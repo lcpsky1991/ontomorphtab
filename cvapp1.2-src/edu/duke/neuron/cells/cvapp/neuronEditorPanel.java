@@ -56,7 +56,7 @@ import java.net.URL;
 public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		ItemListener {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -147,7 +147,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		 * rescalableFloatSlider (rescalableFloatSlider.LOG, "y rescale",
 		 * neucan.yScale, -0.3, 0.3); rsfszscale = new rescalableFloatSlider
 		 * (rescalableFloatSlider.LOG, "z rescale", neucan.zScale, -0.3, 0.3);
-		 * 
+		 *
 		 */
 		rsfszcursor = new rescalableFloatSlider(rescalableFloatSlider.LOG,
 				"red-green dz", zcursor, -3., 0);
@@ -262,6 +262,10 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		headerF = new headerFrame();
 		shrinkageCorrectionF = new shrinkageCorrectionFrame(neucan, headerF);
 
+
+		/* CA: This is just the simplest form of a cell, a small dendrite branch
+		 * to demonstrate that it works correctly.
+		 */
 		String[] sdat = new String[6];
 		sdat[0] = "1 0  0 0 0     4  -1";
 		sdat[1] = "2 0  0 10 0    4  1";
@@ -350,6 +354,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		return sa;
 	}
 
+	//CA: setCell is the function for passing image data to graph?
 	public void setCell(String[] sdat, String fdir, String frfile) {
 		blockingMessageOn("parsing", fdir + frfile);
 		cell = new neulucData();
@@ -623,7 +628,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 class optionBar extends sbPanel implements ItemListener, ActionListener {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -755,7 +760,7 @@ class optionBar extends sbPanel implements ItemListener, ActionListener {
 class webCellBar extends sbPanel implements ItemListener, ActionListener,
 		WindowListener {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -905,12 +910,17 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 			//u = new URL(hostroot + surl);
 			u = new URL(surl);
 		} catch (Exception e) {
-//			System.out.println("malformed URL " + hostroot + surl);
+			//System.out.println("malformed URL " + hostroot + surl);
 			System.out.println("malformed URL " + surl);
 		}
 		// listFrame.setVisible(false);
+
 		String[] sdat = neupan.readStringArrayFromURL(u);
 
+		//This print is just to test whether the net code is working, not useful for project
+		//System.out.print(sdat.toString());
+
+		//CA: setCell is probably the cause of the problem, todo: put a try/catch around it
 		neupan.setCell(sdat, hostroot, surl);
 	}
 

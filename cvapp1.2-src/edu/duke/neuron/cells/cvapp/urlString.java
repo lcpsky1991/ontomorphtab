@@ -34,50 +34,58 @@ public abstract class urlString {
 
 	/*
 	 * public static String readStringFromURL () { Frame fr = new Frame();
-	 * 
+	 *
 	 * File f; String sdat = "null"; FileDialog fd = new FileDialog (fr, "arg
 	 * string", FileDialog.LOAD ); fd.pack(); fd.setVisible(true); String fnm =
 	 * fd.getDirectory() + fd.getFile();
-	 * 
+	 *
 	 * if (fnm != null) { try { f = new File (fnm); int size = (int)f.length();
 	 * FileInputStream in = new FileInputStream (f); int bytes_read = 0; byte[]
 	 * contents = new byte[size]; while (bytes_read < size) bytes_read +=
 	 * in.read (contents, bytes_read, size-bytes_read);
-	 * 
+	 *
 	 * sdat = new String(contents, 0); } catch (IOException ex) {
 	 * System.out.println ("file read error "); } } return sdat; }
-	 * 
-	 * 
+	 *
+	 *
 	 * public static URL getURLToRead() { Frame fr = new Frame(); URL u = null;
 	 * System.out.println ("shold be starting file dialog now..."); String fnm;
 	 * FileDialog fd = new FileDialog (fr, "arg string", FileDialog.LOAD );
 	 * fd.pack(); fd.setVisible(true);
-	 * 
+	 *
 	 * System.out.println ("shold be visible..."); fnm = fd.getDirectory() +
 	 * fd.getFile(); System.out.println ("got " + fnm); // fnm =
 	 * "/users/rcc/morph/3d/000l51.asc"; return u; }
-	 * 
+	 *
 	 */
 
 	@SuppressWarnings("unchecked")
-	public static String[] readStringArrayFromURL(URL u) {
+	public static String[] readStringArrayFromURL(URL u)
+	{
 		Vector vs = new Vector();
 
 		System.out.println("opening " + u);
 		String[] sdat = null;
 		if (u != null) {
 			try {
-				
+
 				HttpURLConnection http = (HttpURLConnection)u.openConnection();
 				InputStream in = http.getInputStream();
 				System.out.println("got input stream");
-				BufferedReader bis = new BufferedReader(new InputStreamReader(
-						in));
+				BufferedReader bis = new BufferedReader(new InputStreamReader(in));
 				System.out.println("got data input stream");
 
-				while (bis.ready()) {
-					vs.addElement(bis.readLine());
-				}
+
+				String buffer;
+
+				//Will read file one line at a time into the buffer
+				//buffer contents are stored in sdat matrix, which is returned
+				//Keep readining one line until EOF is reached (null)
+				do
+				{
+					buffer = bis.readLine();
+					if ( buffer != null ) vs.addElement(buffer);	// dont add null elements
+				} while ( buffer != null );
 
 			} catch (IOException ex) {
 				System.out.println("URL read error ");
@@ -89,12 +97,12 @@ public abstract class urlString {
 				sdat = new String[vs.size()];
 				for (int i = 0; i < vs.size(); i++) {
 					sdat[i] = (String) (vs.elementAt(i));
+					System.out.println(sdat[i]);
 				}
 			}
 
 		}
 		return sdat;
-
 	}
 
 }
