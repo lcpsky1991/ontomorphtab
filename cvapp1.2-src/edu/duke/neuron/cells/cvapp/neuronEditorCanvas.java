@@ -493,7 +493,6 @@ class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 			pmark[1] = ip[1];
 			gotMarks = true;
 			cell.highlightSection(ip[0], ip[1]);
-
 			repaint();
 
 		} else if (gotPointAction == HIGHLIGHTTREE) {

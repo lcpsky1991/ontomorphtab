@@ -53,6 +53,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.net.URL;
 
+import javax.swing.JOptionPane; //TODO: Remove
+
 public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		ItemListener {
 	/**
@@ -334,6 +336,87 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		neucan.repaint();
 	}
 
+	public void inject()
+	{
+
+		String input;
+		String result="none";
+		int m=-1;
+		int a=0;
+		int b=0;
+
+		String coms="\n TRACE: 1" +
+		"\n CUT: 2" +
+		"\n JOIN: 3" +
+		"\n REMOVE: 4" +
+		"\n ADD: 5" +
+		"\n MARK: 6" +
+		"\n HI-SECTION: 7" +
+		"\n HI-TREE: 8" +
+		"\n HI-Points: 9" +
+		"\n MERGE: 10" +
+		"\n JIDENT: 11";
+
+		Object[] btnComs={"Trace: 1",
+							"CUT: 2",
+							"JOIN: 3",
+							"REM: 3",
+							"Add: 4",
+							"Mark: 6",
+							"Hi-Section: 7",
+							"Hi-Tree: 8",
+							"Hi-Points: 9",
+							"Merge: 10",
+							"IDENT: 11",
+							"None"};
+
+
+		input = (JOptionPane.showInputDialog(coms).trim());
+		if (input != null)
+			m = Integer.valueOf(input);
+
+		input = (JOptionPane.showInputDialog("Point 0").trim());
+		if (input != null)
+			a = Integer.valueOf(input);
+
+		input = (JOptionPane.showInputDialog("Point 1").trim());
+		if (input != null)
+			b = Integer.valueOf(input);
+
+
+		switch (m)
+		{
+		case -1:
+			//nothing
+			break;
+		case 6:
+			//nothing
+			break;
+		case 7:
+			cell.highlightSection(a,b);
+			neucan.repaint();
+			break;
+		case 8:
+			cell.highlightTree(a,b);
+			neucan.repaint();
+			break;
+		case 9:
+			cell.highlightPoint(a);
+			neucan.repaint();
+			break;
+
+		}
+
+
+
+		result += "\n [" + m + " @ (" + a + ", " + b + " )] ";
+		result += "";
+		System.out.println(result);
+
+
+
+	}
+
 	public String[] readStringArrayFromURL(URL u) {
 		blockingMessageOn("reading URL", u.toString());
 		String[] sa = urlString.readStringArrayFromURL(u);
@@ -456,8 +539,15 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		} else if (sarg.equals("normal")) {
 			setNormal();
 
-		} else if (sarg.equals("add floating")) {
-			neucan.addFree();
+		}
+		else if (sarg.equals("add floating"))
+		{
+			//CA
+
+			inject();
+
+			//UNCOMMENT THIS NEXT LINE TO RESTORE TO NORMAL
+			//neucan.addFree();
 		} else if (sarg.equals("nodes")) {
 			// setNormal();
 			neucan.showPoints();
@@ -778,6 +868,8 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 
 	Frame listFrame;
 
+	Frame info;
+
 	@SuppressWarnings("static-access")
 	webCellBar(neuronEditorPanel p) {
 		neupan = p;
@@ -825,10 +917,13 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 		listFrame.add("South", b);
 		b.addActionListener(this);
 		listFrame.pack();
-		listFrame.setSize(100, 600);
+		listFrame.setSize(500, 300);
 		listFrame.addWindowListener(this);
+		listFrame.setLocation(listFrame.getBounds().x + 50, listFrame.getBounds().y + 50); //place the list somewhat near the center of the screen
 
-	}
+
+
+		}
 
 	public void windowActivated(WindowEvent e) {
 	}
@@ -838,6 +933,7 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 
 	public void windowClosing(WindowEvent e) {
 		listFrame.setVisible(false);
+		//info.setVisible(false);
 	}
 
 	public void windowDeactivated(WindowEvent e) {
@@ -886,7 +982,7 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 		try {
 			u1 = new URL(ts);
 		} catch (Exception e) {
-			System.out.println("malformed URL " + ts);
+			System.out.println("malformed URL (1) " + ts);
 		}
 
 		if (u1 != null) {
@@ -899,7 +995,7 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 				String[] sl = neupan.readStringArrayFromURL(u2);
 				setList(sl);
 			} catch (Exception e) {
-				System.out.println("malformed URL " + u1 + "list.html");
+				System.out.println("malformed URL (2) " + u1 + "list.html");
 			}
 		}
 	}
@@ -907,21 +1003,22 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 	public void setDataFromURL(String surl) {
 		URL u = null;
 		try {
-			//u = new URL(hostroot + surl);
+			// u = new URL(hostroot + surl);
 			u = new URL(surl);
 		} catch (Exception e) {
-			//System.out.println("malformed URL " + hostroot + surl);
-			System.out.println("malformed URL " + surl);
+			// System.out.println("malformed URL " + hostroot + surl);
+			System.out.println("malformed URL (3) " + surl);
 		}
-		// listFrame.setVisible(false);
+
+		// hide the list before the file loads. This is a simple way to have a
+		// graphical response to selecting a file
+		listFrame.setVisible(false); // so thatt eh user knows they clicked
+										// something
 
 		String[] sdat = neupan.readStringArrayFromURL(u);
 
-		//This print is just to test whether the net code is working, not useful for project
-		//System.out.print(sdat.toString());
-
-		//CA: setCell is probably the cause of the problem, todo: put a try/catch around it
 		neupan.setCell(sdat, hostroot, surl);
+
 	}
 
 	@SuppressWarnings("static-access")
@@ -954,6 +1051,7 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 	}
 
 	private void processNameEvent(String sarg) {
+		System.out.println("preparing to set data from " + sarg);
 		setDataFromURL(sarg);
 	}
 }

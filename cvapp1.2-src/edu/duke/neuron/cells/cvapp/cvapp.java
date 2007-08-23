@@ -34,7 +34,7 @@ import java.awt.event.ActionListener;
 public class cvapp extends Applet implements ActionListener {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -50,8 +50,8 @@ public class cvapp extends Applet implements ActionListener {
 		// w = (new Integer(getParameter ("width"))).intValue();
 		// h = (new Integer(getParameter ("height"))).intValue();
 
-		w = 500;
-		h = 600;
+		w = 500; //500
+		h = 600; //600
 
 		setLayout(new BorderLayout());
 		Font f = new Font("8x13", Font.PLAIN, 13);

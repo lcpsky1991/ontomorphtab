@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
+import java.awt.*;
 
 public abstract class urlString {
 
@@ -77,27 +78,74 @@ public abstract class urlString {
 
 
 				String buffer;
-
+				long fileSize=0;	//size of file to be downloaded
+				long got=0;			//ammount of file that has been got already
 				//Will read file one line at a time into the buffer
 				//buffer contents are stored in sdat matrix, which is returned
 				//Keep readining one line until EOF is reached (null)
+
+				//Check filesize before downloading
+
+				fileSize = http.getContentLength();
+				System.out.println("Estimated filesize is: " + fileSize);
+
+
+
+				//Create an info dialog box to display
+				Frame info;
+
+				info = new Frame("Downloading");			//create new invisible frame with appropriate title
+				info.setLayout(new GridLayout());
+
+
+				TextField txtInfo = new TextField("Downloading...");
+				info.add(txtInfo, BorderLayout.CENTER);
+
+				info.pack();
+				info.setSize(700, 100);
+				info.validate();
+				info.setLocation(info.getBounds().x + 50, info.getBounds().y + 50); //put it somewhat near center of screen
+
+				info.validate();
+				info.setVisible(true);
+
+
+
+
 				do
 				{
 					buffer = bis.readLine();
-					if ( buffer != null ) vs.addElement(buffer);	// dont add null elements
+					if ( buffer != null ) // dont add null elements, dont incriment g on null
+					{
+						got += buffer.length();
+						vs.addElement(buffer);
+						txtInfo.setText(got + " of " + fileSize);
+						info.validate();
+						info.repaint();
+						//System.out.println(g + " of " + fileSize);
+					}
 				} while ( buffer != null );
 
-			} catch (IOException ex) {
+				http.disconnect();	//close the connection to free resources
+
+				//destroy info dialog box to free resources
+				info.setVisible(false);
+				info.dispose();
+			}
+			catch (IOException ex) {
 				System.out.println("URL read error ");
 			}
 
+
 			System.out.println("read " + vs.size() + " lines");
+
+
 
 			if (vs.size() > 0) {
 				sdat = new String[vs.size()];
 				for (int i = 0; i < vs.size(); i++) {
 					sdat[i] = (String) (vs.elementAt(i));
-					System.out.println(sdat[i]);
+					//System.out.println(sdat[i]);
 				}
 			}
 
