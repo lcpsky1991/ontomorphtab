@@ -457,6 +457,17 @@ class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 
 	public void gotPoint(int[] ip) {
 
+
+		/// $$$ Debug $$$$
+		String strP="";
+		for (int i=0; i < ip.length; i++)
+		{
+			strP += "[" + ip[i] + "] ";
+		}
+		System.out.println("*** User Action: (" + gotPointAction + ") @ Index Points {" + strP + "} - invoked by gotPoint()");
+
+		// $$$ End Debug $$$
+
 		if (gotPointAction == TRACE) {
 			cell.tracePoint(ip[0]);
 			trace();

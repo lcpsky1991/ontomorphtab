@@ -185,7 +185,8 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		butpan0.add(cb1 = new Checkbox("normal", true, cbg));
 		butpan0.add(cb2 = new Checkbox("grow", false, cbg));
 
-		butpan0.add(new Button("add floating"));
+		butpan0.add(new Button("add floating")); //this button used to be called "add floating"
+		butpan0.add(new Button("inject")); 			//for debugging
 
 		butpan1.setLayout(new GridLayout(4, 1, 1, 1));
 		butpan1.add(new Button("cut"));
@@ -355,7 +356,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		"\n HI-TREE: 8" +
 		"\n HI-Points: 9" +
 		"\n MERGE: 10" +
-		"\n JIDENT: 11";
+		"\n IDENT: 11";
 
 		Object[] btnComs={"Trace: 1",
 							"CUT: 2",
@@ -408,8 +409,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		}
 
 
-
-		result += "\n [" + m + " @ (" + a + ", " + b + " )] ";
+		result += "\n*** Inject: (" + m + ") @ [" + a + "] [" + b + "] - invoked by inject()";
 		result += "";
 		System.out.println(result);
 
@@ -542,13 +542,13 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		}
 		else if (sarg.equals("add floating"))
 		{
-			//CA
-
+			neucan.addFree();
+		}
+		else if (sarg.equals("inject"))
+		{
 			inject();
-
-			//UNCOMMENT THIS NEXT LINE TO RESTORE TO NORMAL
-			//neucan.addFree();
-		} else if (sarg.equals("nodes")) {
+		}
+		else if (sarg.equals("nodes")) {
 			// setNormal();
 			neucan.showPoints();
 		} else if (sarg.equals("outlines")) {
