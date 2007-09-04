@@ -41,7 +41,7 @@ public class graphCanvas3 extends Canvas implements MouseListener,
 	// to be subclassed for each graph
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -299,6 +299,13 @@ public class graphCanvas3 extends Canvas implements MouseListener,
 
 	public void gotPoint(int[] cp) {
 		// to be overridden
+	}
+
+	public int[] getNodeList()
+	{
+		int[] plist=null;
+
+		return plist;
 	}
 
 	public void mouseDragged(MouseEvent e) {

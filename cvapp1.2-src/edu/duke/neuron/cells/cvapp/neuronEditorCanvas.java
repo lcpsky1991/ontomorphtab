@@ -30,7 +30,12 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
+public class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 904411159030713191L;
+
 	neulucData cell;
 
 	static int TRACE = 1;
@@ -87,6 +92,8 @@ class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 
 	static int SOLIDBLUE = 5;
 
+	int selectedNodesList[];	//for later use by ontomorphtab
+
 	int view = 2;
 
 	int lastView = 2;
@@ -101,7 +108,7 @@ class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 
 	double[] cdp;
 
-	int[] pmark;
+	int[] pmark;	//looks to be used cheifly for selections that require more than 1 point
 
 	boolean gotMarks = false;
 
@@ -133,7 +140,7 @@ class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 
 	double[] growpt;
 
-	neuronEditorCanvas(int w, int h, graphData3 gd) {
+	public neuronEditorCanvas(int w, int h, graphData3 gd) {
 		super(w, h, gd);
 		setSize(w, h);
 		cdp = new double[3];
@@ -455,6 +462,17 @@ class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 		growMode = true;
 	}
 
+	public void storeSelection(int[] plist)
+	{
+		//for later retreival by ontomorphtab
+		selectedNodesList = plist;
+	}
+
+	public int[] getSelectedNodes()	//returns an array of index number that represent the nodes selected
+	{
+		return selectedNodesList;
+	}
+
 	public void gotPoint(int[] ip) {
 
 
@@ -465,6 +483,8 @@ class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 			strP += "[" + ip[i] + "] ";
 		}
 		System.out.println("*** User Action: (" + gotPointAction + ") @ Index Points {" + strP + "} - invoked by gotPoint()");
+
+		storeSelection(ip);
 
 		// $$$ End Debug $$$
 

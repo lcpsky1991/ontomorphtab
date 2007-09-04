@@ -64,7 +64,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 	graphData3 neugd;
 
-	neuronEditorCanvas neucan;
+	neuronEditorCanvas neucan;	//needs to be accessed by OntoMorphTab
 
 	rescalableFloatSlider rsfsxscale;
 
@@ -77,7 +77,6 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 	neulucData cell;
 
 	doublePointer xscale;
-
 	doublePointer yscale;
 
 	doublePointer zscale;
@@ -185,7 +184,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		butpan0.add(cb1 = new Checkbox("normal", true, cbg));
 		butpan0.add(cb2 = new Checkbox("grow", false, cbg));
 
-		butpan0.add(new Button("add floating")); //this button used to be called "add floating"
+		butpan0.add(new Button("add floating"));
 		butpan0.add(new Button("inject")); 			//for debugging
 
 		butpan1.setLayout(new GridLayout(4, 1, 1, 1));
@@ -294,6 +293,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		}
 	}
 
+
 	public void reverseVideo() {
 		neucan.reverseVideo();
 	}
@@ -333,6 +333,11 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		headerF.setVisible(true);
 	}
 
+	public neuronEditorCanvas getCanvas()
+	{
+		return neucan;
+	}
+
 	public void refresh() {
 		neucan.repaint();
 	}
@@ -357,19 +362,6 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		"\n HI-Points: 9" +
 		"\n MERGE: 10" +
 		"\n IDENT: 11";
-
-		Object[] btnComs={"Trace: 1",
-							"CUT: 2",
-							"JOIN: 3",
-							"REM: 3",
-							"Add: 4",
-							"Mark: 6",
-							"Hi-Section: 7",
-							"Hi-Tree: 8",
-							"Hi-Points: 9",
-							"Merge: 10",
-							"IDENT: 11",
-							"None"};
 
 
 		input = (JOptionPane.showInputDialog(coms).trim());
@@ -405,7 +397,6 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 			cell.highlightPoint(a);
 			neucan.repaint();
 			break;
-
 		}
 
 
@@ -414,7 +405,32 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		System.out.println(result);
 
 
+	}
 
+	public void makeSelection(int option, int a, int b)
+	{
+		//a and b are bad variable names for points/nodes - this is better than debugging for p1/p2
+		switch (option)
+		{
+		case -1:
+			//nothing
+			break;
+		case 6:
+			//nothing
+			break;
+		case 7:
+			cell.highlightSection(a,b);
+			neucan.repaint();
+			break;
+		case 8:
+			cell.highlightTree(a,b);
+			neucan.repaint();
+			break;
+		case 9:
+			cell.highlightPoint(a);
+			neucan.repaint();
+			break;
+		}
 	}
 
 	public String[] readStringArrayFromURL(URL u) {
