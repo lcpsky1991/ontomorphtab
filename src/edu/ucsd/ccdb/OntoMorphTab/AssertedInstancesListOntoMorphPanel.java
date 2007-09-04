@@ -324,9 +324,13 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
             			plist=oTab.getSelectedNodes();
 
             			System.out.println("*** Resolving selected nodes to be: [ " + plist.toString() + " ]");
-            			if (plist.length >= 2)
+            			if (plist.length == 3)
             			{
-            					assignImgSelection(res, "nowhere", 8, plist[0], plist[1]);	//graphically display the class that was selected by calling this method on current image
+            					assignImgSelection(res, "nowhere", plist[0], plist[1], plist[2]);	//graphically display the class that was selected by calling this method on current image
+            			}
+            			else
+            			{
+            				System.out.println("*** Error: Could not resolve selection list");
             			}
             		}
 

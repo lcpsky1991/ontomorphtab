@@ -193,7 +193,7 @@ public class OntoMorphTab extends AbstractTabWidget {
     		String begin="";		//prefix of string
     		String number="";	//the number in string
 
-    		int method=-1;	//the selection method
+    		int method=-1;	//the selection method, default -1
     		int a=1;	//first point
     		int b=3;	//second point
 
@@ -213,6 +213,10 @@ public class OntoMorphTab extends AbstractTabWidget {
     			{
     				b = Integer.parseInt(number);
     			}
+    			else if ("omt_me".equals(begin))
+    			{
+    				method = Integer.parseInt(number);
+    			}
     		}
 
     		//will only make a selection if there is a valid entry for the method
@@ -225,14 +229,13 @@ public class OntoMorphTab extends AbstractTabWidget {
     		else
     		{
     			neuronPanel.setNormal();	//deselect any possible selection
-
     			System.out.println("*** De-Selection via selectNeuro()");
     		}
     	}
 
     public int[] getSelectedNodes() //returns the indices of the key nodes from neuronEditorPanel
     {
-    		return	neuronPanel.getCanvas().getSelectedNodes();
+    		return	neuronPanel.getCanvas().getSelection();
     }
 }
 
