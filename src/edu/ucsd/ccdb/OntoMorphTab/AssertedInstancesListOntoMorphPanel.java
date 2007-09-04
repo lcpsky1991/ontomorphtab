@@ -46,7 +46,9 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     private AllowableAction createAction;
 
     private AllowableAction createAnonymousAction;
-    
+
+    private AllowableAction assignNeuroSelection; //CA intended for the button
+
     private AllowableAction copyAction;
 
     private AllowableAction deleteAction;
@@ -65,6 +67,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
     private boolean showSubclassInstances;
 
+    private OntoMorphTab oTab;
 
     static {
         SORT_LIMIT = ApplicationProperties.getIntegerProperty("ui.DirectInstancesList.sort_limit", 1000);
@@ -102,8 +105,12 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     };
 
 
-    public AssertedInstancesListOntoMorphPanel(OWLModel owlModel) {
+
+
+    public AssertedInstancesListOntoMorphPanel(OWLModel owlModel, OntoMorphTab oTab) {
         this.owlModel = owlModel;
+        this.oTab = oTab;
+
         Action viewAction = createViewAction();
 
         list = new InstancesList(viewAction);
@@ -181,6 +188,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
     protected void addButtons(Action viewAction, LabeledComponent c) {
         // c.addHeaderButton(createReferencersAction());
+    		c.addHeaderButton(createAssignNeuroSelection());
         c.addHeaderButton(createConfigureAction());
         c.addHeaderButton(createCreateAction());
         c.addHeaderButton(createCopyAction());
@@ -244,17 +252,17 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
                 } else {*/
                 	RDFResource r = (RDFResource) ProtegeUI.getSelectionDialogFactory().selectClass(AssertedInstancesListOntoMorphPanel.this, owlModel,
                                 "Select a named class to add");
-                	if (r instanceof Cls) {	
+                	if (r instanceof Cls) {
                 		ArrayList a = new ArrayList();
                 		a.add(r);
-                		
+
                         removeClsListeners();
                         classes = new ArrayList(a);
                         list.setClasses(a);
                         reload();
                         updateButtons();
                         addClsListeners();
-                	
+
                 		Instance instance = owlModel.createInstance(null, classes);
                 		if (instance instanceof Cls) {
                 			Cls newCls = (Cls) instance;
@@ -262,7 +270,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
                 				newCls.addDirectSuperclass(owlModel.getOWLThingClass());
                 			}
                 		}
-                		
+
                 		list.setSelectedValue(instance, true);
                 	}
                 //}
@@ -271,7 +279,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         return createAction;
     }
 
-    
+
     protected Action createCreateAnonymousAction() {
         createAnonymousAction = new CreateAction("Create anonymous instance", OWLIcons.getCreateIndividualIcon(OWLIcons.RDF_ANON_INDIVIDUAL)) {
             public void onCreate() {
@@ -290,7 +298,74 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         };
         return createAnonymousAction;
     }
-    
+
+
+    protected Action createAssignNeuroSelection() {
+        assignNeuroSelection = new CreateAction("Assign Neuroleucide Selection to the selected Instance", OWLIcons.getCreateIndividualIcon(OWLIcons.ACCEPT)) {
+            public void onCreate()
+            {
+            		//*
+	        		////TODO: Replace this code that uses the comments with proper properties, following code may be useful:
+	        		////First create the general datatype
+	        		//OWLModel owlModel = (OWLModel)getKnowledgeBase();
+	        		//OWLDatatypeProperty setprop = owlModel.createOWLDatatypeProperty("nodeA");
+	        		//OWLDatatypeProperty getprop = owlModel.createOWLDatatypeProperty("has Property");
+	        		//*
+
+	        		//RDFResource resource = (RDFResource) selectedInstance;
+            		Instance instance = (Instance) list.getSelectedValue();
+            		if (instance != null)
+            		{
+            			RDFResource res = (RDFResource) instance;
+	        			//write the value of the nodes that were selected to the instance data (assign it)
+//            		//TODO: get the info then assign it
+
+            			int[] plist = {0,0};
+            			plist=oTab.getSelectedNodes();
+
+            			System.out.println("*** Resolving selected nodes to be: [ " + plist.toString() + " ]");
+            			if (plist.length >= 2)
+            			{
+            					assignImgSelection(res, "nowhere", 8, plist[0], plist[1]);	//graphically display the class that was selected by calling this method on current image
+            			}
+            		}
+
+            }
+
+            public void assignImgSelection(RDFResource resItem, String URL, int method, int n1, int n2)
+            {
+
+	        		Object[] objNotes = resItem.getComments().toArray();
+	        		String strOne="";
+	        		String begin="";
+	        		//First, remove the old data
+	        		//String strNotes[] = (String[])cnotes.toArray(new String[0]);
+	        		for (int i=0; i < objNotes.length; i++)
+	        		{
+	        			strOne = objNotes[i].toString();
+	        			begin = strOne.substring(0,3);		//for conveiniance of equals() method
+	        			if ( "omt".equals(begin) ) 			//Can't use the == operator here, returns false even if true
+	        			{
+	        				System.out.println("*** Removing Comment: " + strOne);
+	        				resItem.removeComment(strOne);
+	        			}
+	        		}
+
+
+	        			//TODO: Don't store data using hardcoded strings, "omt_" should be a global
+	        		System.out.println("*** Now setting Neuroleucida Comments");
+	        		//And add the new data
+	        		resItem.addComment("omt_url: " + URL);
+	        		resItem.addComment("omt_n1: " + n1);
+	        		resItem.addComment("omt_n2: " + n2);
+	        		resItem.addComment("omt_me: " + method);
+
+
+        		}
+        };
+        return assignNeuroSelection;
+    }
+
 
     protected Action createConfigureAction() {
         return new ConfigureAction() {
@@ -590,10 +665,10 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
 
     private void updateButtons() {
-        Cls cls = (Cls) CollectionUtilities.getFirstItem(classes);        
+        Cls cls = (Cls) CollectionUtilities.getFirstItem(classes);
         createAction.setEnabled(cls == null ? false : cls.isConcrete());
         createAnonymousAction.setEnabled(cls == null ? false : cls.isConcrete());
-        
+
         Instance instance = (Instance) getSoleSelection();
         boolean allowed = instance != null && instance instanceof SimpleInstance;
         copyAction.setAllowed(allowed);
