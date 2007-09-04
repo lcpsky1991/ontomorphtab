@@ -92,7 +92,7 @@ public class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 
 	static int SOLIDBLUE = 5;
 
-	int selectedNodesList[];	//for later use by ontomorphtab
+	int selection[];	// This is a list of indices of nodes, object[0] is the method!! for later use by ontomorphtab
 
 	int view = 2;
 
@@ -464,19 +464,28 @@ public class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 
 	public void storeSelection(int[] plist)
 	{
-		//for later retreival by ontomorphtab
-		selectedNodesList = plist;
+		//This function is for later retreival by ontomorphtab
+		selection = new int[plist.length + 1];	//resize the array to be same size plus one
+
+		selection[0] = gotPointAction;	//store the method in index 0
+
+		for (int i=0; i < plist.length; i++)
+		{	//append the nodes
+			selection[i+1] = plist[i];	//append the data from ip[] to selection
+
+		}
 	}
 
-	public int[] getSelectedNodes()	//returns an array of index number that represent the nodes selected
+	public int[] getSelection()	//returns an array of index number that represent the nodes selected
 	{
-		return selectedNodesList;
+		return selection;
 	}
 
 	public void gotPoint(int[] ip) {
 
 
-		/// $$$ Debug $$$$
+		/// This is invoked whent he user has finished selecting all the points that
+		//were required
 		String strP="";
 		for (int i=0; i < ip.length; i++)
 		{
