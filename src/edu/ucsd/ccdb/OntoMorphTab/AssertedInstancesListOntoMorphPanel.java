@@ -188,12 +188,14 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
     protected void addButtons(Action viewAction, LabeledComponent c) {
         // c.addHeaderButton(createReferencersAction());
-    		c.addHeaderButton(createAssignNeuroSelection());
-        c.addHeaderButton(createConfigureAction());
+
+
+        c.addHeaderButton(createAssignNeuroSelection());
         c.addHeaderButton(createCreateAction());
         c.addHeaderButton(createCopyAction());
         c.addHeaderButton(createDeleteAction());
         c.addHeaderButton(createCreateAnonymousAction());
+        c.addHeaderButton(createConfigureAction());
     }
 
 
@@ -255,6 +257,27 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
                 	if (r instanceof Cls) {
                 		ArrayList a = new ArrayList();
                 		a.add(r);
+
+                		// Add every other class
+                		/*
+                		Collection resBase = owlModel.getRDFIndividuals();
+                		Iterator i=resBase.iterator();
+                		Instance tmp=null;
+
+                		while (i.hasNext())
+                		{
+                			tmp =(Instance) i.next();
+                			if (tmp.getName().startsWith("sao"))
+                			{
+                    			a.add(tmp);
+                    			System.out.println("*** Adding class to list: " + tmp.getName());
+                			}
+                		}*/
+
+                		//a.addAll(owlModel.getRDFIndividuals());
+
+                		//$$ END DEBUG
+
 
                         removeClsListeners();
                         classes = new ArrayList(a);
@@ -622,13 +645,25 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
 
     private Collection getInstances(Cls cls) {
-        Collection instances;
-        if (showSubclassInstances) {
-            instances = cls.getInstances();
-        }
-        else {
-            instances = cls.getDirectInstances();
-        }
+        //CA: does this filter out the classes that are not relevant?
+    		//returns all of the INSTANCES of a specified class!
+
+
+    		Collection instances;
+
+    		//Commented out is the original code that hides subclasses unless otherwise specified
+//        if (showSubclassInstances) {
+//            instances = cls.getInstances();
+//        }
+//        else {
+//            instances = cls.getDirectInstances();
+//        }
+//
+
+        instances = cls.getInstances();
+        instances = owlModel.getRDFIndividuals();
+
+
         if (!owlModel.getProject().getDisplayHiddenFrames()) {
             instances = removeHiddenInstances(instances);
         }
@@ -672,6 +707,9 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         Cls cls = (Cls) CollectionUtilities.getFirstItem(classes);
         createAction.setEnabled(cls == null ? false : cls.isConcrete());
         createAnonymousAction.setEnabled(cls == null ? false : cls.isConcrete());
+
+        //Make the button inactive while no viable class is selected
+        createAssignNeuroSelection().setEnabled(cls == null ? false : cls.isConcrete());
 
         Instance instance = (Instance) getSoleSelection();
         boolean allowed = instance != null && instance instanceof SimpleInstance;
