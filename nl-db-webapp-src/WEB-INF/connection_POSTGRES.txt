@@ -1,0 +1,4 @@
+url = jdbc:postgresql://localhost/EGE
+username = postgres
+password = test01
+databaseDriver = org.postgresql.Driver

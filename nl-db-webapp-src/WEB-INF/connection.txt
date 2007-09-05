@@ -1,0 +1,4 @@
+url = jdbc:oracle:thin:@animal.ucsd.edu:1521:ccdbdev
+username = ccdbd_dev
+password = bee
+databaseDriver = oracle.jdbc.driver.OracleDriver
