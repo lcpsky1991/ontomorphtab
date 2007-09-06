@@ -344,16 +344,21 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 //            		//TODO: get the info then assign it
 
             			int[] plist = {0,0};
+            			int reqNodes = 3;
             			plist=oTab.getSelectedNodes();
 
-            			System.out.println("*** Resolving selected nodes to be: [ " + plist.toString() + " ]");
-            			if (plist.length == 3)
+            			System.out.println("*** Resolving selected nodes to be");
+            			if (plist == null)
             			{
-            					assignImgSelection(res, "nowhere", plist[0], plist[1], plist[2]);	//graphically display the class that was selected by calling this method on current image
+            				System.out.println("*** Error: No points were selected, needed" + reqNodes);
+            			}
+            			else if (plist.length == reqNodes)
+            			{
+            				assignImgSelection(res, oTab.neuronPanel.getURL(), plist[0], plist[1], plist[2]);	//graphically display the class that was selected by calling this method on current image
             			}
             			else
             			{
-            				System.out.println("*** Error: Could not resolve selection list");
+            				System.out.println("*** Error: Could not resolve selection list (Needed " + reqNodes + " have " + plist.length);
             			}
             		}
 
@@ -662,7 +667,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
         instances = cls.getInstances();
         instances = owlModel.getRDFIndividuals();
-
+        instances = removeHiddenInstances(instances);	//this is an attempt to hide the instances that show up which are unknown
 
         if (!owlModel.getProject().getDisplayHiddenFrames()) {
             instances = removeHiddenInstances(instances);
@@ -676,8 +681,15 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         Iterator i = visibleInstances.iterator();
         while (i.hasNext()) {
             Instance instance = (Instance) i.next();
-            if (!instance.isVisible()) {
+            if (!instance.isVisible() )
+            {
                 i.remove();
+            }
+
+            else if ( !instance.isEditable() )	//remove it if it's a datatype
+            {
+            		System.out.println("*** Removing '" + instance.getName() + "' from list because it is not Editable");
+            		i.remove();
             }
         }
         return visibleInstances;
@@ -699,6 +711,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
     public void setSelectedInstance(Instance instance) {
         list.setSelectedValue(instance, true);
+        System.out.println("*** Selection List: [Proj: '" + instance.getProject().getProjectName() + "'] [Icon: " + instance.getIcon().toString() + "]\n Browser Text for '" + instance.getName() + "' \n [" + instance.getBrowserText() + "] \n");
         updateButtons();
     }
 
@@ -714,6 +727,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         Instance instance = (Instance) getSoleSelection();
         boolean allowed = instance != null && instance instanceof SimpleInstance;
         copyAction.setAllowed(allowed);
+
     }
 
 

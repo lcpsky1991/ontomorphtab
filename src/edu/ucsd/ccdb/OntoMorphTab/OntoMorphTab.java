@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.OntoMorphTab;
 
 import java.awt.Component;
+import java.net.URL;
 import java.util.*;
 
 import javax.swing.JComponent;
@@ -192,6 +193,7 @@ public class OntoMorphTab extends AbstractTabWidget {
     		String strOne="";	//any one line of comment
     		String begin="";		//prefix of string
     		String number="";	//the number in string
+    		String loc="none";
 
     		int method=-1;	//the selection method, default -1
     		int a=1;	//first point
@@ -217,12 +219,43 @@ public class OntoMorphTab extends AbstractTabWidget {
     			{
     				method = Integer.parseInt(number);
     			}
+
+    			//get the url
+    			if ( strOne.startsWith("omt_url") )
+    			{
+    				loc = strOne.substring(strOne.indexOf(" ") + 1);
+    			}
     		}
 
-    		//will only make a selection if there is a valid entry for the method
+       	//will only make a selection if there is a valid entry for the method
     		//I am betting that if the method is valid then the point data is valid and -1 is an invalid method
     		if (method > -1)
     		{
+    			//If the current image is not the proper image, then download the corrent image, change images and then select
+    			if ( !neuronPanel.getURL().equalsIgnoreCase(loc) )
+    			{
+    				System.out.println("*** Changing neurolucida image");
+    				//The following is modified version of setDataFromURL(String surl) of neuronEditorPanel.java
+    				//****
+    				URL u = null;
+    				try
+    				{
+    					u = new URL(loc);
+
+    					String[] sdat = neuronPanel.readStringArrayFromURL(u);
+
+        				neuronPanel.setCell(sdat, u.getHost(), u.getFile()); //setCell(sdat, hostroot, surl)
+
+        				neuronPanel.setURL(loc);		//since we changed images, it is approipriate to update the URL
+    				}
+    				catch (Exception e)
+    				{
+    					System.out.println("*** The URL supplied ('" + loc + "') was malformed");
+    				}
+    			}
+
+    			//***
+    			//Make the selection on the current image
     			neuronPanel.makeSelection(method, a, b);
     			System.out.println("*** Making Selection: [m=" + method + ", a=" + a + ", b=" + b + "] via selectNeuro()");
     		}
@@ -237,6 +270,10 @@ public class OntoMorphTab extends AbstractTabWidget {
     {
     		return	neuronPanel.getCanvas().getSelection();
     }
+
+
+
+
 }
 
 
