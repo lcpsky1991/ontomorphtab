@@ -91,6 +91,8 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 	String fwfile;
 
+	String currentURL=""; //for reading back method getURL()
+
 	boolean canReadFiles = true;
 
 	boolean canWriteFiles = true;
@@ -293,6 +295,16 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		}
 	}
 
+	public String getURL()
+	{
+		//wcb goes null
+		return currentURL;
+	}
+
+	public void setURL(String s)
+	{
+		currentURL = s;
+	}
 
 	public void reverseVideo() {
 		neucan.reverseVideo();
@@ -410,26 +422,31 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 	public void makeSelection(int option, int a, int b)
 	{
 		//a and b are bad variable names for points/nodes - this is better than debugging for p1/p2
-		switch (option)
+		try
 		{
-		case -1:
-			//nothing
-			break;
-		case 6:
-			//nothing
-			break;
-		case 7:
-			cell.highlightSection(a,b);
-			neucan.repaint();
-			break;
-		case 8:
-			cell.highlightTree(a,b);
-			neucan.repaint();
-			break;
-		case 9:
-			cell.highlightPoint(a);
-			neucan.repaint();
-			break;
+			switch (option)
+			{
+			case -1:
+				//nothing
+				break;
+			case 7:
+				cell.highlightSection(a,b);
+				neucan.repaint();
+				break;
+			case 8:
+				cell.highlightTree(a,b);
+				neucan.repaint();
+				break;
+			case 9:
+				cell.highlightPoint(a);
+				neucan.repaint();
+				break;
+			}
+		}
+		catch (Exception e)
+		{
+			System.err.println("*** Exception occured with:  makeSelection(" + option + ", " + a + ", " + b + ")");
+			neucan.setNormal();	//clear the selection
 		}
 	}
 
@@ -1029,13 +1046,15 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 		// hide the list before the file loads. This is a simple way to have a
 		// graphical response to selecting a file
 		listFrame.setVisible(false); // so thatt eh user knows they clicked
-										// something
+
+		//Set the internal URL for later calling back
+		neupan.currentURL = u.toString();
 
 		String[] sdat = neupan.readStringArrayFromURL(u);
 
 		neupan.setCell(sdat, hostroot, surl);
-
 	}
+
 
 	@SuppressWarnings("static-access")
 	public void itemStateChanged(ItemEvent e) {
@@ -1067,6 +1086,8 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 	}
 
 	private void processNameEvent(String sarg) {
+
+
 		System.out.println("preparing to set data from " + sarg);
 		setDataFromURL(sarg);
 	}
