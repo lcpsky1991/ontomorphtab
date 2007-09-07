@@ -51,8 +51,7 @@ public class OntoMorphTab extends AbstractTabWidget {
         JSplitPane mainSplitPane = createMainSplitPane();
         add(mainSplitPane);
 
-        //Show all the individuals which have already been made in the ontology
-        	assertedInstancesListPanel.reload();
+        assertedInstancesListPanel.initialize();
 
     }
 

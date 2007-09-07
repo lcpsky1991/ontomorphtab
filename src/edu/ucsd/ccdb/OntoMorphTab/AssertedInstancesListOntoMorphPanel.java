@@ -53,6 +53,8 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
     private AllowableAction deleteAction;
 
+    private AllowableAction developerCommand;
+
     private HeaderComponent header;
 
     private OWLLabeledComponent lc;
@@ -65,7 +67,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
     private static final int SORT_LIMIT;
 
-    private boolean showSubclassInstances;
+    private boolean showSubclassInstances = true;
 
     private OntoMorphTab oTab;
 
@@ -144,6 +146,11 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         setSelectable(list);
         // initializeShowSubclassInstances();
         lc.setHeaderLabel("Asserted Instances");
+
+        //Initialize
+        //Show all the individuals which have already been made in the ontology
+        initialize();
+
     }
 
 
@@ -189,7 +196,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     protected void addButtons(Action viewAction, LabeledComponent c) {
         // c.addHeaderButton(createReferencersAction());
 
-
+    		c.addHeaderButton(createDeveloperCommand());
         c.addHeaderButton(createAssignNeuroSelection());
         c.addHeaderButton(createCreateAction());
         c.addHeaderButton(createCopyAction());
@@ -263,20 +270,17 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 						3. refresh the display list based on the 'classes'
 						4. create the instance in the owlModel
 						5. set the selected on the display list value to match
-
                 		*/
+                		ArrayList acsum = new ArrayList();
 
-                		ArrayList a = new ArrayList();
-                		//r.addComment("omt");		//this flags the class as being ready to markup and therefore it will show up in the list
-
-                		System.out.println("*** New: " + r.getComments().toString());
-                		a.add(r);
-                		//$$ END DEBUG
-
+                		acsum.addAll(classes); //get all the otehr classes first
+                		acsum.add(r);
 
                 		removeClsListeners();
-                		classes = new ArrayList(a);
-                		list.setClasses(a);
+                		classes = new ArrayList(acsum);
+                		list.setClasses(acsum);
+
+
                 		reload();
                 		updateButtons();
                 		addClsListeners();
@@ -294,6 +298,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
                 		//make it ready for markup
                 		r = (RDFResource) instance;
                 		r.addComment("omt");		//this flags the class as being ready to markup and therefore it will show up in the list
+                		System.out.println("*** New OMT individual: " + r.getName());
 
                 		list.setSelectedValue(instance, true);
                 	}
@@ -326,6 +331,17 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         return createAnonymousAction;
     }*/
 
+    protected Action createDeveloperCommand()
+    {
+    		developerCommand = new CreateAction("Debug", OWLIcons.getNerdErrorIcon())
+    		{
+    			public void onCreate()
+    			{
+    				debug();
+    			}
+    		};
+    		return developerCommand;
+    }
 
     protected Action createAssignNeuroSelection() {
         assignNeuroSelection = new CreateAction("Assign Neuroleucide Selection to the selected Instance", OWLIcons.getCreateIndividualIcon(OWLIcons.ACCEPT)) {
@@ -351,7 +367,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
             			int reqNodes = 3;
             			plist=oTab.getSelectedNodes();
 
-            			System.out.println("*** Resolving selected nodes to be");
+            			System.out.println("*** Resolving selected nodes");
             			if (plist == null)
             			{
             				System.out.println("*** Error: No points were selected, needed" + reqNodes);
@@ -408,12 +424,13 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         return new ConfigureAction() {
             public void loadPopupMenu(JPopupMenu menu) {
                 menu.add(createSetDisplaySlotAction());
-                menu.add(createShowAllInstancesAction());
+                //menu.add(createShowAllInstancesAction()); submenu not needed
             }
         };
     }
 
 
+    /* we dont need this submenu
     protected JMenuItem createShowAllInstancesAction() {
         Action action = new AbstractAction("Show Subclass Instances") {
             public void actionPerformed(ActionEvent event) {
@@ -438,6 +455,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         reload();
         fixRenderer();
     }
+    */
 
 
     protected Cls getSoleAllowedCls() {
@@ -619,7 +637,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         Iterator i = classes.iterator();
         while (i.hasNext()) {
             Cls cls = (Cls) i.next();
-            instanceSet.addAll(getInstances(cls));
+            instanceSet.addAll(getInstances());
         }
         List instances = new ArrayList(instanceSet);
         if (instances.size() <= SORT_LIMIT) {
@@ -637,11 +655,19 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         updateLabel();
     }
 
+    public void initialize()
+    {
+    		System.out.println("*** Initialized");
+
+    		reload();
+
+    }
 
     private void reloadHeader(Collection clses) {
         StringBuffer text = new StringBuffer();
         Icon icon = null;
         Iterator i = clses.iterator();
+
         while (i.hasNext()) {
             Cls cls = (Cls) i.next();
             if (icon == null) {
@@ -651,6 +677,8 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
                 text.append(", ");
             }
             text.append(cls.getName());
+
+            System.out.println("*** Class for header '" + cls.getName() + "'");
         }
         JLabel label = (JLabel) header.getComponent();
         label.setText(text.toString());
@@ -658,7 +686,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     }
 
 
-    private Collection getInstances(Cls cls) {
+    private Collection getInstances() {
         //CA: does this filter out the classes that are not relevant?
     		//returns all of the INSTANCES of a specified class!
 
@@ -735,6 +763,11 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         updateButtons();
     }
 
+    public void debug()
+    {
+
+    		initialize();
+    }
 
     private void updateButtons() {
         Cls cls = (Cls) CollectionUtilities.getFirstItem(classes); //formerly
