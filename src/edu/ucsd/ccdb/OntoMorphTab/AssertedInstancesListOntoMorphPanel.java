@@ -194,7 +194,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         c.addHeaderButton(createCreateAction());
         c.addHeaderButton(createCopyAction());
         c.addHeaderButton(createDeleteAction());
-        c.addHeaderButton(createCreateAnonymousAction());
+        //c.addHeaderButton(createCreateAnonymousAction());
         c.addHeaderButton(createConfigureAction());
     }
 
@@ -254,45 +254,46 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
                 } else {*/
                 	RDFResource r = (RDFResource) ProtegeUI.getSelectionDialogFactory().selectClass(AssertedInstancesListOntoMorphPanel.this, owlModel,
                                 "Select a named class to add");
-                	if (r instanceof Cls) {
+                	if (r instanceof Cls)
+                	{
+
+                		/* How creation works:
+						1. First, create a resource
+						2. add resource to the 'classes' list
+						3. refresh the display list based on the 'classes'
+						4. create the instance in the owlModel
+						5. set the selected on the display list value to match
+
+                		*/
+
                 		ArrayList a = new ArrayList();
+                		//r.addComment("omt");		//this flags the class as being ready to markup and therefore it will show up in the list
+
+                		System.out.println("*** New: " + r.getComments().toString());
                 		a.add(r);
-
-                		// Add every other class
-                		/*
-                		Collection resBase = owlModel.getRDFIndividuals();
-                		Iterator i=resBase.iterator();
-                		Instance tmp=null;
-
-                		while (i.hasNext())
-                		{
-                			tmp =(Instance) i.next();
-                			if (tmp.getName().startsWith("sao"))
-                			{
-                    			a.add(tmp);
-                    			System.out.println("*** Adding class to list: " + tmp.getName());
-                			}
-                		}*/
-
-                		//a.addAll(owlModel.getRDFIndividuals());
-
                 		//$$ END DEBUG
 
 
-                        removeClsListeners();
-                        classes = new ArrayList(a);
-                        list.setClasses(a);
-                        reload();
-                        updateButtons();
-                        addClsListeners();
+                		removeClsListeners();
+                		classes = new ArrayList(a);
+                		list.setClasses(a);
+                		reload();
+                		updateButtons();
+                		addClsListeners();
+
 
                 		Instance instance = owlModel.createInstance(null, classes);
                 		if (instance instanceof Cls) {
                 			Cls newCls = (Cls) instance;
+                			//if this is a top level class, make it at least be a subclass of owlThing
                 			if (newCls.getDirectSuperclassCount() == 0) {
                 				newCls.addDirectSuperclass(owlModel.getOWLThingClass());
                 			}
                 		}
+
+                		//make it ready for markup
+                		r = (RDFResource) instance;
+                		r.addComment("omt");		//this flags the class as being ready to markup and therefore it will show up in the list
 
                 		list.setSelectedValue(instance, true);
                 	}
@@ -303,6 +304,9 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     }
 
 
+
+    //This button has been removed because OMT coders don't know what an anonymous instance is, so we won't support it
+    /*
     protected Action createCreateAnonymousAction() {
         createAnonymousAction = new CreateAction("Create anonymous instance", OWLIcons.getCreateIndividualIcon(OWLIcons.RDF_ANON_INDIVIDUAL)) {
             public void onCreate() {
@@ -320,7 +324,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
             }
         };
         return createAnonymousAction;
-    }
+    }*/
 
 
     protected Action createAssignNeuroSelection() {
@@ -665,18 +669,15 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 //        }
 //
 
-        instances = cls.getInstances();
+        //instances = cls.getInstances();
         instances = owlModel.getRDFIndividuals();
-        instances = removeHiddenInstances(instances);	//this is an attempt to hide the instances that show up which are unknown
+        instances = filterInstances(instances);	//this is an attempt to hide the instances that show up which are unknown
 
-        if (!owlModel.getProject().getDisplayHiddenFrames()) {
-            instances = removeHiddenInstances(instances);
-        }
         return instances;
     }
 
 
-    private static Collection removeHiddenInstances(Collection instances) {
+    private static Collection filterInstances(Collection instances) {
         Collection visibleInstances = new ArrayList(instances);
         Iterator i = visibleInstances.iterator();
         while (i.hasNext()) {
@@ -685,11 +686,28 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
             {
                 i.remove();
             }
-
             else if ( !instance.isEditable() )	//remove it if it's a datatype
             {
             		System.out.println("*** Removing '" + instance.getName() + "' from list because it is not Editable");
             		i.remove();
+
+            }
+
+            //If it does not contain a markup of omt then don't show it
+            try
+            {
+            RDFResource r = (RDFResource) instance;
+            Collection c=r.getComments();
+            if ( !c.contains("omt") )
+            {
+            		//i.remove();
+            		System.out.println("*** Comments for object '" + r.getName() + "': " + c.toString());
+            		System.out.println("*** Removing '" + instance.getName() + "' from list because it is not OMT tagged");
+            }
+            }
+            catch (Exception e)
+            {
+            		System.err.println("*** Exception: Unable to make an instance of [" + instance.getName() + "] : " + e.getMessage());
             }
         }
         return visibleInstances;
@@ -719,13 +737,12 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     private void updateButtons() {
         Cls cls = (Cls) CollectionUtilities.getFirstItem(classes);
         createAction.setEnabled(cls == null ? false : cls.isConcrete());
-        createAnonymousAction.setEnabled(cls == null ? false : cls.isConcrete());
+        //createAnonymousAction.setEnabled(cls == null ? false : cls.isConcrete()); //removed because OMT doesnt support
 
         //Make the button inactive while no viable class is selected
-        createAssignNeuroSelection().setEnabled(cls == null ? false : cls.isConcrete());
-
         Instance instance = (Instance) getSoleSelection();
         boolean allowed = instance != null && instance instanceof SimpleInstance;
+        assignNeuroSelection.setAllowed(allowed);
         copyAction.setAllowed(allowed);
 
     }
