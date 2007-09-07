@@ -389,27 +389,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 			b = Integer.valueOf(input);
 
 
-		switch (m)
-		{
-		case -1:
-			//nothing
-			break;
-		case 6:
-			//nothing
-			break;
-		case 7:
-			cell.highlightSection(a,b);
-			neucan.repaint();
-			break;
-		case 8:
-			cell.highlightTree(a,b);
-			neucan.repaint();
-			break;
-		case 9:
-			cell.highlightPoint(a);
-			neucan.repaint();
-			break;
-		}
+		makeSelection(m, a, b);
 
 
 		result += "\n*** Inject: (" + m + ") @ [" + a + "] [" + b + "] - invoked by inject()";
