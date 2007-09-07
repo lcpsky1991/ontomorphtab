@@ -395,6 +395,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 	        		resItem.addComment("omt_n1: " + n1);
 	        		resItem.addComment("omt_n2: " + n2);
 	        		resItem.addComment("omt_me: " + method);
+	        		resItem.addComment("omt");
 
 
         		}
@@ -537,7 +538,11 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     protected Action createViewAction() {
         return new ViewAction(ResourceKey.INSTANCE_VIEW, this) {
             public void onView(Object o) {
-                owlModel.getProject().show((Instance) o);
+            		Instance i = (Instance) o;	//make an instance before attempting to show it
+            		if ( i != null)
+            		{
+            			owlModel.getProject().show(i);
+            		}
             }
         };
     }
@@ -682,32 +687,29 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         Iterator i = visibleInstances.iterator();
         while (i.hasNext()) {
             Instance instance = (Instance) i.next();
-            if (!instance.isVisible() )
+            if (!instance.isVisible() || instance.isSystem() || !instance.isEditable() || instance.isDeleted() )
             {
+            		//System.out.println("*** Removing '" + instance.getName() + "' from list because [invisible|system|!editable|deleted]");
                 i.remove();
             }
-            else if ( !instance.isEditable() )	//remove it if it's a datatype
-            {
-            		System.out.println("*** Removing '" + instance.getName() + "' from list because it is not Editable");
-            		i.remove();
 
-            }
-
-            //If it does not contain a markup of omt then don't show it
-            try
+            else
             {
-            RDFResource r = (RDFResource) instance;
-            Collection c=r.getComments();
-            if ( !c.contains("omt") )
-            {
-            		//i.remove();
-            		System.out.println("*** Comments for object '" + r.getName() + "': " + c.toString());
-            		System.out.println("*** Removing '" + instance.getName() + "' from list because it is not OMT tagged");
-            }
-            }
-            catch (Exception e)
-            {
-            		System.err.println("*** Exception: Unable to make an instance of [" + instance.getName() + "] : " + e.getMessage());
+	            //If it does not contain a markup of omt then don't show it
+	            try
+	            {
+            			RDFResource r = (RDFResource) instance;
+	            		Collection c=r.getComments();
+	            		if ( !c.contains("omt") )
+	            		{
+	            			i.remove();
+	            			//System.out.println("*** Removing '" + instance.getName() + "' from list because it is not OMT tagged");
+	            		}
+	            }
+	            catch (Exception e)
+	            {
+	            		System.err.println("*** Exception: Unable to make an instance of [" + instance.getName() + "] : " + e.toString());
+	            }
             }
         }
         return visibleInstances;
@@ -735,7 +737,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
 
     private void updateButtons() {
-        Cls cls = (Cls) CollectionUtilities.getFirstItem(classes);
+        Cls cls = (Cls) CollectionUtilities.getFirstItem(classes); //formerly
         createAction.setEnabled(cls == null ? false : cls.isConcrete());
         //createAnonymousAction.setEnabled(cls == null ? false : cls.isConcrete()); //removed because OMT doesnt support
 

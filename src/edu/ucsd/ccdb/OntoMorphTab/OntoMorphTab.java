@@ -51,12 +51,14 @@ public class OntoMorphTab extends AbstractTabWidget {
         JSplitPane mainSplitPane = createMainSplitPane();
         add(mainSplitPane);
 
+        //Show all the individuals which have already been made in the ontology
+        	assertedInstancesListPanel.reload();
 
     }
 
     //initialize & return the cvapp GUI
     //This has been changed, it used to create  'new' neuron editor panel and return it
-    private neuronEditorPanel getNeuronEditorPanel() {
+    private neuronEditorPanel makeNeuronEditorPanel() {
 
     		//CA Maybe this is the start location of the data? - NOPE
         int w = 300; //300
@@ -74,7 +76,7 @@ public class OntoMorphTab extends AbstractTabWidget {
     protected JSplitPane createMainSplitPane() {
         JSplitPane mainSplitPane = ComponentFactory.createLeftRightSplitPane();
         //set the left component to the cvapp GUI
-        neuronPanel = getNeuronEditorPanel(); //the panel needs to be intialized from null delcaration
+        neuronPanel = makeNeuronEditorPanel(); //the panel needs to be intialized from null delcaration
         mainSplitPane.setLeftComponent(neuronPanel);
         //set the right component to an instances panel with a splitter
         mainSplitPane.setRightComponent(createInstanceSplitter());
@@ -203,19 +205,21 @@ public class OntoMorphTab extends AbstractTabWidget {
     		for (int i=0; i < objNotes.length; i++)
     		{
     			strOne = objNotes[i].toString();
-    			begin = strOne.substring(0,6);		//for conveiniance of equals() method
-    			number = strOne.substring(8); 		//remove all the prefix string data
+
+    			//Get the number if it exists
+    			if (strOne.length() > 8) number = strOne.substring(8); 		//remove all the prefix string data
+
     			//First point
-    			if ( "omt_n1".equals(begin) ) 			//Can't use the == operator here, returns false even if true
+    			if ( strOne.startsWith("omt_n1") ) 			//Can't use the == operator here, returns false even if true
     			{
     				a = Integer.parseInt(number);
     			}
     			//Second point
-    			else if ("omt_n2".equals(begin))
+    			else if (strOne.startsWith("omt_n2"))
     			{
     				b = Integer.parseInt(number);
     			}
-    			else if ("omt_me".equals(begin))
+    			else if (strOne.startsWith("omt_me"))
     			{
     				method = Integer.parseInt(number);
     			}
@@ -262,7 +266,7 @@ public class OntoMorphTab extends AbstractTabWidget {
     		else
     		{
     			neuronPanel.setNormal();	//deselect any possible selection
-    			System.out.println("*** De-Selection via selectNeuro()");
+    			//System.out.println("*** De-Selection via selectNeuro()");
     		}
     	}
 
