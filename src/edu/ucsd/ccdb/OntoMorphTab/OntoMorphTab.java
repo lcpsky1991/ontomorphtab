@@ -51,8 +51,6 @@ public class OntoMorphTab extends AbstractTabWidget {
         JSplitPane mainSplitPane = createMainSplitPane();
         add(mainSplitPane);
 
-        assertedInstancesListPanel.initialize();
-
     }
 
     //initialize & return the cvapp GUI

@@ -277,7 +277,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
                 		acsum.add(r);
 
                 		removeClsListeners();
-                		classes = new ArrayList(acsum);
+                		classes = acsum;
                 		list.setClasses(acsum);
 
 
@@ -634,11 +634,12 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         removeInstanceListeners();
         Object selectedValue = list.getSelectedValue();
         Set instanceSet = new LinkedHashSet();
-        Iterator i = classes.iterator();
-        while (i.hasNext()) {
-            Cls cls = (Cls) i.next();
-            instanceSet.addAll(getInstances());
-        }
+
+
+        //I want the indivs to appear regardless of whether a class is selected
+
+        	instanceSet.addAll(getInstances());
+
         List instances = new ArrayList(instanceSet);
         if (instances.size() <= SORT_LIMIT) {
             Collections.sort(instances, new FrameComparator());
@@ -657,10 +658,8 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
     public void initialize()
     {
-    		System.out.println("*** Initialized");
-
+    		System.out.println("*** Initializing");
     		reload();
-
     }
 
     private void reloadHeader(Collection clses) {
@@ -727,8 +726,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 	            try
 	            {
             			RDFResource r = (RDFResource) instance;
-	            		Collection c=r.getComments();
-	            		if ( !c.contains("omt") )
+	            		if ( !r.getComments().contains("omt") )
 	            		{
 	            			i.remove();
 	            			//System.out.println("*** Removing '" + instance.getName() + "' from list because it is not OMT tagged");
