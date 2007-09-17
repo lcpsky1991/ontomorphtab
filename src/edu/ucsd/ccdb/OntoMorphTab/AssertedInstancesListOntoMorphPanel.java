@@ -16,7 +16,10 @@ import edu.stanford.smi.protege.ui.FrameRenderer;
 import edu.stanford.smi.protege.ui.HeaderComponent;
 import edu.stanford.smi.protege.util.*;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
+import edu.stanford.smi.protegex.owl.model.OWLOntology;
+import edu.stanford.smi.protegex.owl.model.RDFProperty;
 import edu.stanford.smi.protegex.owl.model.RDFResource;
+import edu.stanford.smi.protegex.owl.model.RDFSDatatype;
 import edu.stanford.smi.protegex.owl.ui.OWLLabeledComponent;
 import edu.stanford.smi.protegex.owl.ui.ProtegeUI;
 import edu.stanford.smi.protegex.owl.ui.dialogs.DefaultSelectionDialogFactory;
@@ -147,8 +150,6 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         // initializeShowSubclassInstances();
         lc.setHeaderLabel("Asserted Instances");
 
-        //Initialize
-        //Show all the individuals which have already been made in the ontology
         initialize();
 
     }
@@ -343,6 +344,48 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     		return developerCommand;
     }
 
+    public void assignImgSelection(RDFResource resItem, String URL, int method, int n1, int n2)
+    {
+
+    		//Add data - NEEDS prefix
+    		RDFProperty propReady, propURL, prop1, prop2, propMethod;
+
+    		//Look up the property objects to be set
+    		propURL = owlModel.getRDFProperty(oTab.namespacePrefix + ":" + oTab.pURL);
+    		propReady = owlModel.getRDFProperty(oTab.namespacePrefix + ":" + oTab.pReady);
+    		prop1 = owlModel.getRDFProperty(oTab.namespacePrefix + ":" + oTab.pn1);
+    		prop2 = owlModel.getRDFProperty(oTab.namespacePrefix + ":" + oTab.pn2);
+    		propMethod = owlModel.getRDFProperty(oTab.namespacePrefix + ":" + oTab.pMethod);
+
+    		if ( propURL == null || propReady == null || prop1 == null || prop2 == null || propMethod == null)
+    		{
+    			System.out.println("*** Error: Could not assigning selection: one of the properties does not exist ontology may be missing " + resItem.getNamespace());
+    		}
+    		else
+    		{
+        		System.out.println("*** Adding properties to " + resItem.getName() + " " + URL + " m" + method + " p" + n1 + " p" + n2);
+
+        		//If the resource doesn't have the properties, then add them, else set
+        		if ( !resItem.hasPropertyValue(propURL) ) resItem.addPropertyValue(propURL, URL);
+        		//METHOD
+        		if ( !resItem.hasPropertyValue(propMethod) ) resItem.addPropertyValue(propMethod, method);
+        		//P1
+        		if ( !resItem.hasPropertyValue(prop1) ) resItem.addPropertyValue(prop1, n1);
+        		//P2
+        		if ( !resItem.hasPropertyValue(prop2) ) resItem.addPropertyValue(prop2, n2);
+        		//READY
+        		if ( !resItem.hasPropertyValue(propReady) ) resItem.addPropertyValue(propReady, true);
+
+        		resItem.setPropertyValue(propURL, URL);
+        		resItem.setPropertyValue(propMethod, method);
+        		resItem.setPropertyValue(propReady, true);
+        		resItem.setPropertyValue(prop1, n1);
+        		resItem.setPropertyValue(prop2, n2);
+    		}
+
+	}
+
+
     protected Action createAssignNeuroSelection() {
         assignNeuroSelection = new CreateAction("Assign Neuroleucide Selection to the selected Instance", OWLIcons.getCreateIndividualIcon(OWLIcons.ACCEPT)) {
             public void onCreate()
@@ -384,37 +427,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
             }
 
-            public void assignImgSelection(RDFResource resItem, String URL, int method, int n1, int n2)
-            {
 
-	        		Object[] objNotes = resItem.getComments().toArray();
-	        		String strOne="";
-	        		String begin="";
-	        		//First, remove the old data
-	        		//String strNotes[] = (String[])cnotes.toArray(new String[0]);
-	        		for (int i=0; i < objNotes.length; i++)
-	        		{
-	        			strOne = objNotes[i].toString();
-	        			begin = strOne.substring(0,3);		//for conveiniance of equals() method
-	        			if ( "omt".equals(begin) ) 			//Can't use the == operator here, returns false even if true
-	        			{
-	        				System.out.println("*** Removing Comment: " + strOne);
-	        				resItem.removeComment(strOne);
-	        			}
-	        		}
-
-
-	        			//TODO: Don't store data using hardcoded strings, "omt_" should be a global
-	        		System.out.println("*** Now setting Neuroleucida Comments");
-	        		//And add the new data
-	        		resItem.addComment("omt_url: " + URL);
-	        		resItem.addComment("omt_n1: " + n1);
-	        		resItem.addComment("omt_n2: " + n2);
-	        		resItem.addComment("omt_me: " + method);
-	        		resItem.addComment("omt");
-
-
-        		}
         };
         return assignNeuroSelection;
     }
@@ -635,10 +648,12 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         Object selectedValue = list.getSelectedValue();
         Set instanceSet = new LinkedHashSet();
 
+        Collection found = getInstances();
 
-        //I want the indivs to appear regardless of whether a class is selected
+        System.out.println("*** reloading list");
 
-        	instanceSet.addAll(getInstances());
+        if ( found != null )
+        		instanceSet.addAll(found);
 
         List instances = new ArrayList(instanceSet);
         if (instances.size() <= SORT_LIMIT) {
@@ -658,9 +673,13 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
     public void initialize()
     {
-    		System.out.println("*** Initializing");
+    		//Find out what the namespace prefix is for looking up properties
+    		System.out.println("*** Initializing ...");
     		reload();
+    		System.out.println("*** ... List loaded");
     }
+
+
 
     private void reloadHeader(Collection clses) {
         StringBuffer text = new StringBuffer();
@@ -674,6 +693,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
             }
             if (text.length() != 0) {
                 text.append(", ");
+                System.out.println("* Classes has " + cls.getName());
             }
             text.append(cls.getName());
 
@@ -686,61 +706,23 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
 
     private Collection getInstances() {
-        //CA: does this filter out the classes that are not relevant?
-    		//returns all of the INSTANCES of a specified class!
-
-
-    		Collection instances;
-
-    		//Commented out is the original code that hides subclasses unless otherwise specified
-//        if (showSubclassInstances) {
-//            instances = cls.getInstances();
-//        }
-//        else {
-//            instances = cls.getDirectInstances();
-//        }
-//
+    		//method returns all instances which are aware of ontomorph tab
+    		Collection instances=null;
 
         //instances = cls.getInstances();
-        instances = owlModel.getRDFIndividuals();
-        instances = filterInstances(instances);	//this is an attempt to hide the instances that show up which are unknown
+    		RDFProperty ready = owlModel.getRDFProperty(oTab.namespacePrefix + ":" + oTab.pReady);
+
+    		if ( ready != null )
+    		{
+    			instances = owlModel.getRDFResourcesWithPropertyValue(ready, true);
+    		}
+    		else
+    		{
+    			System.out.println("*** Could not lookup property defintion for " + oTab.pReady + " Ontology not imported");
+    		}
 
         return instances;
     }
-
-
-    private static Collection filterInstances(Collection instances) {
-        Collection visibleInstances = new ArrayList(instances);
-        Iterator i = visibleInstances.iterator();
-        while (i.hasNext()) {
-            Instance instance = (Instance) i.next();
-            if (!instance.isVisible() || instance.isSystem() || !instance.isEditable() || instance.isDeleted() )
-            {
-            		//System.out.println("*** Removing '" + instance.getName() + "' from list because [invisible|system|!editable|deleted]");
-                i.remove();
-            }
-
-            else
-            {
-	            //If it does not contain a markup of omt then don't show it
-	            try
-	            {
-            			RDFResource r = (RDFResource) instance;
-	            		if ( !r.getComments().contains("omt") )
-	            		{
-	            			i.remove();
-	            			//System.out.println("*** Removing '" + instance.getName() + "' from list because it is not OMT tagged");
-	            		}
-	            }
-	            catch (Exception e)
-	            {
-	            		System.err.println("*** Exception: Unable to make an instance of [" + instance.getName() + "] : " + e.toString());
-	            }
-            }
-        }
-        return visibleInstances;
-    }
-
 
     public void sort() {
         list.setListenerNotificationEnabled(false);
@@ -763,13 +745,14 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
     public void debug()
     {
-
-    		initialize();
+    		//This function's purpose is only for development. This code is run whenever the developer button is pressed
+    		//It is meant as conveiniance of temporary testing code
+    		reload();
     }
 
     private void updateButtons() {
         Cls cls = (Cls) CollectionUtilities.getFirstItem(classes); //formerly
-        createAction.setEnabled(cls == null ? false : cls.isConcrete());
+        createAction.setEnabled(true);
         //createAnonymousAction.setEnabled(cls == null ? false : cls.isConcrete()); //removed because OMT doesnt support
 
         //Make the button inactive while no viable class is selected

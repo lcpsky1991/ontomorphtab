@@ -30,12 +30,26 @@ import edu.stanford.smi.protegex.owl.ui.resourcedisplay.ResourcePanel;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protege.widget.AbstractTabWidget;
 
+
+
+
+
 // an example tab
 public class OntoMorphTab extends AbstractTabWidget {
-    /**
-	 *
-	 */
 	private static final long serialVersionUID = 4598424440166134279L;
+
+
+	//	Global information and labeling
+	final String URI = "http://ccdb.ucsd.edu/SAO/ontomorph/1.0/"; //http://ccdb.ucsd.edu/SAO/ontomorph/1.0/
+	final String title = "Onto Morph Tab v0.1";
+	final String idPrefix = "omt";
+	String namespacePrefix;	//hopefully the same as idPrefix //TODO: make it the same
+
+	final String pURL = idPrefix + "_url";	//String label for URL property
+	final String pMethod = idPrefix + "_me"; //String label for method property
+	final String pn1 = idPrefix + "_n1"; //String label for point 1
+	final String pn2 = idPrefix + "_n2"; //String label for point 2
+	final String pReady = idPrefix; //String label for omt-flag ready
 
     ResourcePanel resourcePanel;
 
@@ -44,14 +58,26 @@ public class OntoMorphTab extends AbstractTabWidget {
 
     neuronEditorPanel neuronPanel=null;	//this needs to be global to ontomorph tab so the different panels can access other elements
 
+    OWLModel ontoModel = null;
 
     public void initialize() {
+
+    		ontoModel = (OWLModel)getKnowledgeBase();	//Get hte owl Model because this is used alot
+    		namespacePrefix = findPrefix();				//get the prefix, useful for finding properties
+
+    		System.out.println("*** Prefix set to: '" + namespacePrefix + "'");
+
         initializeTabLabel();
 
         JSplitPane mainSplitPane = createMainSplitPane();
         add(mainSplitPane);
 
+
+
+
+
     }
+
 
     //initialize & return the cvapp GUI
     //This has been changed, it used to create  'new' neuron editor panel and return it
@@ -70,6 +96,7 @@ public class OntoMorphTab extends AbstractTabWidget {
     //split the tab real estate with a vertical line
 
 
+
     protected JSplitPane createMainSplitPane() {
         JSplitPane mainSplitPane = ComponentFactory.createLeftRightSplitPane();
         //set the left component to the cvapp GUI
@@ -83,7 +110,7 @@ public class OntoMorphTab extends AbstractTabWidget {
 
     //take care of the label that appears on the tab itself
     private void initializeTabLabel() {
-        setLabel("Onto Morph Tab CA");
+        setLabel(title);
         setIcon(Icons.getInstanceIcon());
     }
 
@@ -91,7 +118,7 @@ public class OntoMorphTab extends AbstractTabWidget {
     private JComponent createInstanceSplitter() {
         JSplitPane pane = createLeftRightSplitPane("InstancesTab.right.left_right", 250);
         pane.setLeftComponent(createInstancesPanel());
-        resourcePanel = ProtegeUI.getResourcePanelFactory().createResourcePanel((OWLModel)getKnowledgeBase(), ResourcePanel.DEFAULT_TYPE_INDIVIDUAL);
+        resourcePanel = ProtegeUI.getResourcePanelFactory().createResourcePanel(ontoModel, ResourcePanel.DEFAULT_TYPE_INDIVIDUAL);
         pane.setRightComponent((Component) resourcePanel);
         return pane;
     }
@@ -106,7 +133,7 @@ public class OntoMorphTab extends AbstractTabWidget {
 
     protected AssertedInstancesListOntoMorphPanel createAssertedInstancesListPanel()
     {
-        AssertedInstancesListOntoMorphPanel aiPanel = new AssertedInstancesListOntoMorphPanel((OWLModel)getKnowledgeBase(), this);
+        AssertedInstancesListOntoMorphPanel aiPanel = new AssertedInstancesListOntoMorphPanel(ontoModel, this);
         aiPanel.addSelectionListener(new SelectionListener() {
             public void selectionChanged(SelectionEvent event) {
                 Collection selection = assertedInstancesListPanel.getSelection();
@@ -170,7 +197,7 @@ public class OntoMorphTab extends AbstractTabWidget {
     }
 
     protected JComponent createDirectTypesList() {
-        typesListPanel = new AssertedTypesListPanel((OWLModel)getKnowledgeBase());
+        typesListPanel = new AssertedTypesListPanel(ontoModel);
         return typesListPanel;
     }
 
@@ -184,69 +211,66 @@ public class OntoMorphTab extends AbstractTabWidget {
         edu.stanford.smi.protege.Application.main(args);
     }
 
+    public String findPrefix()
+    {
+    		//Need to know what the prefix is for ontology so its easier to locate properties
+		Collection props = ontoModel.getRDFProperties();
+		Iterator i = props.iterator();
+
+		i = props.iterator();
+		while ( i.hasNext() )
+		{
+			RDFProperty data = (RDFProperty) i.next();
+			if ( URI.equals(data.getNamespace()) )
+			{
+				return data.getNamespacePrefix();
+			}
+		}
+		return "[" + idPrefix + " error]";
+    }
+
     public void selectNeuro(RDFResource resItem)
     {
-    		Collection notes = resItem.getComments();
-
-    		Object[] objNotes = resItem.getComments().toArray();
-    		String strOne="";	//any one line of comment
-    		String begin="";		//prefix of string
-    		String number="";	//the number in string
     		String loc="none";
-
     		int method=-1;	//the selection method, default -1
     		int a=1;	//first point
     		int b=3;	//second point
+    		Object val; //used fo temporary store of property value
+    		//TODO: read the values
 
-    		//parse through the notes and find all the relevant information
-    		for (int i=0; i < objNotes.length; i++)
+    		try
     		{
-    			strOne = objNotes[i].toString();
-
-    			//Get the number if it exists
-    			if (strOne.length() > 8) number = strOne.substring(8); 		//remove all the prefix string data
-
-    			//First point
-    			if ( strOne.startsWith("omt_n1") ) 			//Can't use the == operator here, returns false even if true
-    			{
-    				a = Integer.parseInt(number);
-    			}
-    			//Second point
-    			else if (strOne.startsWith("omt_n2"))
-    			{
-    				b = Integer.parseInt(number);
-    			}
-    			else if (strOne.startsWith("omt_me"))
-    			{
-    				method = Integer.parseInt(number);
-    			}
-
-    			//get the url
-    			if ( strOne.startsWith("omt_url") )
-    			{
-    				loc = strOne.substring(strOne.indexOf(" ") + 1);
-    			}
+    			//Attempt to get the property values, false parameter avoids subproperties
+    			//casting an Integer from a null object will throw an exception, so check for null objects
+    			val = resItem.getPropertyValue(ontoModel.getRDFProperty(namespacePrefix + ":" + pURL), false);
+    			if (val != null) loc = (String) val;
+    			val = resItem.getPropertyValue(ontoModel.getRDFProperty(namespacePrefix + ":" + pn1), false);
+    			if (val != null) a = (Integer) val;
+	    		val = resItem.getPropertyValue(ontoModel.getRDFProperty(namespacePrefix + ":" + pn2), false);
+	    		if (val != null) b = (Integer) val;
+	    		val = resItem.getPropertyValue(ontoModel.getRDFProperty(namespacePrefix + ":" + pMethod), false);
+	    		if (val != null) method = (Integer) val;
+    		}
+    		catch (Exception e)
+    		{
+    			System.err.println("*** Error selecting " + resItem.getName() + " (Properties do not exist, has OntoMorphTab ontology been imported? " + resItem.getNamespace() + ") Message[" + e.getMessage() + "] ");
     		}
 
        	//will only make a selection if there is a valid entry for the method
     		//I am betting that if the method is valid then the point data is valid and -1 is an invalid method
     		if (method > -1)
     		{
-    			//If the current image is not the proper image, then download the corrent image, change images and then select
+    			//If the current image is not the proper image, then download the correct image, change images and then select
     			if ( !neuronPanel.getURL().equalsIgnoreCase(loc) )
     			{
     				System.out.println("*** Changing neurolucida image");
     				//The following is modified version of setDataFromURL(String surl) of neuronEditorPanel.java
-    				//****
     				URL u = null;
     				try
     				{
     					u = new URL(loc);
-
     					String[] sdat = neuronPanel.readStringArrayFromURL(u);
-
         				neuronPanel.setCell(sdat, u.getHost(), u.getFile()); //setCell(sdat, hostroot, surl)
-
         				neuronPanel.setURL(loc);		//since we changed images, it is approipriate to update the URL
     				}
     				catch (Exception e)
@@ -255,7 +279,6 @@ public class OntoMorphTab extends AbstractTabWidget {
     				}
     			}
 
-    			//***
     			//Make the selection on the current image
     			neuronPanel.makeSelection(method, a, b);
     			System.out.println("*** Making Selection: [m=" + method + ", a=" + a + ", b=" + b + "] via selectNeuro()");
