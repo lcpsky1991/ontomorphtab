@@ -150,8 +150,6 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         // initializeShowSubclassInstances();
         lc.setHeaderLabel("Asserted Instances");
 
-        initialize();
-
     }
 
 
@@ -674,7 +672,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     public void initialize()
     {
     		//Find out what the namespace prefix is for looking up properties
-    		System.out.println("*** Initializing ...");
+    		System.out.println("*** Initializing asserted list ...");
     		reload();
     		System.out.println("*** ... List loaded");
     }
@@ -718,7 +716,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     		}
     		else
     		{
-    			System.out.println("*** Could not lookup property defintion for " + oTab.pReady + " Ontology not imported");
+    			System.out.println("*** Could not lookup property defintion for " + oTab.namespacePrefix + ":" + oTab.pReady + " Ontology not imported");
     		}
 
         return instances;

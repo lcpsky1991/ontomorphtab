@@ -1,10 +1,17 @@
 package edu.ucsd.ccdb.OntoMorphTab;
 
 import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URI;
 import java.net.URL;
 import java.util.*;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
@@ -19,15 +26,18 @@ import edu.stanford.smi.protege.util.PopupMenuMouseListener;
 import edu.stanford.smi.protege.util.Selectable;
 import edu.stanford.smi.protege.util.SelectionEvent;
 import edu.stanford.smi.protege.util.SelectionListener;
+import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLDatatypeProperty;
 import edu.stanford.smi.protegex.owl.model.RDFProperty;
 import edu.stanford.smi.protegex.owl.model.RDFResource;
+import edu.stanford.smi.protegex.owl.swrl.model.SWRLNames;
 import edu.stanford.smi.protegex.owl.ui.ProtegeUI;
 import edu.stanford.smi.protegex.owl.ui.actions.ResourceActionManager;
 import edu.stanford.smi.protegex.owl.ui.individuals.AssertedTypesListPanel;
 import edu.stanford.smi.protegex.owl.ui.resourcedisplay.ResourceDisplay;
 import edu.stanford.smi.protegex.owl.ui.resourcedisplay.ResourcePanel;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
+import edu.stanford.smi.protegex.owl.model.util.ImportHelper;
 import edu.stanford.smi.protege.widget.AbstractTabWidget;
 
 
@@ -41,8 +51,10 @@ public class OntoMorphTab extends AbstractTabWidget {
 
 	//	Global information and labeling
 	final String URI = "http://ccdb.ucsd.edu/SAO/ontomorph/1.0/"; //http://ccdb.ucsd.edu/SAO/ontomorph/1.0/
+	final String default_OWL_URL = URI + "";
 	final String title = "Onto Morph Tab v0.1";
-	final String idPrefix = "omt";
+	final String idPrefix = "omt";					//how the properties are prefixed
+	final String preferredPrefix = "ontomorph";	//the preffered prefix for the namespace
 	String namespacePrefix;	//hopefully the same as idPrefix //TODO: make it the same
 
 	final String pURL = idPrefix + "_url";	//String label for URL property
@@ -51,33 +63,112 @@ public class OntoMorphTab extends AbstractTabWidget {
 	final String pn2 = idPrefix + "_n2"; //String label for point 2
 	final String pReady = idPrefix; //String label for omt-flag ready
 
-    ResourcePanel resourcePanel;
+	OWLModel ontoModel = null;
 
+    ResourcePanel resourcePanel;
     AssertedInstancesListOntoMorphPanel assertedInstancesListPanel;
     AssertedTypesListPanel typesListPanel;
-
     neuronEditorPanel neuronPanel=null;	//this needs to be global to ontomorph tab so the different panels can access other elements
 
-    OWLModel ontoModel = null;
 
     public void initialize() {
 
     		ontoModel = (OWLModel)getKnowledgeBase();	//Get hte owl Model because this is used alot
     		namespacePrefix = findPrefix();				//get the prefix, useful for finding properties
 
-    		System.out.println("*** Prefix set to: '" + namespacePrefix + "'");
 
-        initializeTabLabel();
+    		System.out.println("*** Initializing ontomorphtab");
+    		System.out.println("*** Prefix started as " + namespacePrefix);
 
-        JSplitPane mainSplitPane = createMainSplitPane();
-        add(mainSplitPane);
+    		//If the prefix is null then the ontology is not imported
+    		if ( isOntologyLoaded() )
+    		{
+    			//remove the notices and show the GUI
+    			//Make it ready before building interface
+    			//namespacePrefix = findPrefix();
+    			//System.out.println("*** Prefix renamed to " + namespacePrefix);
+    			buildInterface();	//display the GUI
+
+    		}
+    		else
+    		{	//The ontomorph ontology was not found with a prefix, assume it's not been imported
+    			setLayout(new FlowLayout());
+    			JButton impButton = new JButton("Import");
+
+    			add(new JLabel("Your ontology needs to import the OntoMorphTab ontology (" + URI + ")"));
+    	        impButton.addActionListener(new ActionListener()
+    	        {
+    	            public void actionPerformed(ActionEvent e)
+    	            {
+
+    	            		//if the ontology finishes successfully then go ahead and build the interface
+    	            		if ( loadOntology() )
+    	            		{
+    	            			//when protege is finished importing, ontomorph will be re-initialized (call this function again)
+    	            			System.out.println("Load ontology finished");
+
+    	            		}
+    	            		else
+    	            		{	//Load Ontology Failed
+    	            			//loading of the ontology was unsuccessful, so unload it
+    	            			System.out.println("*** Load ontology failed");
+    	            		}
+    	            }
+    	        });
+    	        add(impButton);
+
+    		}
 
 
-
-
-
+        initializeTabLabel();	//lets do this last, so that if it's not done then there's been an error
     }
 
+    private void buildInterface()
+    {
+    		System.out.println("*** Building interface");
+    		removeAll(); //clear the panels that were there before
+    		//The ontomorph ontology has been found with a prefix, so act normal
+		JSplitPane mainSplitPane = createMainSplitPane();
+		add(mainSplitPane);
+		repaint();
+    }
+
+    private boolean loadOntology()
+    {
+    		//code to import the ontology
+    		JenaOWLModel owlModel = (JenaOWLModel) getKnowledgeBase();
+
+    		if ( (owlModel instanceof OWLModel) )
+    		{
+	    	    	try
+	    	    	{
+	    	    		ImportHelper importHelper = new ImportHelper((JenaOWLModel)getKnowledgeBase());
+
+	    	    		//add the ontologies to the import list, this queus up for import
+	    	    		System.out.println("*** Attempting import " + default_OWL_URL);
+	    	    		importHelper.addImport(new URI(default_OWL_URL));
+
+	    	    		owlModel.getNamespaceManager().setPrefix(new URI(URI), preferredPrefix );
+
+	    	    		//the ontologies have only been added to a queue, now process that queue
+	    	    		importHelper.importOntologies(true);
+
+
+    	    			return true;
+
+	    	    	}
+	    	    	catch(Exception e)
+	    	    	{
+	    	    		System.err.println("*** Exception caught in attempting to import the onology (" + URI + "): " + e.getMessage());
+	    	    	}
+    		}
+    		else
+    		{
+    			System.out.println("*** Error loading the ontology, knowledgebase is not an OWLModel. This tab can only be used with OWL projects.");
+    		}
+
+	    	return false;
+    }
 
     //initialize & return the cvapp GUI
     //This has been changed, it used to create  'new' neuron editor panel and return it
@@ -88,14 +179,23 @@ public class OntoMorphTab extends AbstractTabWidget {
         int h = 250; //250
 
         neuronEditorPanel neupan = new neuronEditorPanel(w, h, getFont());
-
-
         return neupan;
     }
 
     //split the tab real estate with a vertical line
 
+    public boolean isOntologyLoaded()
+    {
+    		//returns true if the ontomorphtab ontology is imported WITH omt-ready property definition available
+		RDFProperty ready = ontoModel.getRDFProperty(findPrefix() + ":" + pReady);
 
+		if ( ready != null )	//defintion exists
+		{
+			return true;
+		}
+
+		return false;
+    }
 
     protected JSplitPane createMainSplitPane() {
         JSplitPane mainSplitPane = ComponentFactory.createLeftRightSplitPane();
@@ -116,7 +216,7 @@ public class OntoMorphTab extends AbstractTabWidget {
 
 
     private JComponent createInstanceSplitter() {
-        JSplitPane pane = createLeftRightSplitPane("InstancesTab.right.left_right", 250);
+        JSplitPane pane = createLeftRightSplitPane("InstancesTab.right.left_right", 250); //("InstancesTab.right.left_right", 250)
         pane.setLeftComponent(createInstancesPanel());
         resourcePanel = ProtegeUI.getResourcePanelFactory().createResourcePanel(ontoModel, ResourcePanel.DEFAULT_TYPE_INDIVIDUAL);
         pane.setRightComponent((Component) resourcePanel);
@@ -213,7 +313,9 @@ public class OntoMorphTab extends AbstractTabWidget {
 
     public String findPrefix()
     {
+    		//return the prefix for what corresponds to the namespace
     		//Need to know what the prefix is for ontology so its easier to locate properties
+
 		Collection props = ontoModel.getRDFProperties();
 		Iterator i = props.iterator();
 
@@ -226,7 +328,7 @@ public class OntoMorphTab extends AbstractTabWidget {
 				return data.getNamespacePrefix();
 			}
 		}
-		return "[" + idPrefix + " error]";
+		return null;
     }
 
     public void selectNeuro(RDFResource resItem)
