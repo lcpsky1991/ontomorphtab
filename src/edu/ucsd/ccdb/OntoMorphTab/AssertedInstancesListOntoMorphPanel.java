@@ -247,20 +247,10 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         createAction = new CreateAction("Create instance", OWLIcons.getCreateIndividualIcon(OWLIcons.RDF_INDIVIDUAL)) {
             public void onCreate() {
             	//Every time you hit the create new instance button, pop up the class chooser
-            	/*
-                if (!classes.isEmpty()) {
-                    Instance instance = owlModel.createInstance(null, classes);
-                    if (instance instanceof Cls) {
-                        Cls newCls = (Cls) instance;
-                        if (newCls.getDirectSuperclassCount() == 0) {
-                            newCls.addDirectSuperclass(owlModel.getOWLThingClass());
-                        }
-                    }
-                    list.setSelectedValue(instance, true);
-                } else {*/
-                	RDFResource r = (RDFResource) ProtegeUI.getSelectionDialogFactory().selectClass(AssertedInstancesListOntoMorphPanel.this, owlModel,
-                                "Select a named class to add");
-                	if (r instanceof Cls)
+
+
+                	RDFResource newResource = (RDFResource) ProtegeUI.getSelectionDialogFactory().selectClass(AssertedInstancesListOntoMorphPanel.this, owlModel, "Select a named class to add");
+                	if (newResource instanceof Cls)
                 	{
 
                 		/* How creation works:
@@ -270,22 +260,13 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 						4. create the instance in the owlModel
 						5. set the selected on the display list value to match
                 		*/
-                		ArrayList acsum = new ArrayList();
 
-                		acsum.addAll(classes); //get all the otehr classes first
-                		acsum.add(r);
+                		ArrayList type = new ArrayList();
+                		type.add(newResource);
 
                 		removeClsListeners();
-                		classes = acsum;
-                		list.setClasses(acsum);
 
-
-                		reload();
-                		updateButtons();
-                		addClsListeners();
-
-
-                		Instance instance = owlModel.createInstance(null, classes);
+                		Instance instance = owlModel.createInstance(null, type);
                 		if (instance instanceof Cls) {
                 			Cls newCls = (Cls) instance;
                 			//if this is a top level class, make it at least be a subclass of owlThing
@@ -295,13 +276,17 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
                 		}
 
                 		//make it ready for markup
-                		r = (RDFResource) instance;
-                		r.addComment("omt");		//this flags the class as being ready to markup and therefore it will show up in the list
-                		System.out.println("*** New OMT individual: " + r.getName());
+                		newResource = (RDFResource) instance;
+                		assignImgSelection(newResource, "none", 0, 0, 0);
+                		System.out.println("*** New OMT individual: " + newResource.getName());
+
+                		//Reload the list
+                		reload();
+                		updateButtons();
+                		addClsListeners();
 
                 		list.setSelectedValue(instance, true);
                 	}
-                //}
             }
         };
         return createAction;
@@ -385,7 +370,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
 
     protected Action createAssignNeuroSelection() {
-        assignNeuroSelection = new CreateAction("Assign Neuroleucide Selection to the selected Instance", OWLIcons.getCreateIndividualIcon(OWLIcons.ACCEPT)) {
+        assignNeuroSelection = new CreateAction("Assign Neuroleucida Selection to the selected Instance", OWLIcons.getCreateIndividualIcon(OWLIcons.ACCEPT)) {
             public void onCreate()
             {
             		//*
@@ -665,7 +650,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
             list.setSelectedIndex(0);
         }
         addInstanceListeners();
-        reloadHeader(classes);
+        reloadHeader(found);
         updateLabel();
     }
 
@@ -679,32 +664,38 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
 
 
-    private void reloadHeader(Collection clses) {
-        StringBuffer text = new StringBuffer();
-        Icon icon = null;
-        Iterator i = clses.iterator();
+    private void reloadHeader(Collection individuals)
+	{
+		Icon icon = null;
+		Iterator i = individuals.iterator();
+		String strNames="";
+		final String para = ", ";
 
-        while (i.hasNext()) {
-            Cls cls = (Cls) i.next();
-            if (icon == null) {
-                icon = cls.getIcon();
-            }
-            if (text.length() != 0) {
-                text.append(", ");
-                System.out.println("* Classes has " + cls.getName());
-            }
-            text.append(cls.getName());
+		while (i.hasNext())
+		{
+			Instance ind = (Instance) i.next();
 
-            System.out.println("*** Class for header '" + cls.getName() + "'");
-        }
-        JLabel label = (JLabel) header.getComponent();
-        label.setText(text.toString());
-        label.setIcon(icon);
-    }
+			//get the first available icon
+			if (icon == null)	icon = ind.getIcon();
+
+			//add the name if it is not already in existance
+			if (!strNames.contains(ind.getDirectType().getBrowserText()))
+			{
+				strNames += ind.getDirectType().getBrowserText() + para;
+			}
+			System.out.println("*** Classes for header: " + strNames);
+		}
+		//remove the last commas
+		strNames = strNames.substring(0, strNames.length() - para.length());
+
+		JLabel label = (JLabel) header.getComponent();
+		label.setText(strNames);
+		label.setIcon(icon);
+	}
 
 
     private Collection getInstances() {
-    		//method returns all instances which are aware of ontomorph tab
+    		// method returns all instances which are aware of ontomorph tab
     		Collection instances=null;
 
         //instances = cls.getInstances();

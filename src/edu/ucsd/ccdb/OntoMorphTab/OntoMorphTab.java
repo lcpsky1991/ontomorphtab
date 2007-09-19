@@ -51,7 +51,7 @@ public class OntoMorphTab extends AbstractTabWidget {
 
 	//	Global information and labeling
 	final String URI = "http://ccdb.ucsd.edu/SAO/ontomorph/1.0/"; //http://ccdb.ucsd.edu/SAO/ontomorph/1.0/
-	final String default_OWL_URL = URI + "";
+	final String default_OWL_URL = URI + "OMT.owl";
 	final String title = "Onto Morph Tab v0.1";
 	final String idPrefix = "omt";					//how the properties are prefixed
 	final String preferredPrefix = "ontomorph";	//the preffered prefix for the namespace
