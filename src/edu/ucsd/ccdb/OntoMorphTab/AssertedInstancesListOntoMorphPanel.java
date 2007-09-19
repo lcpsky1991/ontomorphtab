@@ -264,7 +264,15 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
                 		ArrayList type = new ArrayList();
                 		type.add(newResource);
 
+                		//** Not sure what this does, but deleteding it will criple the 'delete individual' button
+                		ArrayList acsum = new ArrayList();
+                		acsum.addAll(classes);
+                		acsum.add(newResource);
                 		removeClsListeners();
+                		classes = acsum;
+                		list.setClasses(acsum);
+                		//****
+
 
                 		Instance instance = owlModel.createInstance(null, type);
                 		if (instance instanceof Cls) {
