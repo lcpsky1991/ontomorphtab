@@ -52,6 +52,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.net.URL;
+import java.util.Hashtable;
 
 import javax.swing.JOptionPane; //TODO: Remove
 
@@ -61,6 +62,8 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private Hashtable cache = new Hashtable();	//used for storing images as strings
 
 	graphData3 neugd;
 
@@ -105,6 +108,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 	PopupMenu typeMenu;
 
+
 	String[] sectionTypes = { "undefined", "soma", "axon", "dendrite",
 			"apical dendrite", "custom-1", "custom-2", "custom-n" };
 
@@ -115,6 +119,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 	headerFrame headerF;
 
 	Panel pneucan; // neucan container - for switching with header;
+
 
 	int markType = 0;
 
@@ -352,6 +357,49 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 	public void refresh() {
 		neucan.repaint();
+	}
+
+	public void loadImage(String location)
+	{	//Purpose to load image from net if not already in cache, otherwise put it in cache
+
+		//The following is modified version of setDataFromURL(String surl) of neuronEditorPanel.java
+		URL u = null;
+		//String[] memVal=null;		//value of object in cache (if it exists)
+		Object memVal=null;
+
+		//location = location.toLowerCase();	//to prevent duplicate cahce entries
+
+		try
+		{
+			String[] sdat=null;
+			u = new URL(location);
+
+			//retreive the image from the cache hastable if it is available
+			if ( cache.containsKey(location) )
+			{
+				System.out.println("*** Loading image from cache");
+				memVal = cache.get(location);
+				sdat = (String[]) memVal;
+			}
+			else
+			{
+				//the image was not in the cache, so download the image and put it in cache
+				System.out.println("*** Loading image from net");
+				sdat = readStringArrayFromURL(u);
+				cache.put(location, sdat);
+			}
+
+			setCell(sdat, u.getHost(), u.getFile()); //setCell(sdat, hostroot, surl)
+			setURL(location);		//since we changed images, it is approipriate to update the URL
+		}
+		catch (Exception e)
+		{
+			System.err.println("*** Error in loadImage('" + location + "'): " + e.getMessage());
+			System.err.println(e.toString());
+
+
+		}
+
 	}
 
 	public void inject()
@@ -982,57 +1030,50 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 		}
 	}
 
-	public void getIndexFromURL() {
+	public void getIndexFromURL()
+	{
 		URL u1 = null;
 		URL u2 = null;
 		String ts = hostroot;
 		ts = ts.trim();
-		if (!ts.startsWith("http://"))
-			ts = "http://" + ts;
-		if (!ts.endsWith("/"))
-			ts = ts + "/";
+		if (!ts.startsWith("http://")) ts = "http://" + ts;
+		if (!ts.endsWith("/")) ts = ts + "/";
 
-		try {
+		try
+		{
 			u1 = new URL(ts);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			System.out.println("malformed URL (1) " + ts);
+			System.err.println(e.getMessage() + "\n" + e.toString());
 		}
 
-		if (u1 != null) {
+		if (u1 != null)
+		{
 			hostroot = u1.toString();
 			webAdd.setText(hostroot);
 
-			try {
+			try
+			{
 				u2 = new URL(u1, "list.html");
 
 				String[] sl = neupan.readStringArrayFromURL(u2);
 				setList(sl);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				System.out.println("malformed URL (2) " + u1 + "list.html");
+				System.err.println(e.getMessage() + "\n" + e.toString());
 			}
 		}
 	}
 
-	public void setDataFromURL(String surl) {
-		URL u = null;
-		try {
-			// u = new URL(hostroot + surl);
-			u = new URL(surl);
-		} catch (Exception e) {
-			// System.out.println("malformed URL " + hostroot + surl);
-			System.out.println("malformed URL (3) " + surl);
-		}
 
-		// hide the list before the file loads. This is a simple way to have a
-		// graphical response to selecting a file
+	public void setDataFromURL(String surl)
+	{
 		listFrame.setVisible(false); // so thatt eh user knows they clicked
-
-		//Set the internal URL for later calling back
-		neupan.currentURL = u.toString();
-
-		String[] sdat = neupan.readStringArrayFromURL(u);
-
-		neupan.setCell(sdat, hostroot, surl);
+		neupan.loadImage(surl);
 	}
 
 

@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
+import javax.swing.SwingConstants;
 
 import edu.duke.neuron.cells.cvapp.neuronEditorPanel;
 import edu.stanford.smi.protege.model.Instance;
@@ -94,8 +95,14 @@ public class OntoMorphTab extends AbstractTabWidget {
     		{	//The ontomorph ontology was not found with a prefix, assume it's not been imported
     			setLayout(new FlowLayout());
     			JButton impButton = new JButton("Import");
+    			JLabel lblInfo = new JLabel("Your ontology needs to import the OntoMorphTab ontology (" + URI + ")");
 
-    			add(new JLabel("Your ontology needs to import the OntoMorphTab ontology (" + URI + ")"));
+    			impButton.setHorizontalAlignment(SwingConstants.CENTER);
+    			impButton.setVerticalAlignment(SwingConstants.CENTER);
+    			lblInfo.setVerticalAlignment(SwingConstants.CENTER);
+    			lblInfo.setHorizontalAlignment(SwingConstants.CENTER);
+
+    			add(lblInfo);
     	        impButton.addActionListener(new ActionListener()
     	        {
     	            public void actionPerformed(ActionEvent e)
@@ -359,26 +366,14 @@ public class OntoMorphTab extends AbstractTabWidget {
     		}
 
        	//will only make a selection if there is a valid entry for the method
-    		//I am betting that if the method is valid then the point data is valid and -1 is an invalid method
-    		if (method > -1)
+    		//I am betting that if the method is valid then the point data is valid and 0 is an invalid method
+    		if (method > 0)
     		{
     			//If the current image is not the proper image, then download the correct image, change images and then select
     			if ( !neuronPanel.getURL().equalsIgnoreCase(loc) )
     			{
     				System.out.println("*** Changing neurolucida image");
-    				//The following is modified version of setDataFromURL(String surl) of neuronEditorPanel.java
-    				URL u = null;
-    				try
-    				{
-    					u = new URL(loc);
-    					String[] sdat = neuronPanel.readStringArrayFromURL(u);
-        				neuronPanel.setCell(sdat, u.getHost(), u.getFile()); //setCell(sdat, hostroot, surl)
-        				neuronPanel.setURL(loc);		//since we changed images, it is approipriate to update the URL
-    				}
-    				catch (Exception e)
-    				{
-    					System.out.println("*** The URL supplied ('" + loc + "') was malformed");
-    				}
+    				neuronPanel.loadImage(loc);
     			}
 
     			//Make the selection on the current image
@@ -396,9 +391,6 @@ public class OntoMorphTab extends AbstractTabWidget {
     {
     		return	neuronPanel.getCanvas().getSelection();
     }
-
-
-
 
 }
 

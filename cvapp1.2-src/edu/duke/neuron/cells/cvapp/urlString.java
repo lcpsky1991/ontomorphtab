@@ -31,36 +31,10 @@ import java.net.URL;
 import java.util.Vector;
 import java.awt.*;
 
+import javax.swing.JFrame;	//potentially for use with download dialog/progress bar
+
 public abstract class urlString {
 
-	/*
-	 * public static String readStringFromURL () { Frame fr = new Frame();
-	 *
-	 * File f; String sdat = "null"; FileDialog fd = new FileDialog (fr, "arg
-	 * string", FileDialog.LOAD ); fd.pack(); fd.setVisible(true); String fnm =
-	 * fd.getDirectory() + fd.getFile();
-	 *
-	 * if (fnm != null) { try { f = new File (fnm); int size = (int)f.length();
-	 * FileInputStream in = new FileInputStream (f); int bytes_read = 0; byte[]
-	 * contents = new byte[size]; while (bytes_read < size) bytes_read +=
-	 * in.read (contents, bytes_read, size-bytes_read);
-	 *
-	 * sdat = new String(contents, 0); } catch (IOException ex) {
-	 * System.out.println ("file read error "); } } return sdat; }
-	 *
-	 *
-	 * public static URL getURLToRead() { Frame fr = new Frame(); URL u = null;
-	 * System.out.println ("shold be starting file dialog now..."); String fnm;
-	 * FileDialog fd = new FileDialog (fr, "arg string", FileDialog.LOAD );
-	 * fd.pack(); fd.setVisible(true);
-	 *
-	 * System.out.println ("shold be visible..."); fnm = fd.getDirectory() +
-	 * fd.getFile(); System.out.println ("got " + fnm); // fnm =
-	 * "/users/rcc/morph/3d/000l51.asc"; return u; }
-	 *
-	 */
-
-	@SuppressWarnings("unchecked")
 	public static String[] readStringArrayFromURL(URL u)
 	{
 		Vector vs = new Vector();
@@ -80,14 +54,14 @@ public abstract class urlString {
 				String buffer;
 				long fileSize=0;	//size of file to be downloaded
 				long got=0;			//ammount of file that has been got already
+				final long factor = 1024;	//The filesize is probably counting characters, divide by 1024 for KB
 				//Will read file one line at a time into the buffer
 				//buffer contents are stored in sdat matrix, which is returned
 				//Keep readining one line until EOF is reached (null)
 
 				//Check filesize before downloading
-
 				fileSize = http.getContentLength();
-				System.out.println("Estimated filesize is: " + fileSize);
+				System.out.println("Estimated filesize is: " + fileSize / factor + "KB (" + fileSize + ")");
 
 
 
@@ -95,22 +69,20 @@ public abstract class urlString {
 				Frame info;
 
 				info = new Frame("Downloading");			//create new invisible frame with appropriate title
-				info.setLayout(new GridLayout());
+				info.setLayout(new FlowLayout());
 
 
 				TextField txtInfo = new TextField("Downloading...");
 				info.add(txtInfo, BorderLayout.CENTER);
 
-				info.pack();
-				info.setSize(700, 100);
-				info.validate();
-				info.setLocation(info.getBounds().x + 50, info.getBounds().y + 50); //put it somewhat near center of screen
+				//p is approximately center of screen
+				int p = (int) (( Toolkit.getDefaultToolkit().getScreenSize().getHeight() ) * (3/8) );
 
+				info.setSize(700, 100);
+				info.setLocation(p ,p);
 				info.validate();
 				info.setVisible(true);
-
-
-
+				info.repaint();
 
 				do
 				{
@@ -119,22 +91,22 @@ public abstract class urlString {
 					{
 						got += buffer.length();
 						vs.addElement(buffer);
-						txtInfo.setText(got + " of " + fileSize);
-						info.validate();
+						txtInfo.setText(got/factor + "KB  of " + fileSize/factor + "KB)");
 						info.repaint();
-						//System.out.println(g + " of " + fileSize);
 					}
 				} while ( buffer != null );
-
-				http.disconnect();	//close the connection to free resources
 
 				//destroy info dialog box to free resources
 				info.setVisible(false);
 				info.dispose();
+
+				http.disconnect();	//close the connection to free resources
+
 			}
 			catch (IOException ex) {
 				System.out.println("URL read error ");
 			}
+
 
 
 			System.out.println("read " + vs.size() + " lines");

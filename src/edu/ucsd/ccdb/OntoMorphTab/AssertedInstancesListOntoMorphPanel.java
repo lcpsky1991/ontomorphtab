@@ -48,7 +48,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
     private AllowableAction createAction;
 
-    private AllowableAction createAnonymousAction;
+    //private AllowableAction createAnonymousAction;
 
     private AllowableAction assignNeuroSelection; //CA intended for the button
 
@@ -691,10 +691,18 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 			{
 				strNames += ind.getDirectType().getBrowserText() + para;
 			}
-			System.out.println("*** Classes for header: " + strNames);
+
 		}
-		//remove the last commas
-		strNames = strNames.substring(0, strNames.length() - para.length());
+
+		//remove the last commas, but only do so if there is at least enough text to remove it
+		if (strNames.length() > para.length())
+		{
+			strNames = strNames.substring(0, strNames.length() - para.length());
+		}
+		else
+		{
+			strNames = "None";
+		}
 
 		JLabel label = (JLabel) header.getComponent();
 		label.setText(strNames);
