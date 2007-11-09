@@ -103,6 +103,7 @@ class neulucData extends Object {
 		return icode;
 	}
 
+
 	public String getHeaderText() {
 		return headerText;
 	}
@@ -251,6 +252,7 @@ class neulucData extends Object {
 
 	}
 
+
 	private void checkHeader() {
 		StringTokenizer st = new StringTokenizer(headerText, "\n\r");
 		StringBuffer sb = new StringBuffer();
@@ -293,10 +295,11 @@ class neulucData extends Object {
 		headerText = sb.toString();
 	}
 
-	public void fillFromSwcFile(String[] s) {
-		String ts;
+	public void fillFromSwcFile(String[] s)
+	{
+		String strToken;
 		points.removeAllElements();
-		StringBuffer hsb = new StringBuffer();
+		StringBuffer headerBuffer = new StringBuffer();
 
 		int i0, i1, iprev;
 		double[] d = new double[7];
@@ -306,15 +309,21 @@ class neulucData extends Object {
 
 		int ptind = 0;
 		int ns = s.length;
-		for (int i = 0; i < ns; i++) {
-			ts = s[i];
-			if (ts.startsWith("#")) {
-				hsb.append(ts);
-				hsb.append("\n");
-			} else if (ts.length() > 10) {
-				StringTokenizer st = new StringTokenizer(ts, ", ");
-				if (st.countTokens() == 7) {
-					for (int j = 0; j < 7; j++) {
+		for (int i = 0; i < ns; i++)
+		{
+			strToken = s[i];
+			if (strToken.startsWith("#"))
+			{
+				headerBuffer.append(strToken);
+				headerBuffer.append("\n");
+			}
+			else if (strToken.length() > 10)
+			{
+				StringTokenizer st = new StringTokenizer(strToken, ", ");
+				if (st.countTokens() == 7)
+				{
+					for (int j = 0; j < 7; j++)
+					{
 						d[j] = Double.valueOf(st.nextToken()).doubleValue();
 					}
 					i0 = (int) d[0];
@@ -325,26 +334,32 @@ class neulucData extends Object {
 					r = d[5];
 					iprev = (int) d[6];
 
-					if (i % 100 == 0) {
+					if (i % 100 == 0)
+					{
 						System.out.println(" " + i + " " + i0 + " " + x + " "
 								+ y + " " + z);
 					}
 
-					if (ptind != i0 - 1) {
+					if (ptind != i0 - 1)
+					{
 						System.out
 								.println("swc read error " + i0 + " " + ptind);
 					}
 
-					if (iprev > 0) {
+					if (iprev > 0)
+					{
 						latestPoint = (nlpoint) (points.elementAt(iprev - 1));
-					} else {
+					}
+					else
+					{
 						latestPoint = null;
 					}
 
 					newPoint = new nlpoint(ptind, i1, latestPoint, x, y, z, r);
+
+
 					points.addElement(newPoint);
-					if (latestPoint != null)
-						latestPoint.addNeighbor(newPoint);
+					if (latestPoint != null) latestPoint.addNeighbor(newPoint);
 					ptind++;
 				}
 			}
@@ -353,7 +368,7 @@ class neulucData extends Object {
 		enforceCommutativity();
 		trustLineList = false;
 		trustPointList = false;
-		headerText = hsb.toString();
+		headerText = headerBuffer.toString();
 	}
 
 	private final int ptconv(int minor) {
@@ -839,7 +854,8 @@ class neulucData extends Object {
 		return lineList;
 	}
 
-	public double[][] getPointList() {
+	public double[][] getPointList() 		//returns a list of the SELECTED nodes!
+	{
 		nlpoint p;
 		if (pointList == null || !trustPointList) {
 			int np = points.size();

@@ -245,12 +245,17 @@ public class graphCanvas3 extends Canvas implements MouseListener,
 				if (echoPoint >= 0) {
 					x0 = gd.xOfP(pointList[echoPoint]);
 					y0 = gd.yOfP(pointList[echoPoint]);
+
+					//this is the selection oval
 					g.drawOval(x0 - 4, (imh - y0 - 1) - 4, 9, 9);
 					g.drawOval(x0 - 3, (imh - y0 - 1) - 3, 7, 7);
 					double[] ple = pointList[echoPoint];
-					String snum = " " + mytrim(xScale.value() * ple[0]) + " "
-							+ mytrim(yScale.value() * ple[1]) + " "
-							+ mytrim(zScale.value() * ple[2]);
+					String snum = " x(" + mytrim(xScale.value() * ple[0]) + ")"
+							+ " y(" + mytrim(yScale.value() * ple[1]) + ")"
+							+ " z(" + mytrim(zScale.value() * ple[2]) + ")"
+                          	+ " r(" + ple[3] + ")"
+                          	+ " i(" + ple[4] + ")"
+                          	+ " more(" + (ple.length - 5) + ")";
 					g.setColor(Color.white);
 					g.setFont(getFont());
 					g.drawString(snum, 10, 20);
@@ -261,6 +266,7 @@ public class graphCanvas3 extends Canvas implements MouseListener,
 	}
 
 	private String mytrim(double d) {
+		//TODO: replace this with DecimalFormat object
 		return (" " + d + "       ").substring(1, 7);
 	}
 

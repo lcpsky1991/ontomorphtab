@@ -199,30 +199,40 @@ public class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 		repaint();
 	}
 
-	public void myPaint(Graphics g) {
+	public void myPaint(Graphics g)
+	{
 		double xs, ys, zs;
 
-		if (cell != null) {
+		if (cell != null)
+		{
 			lineList = cell.getLineList();
 			pointList = cell.getPointList();
+
 		}
-		if (lineList != null) {
+		if (lineList != null)
+		{
 			gd.setScale(xScale.value(), yScale.value(), zScale.value());
 
-			if (view == SPROJECTION) {
+			if (view == SPROJECTION)
+			{
 				gd.drawLineList9(g, lineList);
-			} else if (view == SREDGREEN) {
+			}
+			else if (view == SREDGREEN)
+			{
 
 				Dimension d = getSize();
-				if (imred == null || imrgw != d.width || imrgh != d.height) {
+				if (imred == null || imrgw != d.width || imrgh != d.height)
+				{
 					imrgw = d.width;
 					imrgh = d.height;
-					if (imrgw > 0 && imrgh > 0) {
+					if (imrgw > 0 && imrgh > 0)
+					{
 						imred = createImage(imrgw, imrgh);
 						imgreen = createImage(imrgw, imrgh);
 					}
 				}
-				if (imred != null && imgreen != null) {
+				if (imred != null && imgreen != null)
+				{
 					gr = imred.getGraphics();
 					gg = imgreen.getGraphics();
 					gr.setColor(revvid ? Color.white : Color.black);
@@ -241,17 +251,22 @@ public class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 					g.drawImage(imgreen, 0, 0, this);
 				}
 
-			} else if (view == AREDGREEN) {
+			}
+			else if (view == AREDGREEN)
+			{
 				Dimension d = getSize();
-				if (imred == null || imrgw != d.width || imrgh != d.height) {
+				if (imred == null || imrgw != d.width || imrgh != d.height)
+				{
 					imrgw = d.width;
 					imrgh = d.height;
-					if (imrgw > 0 && imrgh > 0) {
+					if (imrgw > 0 && imrgh > 0)
+					{
 						imred = createImage(imrgw, imrgh);
 						imgreen = createImage(imrgw, imrgh);
 					}
 				}
-				if (imred != null && imgreen != null) {
+				if (imred != null && imgreen != null)
+				{
 					gr = imred.getGraphics();
 					gg = imgreen.getGraphics();
 					gr.setColor(revvid ? Color.white : Color.black);
@@ -271,32 +286,43 @@ public class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 					g.drawImage(imgreen, 0, 0, this);
 				}
 
-			} else if (view == APROJECTION) {
+			}
+			else if (view == APROJECTION)
+			{
 				gd.drawAreaLineList9(g, lineList, null);
-			} else if (view == SOLIDBLUE) {
+			}
+			else if (view == SOLIDBLUE)
+			{
 				gd.drawAreaLineList9(g, lineList, Color.blue);
 			}
 
-			if (showOutlines) {
+			if (showOutlines)
+			{
 				gd.drawRadiusLineList9(g, lineList, Color.yellow);
 			}
 
 		}
 
 		if ((view == SPROJECTION || view == APROJECTION) && pointList != null
-				&& showPoints) {
+				&& showPoints)
+		{
 			gd.drawPointList(g, pointList);
 		}
 
 		g.setColor(Color.cyan);
-		if (gotPointAction >= 0) {
+		if (gotPointAction >= 0)
+		{
 			g.drawString(gotPointActionStrings[gotPointAction], 10, 35);
 
-		} else if (growMode) {
-			for (int i = 0; i < growModeInstructions.length; i++) {
+		}
+		else if (growMode)
+		{
+			for (int i = 0; i < growModeInstructions.length; i++)
+			{
 				g.drawString(growModeInstructions[i], 10, 35 + 13 * i);
 
-				if (newLines != null) {
+				if (newLines != null)
+				{
 					g.setColor(Color.cyan);
 					gd.drawBlockLineList(g, newLines);
 				}

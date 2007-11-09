@@ -53,6 +53,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.net.URL;
 import java.util.Hashtable;
+import java.util.Vector;
 
 import javax.swing.JOptionPane; //TODO: Remove
 
@@ -106,6 +107,11 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 	TextField markTF;
 
+
+	popLabel lblIndividuals;		//a popup list of all the potential individuals in the neuroleucida file
+
+	PopupMenu mnuIndividuals;	//a popup list of all the potential individuals in the neuroleucida file
+
 	PopupMenu typeMenu;
 
 
@@ -138,11 +144,18 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		neugd.setMargins(40, 20, 30, 20);
 		neugd.setFont(f);
 
+		//Mark as type
 		typeMenu = new PopupMenu();
 		for (int i = 0; i < sectionTypes.length; i++) {
 			typeMenu.add(new MenuItem(sectionTypes[i]));
 		}
 		add(typeMenu);
+
+		//Areas of interest
+		mnuIndividuals = new PopupMenu();
+		mnuIndividuals.add(new MenuItem("None"));
+		add(mnuIndividuals);
+
 
 		neucan = new neuronEditorCanvas(w - 40, h - 120, neugd);
 		neucan.setFont(f);
@@ -177,6 +190,8 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		toppan.add(new Button("clean"));
 
 		markLabel = new popLabel("as: unknown", typeMenu);
+		lblIndividuals = new popLabel("Areas of Interest", mnuIndividuals);
+
 		markTF = new TextField("-1");
 
 		Panel butpan = new Panel();
@@ -192,7 +207,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		butpan0.add(cb2 = new Checkbox("grow", false, cbg));
 
 		butpan0.add(new Button("add floating"));
-		butpan0.add(new Button("inject")); 			//for debugging
+		butpan0.add(new Button("debug")); 			//for debugging
 
 		butpan1.setLayout(new GridLayout(4, 1, 1, 1));
 		butpan1.add(new Button("cut"));
@@ -210,6 +225,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		butpan3.add(new Button("mark"));
 		butpan3.setLayout(new GridLayout(4, 1, 1, 1));
 		butpan3.add(markLabel);
+		butpan3.add(lblIndividuals);
 		butpan3.add(markTF);
 
 		butpan.add(butpan0);
@@ -391,19 +407,32 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 			setCell(sdat, u.getHost(), u.getFile()); //setCell(sdat, hostroot, surl)
 			setURL(location);		//since we changed images, it is approipriate to update the URL
+			refresh();
+
+			neucan.find();			//center the image on the screen
+
+
+
 		}
 		catch (Exception e)
 		{
 			System.err.println("*** Error in loadImage('" + location + "'): " + e.getMessage());
-			System.err.println(e.toString());
-
-
+			System.err.println(e.toString() + " - " + e.getCause());
 		}
 
+	}
+	public void developer()
+	{
+		//This function servers no release purpose
+		//this is a way for the programmer to conveiniantly call a function
+		//at run-time
+
+		inject();
 	}
 
 	public void inject()
 	{
+		//This function no longer needed, was used for CA developing
 
 		String input;
 		String result="none";
@@ -428,11 +457,11 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		if (input != null)
 			m = Integer.valueOf(input);
 
-		input = (JOptionPane.showInputDialog("Point 0").trim());
+		input = (JOptionPane.showInputDialog("Point A").trim());
 		if (input != null)
 			a = Integer.valueOf(input);
 
-		input = (JOptionPane.showInputDialog("Point 1").trim());
+		input = (JOptionPane.showInputDialog("Point B").trim());
 		if (input != null)
 			b = Integer.valueOf(input);
 
@@ -513,36 +542,41 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		Object source = e.getSource();
-		if (source instanceof Button) {
+		if (source instanceof Button)
+		{
 			String sarg = ((Button) source).getLabel();
 			processNameEvent(sarg);
-		} else if (source instanceof MenuItem) {
+		}
+		else if (source instanceof MenuItem)
+		{
 			String sarg = ((MenuItem) source).getLabel();
 			sarg = e.getActionCommand();
 
 			int newtyp = -1;
-			for (int i = 0; i < sectionTypes.length; i++) {
-				if (sectionTypes[i].equals(sarg))
-					newtyp = i;
+			for (int i = 0; i < sectionTypes.length; i++)
+			{
+				if (sectionTypes[i].equals(sarg)) newtyp = i;
 			}
 			markTF.setText((new Integer(newtyp)).toString());
-			if (newtyp >= 0) {
+			if (newtyp >= 0)
+			{
 				markType = newtyp;
 				int inwt = newtyp;
-				if (inwt >= sectionTypes.length)
-					inwt = sectionTypes.length - 1;
+				if (inwt >= sectionTypes.length) inwt = sectionTypes.length - 1;
 				markLabel.setText("as: " + sectionTypes[inwt]);
 			}
-		} else if (source instanceof TextField) {
+		}
+		else if (source instanceof TextField)
+		{
 			String s = markTF.getText();
 
 			int newtyp = (Integer.valueOf(s)).intValue();
 			markType = newtyp;
 			int inwt = newtyp;
-			if (inwt >= sectionTypes.length)
-				inwt = sectionTypes.length - 1;
+			if (inwt >= sectionTypes.length) inwt = sectionTypes.length - 1;
 			markLabel.setText("as: " + sectionTypes[inwt]);
 			System.out.println("tf text " + s + sectionTypes[inwt]);
 
@@ -562,198 +596,300 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		}
 	}
 
-	public void processNameEvent(String sarg) {
+	public void processNameEvent(String sarg)
+	{
 
-		if (sarg.equals("trace")) {
+		if ( sarg.equals("trace") )
+		{
 			setNormal();
 			neucan.trace();
-		} else if (sarg.equals("find")) {
+		}
+		else if ( sarg.equals("find") )
+		{
 			neucan.find();
-		} else if (sarg.equals("add between")) {
+		}
+		else if ( sarg.equals("add between") )
+		{
 			setNormal();
 			neucan.addNode();
-		} else if (sarg.equals("remove")) {
+		}
+		else if ( sarg.equals("remove") )
+		{
 			setNormal();
 			neucan.setRemoveMode();
-		} else if (sarg.equals("join")) {
+		}
+		else if ( sarg.equals("join") )
+		{
 			setNormal();
 			neucan.join();
-		} else if (sarg.equals("merge")) {
+		}
+		else if ( sarg.equals("merge") )
+		{
 			setNormal();
 			neucan.merge();
-		} else if (sarg.equals("ident.")) {
+		}
+		else if ( sarg.equals("ident.") )
+		{
 			setNormal();
 			neucan.ident();
-		} else if (sarg.equals("clear")) {
+		}
+		else if ( sarg.equals("clear") )
+		{
 			setNormal();
-		} else if (sarg.equals("clean")) {
+		}
+		else if ( sarg.equals("clean") )
+		{
 			setNormal();
 			neucan.cleanCell();
-		} else if (sarg.equals("cut")) {
+		}
+		else if ( sarg.equals("cut") )
+		{
 			setNormal();
 			neucan.cut();
-		} else if (sarg.equals("drag")) {
+		}
+		else if ( sarg.equals("drag") )
+		{
 			setNormal();
 			neucan.drag();
-		} else if (sarg.equals("grow")) {
+		}
+		else if ( sarg.equals("grow") )
+		{
 			neucan.grow();
-		} else if (sarg.equals("normal")) {
+		}
+		else if ( sarg.equals("normal") )
+		{
 			setNormal();
 
 		}
-		else if (sarg.equals("add floating"))
+		else if ( sarg.equals("add floating") )
 		{
 			neucan.addFree();
 		}
-		else if (sarg.equals("inject"))
+		else if ( sarg.equals("inject") )
 		{
 			inject();
 		}
-		else if (sarg.equals("nodes")) {
+		else if ( sarg.equals("debug") )
+		{
+			developer();
+		}
+		else if ( sarg.equals("nodes") )
+		{
 			// setNormal();
 			neucan.showPoints();
-		} else if (sarg.equals("outlines")) {
+		}
+		else if ( sarg.equals("outlines") )
+		{
 			// setNormal();
 			neucan.showOutlines();
-		} else if (sarg.equals("loops")) {
+		}
+		else if ( sarg.equals("loops") )
+		{
 			setNormal();
 			neucan.showLoops();
-		} else if (sarg.equals("section")) {
+		}
+		else if ( sarg.equals("section") )
+		{
 			setNormal();
 			neucan.highlightSection();
 
-		} else if (sarg.equals("points")) {
+		}
+		else if ( sarg.equals("points") )
+		{
 			setNormal();
 			neucan.reallyShowPoints();
 			neucan.markPoint();
 
-		} else if (sarg.equals("tree")) {
+		}
+		else if ( sarg.equals("tree") )
+		{
 			setNormal();
 			neucan.highlightTree();
-		} else if (sarg.equals("mark")) {
-			if (cell != null) {
+		}
+		else if ( sarg.equals("mark") )
+		{
+			if ( cell != null )
+			{
 				cell.markHighlightedType(markType);
 				neucan.clear();
 			}
-		} else if (sarg.equals("delete")) {
-			if (cell != null) {
+		}
+		else if ( sarg.equals("delete") )
+		{
+			if ( cell != null )
+			{
 				cell.deleteHighlighted();
 				neucan.clear();
 			}
 
-		} else if (sarg.equals("open")) {
-			if (canReadFiles) {
+		}
+		else if ( sarg.equals("open") )
+		{
+			if ( canReadFiles )
+			{
 
 				String[] sa = fileString.getFileName2("r", fdir);
-				if (sa != null && sa[0] != null && sa[1] != null) {
+				if ( sa != null && sa[0] != null && sa[1] != null )
+				{
 					fdir = sa[0];
 					frfile = sa[1];
 
 					String[] sdat = readStringArrayFromFile(fdir + frfile);
+
+					// If the user inputted an http address, use a different
+					// method
+
 					setCell(sdat, fdir, frfile);
 				}
 			}
+		}
+		else if ( sarg.equals("open URL") )
+		{
+			{
+				String sa = (JOptionPane.showInputDialog("Enter the URL of file").trim());
+				if ( sa != null && sa.startsWith("http://") )
+				{
+					System.out.println("Opening URL: " + sa);
+					loadImage(sa);
+				}
+			}
+		}
 
-		} else if (sarg.equals("shrinkage correction")) {
+		else if ( sarg.equals("shrinkage correction") )
+		{
 			shrinkageCorrect();
-
-		} else if (sarg.equals("edit header")) {
+		}
+		else if ( sarg.equals("edit header") )
+		{
 			editHeader();
-
-		} else if (sarg.equals("save as swc")) {
-			if (canWriteFiles) {
+		}
+		else if ( sarg.equals("save as swc") )
+		{
+			if ( canWriteFiles )
+			{
 				headerF.apply();
 				String[] sa = fileString.getFileName2("w", fdir);
-				if (sa != null && sa[0] != null) {
+				if ( sa != null && sa[0] != null )
+				{
 					fdir = sa[0];
 					fwfile = sa[1];
 					blockingMessageOn("formatting as SWC");
 					writeStringToFile(cell.write(), fdir + fwfile);
 				}
 
-			} else {
+			}
+			else
+			{
 				System.out.println("file writing not allowed ");
 			}
 
-		} else if (sarg.equals("save as Genesis - flat")) {
-			if (canWriteFiles) {
+		}
+		else if ( sarg.equals("save as Genesis - flat") )
+		{
+			if ( canWriteFiles )
+			{
 				String[] sa = fileString.getFileName2("w", fdir);
-				if (sa != null && sa[0] != null) {
+				if ( sa != null && sa[0] != null )
+				{
 					fdir = sa[0];
 					fwfile = sa[1];
 					blockingMessageOn("formatting as GENESIS");
 					writeStringToFile(cell.GENESISwrite(), fdir + fwfile);
 				}
 
-			} else {
+			}
+			else
+			{
 				System.out.println("file writing not allowed ");
 			}
 
-		} else if (sarg.startsWith("save as Genesis - hierar")) {
-			if (canWriteFiles) {
+		}
+		else if ( sarg.startsWith("save as Genesis - hierar") )
+		{
+			if ( canWriteFiles )
+			{
 				String[] sa = fileString.getFileName2("w", fdir);
-				if (sa != null && sa[0] != null) {
+				if ( sa != null && sa[0] != null )
+				{
 					fdir = sa[0];
 					fwfile = sa[1];
 					blockingMessageOn("formatting as GENESIS");
 					writeStringToFile(cell.GENESISwriteHR(), fdir + fwfile);
 				}
-
-			} else {
+			}
+			else
+			{
 				System.out.println("file writing not allowed ");
 			}
 
-		} else if (sarg.startsWith("save as hoc (Neuron) - stru")) {
-			if (canWriteFiles) {
+		}
+		else if ( sarg.startsWith("save as hoc (Neuron) - stru") )
+		{
+			if ( canWriteFiles )
+			{
 				String[] sa = fileString.getFileName2("w", fdir);
-				if (sa != null && sa[0] != null) {
+				if ( sa != null && sa[0] != null )
+				{
 					fdir = sa[0];
 					fwfile = sa[1];
 					blockingMessageOn("formatting as HOC");
 					writeStringToFile(cell.HOCwrite(), fdir + fwfile);
 				}
-
-			} else {
+			}
+			else
+			{
 				System.out.println("file writing not allowed ");
 			}
 
-		} else if (sarg.startsWith("save as hoc (Neuron) - name")) {
-			if (canWriteFiles) {
+		}
+		else if ( sarg.startsWith("save as hoc (Neuron) - name") )
+		{
+			if ( canWriteFiles )
+			{
 				String[] sa = fileString.getFileName2("w", fdir);
-				if (sa != null && sa[0] != null) {
+				if ( sa != null && sa[0] != null )
+				{
 					fdir = sa[0];
 					fwfile = sa[1];
 					blockingMessageOn("formatting as HOC (named segments)");
 					writeStringToFile(cell.HOCwriteNS(), fdir + fwfile);
 				}
 
-			} else {
+			}
+			else
+			{
 				System.out.println("file writing not allowed ");
 			}
 
-		} else if (sarg.equals("auto save as swc")) {
-			if (canWriteFiles) {
+		}
+		else if ( sarg.equals("auto save as swc") )
+		{
+			if ( canWriteFiles )
+			{
 				headerF.apply();
 				fwfile = frfile.substring(0, frfile.lastIndexOf(".")) + ".swc";
 				blockingMessageOn("formatting as SWC");
 				writeStringToFile(cell.write(), fdir + fwfile);
-			} else {
+			}
+			else
+			{
 				System.out.println("file writing not allowed ");
 			}
 
-		} else {
+		}
+		else
+		{
 			System.out.println("button ? " + sarg);
 		}
 
 	}
-
+	
+	
 	public void blockingMessageOn(String s) {
 		/*
-		messageD.setLabel1(s);
-		Point p = getLocationOnScreen();
-		messageD.setLocation(p.x + 100, p.y + 20);
-		messageD.showMessage();
-		*/
+		 * messageD.setLabel1(s); Point p = getLocationOnScreen();
+		 * messageD.setLocation(p.x + 100, p.y + 20); messageD.showMessage();
+		 */
 	}
 
 	public void blockingMessageOn(String s1, String s2) {
@@ -805,17 +941,19 @@ class optionBar extends sbPanel implements ItemListener, ActionListener {
 		cfile = new Choice();
 
 		PopupMenu pmfile = new PopupMenu();
-		MenuItem[] mi = new MenuItem[10];
+		MenuItem[] mi = new MenuItem[11];
+		
 		mi[0] = new MenuItem("open");
-		mi[1] = new MenuItem("shrinkage correction");
-		mi[2] = new MenuItem("edit header");
-		mi[3] = new MenuItem("save as swc");
-		mi[4] = new MenuItem("save as hoc (Neuron) - structure only");
-		mi[5] = new MenuItem("save as hoc (Neuron) - named segments");
-		mi[6] = new MenuItem("save as Genesis - flat");
-		mi[7] = new MenuItem("save as Genesis - hierarchical");
-		mi[8] = new MenuItem("auto save as swc");
-		mi[9] = new MenuItem("quit");
+		mi[1] = new MenuItem("open URL");
+		mi[2] = new MenuItem("shrinkage correction");
+		mi[3] = new MenuItem("edit header");
+		mi[4] = new MenuItem("save as swc");
+		mi[5] = new MenuItem("save as hoc (Neuron) - structure only");
+		mi[6] = new MenuItem("save as hoc (Neuron) - named segments");
+		mi[7] = new MenuItem("save as Genesis - flat");
+		mi[8] = new MenuItem("save as Genesis - hierarchical");
+		mi[9] = new MenuItem("auto save as swc");
+		mi[10] = new MenuItem("quit");
 
 		for (int i = 0; i < mi.length; i++) {
 			mi[i].addActionListener(this);

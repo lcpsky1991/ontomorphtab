@@ -91,10 +91,8 @@ class nlpoint extends Object {
 	}
 
 	public void print() {
-		System.out.println(" nlpoint " + this + " " + myIndex + " " + x + " "
-				+ y + " " + z);
-		System.out.println("parent " + parent + " "
-				+ (parent != null ? parent.myIndex : -999));
+		System.out.println(" nlpoint " + this + " myIndex[" + myIndex + "] x[" + x + "] y["	+ y + "] z[" + z + "]");
+		System.out.println("parent [" + parent + " "	+ (parent != null ? parent.myIndex : -999) + "]");
 		for (int i = 0; i < nnbr; i++) {
 			System.out.println("nbr " + i + " " + pnbr[i].myIndex + " "
 					+ pnbr[i].x + " " + pnbr[i].y + " " + pnbr[i].z);

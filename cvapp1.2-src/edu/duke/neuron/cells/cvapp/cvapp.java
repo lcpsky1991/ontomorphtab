@@ -58,7 +58,7 @@ public class cvapp extends Applet implements ActionListener {
 
 		neuronEditorPanel neupan = new neuronEditorPanel(w, h, f);
 
-		neupan.setParentFrame(new Frame());
+		//neupan.setParentFrame(new Frame());
 
 		add("Center", neupan);
 
@@ -80,21 +80,24 @@ public class cvapp extends Applet implements ActionListener {
 				Dimension d = getSize();
 				int w = d.width;
 				int h = d.height;
-				neuronEditorFrame nef = new neuronEditorFrame(w, h);
-				nef.setReadWrite(true, true);
-				nef.validate();
-				nef.setVisible(true);
+
+//				//remove frame
+//				neuronEditorFrame nef = new neuronEditorFrame(w, h); //(w,h)
+//				nef.setSize(d); //ca: this line is an attempt to fix resize error
+//				nef.setReadWrite(true, true);
+//				nef.validate();
+//				nef.setVisible(true);
 			}
 		}
 	}
 
 	public static void main(String argv[]) {
-		neuronEditorFrame nef = new neuronEditorFrame(600, 550);
-
-		nef.setReadWrite(true, true);
-
-		// nef.setSize(600, 550);
-		nef.validate();
-		nef.setVisible(true);
+//		neuronEditorFrame nef = new neuronEditorFrame(50, 50);	//600, 550
+//
+//		nef.setReadWrite(true, true);
+//
+//		// nef.setSize(600, 550);
+//		nef.validate();
+//		nef.setVisible(true);
 	}
 }

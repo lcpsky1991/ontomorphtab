@@ -208,10 +208,10 @@ public class OntoMorphTab extends AbstractTabWidget {
         JSplitPane mainSplitPane = ComponentFactory.createLeftRightSplitPane();
         //set the left component to the cvapp GUI
         neuronPanel = makeNeuronEditorPanel(); //the panel needs to be intialized from null delcaration
-        mainSplitPane.setLeftComponent(neuronPanel);
+        mainSplitPane.setLeftComponent( (Component) neuronPanel);
         //set the right component to an instances panel with a splitter
         mainSplitPane.setRightComponent(createInstanceSplitter());
-        mainSplitPane.setDividerLocation(250); //ca: 250 is correct val
+        //mainSplitPane.setDividerLocation(250); //ca: 250 is correct val
         return mainSplitPane;
     }
 

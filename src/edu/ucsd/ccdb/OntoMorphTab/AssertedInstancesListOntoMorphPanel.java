@@ -285,8 +285,31 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
                 		//make it ready for markup
                 		newResource = (RDFResource) instance;
-                		assignImgSelection(newResource, "none", 0, 0, 0);
-                		System.out.println("*** New OMT individual: " + newResource.getName());
+                		
+                		//To create an 'empty' instance as below
+                		//assignImgSelection(newResource, "none", 0, 0, 0);
+                		//***
+                		if (instance != null)
+                		{
+                			int[] plist = {0,0};
+                			int reqNodes = 3;
+                			plist=oTab.getSelectedNodes();
+
+                			if (plist == null)
+                			{
+                				System.out.println("*** Error creating instance: No points were selected, needed" + reqNodes);
+                				assignImgSelection(newResource, "none", 0, 0, 0); //create an 'empty' instance
+                			}
+                			else if (plist.length == reqNodes)
+                			{
+                				assignImgSelection(newResource, oTab.neuronPanel.getURL(), plist[0], plist[1], plist[2]);	//graphically display the class that was selected by calling this method on current image
+                        		System.out.println("*** New OMT individual: " + newResource.getName());
+                			}
+                			else
+                			{
+                				System.out.println("*** Error creating instance: Could not resolve selection list (Needed " + reqNodes + " have " + plist.length);
+                			}
+                		}
 
                 		//Reload the list
                 		reload();
