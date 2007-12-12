@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:ontomorph="http://ccdb.ucsd.edu/SAO/ontomorph/1.0/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns="http://www.owl-ontologies.com/Ontology1196812044.owl#"
+  xml:base="http://www.owl-ontologies.com/Ontology1196812044.owl">
+  <owl:Ontology rdf:about="">
+    <owl:imports rdf:resource="http://ccdb.ucsd.edu/SAO/ontomorph/1.0/"/>
+  </owl:Ontology>
+  <owl:Thing rdf:ID="Thing_4">
+    <ontomorph:omt_n1 rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >1093</ontomorph:omt_n1>
+    <ontomorph:omt_me rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >7</ontomorph:omt_me>
+    <ontomorph:omt_url rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >http://www.temet-nosce.net/slarson/ccdbNL/alexP.asc</ontomorph:omt_url>
+    <ontomorph:omt rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+    >true</ontomorph:omt>
+    <ontomorph:omt_n2 rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >6154</ontomorph:omt_n2>
+  </owl:Thing>
+  <owl:Thing rdf:ID="Thing_5">
+    <ontomorph:omt rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+    >true</ontomorph:omt>
+    <ontomorph:omt_url rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >http://www.temet-nosce.net/slarson/ccdbNL/alexP.asc</ontomorph:omt_url>
+    <ontomorph:omt_me rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >7</ontomorph:omt_me>
+    <ontomorph:omt_n2 rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >6154</ontomorph:omt_n2>
+    <ontomorph:omt_n1 rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+    >1093</ontomorph:omt_n1>
+  </owl:Thing>
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 3.3.1, Build 430)  http://protege.stanford.edu -->

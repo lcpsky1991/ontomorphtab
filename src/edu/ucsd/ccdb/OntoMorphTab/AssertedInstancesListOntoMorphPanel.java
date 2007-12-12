@@ -89,7 +89,9 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         }
 
 
-        public void directInstanceRemoved(ClsEvent event) {
+        public void directInstanceRemoved(ClsEvent event) 
+        {
+        	System.out.println("*** Debug: event instanceremoved(): " + event);
             removeInstance(event.getInstance());
         }
     };
@@ -97,21 +99,26 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     private FrameListener _clsFrameListener = new FrameAdapter() {
         public void ownSlotValueChanged(FrameEvent event) {
             super.ownSlotValueChanged(event);
+            System.out.println("*** Debug: event _clsFrameListener: " + event);
             updateButtons();
         }
     };
 
-    private FrameListener _instanceFrameListener = new FrameAdapter() {
-        public void browserTextChanged(FrameEvent event) {
+    private FrameListener _instanceFrameListener = new FrameAdapter() 
+    {
+    	
+        public void browserTextChanged(FrameEvent event) 
+        {
+        	System.out.println("*** Debug: event _instanceFrameListener event is " + event);
             super.browserTextChanged(event);
             sort();
             repaint();
         }
+        
+        
     };
 
-
-
-
+    
     public AssertedInstancesListOntoMorphPanel(OWLModel owlModel, OntoMorphTab oTab) {
         this.owlModel = owlModel;
         this.oTab = oTab;
@@ -222,12 +229,13 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         for (int i = start; i < stop; ++i) {
             Instance instance = (Instance) model.getElementAt(i);
             addInstanceListener(instance);
-
         }
     }
 
 
-    private void removeInstanceListeners() {
+    private void removeInstanceListeners() 
+    {
+    	System.out.println("*** Debug: aasserted.removeInstanceListeners");
         Iterator i = listenedToInstances.iterator();
         while (i.hasNext()) {
             Instance instance = (Instance) i.next();
@@ -237,7 +245,9 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     }
 
 
-    private void addInstanceListener(Instance instance) {
+    private void addInstanceListener(Instance instance) 
+    {
+    	System.out.println("*** Debug: asserted.addInstanceListener for " + instance);
         instance.addFrameListener(_instanceFrameListener);
         listenedToInstances.add(instance);
     }
@@ -272,7 +282,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
                 		classes = acsum;
                 		list.setClasses(acsum);
                 		//****
-
+                		
 
                 		Instance instance = owlModel.createInstance(null, type);
                 		if (instance instanceof Cls) {
@@ -404,21 +414,16 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         assignNeuroSelection = new CreateAction("Assign Neuroleucida Selection to the selected Instance", OWLIcons.getCreateIndividualIcon(OWLIcons.ACCEPT)) {
             public void onCreate()
             {
-            		//*
-	        		////TODO: Replace this code that uses the comments with proper properties, following code may be useful:
-	        		////First create the general datatype
-	        		//OWLModel owlModel = (OWLModel)getKnowledgeBase();
-	        		//OWLDatatypeProperty setprop = owlModel.createOWLDatatypeProperty("nodeA");
-	        		//OWLDatatypeProperty getprop = owlModel.createOWLDatatypeProperty("has Property");
-	        		//*
+            		
 
 	        		//RDFResource resource = (RDFResource) selectedInstance;
+            	
+            		//By this point the list is now set to be the recently created instance
             		Instance instance = (Instance) list.getSelectedValue();
             		if (instance != null)
             		{
             			RDFResource res = (RDFResource) instance;
 	        			//write the value of the nodes that were selected to the instance data (assign it)
-//            		//TODO: get the info then assign it
 
             			int[] plist = {0,0};
             			int reqNodes = 3;
@@ -427,7 +432,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
             			System.out.println("*** Resolving selected nodes");
             			if (plist == null)
             			{
-            				System.out.println("*** Error: No points were selected, needed" + reqNodes);
+            				System.out.println("*** Error: No points were selected, needed " + reqNodes);
             			}
             			else if (plist.length == reqNodes)
             			{
@@ -581,25 +586,29 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
 
 
     protected Action createViewAction() {
-        return new ViewAction(ResourceKey.INSTANCE_VIEW, this) {
-            public void onView(Object o) {
-            		Instance i = (Instance) o;	//make an instance before attempting to show it
-            		if ( i != null)
-            		{
-            			owlModel.getProject().show(i);
-            		}
-            }
-        };
-    }
+		return new ViewAction(ResourceKey.INSTANCE_VIEW, this) {
+			public void onView(Object o) {
+				Instance i = (Instance) o; // make an instance before
+											// attempting to show it
+				if (i != null) {
+					owlModel.getProject().show(i);
+				}
+			}
+		};
+	}
 
 
-    public void dispose() {
+    public void dispose() 
+    {
+    	System.out.println("*** Debug: AssertedInstancesList.dispose() called, classes: " + classes);
         removeClsListeners();
         removeInstanceListeners();
     }
 
 
-    public JComponent getDragComponent() {
+    public JComponent getDragComponent() 
+    {
+    	System.out.println("*** Debug: getDragComponent()");
         return list;
     }
 
@@ -623,15 +632,26 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     }
 
 
-    public void onSelectionChange() {
+    public void onSelectionChange() 
+    {
         // Log.enter(this, "onSelectionChange");
-        boolean editable = isSelectionEditable();
-        ComponentUtilities.setDragAndDropEnabled(list, editable);
-        updateButtons();
+    	System.out.println("*** Debug: Asserted.onSelectionChange() " + list.getSelectedValues().length);
+    	try
+    	{
+            boolean editable = isSelectionEditable();
+            ComponentUtilities.setDragAndDropEnabled(list, editable);
+            updateButtons();	
+    	}
+    	catch (Exception e)
+    	{
+    		System.err.println("*** Exception in AssertedInstances.onSelectionChance()");
+    	}
+    	
     }
 
 
     private void removeInstance(Instance instance) {
+    	System.out.println("*** Debug: Asserted.removeInstance, instance:" + instance);
         ComponentUtilities.removeListValue(list, instance);
         instance.removeFrameListener(_instanceFrameListener);
     }
@@ -657,14 +677,17 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     }
 
 
-    public void reload() {
+    public void reload() 
+    {	
+    	System.out.println("*** reloading list");
         removeInstanceListeners();
+        
         Object selectedValue = list.getSelectedValue();
+        
+        list.clearSelection();
+        
         Set instanceSet = new LinkedHashSet();
-
         Collection found = getInstances();
-
-        System.out.println("*** reloading list");
 
         if ( found != null )
         		instanceSet.addAll(found);
@@ -683,6 +706,10 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
         addInstanceListeners();
         reloadHeader(found);
         updateLabel();
+        
+        System.out.println("*** ... list reloaded");
+        
+        //list.setSelectedIndex(-1);	//set the selected item to be nonexistant to it doesnt download
     }
 
     public void initialize()

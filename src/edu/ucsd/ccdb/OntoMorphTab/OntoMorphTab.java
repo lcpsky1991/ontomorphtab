@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
@@ -89,7 +91,7 @@ public class OntoMorphTab extends AbstractTabWidget {
     			//namespacePrefix = findPrefix();
     			//System.out.println("*** Prefix renamed to " + namespacePrefix);
     			buildInterface();	//display the GUI
-
+    			assertedInstancesListPanel.reload(); //now I want to refresh the list
     		}
     		else
     		{	//The ontomorph ontology was not found with a prefix, assume it's not been imported
@@ -126,15 +128,16 @@ public class OntoMorphTab extends AbstractTabWidget {
 
     		}
 
-
-        initializeTabLabel();	//lets do this last, so that if it's not done then there's been an error
+    		initializeTabLabel();	//lets do this last, so that if it's not done then there's been an error
+        
     }
 
     private void buildInterface()
     {
-    		System.out.println("*** Building interface");
-    		removeAll(); //clear the panels that were there before
-    		//The ontomorph ontology has been found with a prefix, so act normal
+    	System.out.println("*** Building interface");
+    	removeAll(); //clear the panels that were there before
+    	
+    	//The ontomorph ontology has been found with a prefix, so act normal
 		JSplitPane mainSplitPane = createMainSplitPane();
 		add(mainSplitPane);
 		repaint();
@@ -216,9 +219,18 @@ public class OntoMorphTab extends AbstractTabWidget {
     }
 
     //take care of the label that appears on the tab itself
-    private void initializeTabLabel() {
-        setLabel(title);
-        setIcon(Icons.getInstanceIcon());
+    private void initializeTabLabel() 
+    {
+    	try
+    	{
+    		setLabel(title);
+            setIcon(Icons.getInstanceIcon());	
+    	}
+    	catch (Exception e)
+    	{
+    		System.out.println("*** Error: Could not set Tab Label");
+    	}
+        
     }
 
 
@@ -239,84 +251,118 @@ public class OntoMorphTab extends AbstractTabWidget {
     }
 
     protected AssertedInstancesListOntoMorphPanel createAssertedInstancesListPanel()
-    {
-        AssertedInstancesListOntoMorphPanel aiPanel = new AssertedInstancesListOntoMorphPanel(ontoModel, this);
-        aiPanel.addSelectionListener(new SelectionListener() {
-            public void selectionChanged(SelectionEvent event) {
-                Collection selection = assertedInstancesListPanel.getSelection();
-                Instance selectedInstance;
-                if (selection.size() == 1) {
-                    selectedInstance = (Instance) CollectionUtilities.getFirstItem(selection);
+	{
+		AssertedInstancesListOntoMorphPanel aiPanel = new AssertedInstancesListOntoMorphPanel(ontoModel, this);
+	
+		aiPanel.addSelectionListener(new SelectionListener() {
+			public void selectionChanged(SelectionEvent event)
+			{
+				
+				//CA: the idea here is to get the selection from the list and make sure that its not a multiple selection
+				//if its a multiple selection return null
+				
+				Collection selection = assertedInstancesListPanel.getSelection();
+				Instance selectedInstance;
+				if ( selection.size() == 1 )
+				{
+					selectedInstance = (Instance) CollectionUtilities.getFirstItem(selection);
+				}
+				else
+				{	//the selection is multiple
+					selectedInstance = null;
+				}
 
-                }
-                else {
-                    selectedInstance = null;
-                }
+				// CA: at this point the selectedInstance should be null (for
+				// multiple) or an Instance object
+				if ( selectedInstance == null )
+				{
+					System.out.println("*** Multiple Instances selected");
+				}
+				else if ( selectedInstance != null && selectedInstance instanceof RDFResource )
+				{
+					RDFResource resource = (RDFResource) selectedInstance;
+					resourcePanel.setResource(resource);
+					typesListPanel.setResource(resource);
+				}
+				
+				
+				/*else if ( resourcePanel instanceof ResourceDisplay )
+				{ // legacy only
+					((ResourceDisplay) resourcePanel).setInstance(selectedInstance);
+					typesListPanel.setResource(null);
+				}
+				*/
 
-                //CA: at this point the selectedInstance should be null (for multiple) or an Instance object
-                if(selectedInstance == null || selectedInstance instanceof RDFResource) {
-                    RDFResource resource = (RDFResource) selectedInstance;
-                    resourcePanel.setResource(resource);
-                    typesListPanel.setResource(resource);
-                }
-                else if(resourcePanel instanceof ResourceDisplay) {  // legacy only
-                    ((ResourceDisplay)resourcePanel).setInstance(selectedInstance);
-                    typesListPanel.setResource(null);
-                }
+				
+				if ( selectedInstance != null && selectedInstance instanceof RDFResource )
+				{
+					selectNeuro((RDFResource) selectedInstance);
+				}
+				
+				System.out.println("*** omt.selectionChanged():  " + selectedInstance);
+			}
+		});
+		
+		
+		setInstanceSelectable((Selectable) aiPanel.getDragComponent());
+		
+		final JList list = (JList) aiPanel.getDragComponent();
 
-                //This is where the code for setting the cvapp display will go
-                //Only runs if user has selected ONE item and that item isn't empty
-                if (selectedInstance != null && selectedInstance instanceof RDFResource)
-                	{
-                		selectNeuro((RDFResource) selectedInstance);
-                	}
-            }
-        });
-        setInstanceSelectable((Selectable) aiPanel.getDragComponent());
-        final JList list = (JList) aiPanel.getDragComponent();
-        list.addMouseListener(new PopupMenuMouseListener(list) {
-            protected JPopupMenu getPopupMenu() {
-                Instance instance = (Instance) list.getSelectedValue();
-                if (instance instanceof RDFResource) {
-                    JPopupMenu menu = new JPopupMenu();
-                    ResourceActionManager.addResourceActions(menu, list, (RDFResource) instance);
-                    if (menu.getComponentCount() > 0) {
-                        return menu;
-                    }
-                }
-                return null;
-            }
+		list.addMouseListener(new PopupMenuMouseListener(list) {
+			protected JPopupMenu getPopupMenu()
+			{
 
+				Instance instance = (Instance) list.getSelectedValue();
+				if ( instance instanceof RDFResource )
+				{
+					JPopupMenu menu = new JPopupMenu();
+					ResourceActionManager.addResourceActions(menu, list,
+							(RDFResource) instance);
+					if ( menu.getComponentCount() > 0 )
+					{
+						return menu;
+					}
+				}
+				return null;
+			}
 
+			protected void setSelection(JComponent c, int x, int y)
+			{
+				for (int i = 0; i < list.getModel().getSize(); i++)
+				{
+					if ( list.getCellBounds(i, i).contains(x, y) )
+					{
+						list.setSelectedIndex(i);
+						System.out.println("debug select");
+						return;
+					}
+				}
+				list.setSelectedIndex(-1);
 
+			}
+		});
+		
+		
+		return aiPanel;
+	}
 
-            protected void setSelection(JComponent c, int x, int y) {
-                for (int i = 0; i < list.getModel().getSize(); i++) {
-                    if (list.getCellBounds(i, i).contains(x, y)) {
-                        list.setSelectedIndex(i);
-                        return;
-                    }
-                }
-                list.setSelectedIndex(-1);
-            }
-        });
-        return aiPanel;
-    }
+	protected JComponent createDirectTypesList()
+	{
+		typesListPanel = new AssertedTypesListPanel(ontoModel);
+		return typesListPanel;
+	}
 
-    protected JComponent createDirectTypesList() {
-        typesListPanel = new AssertedTypesListPanel(ontoModel);
-        return typesListPanel;
-    }
+	@SuppressWarnings("unchecked")
+	public static boolean isSuitable(Project project, Collection errors)
+	{
+		return true;
+	}
 
-    @SuppressWarnings("unchecked")
-	public static boolean isSuitable(Project project, Collection errors) {
-    	return true;
-    }
-
-    // this method is useful for debugging
-    public static void main(String[] args) {
-        edu.stanford.smi.protege.Application.main(args);
-    }
+	// this method is useful for debugging
+	public static void main(String[] args)
+	{
+		edu.stanford.smi.protege.Application.main(args);
+	}
 
     public String findPrefix()
     {
@@ -326,6 +372,7 @@ public class OntoMorphTab extends AbstractTabWidget {
 		Collection props = ontoModel.getRDFProperties();
 		Iterator i = props.iterator();
 
+		//Looks up the namespace by finding which one has the URI
 		i = props.iterator();
 		while ( i.hasNext() )
 		{
@@ -339,55 +386,69 @@ public class OntoMorphTab extends AbstractTabWidget {
     }
 
     public void selectNeuro(RDFResource resItem)
-    {
-    		String loc="none";
-    		int method=-1;	//the selection method, default -1
-    		int a=1;	//first point
-    		int b=3;	//second point
-    		Object val; //used fo temporary store of property value
-    		//TODO: read the values
+	{
+		String loc = "none";
+		int method = -1; // the selection method, default -1
+		int a = -1; // first point
+		int b = -1; // second point
+		Object val; // used fo temporary store of property value
 
-    		try
-    		{
-    			//Attempt to get the property values, false parameter avoids subproperties
-    			//casting an Integer from a null object will throw an exception, so check for null objects
-    			val = resItem.getPropertyValue(ontoModel.getRDFProperty(namespacePrefix + ":" + pURL), false);
-    			if (val != null) loc = (String) val;
-    			val = resItem.getPropertyValue(ontoModel.getRDFProperty(namespacePrefix + ":" + pn1), false);
-    			if (val != null) a = (Integer) val;
-	    		val = resItem.getPropertyValue(ontoModel.getRDFProperty(namespacePrefix + ":" + pn2), false);
-	    		if (val != null) b = (Integer) val;
-	    		val = resItem.getPropertyValue(ontoModel.getRDFProperty(namespacePrefix + ":" + pMethod), false);
-	    		if (val != null) method = (Integer) val;
-    		}
-    		catch (Exception e)
-    		{
-    			System.err.println("*** Error selecting " + resItem.getName() + " (Properties do not exist, has OntoMorphTab ontology been imported? " + resItem.getNamespace() + ") Message[" + e.getMessage() + "] ");
-    		}
+		try
+		{
+			// Attempt to get the property values, false parameter avoids
+			// subproperties
+			// casting an Integer from a null object will throw an exception, so
+			// check for null objects
+			val = resItem.getPropertyValue(ontoModel
+					.getRDFProperty(namespacePrefix + ":" + pURL), false);
+			if ( val != null ) loc = (String) val;
+			val = resItem.getPropertyValue(ontoModel
+					.getRDFProperty(namespacePrefix + ":" + pn1), false);
+			if ( val != null ) a = (Integer) val;
+			val = resItem.getPropertyValue(ontoModel
+					.getRDFProperty(namespacePrefix + ":" + pn2), false);
+			if ( val != null ) b = (Integer) val;
+			val = resItem.getPropertyValue(ontoModel
+					.getRDFProperty(namespacePrefix + ":" + pMethod), false);
+			if ( val != null ) method = (Integer) val;
+		}
+		catch (Exception e)
+		{
+			System.err
+					.println("*** Error selecting "
+							+ resItem.getName()
+							+ " (Properties do not exist, has OntoMorphTab ontology been imported? "
+							+ resItem.getNamespace() + ") Message["
+							+ e.getMessage() + "] ");
+		}
 
-       	//will only make a selection if there is a valid entry for the method
-    		//I am betting that if the method is valid then the point data is valid and 0 is an invalid method
-    		if (method > 0)
-    		{
-    			//If the current image is not the proper image, then download the correct image, change images and then select
-    			if ( !neuronPanel.getURL().equalsIgnoreCase(loc) )
-    			{
-    				System.out.println("*** Changing neurolucida image");
-    				neuronPanel.loadImage(loc);
-    			}
+		// will only make a selection if there is a valid entry for the method
+		// I am betting that if the method is valid then the point data is valid
+		// and 0 is an invalid method
+		if ( method > 0 )
+		{
+			// If the current image is not the proper image, then download the
+			// correct image, change images and then select
+			if ( !neuronPanel.getURL().equalsIgnoreCase(loc) )
+			{
+				System.out.println("*** Changing neurolucida image");
+				neuronPanel.loadImage(loc);
+			}
 
-    			//Make the selection on the current image
-    			neuronPanel.makeSelection(method, a, b);
-    			System.out.println("*** Making Selection: [m=" + method + ", a=" + a + ", b=" + b + "] via selectNeuro()");
-    		}
-    		else
-    		{
-    			neuronPanel.setNormal();	//deselect any possible selection
-    			//System.out.println("*** De-Selection via selectNeuro()");
-    		}
-    	}
+			// Make the selection on the current image
+			neuronPanel.makeSelection(method, a, b);
+			System.out.println("*** Making Selection: [m=" + method + ", a="
+					+ a + ", b=" + b + "] via selectNeuro()");
+		}
+		else
+		{
+			neuronPanel.setNormal(); // deselect any possible selection
+			// System.out.println("*** De-Selection via selectNeuro()");
+		}
+	}
 
-    public int[] getSelectedNodes() //returns the indices of the key nodes from neuronEditorPanel
+    public int[] getSelectedNodes() // returns the indices of the key nodes from
+									// neuronEditorPanel
     {
     		return	neuronPanel.getCanvas().getSelection();
     }
