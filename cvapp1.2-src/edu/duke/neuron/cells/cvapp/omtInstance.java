@@ -27,6 +27,7 @@ public class omtInstance
 	public String strName;
 	public int beginPoint;
 	public int endPoint;
+	public int selectType=7;
 	
 	omtInstance()
 	{

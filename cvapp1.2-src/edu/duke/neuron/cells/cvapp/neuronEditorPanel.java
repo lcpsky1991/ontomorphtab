@@ -357,7 +357,9 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		}
 	}
 		
-	public void setNormal() {
+	public void setNormal() 
+	{
+		System.out.println("*** Set normal");
 		cb1.setState(true);
 		cb2.setState(false);
 		neucan.setNormal();
@@ -908,15 +910,35 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 //		This is the code for slection of "areas of interest" are
 		// execute code for selecting that object
 		//TODO: code for select interesting
-		System.out.println("*** Selected item of interest: ");
+		System.out.println("*** Selected item of interest");
 		
 		
 		int i=0;
+		i=options.getSelectedIndex() - 1;//subtract one from the index because the choice box has an extra option which is the box name, "Areas of Interest"
 		
-		i=options.getSelectedIndex();
-		
-		
-		
+		try
+		{
+			if (i>0 && i < cell.inObjectNames.size())
+			{
+				omtInstance chosenItem = cell.inObjectNames.get(i);
+				
+				//Use tree selection because it'll work for both trees and contours
+				makeSelection(chosenItem.selectType, chosenItem.beginPoint, chosenItem.endPoint);
+			}
+			else if ( i == 0)
+			{	//this is a non-point of interest, this is selecting the title of the choice box
+				neucan.setNormal();
+			}
+			else if ( i > 0)
+			{
+				System.err.println("*** Error: index of chosen out of bounds of neurodata Vector. Index is: " + i);
+			}
+		}
+		catch (Exception e)
+		{
+			System.err.println("*** Exception: eventSelectedInteresting: " + e.toString());
+			System.err.println("*** Exception: eventSelectedInteresting: " + e.getMessage());
+		}
 	}
 	
 	public void blockingMessageOn(String s) {
