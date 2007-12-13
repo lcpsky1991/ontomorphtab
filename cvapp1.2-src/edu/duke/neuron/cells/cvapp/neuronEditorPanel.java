@@ -107,13 +107,9 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 	TextField markTF;
 
-
-	popLabel lblIndividuals;		//a popup list of all the potential individuals in the neuroleucida file
-
-	PopupMenu mnuIndividuals;	//a popup list of all the potential individuals in the neuroleucida file
-
+	Choice chInterestingObjects; //a popup list of all the potential individuals in the neuroleucida file	
+	
 	PopupMenu typeMenu;
-
 
 	String[] sectionTypes = { "undefined", "soma", "axon", "dendrite",
 			"apical dendrite", "custom-1", "custom-2", "custom-n" };
@@ -150,12 +146,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 			typeMenu.add(new MenuItem(sectionTypes[i]));
 		}
 		add(typeMenu);
-
-		//Areas of interest
-		mnuIndividuals = new PopupMenu();
-		mnuIndividuals.add(new MenuItem("None"));
-		add(mnuIndividuals);
-
+		
 
 		neucan = new neuronEditorCanvas(w - 40, h - 120, neugd);
 		neucan.setFont(f);
@@ -190,7 +181,6 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		toppan.add(new Button("clean"));
 
 		markLabel = new popLabel("as: unknown", typeMenu);
-		lblIndividuals = new popLabel("Areas of Interest", mnuIndividuals);
 
 		markTF = new TextField("-1");
 
@@ -215,17 +205,21 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		butpan1.add(new Button("remove"));
 		butpan1.add(new Button("loops"));
 
-		butpan2.setLayout(new GridLayout(4, 1, 1, 1));
+		butpan2.setLayout(new GridLayout(5, 1, 1, 1));
 		butpan2.add(new Label("select:"));
 		butpan2.add(new Button("section"));
 		butpan2.add(new Button("tree"));
 		butpan2.add(new Button("points"));
-
+		butpan2.add(chInterestingObjects = new Choice());
+			setInterestingObjects(null, null);
+			
+		
+		butpan3.setLayout(new GridLayout(5, 1, 1, 1));
+		butpan3.add(new Label("actions:"));
 		butpan3.add(new Button("delete"));
 		butpan3.add(new Button("mark"));
-		butpan3.setLayout(new GridLayout(4, 1, 1, 1));
+		
 		butpan3.add(markLabel);
-		butpan3.add(lblIndividuals);
 		butpan3.add(markTF);
 
 		butpan.add(butpan0);
@@ -236,6 +230,8 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		cb1.addItemListener(this);
 		cb2.addItemListener(this);
 
+		chInterestingObjects.addItemListener(this);
+		
 		markTF.addActionListener(this);
 
 		for (int i = typeMenu.getItemCount() - 1; i >= 0; i--) {
@@ -340,6 +336,27 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		}
 	}
 
+	//TODO: write code that populates this choice box
+	public void setInterestingObjects(Vector areas, int[][] vals)
+	{
+		
+		chInterestingObjects.removeAll();
+		chInterestingObjects.add("Areas of Interest");
+		
+		if (areas == null)
+		{
+			chInterestingObjects.add("(None Found)");
+		}
+		else
+		{
+			//loop through all the named objects and make them an option with values associated
+			for (int i=0; i<areas.size(); i++)
+			{
+				chInterestingObjects.add( areas.elementAt(i).toString() );
+			}
+		}
+	}
+		
 	public void setNormal() {
 		cb1.setState(true);
 		cb2.setState(false);
@@ -347,6 +364,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 	}
 
 	public void setData(neulucData dat) {
+		System.out.println("*** setData()");
 		cell = dat;
 		neucan.setData(cell);
 	}
@@ -408,10 +426,6 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 			setCell(sdat, u.getHost(), u.getFile()); //setCell(sdat, hostroot, surl)
 			setURL(location);		//since we changed images, it is approipriate to update the URL
 			refresh();
-
-			neucan.find();			//center the image on the screen
-
-
 
 		}
 		catch (Exception e)
@@ -529,6 +543,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 
 	//CA: setCell is the function for passing image data to graph?
 	public void setCell(String[] sdat, String fdir, String frfile) {
+		System.out.println("*** cetCell()");
 		blockingMessageOn("parsing", fdir + frfile);
 		cell = new neulucData();
 		cell.fill(sdat, fdir + frfile);
@@ -540,6 +555,9 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		cell.setSourceFileName(frfile);
 		ob.setFileNameLabel(cell.getSourceFileName());
 
+		setInterestingObjects(cell.inObjectNames, null);
+		neucan.find();			//center the image on the screen
+		
 	}
 
 	public void actionPerformed(ActionEvent e)
@@ -589,8 +607,16 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 	 */
 
 	@SuppressWarnings("static-access")
-	public void itemStateChanged(ItemEvent e) {
-		if (e.getStateChange() == e.SELECTED) {
+	public void itemStateChanged(ItemEvent e)
+	{
+		if ( e.getSource() == chInterestingObjects)
+		{
+			System.out.println("*** event for choice box");
+			eventSelectedInteresting(chInterestingObjects);
+		}
+		
+		if (e.getStateChange() == e.SELECTED)
+		{
 			String sarg = (String) (e.getItem());
 			processNameEvent(sarg);
 		}
@@ -735,23 +761,17 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 					frfile = sa[1];
 
 					String[] sdat = readStringArrayFromFile(fdir + frfile);
-
-					// If the user inputted an http address, use a different
-					// method
-
 					setCell(sdat, fdir, frfile);
 				}
 			}
 		}
 		else if ( sarg.equals("open URL") )
 		{
+			String sa = (JOptionPane.showInputDialog("Enter the URL of file").trim());
+			if ( sa != null && sa.startsWith("http://") )
 			{
-				String sa = (JOptionPane.showInputDialog("Enter the URL of file").trim());
-				if ( sa != null && sa.startsWith("http://") )
-				{
-					System.out.println("Opening URL: " + sa);
-					loadImage(sa);
-				}
+				System.out.println("Opening URL: " + sa);
+				loadImage(sa);
 			}
 		}
 
@@ -883,7 +903,21 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		}
 
 	}
-	
+	public void eventSelectedInteresting(Choice options)
+	{
+//		This is the code for slection of "areas of interest" are
+		// execute code for selecting that object
+		//TODO: code for select interesting
+		System.out.println("*** Selected item of interest: ");
+		
+		
+		int i=0;
+		
+		i=options.getSelectedIndex();
+		
+		
+		
+	}
 	
 	public void blockingMessageOn(String s) {
 		/*
@@ -920,7 +954,7 @@ class optionBar extends sbPanel implements ItemListener, ActionListener {
 	private static final long serialVersionUID = 1L;
 
 	Choice cfile;
-
+	
 	neuronEditorPanel neupan;
 
 	Label FileNameL;
@@ -939,7 +973,7 @@ class optionBar extends sbPanel implements ItemListener, ActionListener {
 		view.addItemListener(this);
 
 		cfile = new Choice();
-
+		
 		PopupMenu pmfile = new PopupMenu();
 		MenuItem[] mi = new MenuItem[11];
 		
@@ -1168,6 +1202,8 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 		}
 	}
 
+
+	
 	public void getIndexFromURL()
 	{
 		URL u1 = null;
@@ -1231,22 +1267,25 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 		System.out.println("item state change " + sarg);
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		Object source = e.getSource();
-		if (source instanceof Button) {
+		if (source instanceof Button)
+		{
 			String sarg = ((Button) source).getLabel();
-			if (sarg.equals("fetch list")) {
+			if (sarg.equals("fetch list"))
+			{
 				hostroot = webAdd.getText();
 				getIndexFromURL();
-			} else if (sarg.equals("close")) {
+			}
+			else if (sarg.equals("close"))
+			{
 				listFrame.setVisible(false);
 			}
 		}
 	}
 
 	private void processNameEvent(String sarg) {
-
-
 		System.out.println("preparing to set data from " + sarg);
 		setDataFromURL(sarg);
 	}

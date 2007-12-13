@@ -635,7 +635,7 @@ public class AssertedInstancesListOntoMorphPanel extends SelectableContainer imp
     public void onSelectionChange() 
     {
         // Log.enter(this, "onSelectionChange");
-    	System.out.println("*** Debug: Asserted.onSelectionChange() " + list.getSelectedValues().length);
+    	System.out.println("*** Debug: Asserted.onSelectionChange() selected:" + list.getSelectedValues().length);
     	try
     	{
             boolean editable = isSelectionEditable();

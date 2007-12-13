@@ -73,6 +73,7 @@ public class OntoMorphTab extends AbstractTabWidget {
     AssertedTypesListPanel typesListPanel;
     neuronEditorPanel neuronPanel=null;	//this needs to be global to ontomorph tab so the different panels can access other elements
 
+    boolean isInstanceListLoaded = false;	//used to prevent downloading of instance on creation of tab
 
     public void initialize() {
 
@@ -257,6 +258,15 @@ public class OntoMorphTab extends AbstractTabWidget {
 		aiPanel.addSelectionListener(new SelectionListener() {
 			public void selectionChanged(SelectionEvent event)
 			{
+				
+				//Checks to see if this is the first selection being made in this session
+				//if this is the first selection, then don't do anything b/c it is auto-selected by being created
+				if ( !isInstanceListLoaded )
+				{
+					System.out.println("*** Avoiding selection");
+					isInstanceListLoaded = true;
+					return;
+				}
 				
 				//CA: the idea here is to get the selection from the list and make sure that its not a multiple selection
 				//if its a multiple selection return null

@@ -223,7 +223,7 @@ class nl3parser extends Object {
 				}
 
 				//contours are good candidates for instances
-				listPotentialInstance("Contour " + tob.txt + " " + tob.qtxt + " | " + tob.itype, i1, pnew.myIndex);
+				listPotentialInstance("Contour " + tob.qtxt, i1, pnew.myIndex);
 			}
 
 
@@ -260,8 +260,6 @@ class nl3parser extends Object {
 		}
 
 		nlpoint ppar = null;
-
-
 
 		recAddTree(nl3o, ppar, ipt);		//add a new tree with a null parent point
 
@@ -342,7 +340,14 @@ class nl3parser extends Object {
 				if (ppar != null) begin = ppar.myIndex;
 				if (pprev != null) end = pprev.myIndex;
 
-				listPotentialInstance("Tree " + tob.txt, begin, end);
+				//As long as the object doesn't begin with 'color'
+				//if (tob.txt != null && !tob.txt.startsWith("color"))
+				{
+					if ( begin != end)
+					{
+						listPotentialInstance("Tree " + tob.qtxt, begin, end);	
+					}						
+				}
 			}
 		}
 
@@ -352,6 +357,10 @@ class nl3parser extends Object {
 
 	public void listPotentialInstance(String name, int p1, int p2)
 	{
+		
+		omtInstance inst = new omtInstance(name, p1, p2);
+		neuroData.inObjectNames.add(inst);
+		
 		System.out.println("*** Potential instance: " + name + " @ " + p1 + " - " + p2);
 	}
 

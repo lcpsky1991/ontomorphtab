@@ -35,6 +35,9 @@ class neulucData extends Object {
 
 	double[][] pointList;
 
+	//String[] inObjectNames = {"None"};
+	Vector<omtInstance> inObjectNames = new Vector();
+	
 	// stuff used in recursive write functions;
 	int nseg;
 

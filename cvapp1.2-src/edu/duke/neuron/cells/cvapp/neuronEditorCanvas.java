@@ -196,6 +196,7 @@ public class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 			}
 		}
 		gd.setRange(xl - 20, xh + 20, yl - 20, yh + 20);
+		System.out.println("*** finding");
 		repaint();
 	}
 
