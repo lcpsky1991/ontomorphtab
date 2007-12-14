@@ -925,11 +925,11 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 				//Use tree selection because it'll work for both trees and contours
 				makeSelection(chosenItem.selectType, chosenItem.beginPoint, chosenItem.endPoint);
 			}
-			else if ( i == 0)
+			else if ( i == -1)
 			{	//this is a non-point of interest, this is selecting the title of the choice box
 				neucan.setNormal();
 			}
-			else if ( i > 0)
+			else if ( i >= 0)
 			{
 				System.err.println("*** Error: index of chosen out of bounds of neurodata Vector. Index is: " + i);
 			}

@@ -223,7 +223,10 @@ class nl3parser extends Object {
 				}
 
 				//contours are good candidates for instances
-				listPotentialInstance("Contour " + tob.qtxt, i1, pnew.myIndex, 7);
+				if (tob != null && pnew != null)
+				{
+					listPotentialInstance("Contour " + tob.qtxt, i1, pnew.myIndex, 7);	
+				}
 			}
 
 
@@ -231,7 +234,14 @@ class nl3parser extends Object {
 			//anon or "unknown" is assumed to be a tree
 			else if (tob.itype == tob.AXON || tob.itype == tob.DENDRITE || tob.itype == tob.APICAL || tob.itype == tob.ANON)
 			{
-				addTree(tob);
+				try
+				{
+					addTree(tob);	
+				}
+				catch(Exception e)
+				{
+					System.err.println("*** Exception loading file" + e.toString());
+				}
 			}
 			else
 			{
