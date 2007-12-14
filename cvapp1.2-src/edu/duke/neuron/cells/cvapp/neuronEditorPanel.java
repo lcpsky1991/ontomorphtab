@@ -910,18 +910,18 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 //		This is the code for slection of "areas of interest" are
 		// execute code for selecting that object
 		//TODO: code for select interesting
-		System.out.println("*** Selected item of interest");
-		
 		
 		int i=0;
-		i=options.getSelectedIndex() - 1;//subtract one from the index because the choice box has an extra option which is the box name, "Areas of Interest"
+		i=options.getSelectedIndex()-1;
 		
 		try
-		{
-			if (i>0 && i < cell.inObjectNames.size())
+		{ 
+			if (i>=0 && i < cell.inObjectNames.size())
 			{
+				//subtract one from the index because the choice box has an extra option which is the box name, "Areas of Interest"
 				omtInstance chosenItem = cell.inObjectNames.get(i);
-				
+		
+				System.out.println("*** Selected item of interest (" + i + ") [" + chosenItem.beginPoint + "-" + chosenItem.endPoint + "]");
 				//Use tree selection because it'll work for both trees and contours
 				makeSelection(chosenItem.selectType, chosenItem.beginPoint, chosenItem.endPoint);
 			}

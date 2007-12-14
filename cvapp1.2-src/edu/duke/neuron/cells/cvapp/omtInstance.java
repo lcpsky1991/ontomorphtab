@@ -36,11 +36,12 @@ public class omtInstance
 		endPoint = 0;
 	}
 	
-	omtInstance(String name, int begin, int end)
+	omtInstance(String name, int begin, int end, int method)
 	{
 		strName = name;
 		beginPoint = begin;
 		endPoint = end;
+		selectType = method;
 	}
 	
 	public String toString()

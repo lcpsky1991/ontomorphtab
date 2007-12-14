@@ -223,7 +223,7 @@ class nl3parser extends Object {
 				}
 
 				//contours are good candidates for instances
-				listPotentialInstance("Contour " + tob.qtxt, i1, pnew.myIndex);
+				listPotentialInstance("Contour " + tob.qtxt, i1, pnew.myIndex, 7);
 			}
 
 
@@ -343,10 +343,7 @@ class nl3parser extends Object {
 				//As long as the object doesn't begin with 'color'
 				//if (tob.txt != null && !tob.txt.startsWith("color"))
 				{
-					if ( begin != end)
-					{
-						listPotentialInstance("Tree " + tob.qtxt, begin, end);	
-					}						
+					listPotentialInstance("Tree " + tob.qtxt, begin, end, 8);
 				}
 			}
 		}
@@ -355,11 +352,14 @@ class nl3parser extends Object {
 
 	}
 
-	public void listPotentialInstance(String name, int p1, int p2)
+	public void listPotentialInstance(String name, int p1, int p2, int selectionMethod)
 	{
 		
-		omtInstance inst = new omtInstance(name, p1, p2);
-		neuroData.inObjectNames.add(inst);
+		if ( p1 != p2)
+		{
+			omtInstance inst = new omtInstance(name, p1, p2, selectionMethod);
+			neuroData.inObjectNames.add(inst);		
+		}
 		
 		System.out.println("*** Potential instance: " + name + " @ " + p1 + " - " + p2);
 	}
