@@ -336,7 +336,6 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		}
 	}
 
-	//TODO: write code that populates this choice box
 	public void setInterestingObjects(Vector areas, int[][] vals)
 	{
 		
@@ -469,26 +468,34 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		"\n IDENT: 11";
 
 
-		input = (JOptionPane.showInputDialog(coms).trim());
-		if (input != null)
-			m = Integer.valueOf(input);
+		try
+		{
+			input = (JOptionPane.showInputDialog(coms).trim());
+			if (input != null)
+				m = Integer.valueOf(input);
 
-		input = (JOptionPane.showInputDialog("Point A").trim());
-		if (input != null)
-			a = Integer.valueOf(input);
+			input = (JOptionPane.showInputDialog("Point A").trim());
+			if (input != null)
+				a = Integer.valueOf(input);
 
-		input = (JOptionPane.showInputDialog("Point B").trim());
-		if (input != null)
-			b = Integer.valueOf(input);
-
-
-		makeSelection(m, a, b);
+			input = (JOptionPane.showInputDialog("Point B").trim());
+			if (input != null)
+				b = Integer.valueOf(input);
 
 
-		result += "\n*** Inject: (" + m + ") @ [" + a + "] [" + b + "] - invoked by inject()";
-		result += "";
-		System.out.println(result);
+			makeSelection(m, a, b);
 
+
+			result += "\n*** Inject: (" + m + ") @ [" + a + "] [" + b + "] - invoked by inject()";
+			result += "";
+			System.out.println(result);
+
+		}
+		catch (Exception e)
+		{
+			//inject aborted by user
+		}
+		
 
 	}
 
@@ -521,6 +528,9 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 			System.err.println("*** Exception occured with:  makeSelection(" + option + ", " + a + ", " + b + ")");
 			neucan.setNormal();	//clear the selection
 		}
+		
+		int[] selected = {a, b};
+		neucan.storeSelection(selected, option);
 	}
 
 	public String[] readStringArrayFromURL(URL u) {
@@ -909,7 +919,7 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 	{
 //		This is the code for slection of "areas of interest" are
 		// execute code for selecting that object
-		//TODO: code for select interesting
+		//TODO: assign selection to asserted instances
 		
 		int i=0;
 		i=options.getSelectedIndex()-1;

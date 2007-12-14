@@ -449,6 +449,7 @@ public class OntoMorphTab extends AbstractTabWidget {
 			neuronPanel.makeSelection(method, a, b);
 			System.out.println("*** Making Selection: [m=" + method + ", a="
 					+ a + ", b=" + b + "] via selectNeuro()");
+			
 		}
 		else
 		{

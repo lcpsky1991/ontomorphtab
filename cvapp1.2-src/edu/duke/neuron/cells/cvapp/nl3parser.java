@@ -225,7 +225,10 @@ class nl3parser extends Object {
 				//contours are good candidates for instances
 				if (tob != null && pnew != null)
 				{
-					listPotentialInstance("Contour " + tob.qtxt, i1, pnew.myIndex, 7);	
+					String tag = tob.qtxt;
+					//if (tag == null) tag = tob.txt;
+					//if (tag == null) tag = "(Unnamed)";
+					listPotentialInstance("Contour " + tag, i1, pnew.myIndex, 7);	
 				}
 			}
 
@@ -324,6 +327,10 @@ class nl3parser extends Object {
 					//System.out.println("recAddTree ignoring property: "	+ tob.txt);
 				}
 			}
+			else if (tob.itype == tob.CONTOUR)
+			{
+				System.out.println("Contour not accounted for " + tob.txt + " " + tob.qtxt);
+			}
 			else
 			{
 				System.out.println("recAddTree ignoring object of type " + tob.itype + " " + tob.txt);
@@ -333,6 +340,8 @@ class nl3parser extends Object {
 			// To list all dendrite use:
 			//listObj = (tob.itype == tob.ANON);
 
+			listObj = (tob.qtxt != null);
+			
 			//If the type is a branch, and it has no parent, then it is a root level branch
 			if ( tob.itype == tob.ANON && ppar == null) listObj = true; //display root level branches
 
@@ -353,7 +362,12 @@ class nl3parser extends Object {
 				//As long as the object doesn't begin with 'color'
 				//if (tob.txt != null && !tob.txt.startsWith("color"))
 				{
-					listPotentialInstance("Tree " + tob.qtxt, begin, end, 8);
+					String tag=null;
+					
+					tag = tob.qtxt;
+					if (tag == null) tag = tob.txt;
+					if (tag == null) tag = " ";
+					listPotentialInstance("Tree " + tag, begin, end, 8);
 				}
 			}
 		}
@@ -462,7 +476,7 @@ class nl3Object {
 
 	static int BRANCHSEP = 9;
 
-	int itype;	//default is -1 (unknown), 1=axon, 2=dendrite, 3=apical
+	int itype;	//default is -1 (unknown), 1=axon, 2=dendrite, 3=apical, 4=property, 5=point, 6=countour, 7=label, 8=anon, 9=branchsep
 
 	double x, y, z, r;
 

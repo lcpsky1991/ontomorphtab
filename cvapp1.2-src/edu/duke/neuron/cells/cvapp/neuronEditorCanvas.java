@@ -489,12 +489,12 @@ public class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 		growMode = true;
 	}
 
-	public void storeSelection(int[] plist)
+	public void storeSelection(int[] plist, int method)
 	{
 		//This function is for later retreival by ontomorphtab
 		selection = new int[plist.length + 1];	//resize the array to be same size plus one
 
-		selection[0] = gotPointAction;	//store the method in index 0
+		selection[0] = method;	//store the method in index 0
 
 		for (int i=0; i < plist.length; i++)
 		{	//append the nodes
@@ -520,7 +520,8 @@ public class neuronEditorCanvas extends graphCanvas3 implements ActionListener {
 		}
 		System.out.println("*** User Action: (" + gotPointAction + ") @ Index Points {" + strP + "} - invoked by gotPoint()");
 
-		storeSelection(ip);
+		
+		storeSelection(ip, gotPointAction);
 
 		// $$$ End Debug $$$
 
