@@ -621,6 +621,8 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 	@SuppressWarnings("static-access")
 	public void itemStateChanged(ItemEvent e)
 	{
+		
+		//user has selected one of the potential instances listed int he choice box
 		if ( e.getSource() == chInterestingObjects)
 		{
 			System.out.println("*** event for choice box");
@@ -915,7 +917,8 @@ public class neuronEditorPanel extends rsbPanel implements ActionListener,
 		}
 
 	}
-	public void eventSelectedInteresting(Choice options)
+	
+	private void eventSelectedInteresting(Choice options)
 	{
 //		This is the code for slection of "areas of interest" are
 		// execute code for selecting that object
@@ -1122,73 +1125,45 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 	neuronEditorPanel neupan;
 
 	String[] slist = null;
-
-	TextField webAdd;
-
+	
+	final String strCCDBFiles = "http://www.temet-nosce.net/slarson/ccdbNL/";
+	
 	String hostroot;
 
-	Choice chlist;
-
-	List list;
-
-	Frame listFrame;
-
-	Frame info;
-
+	Choice chFilesCCDB;
+	Choice chFilesExternal;
+	
+	Button btnFetch;
+	
 	@SuppressWarnings("static-access")
 	webCellBar(neuronEditorPanel p) {
 		neupan = p;
 		setLayout(new FlowLayout());
-		chlist = new Choice();
-		list = new List();
+		
 
+		
+		chFilesCCDB = new Choice();
+		chFilesExternal = new Choice();
+		
 		setList(null);
-		webAdd = new TextField("http://www.temet-nosce.net/slarson/ccdbNL/");
-		Button fetch = new Button("fetch list");
-		fetch.addActionListener(this);
+		
+		
+		btnFetch = new Button("fetch lists --->");
+		add(btnFetch);
+		btnFetch.addActionListener(this);
 
-		GridBagLayout gbl = new GridBagLayout();
-		GridBagConstraints gbc = new GridBagConstraints();
-		setLayout(gbl);
-		gbc.insets = new Insets(0, 0, 0, 0);
-		gbc.weightx = 1.0;
-		gbc.weighty = 1.0;
-		gbc.ipadx = 1;
-		gbc.ipady = 1;
-		gbc.fill = gbc.BOTH;
-		gbc.insets = new Insets(0, 0, 0, 0);
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;
-
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbl.setConstraints(webAdd, gbc);
-		add(webAdd);
-		gbc.gridx = 1;
-		gbc.gridy = 0;
-		gbl.setConstraints(fetch, gbc);
-		add(fetch);
-		gbc.gridx = 2;
-		gbc.gridy = 0;
-		gbl.setConstraints(chlist, gbc);
-		add(chlist);
-		chlist.addItemListener(this);
-
-		list.addItemListener(this);
-		listFrame = new Frame();
-		listFrame.setLayout(new BorderLayout());
-		listFrame.add("Center", list);
-		Button b = new Button("close");
-		listFrame.add("South", b);
-		b.addActionListener(this);
-		listFrame.pack();
-		listFrame.setSize(500, 300);
-		listFrame.addWindowListener(this);
-		listFrame.setLocation(listFrame.getBounds().x + 50, listFrame.getBounds().y + 50); //place the list somewhat near the center of the screen
-
-
-
-		}
+		
+		//setLayout(gbl);
+		setLayout(new GridLayout());
+		
+		//files combo boxes
+		add(chFilesCCDB);
+		chFilesCCDB.addItemListener(this);
+		
+		add(chFilesExternal);
+		chFilesExternal.addItemListener(this);
+		
+	}
 
 	public void windowActivated(WindowEvent e) {
 	}
@@ -1197,8 +1172,6 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 	}
 
 	public void windowClosing(WindowEvent e) {
-		listFrame.setVisible(false);
-		//info.setVisible(false);
 	}
 
 	public void windowDeactivated(WindowEvent e) {
@@ -1213,24 +1186,24 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 	public void windowOpened(WindowEvent e) {
 	}
 
-	public void setList(String[] l) {
+	public void setList(String[] l)
+	{
 		slist = l;
-		chlist.removeAll();
-		list.removeAll();
-		if (slist != null) {
-			for (int i = 0; i < slist.length; i++) {
-				chlist.add(slist[i]);
-				list.add(slist[i]);
+
+		chFilesExternal.removeAll();
+		chFilesCCDB.removeAll();
+		
+		
+		if (slist != null)
+		{
+			for (int i = 0; i < slist.length; i++)
+			{
+				chFilesCCDB.add(slist[i]);
 			}
-		} else {
-			chlist.add("list is empty");
-			list.add("list is empty");
 		}
-		if (listFrame != null) {
-			Dimension d = listFrame.getSize();
-			listFrame.pack();
-			listFrame.setSize(d);
-			listFrame.setVisible(true);
+		else
+		{
+			chFilesCCDB.add("CCDB List is Empty");
 		}
 	}
 
@@ -1258,7 +1231,7 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 		if (u1 != null)
 		{
 			hostroot = u1.toString();
-			webAdd.setText(hostroot);
+			//webAdd.setText(hostroot);
 
 			try
 			{
@@ -1278,41 +1251,62 @@ class webCellBar extends sbPanel implements ItemListener, ActionListener,
 
 	public void setDataFromURL(String surl)
 	{
-		listFrame.setVisible(false); // so thatt eh user knows they clicked
+		//listFrame.setVisible(false); // so thatt eh user knows they clicked
 		neupan.loadImage(surl);
 	}
 
 
 	@SuppressWarnings("static-access")
-	public void itemStateChanged(ItemEvent e) {
+	public void itemStateChanged(ItemEvent e)
+	{
+		
+		//TODO: clean this up to properly reference thes objects and not sarg/instanceof
 		String sarg = "none";
 		Object source = e.getSource();
-		if (e.getStateChange() == e.SELECTED) {
-			if (source instanceof Choice) {
+		if (e.getStateChange() == e.SELECTED)
+		{
+			if (source instanceof Choice)
+			{
 				sarg = (String) (e.getItem());
 				processNameEvent(sarg);
-			} else if (source instanceof List) {
-				sarg = (String) (list.getSelectedItem());
+			}
+			else if (source instanceof List)
+			{
+				//sarg = (String) (list.getSelectedItem());
 				processNameEvent(sarg);
 			}
 		}
+		
+		//user has selected on of the files to open from neuroleucida combo boxes
+		if ( e.getSource() == chFilesCCDB || e.getSource() == chFilesExternal )
+		{
+			eventSelectedFile((Choice) e.getSource());
+		}
+		
+		
 		System.out.println("item state change " + sarg);
 	}
 
+	private void eventSelectedFile(Choice options)
+	{
+		int i = options.getSelectedIndex();
+		
+		if (i>=0) 
+		{
+			String path=(String) options.getItem(i);
+			setDataFromURL(path);
+		}
+	}
+	
 	public void actionPerformed(ActionEvent e)
 	{
 		Object source = e.getSource();
 		if (source instanceof Button)
 		{
-			String sarg = ((Button) source).getLabel();
-			if (sarg.equals("fetch list"))
+			if (source == btnFetch)
 			{
-				hostroot = webAdd.getText();
+				hostroot = strCCDBFiles;
 				getIndexFromURL();
-			}
-			else if (sarg.equals("close"))
-			{
-				listFrame.setVisible(false);
 			}
 		}
 	}
