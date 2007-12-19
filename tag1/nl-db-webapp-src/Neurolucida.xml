@@ -1,0 +1,7 @@
+<Context path="/Neurolucida" 
+    docBase="C:\DEV\Neurolucida"
+debug="0" privileged="true">
+<Logger className="org.apache.catalina.logger.FileLogger"
+prefix="Test_log." suffix=".txt" timestamp="false"/>
+</Context>
+

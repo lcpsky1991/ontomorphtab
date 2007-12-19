@@ -1,0 +1,144 @@
+
+
+cvapp version 1.2,  September 98, Robert Cannon
+
+
+see http://www.neuro.soton.ac.uk/cells/ for example cells, 
+usage notes and documentation.
+
+
+This is the source distribution of cvapp, a viewere editor and file
+format converter for neuronal structures.
+Comments, bugs, problems to rcc1@soton.a.uk 
+
+
+to compile:
+ needs java 1.1 or later.
+   javac cvapp.java
+
+if you have the current directory in your CLASSPATH you can then run
+it with:
+   java cvapp
+
+alternatively, make a jar file, put the .jar file in your CLASSPATH
+and run it from anywhere:
+
+   jar cvf cvapp.jar *.class
+   java cvapp
+
+
+
+**********************************************************************
+
+Notes on cvapp internals.
+
+Cvapp uses the default package - I've never got round to putting
+package statements all over the place. If this causes any problems, 
+let me know.
+
+The structure is stored in the points field in the object neulucData.
+This is a Vector of nlpoint Objects.  When a file is read, an new 
+neulucData object is instantiated and one of its "fillFrom..." methods
+is called, with the contents of the file provided as the single
+argument in the form of an array of strings (one per line of the input
+file). See the fillFromSwcFile method for the simplest example of
+reading a structure. 
+
+
+For display, the list of points is converted into two arrays, also
+fields in neulucData: 
+
+   double[][] lineList;
+   double[][] pointList;
+All the drawing operations work with these two arrays alone.
+
+
+
+Adding new input formats:
+ - modify the generic "fill" method in neulucData to recognise 
+   your file type somehow (at present it goes on the file extension
+   alone);	
+ - provide a new method like the fillFromSwcFile method to parse the
+   file and set up the dta structure.
+   (note that the file IO is handled the same for all files - the 
+   fill method is given a string array containing the eintire contents
+   of the file)
+
+
+Adding output formats:
+For now, it is probably easiest to duplicate some code in the 
+neuronEditorPanel class
+ - add a new line in the file menu;
+ - add a new block in the processNameEvent method
+
+then
+ - add a new method in the neulucData object like, for example, the 
+   HOCwriteNS method, which, if necessary instantiates a new writer 
+   to do the writing.
+
+
+
+I realise that this could be streamlined quite a lot, to make a more standard
+interface for file handling but don't wait for it - maybe by version 2!
+
+
+please send me any modifications so they can be incorporated in the
+main distribution.
+
+***********************************************************************
+
+
+Input formats:   neurolucida 2 ascii,  swc;
+Output formats:  swc, genesis .p (flat and hierarchical), neuron hoc;
+
+what's this 'swc' stuff then?	
+For reasons which escape the author, digitization systems, and
+modelling packages insist on their own baroque file formats full of 
+extrane[ous} pun,ctuat(i)on and some even mix modelling instructions 
+with the declaration of the structure.
+
+So, for its internal use, and for storing structures - since it is the
+only format that cvapp can both read and write :), cvapp uses a simple
+file format with the arbitrary extension ".swc"
+An swc file contains:
+
+comment lines beginning with '#' anywhere in the file;
+data lines containing seven blank-separated fields:
+   point_index  type_code  x  y  z  r  parent_point_index
+   
+x,y,z,r are floats giving the position and radius in microns;
+the rest are integers.
+The point index is the index of the point ins the structure - in any
+file written by cvapp, the first point (the first data line in the
+file) will have index 1, the second 2 etc but this is not obligatory.
+The parent_point_index is the index of the parent of this point, where
+the parent is taken to be the point immediately preceding it on a
+path between some root point and itself. The root point defaults to
+the point of maximal radius, but can be set to any point in the
+structure.
+
+The type_code is an integer label, with the following predefined
+fields:
+ 0 undefined
+ 1 soma
+ 2 axon
+ 3 dendrite
+ 4 apical dendrite
+ 5 custom-1
+ 6 custom-2
+ 7 custom-n
+
+On reading neurolucida files, the neurolucida type codes are converted
+to these. Cvapp allows relabelling with these or with user defined
+codes and uses them for assigning line colours in the non-stereo 
+structure display modes.
+
+
+************************************************************************
+
+
+
+
+
+
+

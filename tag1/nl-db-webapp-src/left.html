@@ -1,0 +1,155 @@
+<HTML>
+
+<HEAD> <TITLE>SDSC Demo Page</TITLE> </HEAD>
+
+<BODY  bgcolor="#ffddaa">
+
+<br><br>
+<form action="http://erdem-xp.ad.sdsc.edu:8080/Neurolucida/test_b.jsp"  method="POST" target="RIGHT"> 
+<center>
+
+<table border="1" cellpadding="1" cellspacing="1" width="320">
+   <tr>
+   <tr><td height="2"></td></tr>  
+   <tr width="16" ><td height="12" bgcolor=#EEEEFF> <font face=arial,sans-serif color=black>
+					<center><B>GET NEUROLUCIDA INFO </B> </center></font>             
+   </td></tr>
+
+   <tr><td height="2"></td></tr>  
+   <tr>
+		<td> 
+		<tr><td><font color="#ff4444"><b> Neuron Tree Input</b></font></td></tr>
+		<tr><td>Name:
+				<input type="text" name="neuron" size=24 value="alxp">
+				<br>
+				Level:&nbsp;
+				<select name="lcond" size="1">
+				<option value='='>=</option>
+				<option value='>='>&gt;=</option>
+				<option value='<='>&lt;=</option>
+				<option value='>'>&gt;</option>
+				<option value='<'>&lt;</option>
+				</select>
+				<input type="text" name="level" size=2 value="3">
+
+		</td></tr>
+		</td>
+   </tr>
+   <tr><td height="2"></td></tr>  
+	<tr>
+		<td> 
+		<tr><td><font color="#ff4444"><b> Operations</b></font></td></tr>
+		<tr><td>Operation:
+				<select name="op" size="1">
+				<option value='METADATA'>METADATA</option>
+				<option value='ALL'>ALL</option>
+				<option value='getXthOrderFanout'>getXthOrderFanout</option>
+				<option value='getXthOrderDiameter'>getXthOrderDiameter</option>
+				<option value='getXthOrderLength'>getXthOrderLength</option>
+				<option value='getXthOrderSpines'>getXthOrderSpines</option>
+				<option value='getXthOrderSpineDensity'>getXthOrderSpineDensity</option>
+				<option value='getXthOrderArea'>getXthOrderArea</option>
+				<option value='getXthOrderVolume'>getXthOrderVolume</option>
+				<option value='getTotalArea'>getTotalArea</option>
+				<option value='getTotalVolume'>getTotalVolume</option>
+				</select>
+		</td></tr>
+		</td>
+   </tr>
+   
+</table>
+<input type="submit" name="submit" value="Submit">
+<input type="reset" name="reset" value="Default">
+</center>
+</form>
+<br>
+<br>
+
+
+<form action="http://erdem-xp.ad.sdsc.edu:8080/Neurolucida/test_b.jsp"  method="POST" target="RIGHT"> 
+<center>
+<table border="1" cellpadding="1" cellspacing="1" width="320">
+   <tr>
+   <tr><td height="2"></td></tr>  
+   <tr width="16" ><td height="12" bgcolor=#EEEEFF> <font face=arial,sans-serif color=black>
+					<center><B>COMPARE TWO NEURONS </B> </center></font>             
+   </td></tr>
+
+   <tr><td height="2"></td></tr>  
+   <tr>
+		<td> 
+		<tr><td><font color="#ff4444"><b> Neuron Tree Input</b></font></td></tr>
+		<tr><td>Name 1:
+				<input type="text" name="neuron1" size=24 value="alxp">
+				<br>
+				Name 2:
+				<input type="text" name="neuron2" size=24 value="alxp">
+				<br>
+				Level:&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="text" name="level" size=2 value="3">
+				<br>
+				Criteria:&nbsp;
+				<select name="criteria" size="1">
+				<option value='FANOUT'>FANOUT</option>
+				<option value='LENGTH'>LENGTH</option>
+				<option value='SPINES'>SPINES</option>
+				<option value='SPINEDENSITY'>SPINEDENSITY</option>
+				<option value='DIAMETER'>DIAMETER</option>
+				</select>
+
+
+		</td></tr>
+		</td>
+   </tr>
+</table>
+<input type="submit" name="submit" value="Submit">
+<input type="reset" name="reset" value="Default">
+</center>
+</form>
+<br>
+<br>
+
+<form action="http://erdem-xp.ad.sdsc.edu:8080/Neurolucida/test_b.jsp"  method="POST" target="RIGHT"> 
+<center>
+<table border="1" cellpadding="1" cellspacing="1" width="320">
+   <tr>
+   <tr><td height="2"></td></tr>  
+   <tr width="16" ><td height="12" bgcolor=#EEEEFF> <font face=arial,sans-serif color=black>
+					<center><B>LOAD/DELETE NEURON </B> </center></font>             
+   </td></tr>
+
+   <tr><td height="2"></td></tr>  
+   <tr>
+		<td> 
+		<tr><td><font color="#ff4444"><b>Load Neurolucida File</b></font></td></tr>
+		<tr><td>Load URL:
+				<input type="text" name="load" size=32 value="http://">
+				<br>
+				Neuron:&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="text" name="neuronl" size=24 value="alxp">
+				<br>
+				Password:&nbsp;
+				<input type="password" name="pwl" size=24>
+		</td></tr>
+		</td>
+		<tr><td><font color="#ff4444"><b>Delete Neurolucida File</b></font></td></tr>
+		<tr><td>Neuron:&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="text" name="delete" size=24 value="alxp">
+				<br>
+				Password:&nbsp;
+				<input type="password" name="pwd" size=24>
+		</td></tr>
+   </tr>
+</table>
+<input type="submit" name="submit" value="Submit">
+<input type="reset" name="reset" value="Default">
+</center>
+</form>
+
+<p align="right">SDSC/BIRN 2006</p>
+
+
+
+
+</BODY>
+</HTML>
