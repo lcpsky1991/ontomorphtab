@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<nodeSet  version="1.1">
+	<view uin="V574ng9fb33nbsq-udazgh">
+		<property name="$defaultDiagram" value="true"/>
+		<property name="$metaclass" value="Package Diagram"/>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IView2D">
+			<property name="bounds" value="115,55,80,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IView2D">
+				<property name="bounds" value="160,150,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IView3D">
+			<property name="bounds" value="5,5,90,82"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IView3D">
+				<property name="bounds" value="55,102,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IView">
+			<property name="bounds" value="275,5,114,82"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IView">
+				<property name="bounds" value="325,131,0,0"/>
+			</reference>
+			<reference referencedUin="jdt:l_dpn:src:edu.ucsd.ccdb.ontomorph2.view.IView:Dependency_Link">
+				<property name="sourceAnchor" value="280,50"/>
+				<property name="targetAnchor" value="100,50"/>
+			</reference>
+			<reference referencedUin="jdt:l_dpn:src:edu.ucsd.ccdb.ontomorph2.view.IView:Dependency_Link1">
+				<property name="sourceAnchor" value="280,75"/>
+				<property name="targetAnchor" value="200,75"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.View3DImpl">
+			<property name="bounds" value="5,155,96,134"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="jdt:e_method:src:edu.ucsd.ccdb.ontomorph2.view.View3DImpl.setCells:setCells~QSet\&lt;QICell;&gt;;">
+			</reference>
+			<reference referencedUin="jdt:e_method:src:edu.ucsd.ccdb.ontomorph2.view.View3DImpl.setSlides:setSlides~QArrayList\&lt;QISlide;&gt;;">
+			</reference>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.view.View3DImpl:IView3D">
+				<property name="sourceAnchor" value="50,160"/>
+				<property name="targetAnchor" value="50,92"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ISlideView">
+			<property name="bounds" value="515,15,132,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ISlideView">
+				<property name="bounds" value="586,110,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.SlideViewImpl">
+			<property name="bounds" value="575,175,110,141"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ViewImpl">
+			<property name="bounds" value="226,134,178,332"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.view.ViewImpl:IView">
+				<property name="sourceAnchor" value="323,139"/>
+				<property name="targetAnchor" value="323,121"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.ViewImpl:view3D">
+				<property name="sourceAnchor" value="231,200"/>
+				<property name="targetAnchor" value="100,200"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.ViewImpl:instance">
+				<property name="sourceAnchor" value="409,428"/>
+				<property name="targetAnchor" value="405,432"/>
+				<property name="bendpoints" value="438,428,438,461,405,461"/>
+				<property name="smooth_bendpoints" value="438,428,438,461,405,461"/>
+			</reference>
+			<reference referencedUin="jdt:e_field:src:edu.ucsd.ccdb.ontomorph2.view.ViewImpl.coordDelta">
+				<property name="bounds" value="0,38,176,13"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IStructure3D">
+			<property name="bounds" value="135,206,90,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IStructure3D">
+				<property name="bounds" value="183,301,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.Structure3DImpl">
+			<property name="bounds" value="5,315,113,105"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.view.Structure3DImpl:IStructure3D">
+				<property name="sourceAnchor" value="123,322"/>
+				<property name="targetAnchor" value="149,291"/>
+			</reference>
+		</reference>
+	</view>
+</nodeSet>

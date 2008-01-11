@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<nodeSet  version="1.1">
+	<view uin="V574ng9fb5f4yrl-p43sh4">
+		<property name="$defaultDiagram" value="true"/>
+		<property name="$metaclass" value="Package Diagram"/>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.observers.SceneObserver">
+			<property name="bounds" value="5,5,134,134"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.observers.SceneObserver:instance">
+				<property name="sourceAnchor" value="144,140"/>
+				<property name="targetAnchor" value="140,144"/>
+				<property name="bendpoints" value="173,140,173,173,140,173"/>
+				<property name="smooth_bendpoints" value="173,140,173,173,140,173"/>
+			</reference>
+		</reference>
+	</view>
+</nodeSet>

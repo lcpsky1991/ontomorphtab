@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<nodeSet  version="1.1">
+	<view uin="V574ng9fb30xesk7cadji">
+		<property name="$defaultDiagram" value="true"/>
+		<property name="$metaclass" value="Package Diagram"/>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.MorphologyRepository">
+			<property name="bounds" value="897,460,154,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<property name="$hidden" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.SemanticRepository">
+			<property name="bounds" value="175,289,161,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticThing">
+			<property name="bounds" value="175,395,120,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticThing:lnkCompartment">
+				<property name="sourceAnchor" value="340,340"/>
+				<property name="targetAnchor" value="340,420"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticThing:lnkSemanticRepository">
+				<property name="sourceAnchor" value="240,400"/>
+				<property name="targetAnchor" value="240,374"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticThing:lnkVariabilityTransformFunction">
+				<property name="sourceAnchor" value="240,340"/>
+				<property name="targetAnchor" value="240,500"/>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticThing">
+				<property name="bounds" value="240,490,0,0"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticThing:lnkSegmentGroup">
+				<property name="sourceAnchor" value="267,260"/>
+				<property name="targetAnchor" value="267,201"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISegment">
+			<property name="bounds" value="315,420,114,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<property name="$hidden" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISegment">
+				<property name="bounds" value="377,510,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ICell">
+			<property name="bounds" value="395,339,224,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ICell:lnkStructure2D">
+				<property name="sourceAnchor" value="624,349"/>
+				<property name="targetAnchor" value="720,349"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ICell:lnkMorphology">
+				<property name="sourceAnchor" value="553,424"/>
+				<property name="targetAnchor" value="699,565"/>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ICell">
+				<property name="bounds" value="512,434,0,0"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ICell:lnkPopulation">
+				<property name="sourceAnchor" value="452,344"/>
+				<property name="targetAnchor" value="452,240"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ICell:lnkSemanticThing">
+				<property name="sourceAnchor" value="400,409"/>
+				<property name="targetAnchor" value="300,409"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IPopulation">
+			<property name="bounds" value="335,154,164,81"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IPopulation">
+				<property name="bounds" value="422,250,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IVariabilityTransformFunction">
+			<property name="bounds" value="99,495,137,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<property name="$hidden" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IVariabilityTransformFunction">
+				<property name="bounds" value="172,590,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IPrototype">
+			<property name="bounds" value="335,560,141,121"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<property name="$hidden" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IPrototype:lnkVariabilityTransformFunction">
+				<property name="sourceAnchor" value="340,570"/>
+				<property name="targetAnchor" value="241,570"/>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IPrototype">
+				<property name="bounds" value="410,691,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IStructure2D">
+			<property name="bounds" value="715,280,115,80"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$hidden" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IStructure2D:lnkCircuit2D">
+				<property name="sourceAnchor" value="835,304"/>
+				<property name="targetAnchor" value="880,304"/>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IStructure2D">
+				<property name="bounds" value="777,370,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ICircuit2D">
+			<property name="bounds" value="875,231,250,98"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<property name="$hidden" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ICircuit2D">
+				<property name="bounds" value="1005,339,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology">
+			<property name="bounds" value="652,560,188,101"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology">
+				<property name="bounds" value="751,676,0,0"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology:lnkMorphologyRepository">
+				<property name="sourceAnchor" value="845,564"/>
+				<property name="targetAnchor" value="901,536"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology:lnkSegment">
+				<property name="sourceAnchor" value="656,571"/>
+				<property name="targetAnchor" value="434,483"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology:lnkPrototype">
+				<property name="sourceAnchor" value="657,610"/>
+				<property name="targetAnchor" value="481,610"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology:lnkSegmentGroup">
+				<property name="sourceAnchor" value="640,212"/>
+				<property name="targetAnchor" value="317,116"/>
+				<reference referencedUin="label:supplierCardinality:jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology:lnkSegmentGroup">
+					<property name="bounds" value="327,99,24,17"/>
+				</reference>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISegmentGroup">
+			<property name="bounds" value="175,120,114,81"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<property name="$hidden" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISegmentGroup">
+				<property name="bounds" value="237,211,0,0"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ISegmentGroup:lnkSegment">
+				<property name="sourceAnchor" value="300,141"/>
+				<property name="targetAnchor" value="437,280"/>
+				<reference referencedUin="label:supplierCardinality:jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ISegmentGroup:lnkSegment">
+					<property name="bounds" value="433,256,24,17"/>
+				</reference>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ITransformManifold">
+			<property name="bounds" value="24,375,124,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$hidden" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ITransformManifold:lnkIVariabilityTransformFunction">
+				<property name="sourceAnchor" value="128,460"/>
+				<property name="targetAnchor" value="128,500"/>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ITransformManifold">
+				<property name="bounds" value="91,470,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IScene">
+			<property name="bounds" value="321,6,144,108"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IScene:lnkISlide">
+				<property name="sourceAnchor" value="470,59"/>
+				<property name="targetAnchor" value="537,59"/>
+				<reference referencedUin="label:supplierCardinality:jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IScene:lnkISlide">
+					<property name="bounds" value="503,39,24,17"/>
+				</reference>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IScene:lnkIPopulation">
+				<property name="sourceAnchor" value="405,119"/>
+				<property name="targetAnchor" value="405,159"/>
+				<reference referencedUin="label:supplierCardinality:jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IScene:lnkIPopulation">
+					<property name="bounds" value="408,132,24,17"/>
+				</reference>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IScene">
+				<property name="bounds" value="398,129,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISlide">
+			<property name="bounds" value="532,9,121,101"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="jdt:e_method:src:edu.ucsd.ccdb.ontomorph2.core.ISlide.getRotation:getRotation">
+				<property name="bounds" value="0,25,124,13"/>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISlide">
+				<property name="bounds" value="597,125,0,0"/>
+			</reference>
+			<reference referencedUin="jdt:e_method:src:edu.ucsd.ccdb.ontomorph2.core.ISlide.method1:method1">
+				<property name="bounds" value="46,29,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IRotation">
+			<property name="bounds" value="735,20,129,121"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IRotation">
+				<property name="bounds" value="804,156,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IPosition">
+			<property name="bounds" value="735,161,117,108"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IPosition">
+				<property name="bounds" value="798,284,0,0"/>
+			</reference>
+			<reference referencedUin="jdt:e_method:src:edu.ucsd.ccdb.ontomorph2.core.IPosition.method1:method1">
+				<property name="bounds" value="44,3,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.SlideImpl">
+			<property name="bounds" value="530,173,126,147"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.core.SlideImpl:ISlide">
+				<property name="sourceAnchor" value="597,178"/>
+				<property name="targetAnchor" value="597,115"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.SlideImpl:_rotation">
+				<property name="sourceAnchor" value="661,186"/>
+				<property name="targetAnchor" value="740,113"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.SlideImpl:_position">
+				<property name="sourceAnchor" value="661,226"/>
+				<property name="targetAnchor" value="740,226"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.PositionImpl">
+			<property name="bounds" value="741,301,117,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.core.PositionImpl:IPosition">
+				<property name="sourceAnchor" value="801,306"/>
+				<property name="targetAnchor" value="801,274"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.RotationImpl">
+			<property name="bounds" value="915,15,129,92"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.core.RotationImpl:IRotation">
+				<property name="sourceAnchor" value="920,62"/>
+				<property name="targetAnchor" value="869,62"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.SceneImpl">
+			<property name="bounds" value="155,7,127,147"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.core.SceneImpl:IScene">
+				<property name="sourceAnchor" value="287,65"/>
+				<property name="targetAnchor" value="326,65"/>
+			</reference>
+			<reference referencedUin="jdt:e_method:src:edu.ucsd.ccdb.ontomorph2.core.SceneImpl.load:load">
+				<property name="bounds" value="0,12,125,13"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.MorphologyImpl">
+			<property name="bounds" value="915,255,126,147"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.MorphologyImpl:_rotation">
+				<property name="sourceAnchor" value="949,260"/>
+				<property name="targetAnchor" value="854,146"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.MorphologyImpl:_position">
+				<property name="sourceAnchor" value="920,267"/>
+				<property name="targetAnchor" value="857,267"/>
+			</reference>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.core.MorphologyImpl:IMorphology">
+				<property name="sourceAnchor" value="921,407"/>
+				<property name="targetAnchor" value="792,565"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.CellImpl">
+			<property name="bounds" value="668,401,156,108"/>
+			<property name="location_set_by_user" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.CellImpl:_morph">
+				<property name="sourceAnchor" value="751,514"/>
+				<property name="targetAnchor" value="751,565"/>
+			</reference>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.core.CellImpl:ICell">
+				<property name="sourceAnchor" value="673,415"/>
+				<property name="targetAnchor" value="624,415"/>
+			</reference>
+		</reference>
+	</view>
+</nodeSet>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<nodeSet  version="1.1">
+	<view uin="V574ng9fb30x7rjl7ug9l">
+		<property name="$defaultDiagram" value="true"/>
+		<property name="$metaclass" value="Package Diagram"/>
+		<reference referencedUin="design:view:::V574ng9fb31fkpsjjn8ob">
+			<property name="bounds" value="172,115,80,83"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="design:view:::V574ng9fb31evg2ofuz4l">
+			<property name="bounds" value="172,0,120,109"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="design:view:::V574ng9fb30xesk7cadji">
+			<property name="bounds" value="5,9,107,252"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="design:view:::V574ng9fb31nfpaz88qro">
+			<property name="bounds" value="172,219,80,70"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="design:view:::V574ng9fb33nbsq-udazgh">
+			<property name="bounds" value="375,9,90,174"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="design:view:::V574ng9fb5f4yrl-p43sh4">
+			<property name="bounds" value="176,308,86,70"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+	</view>
+</nodeSet>
