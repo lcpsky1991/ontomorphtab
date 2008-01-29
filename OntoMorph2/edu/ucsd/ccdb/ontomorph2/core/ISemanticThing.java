@@ -5,6 +5,8 @@ package edu.ucsd.ccdb.ontomorph2.core;
 
 public interface ISemanticThing {
 
+		public edu.ucsd.ccdb.ontomorph2.core.IPopulation lnkIPopulation = null;
+
 	public IVariabilityTransformFunction lnkVariabilityTransformFunction = null;
 
 	public ISegmentGroup lnkSegmentGroup = null;

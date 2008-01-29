@@ -5,6 +5,12 @@ import java.util.Set;
 
 public interface IScene {
 
+				/**
+	 * @associates edu.ucsd.ccdb.ontomorph2.core.ICell
+	 * @directed directed
+	 * @supplierCardinality 0..*
+	 */
+	java.util.Set lnkICell = null;
 			/**
 	 * @link aggregation 
 	 * @associates edu.ucsd.ccdb.ontomorph2.core.IPopulation

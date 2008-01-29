@@ -11,6 +11,10 @@ import edu.ucsd.ccdb.ontomorph2.view.IStructure3D;
 
 public interface IMorphology {
 
+			public edu.ucsd.ccdb.ontomorph2.core.IRotation lnkIRotation = null;
+
+		public edu.ucsd.ccdb.ontomorph2.core.IPosition lnkIPosition = null;
+
 	public ISegment lnkSegment = null;
 
 	/**

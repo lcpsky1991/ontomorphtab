@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<nodeSet  version="1.1">
+	<view uin="Vd7rsvffbzv494j-5w2766">
+		<property name="$metaclass" value="Class Diagram"/>
+		<property name="#invoke_inplace" value=""/>
+		<property name="$name" value="EntityDetailView Class Diagram"/>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.EntityDetailView">
+			<property name="bounds" value="278,168,104,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.EntityDetailView:lnkNamedPlusCustomEntityTreePanel">
+				<property name="sourceAnchor" value="283,213"/>
+				<property name="targetAnchor" value="245,213"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.EntityDetailView:lnkStatementWizard">
+				<property name="sourceAnchor" value="383,253"/>
+				<property name="targetAnchor" value="467,320"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.EntityDetailView:lnkMorphologyViewer">
+				<property name="sourceAnchor" value="372,173"/>
+				<property name="targetAnchor" value="403,140"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.EntityPropertiesPanel">
+			<property name="bounds" value="115,35,135,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.EntitySearchPanel">
+			<property name="bounds" value="35,295,115,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.EntityViewer">
+			<property name="bounds" value="395,55,83,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ExplicitImplicitEntityTreePanel">
+			<property name="bounds" value="55,168,185,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.ExplicitImplicitEntityTreePanel:lnkEntitySearchPanel">
+				<property name="sourceAnchor" value="107,253"/>
+				<property name="targetAnchor" value="107,300"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.ExplicitImplicitEntityTreePanel:lnkEntityPropertiesPanel">
+				<property name="sourceAnchor" value="182,173"/>
+				<property name="targetAnchor" value="182,120"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.StatementWizard">
+			<property name="bounds" value="455,315,112,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.MorphologyViewer">
+			<property name="bounds" value="598,178,117,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ImageViewer">
+			<property name="bounds" value="609,74,87,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+		</reference>
+	</view>
+</nodeSet>

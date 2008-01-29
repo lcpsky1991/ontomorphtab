@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<nodeSet  version="1.1">
+	<view uin="Vd7rsvffbzvhm4ixw03li">
+		<property name="$metaclass" value="Class Diagram"/>
+		<property name="#invoke_inplace" value=""/>
+		<property name="$name" value="Scene Class Diagram"/>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IScene">
+			<property name="bounds" value="255,15,144,108"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IScene:lnkISlide">
+				<property name="sourceAnchor" value="404,114"/>
+				<property name="targetAnchor" value="480,114"/>
+				<reference referencedUin="label:supplierCardinality:jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IScene:lnkISlide">
+					<property name="bounds" value="446,94,24,17"/>
+				</reference>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IScene:lnkICell">
+				<property name="sourceAnchor" value="267,128"/>
+				<property name="targetAnchor" value="205,180"/>
+				<reference referencedUin="label:supplierCardinality:jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IScene:lnkICell">
+					<property name="bounds" value="228,120,24,17"/>
+				</reference>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IScene">
+				<property name="bounds" value="332,138,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISlide">
+			<property name="bounds" value="475,95,121,101"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ISlide:lnkIPosition">
+				<property name="sourceAnchor" value="480,200"/>
+				<property name="targetAnchor" value="417,200"/>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISlide">
+				<property name="bounds" value="540,211,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ICell">
+			<property name="bounds" value="75,175,156,80"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ICell:lnkMorphology">
+				<property name="sourceAnchor" value="143,260"/>
+				<property name="targetAnchor" value="143,320"/>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ICell">
+				<property name="bounds" value="158,270,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IPosition">
+			<property name="bounds" value="295,195,117,108"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IPosition">
+				<property name="bounds" value="358,318,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IRotation">
+			<property name="bounds" value="398,335,129,121"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IRotation:lnkISlide">
+				<property name="sourceAnchor" value="506,340"/>
+				<property name="targetAnchor" value="506,201"/>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IRotation">
+				<property name="bounds" value="467,471,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology">
+			<property name="bounds" value="75,315,126,95"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology:lnkIRotation">
+				<property name="sourceAnchor" value="206,377"/>
+				<property name="targetAnchor" value="403,377"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology:lnkIPosition">
+				<property name="sourceAnchor" value="206,333"/>
+				<property name="targetAnchor" value="300,284"/>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology">
+				<property name="bounds" value="143,425,0,0"/>
+			</reference>
+		</reference>
+	</view>
+</nodeSet>
