@@ -7,7 +7,7 @@
 		<property name="#invoke_inplace" value=""/>
 		<property name="$name" value="Scene Class Diagram"/>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IScene">
-			<property name="bounds" value="255,15,144,108"/>
+			<property name="bounds" value="255,15,158,114"/>
 			<property name="location_set_by_user" value="true"/>
 			<property name="$shortcutReference" value="true"/>
 			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IScene:lnkISlide">
@@ -42,7 +42,7 @@
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ICell">
-			<property name="bounds" value="75,175,156,80"/>
+			<property name="bounds" value="75,175,173,80"/>
 			<property name="location_set_by_user" value="true"/>
 			<property name="$shortcutReference" value="true"/>
 			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ICell:lnkMorphology">
@@ -54,7 +54,7 @@
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IPosition">
-			<property name="bounds" value="295,195,117,108"/>
+			<property name="bounds" value="295,195,131,114"/>
 			<property name="location_set_by_user" value="true"/>
 			<property name="$shortcutReference" value="true"/>
 			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IPosition">
@@ -62,7 +62,7 @@
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IRotation">
-			<property name="bounds" value="398,335,129,121"/>
+			<property name="bounds" value="398,335,139,128"/>
 			<property name="location_set_by_user" value="true"/>
 			<property name="$shortcutReference" value="true"/>
 			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IRotation:lnkISlide">
@@ -74,7 +74,7 @@
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology">
-			<property name="bounds" value="75,315,126,95"/>
+			<property name="bounds" value="75,315,139,100"/>
 			<property name="location_set_by_user" value="true"/>
 			<property name="$shortcutReference" value="true"/>
 			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology:lnkIRotation">

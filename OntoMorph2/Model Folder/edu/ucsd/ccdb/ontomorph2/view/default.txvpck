@@ -13,21 +13,21 @@
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IView3D">
-			<property name="bounds" value="5,5,90,82"/>
+			<property name="bounds" value="5,5,96,86"/>
 			<property name="location_set_by_user" value="true"/>
 			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IView3D">
-				<property name="bounds" value="55,102,0,0"/>
+				<property name="bounds" value="58,106,0,0"/>
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IView">
-			<property name="bounds" value="275,5,114,82"/>
+			<property name="bounds" value="275,5,131,86"/>
 			<property name="location_set_by_user" value="true"/>
 			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IView">
-				<property name="bounds" value="337,102,0,0"/>
+				<property name="bounds" value="345,106,0,0"/>
 			</reference>
 			<reference referencedUin="jdt:l_dpn:src:edu.ucsd.ccdb.ontomorph2.view.IView:Dependency_Link">
 				<property name="sourceAnchor" value="280,50"/>
-				<property name="targetAnchor" value="100,50"/>
+				<property name="targetAnchor" value="106,50"/>
 			</reference>
 			<reference referencedUin="jdt:l_dpn:src:edu.ucsd.ccdb.ontomorph2.view.IView:Dependency_Link1">
 				<property name="sourceAnchor" value="280,75"/>
@@ -35,7 +35,7 @@
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.View3DImpl">
-			<property name="bounds" value="5,155,96,134"/>
+			<property name="bounds" value="5,155,106,141"/>
 			<property name="location_set_by_user" value="true"/>
 			<reference referencedUin="jdt:e_method:src:edu.ucsd.ccdb.ontomorph2.view.View3DImpl.setCells:setCells~QSet\&lt;QICell;&gt;;">
 			</reference>
@@ -43,7 +43,7 @@
 			</reference>
 			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.view.View3DImpl:IView3D">
 				<property name="sourceAnchor" value="50,160"/>
-				<property name="targetAnchor" value="50,92"/>
+				<property name="targetAnchor" value="50,96"/>
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ISlideView">
@@ -64,38 +64,38 @@
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ViewImpl">
-			<property name="bounds" value="275,134,178,332"/>
+			<property name="bounds" value="275,134,195,353"/>
 			<property name="location_set_by_user" value="true"/>
 			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.view.ViewImpl:IView">
 				<property name="sourceAnchor" value="337,139"/>
-				<property name="targetAnchor" value="337,92"/>
+				<property name="targetAnchor" value="337,96"/>
 			</reference>
 			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.ViewImpl:view3D">
 				<property name="sourceAnchor" value="280,227"/>
-				<property name="targetAnchor" value="106,227"/>
+				<property name="targetAnchor" value="116,227"/>
 			</reference>
 			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.ViewImpl:instance">
-				<property name="sourceAnchor" value="458,467"/>
-				<property name="targetAnchor" value="454,471"/>
-				<property name="bendpoints" value="487,467,487,500,454,500"/>
-				<property name="smooth_bendpoints" value="487,467,487,500,454,500"/>
+				<property name="sourceAnchor" value="475,487"/>
+				<property name="targetAnchor" value="471,492"/>
+				<property name="bendpoints" value="505,487,505,522,471,522"/>
+				<property name="smooth_bendpoints" value="505,487,505,522,471,522"/>
 			</reference>
 			<reference referencedUin="jdt:e_field:src:edu.ucsd.ccdb.ontomorph2.view.ViewImpl.coordDelta">
 				<property name="bounds" value="0,38,176,13"/>
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IStructure3D">
-			<property name="bounds" value="155,235,90,80"/>
+			<property name="bounds" value="155,235,101,80"/>
 			<property name="location_set_by_user" value="true"/>
 			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IStructure3D">
-				<property name="bounds" value="205,330,0,0"/>
+				<property name="bounds" value="210,330,0,0"/>
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.Structure3DImpl">
-			<property name="bounds" value="5,315,113,105"/>
+			<property name="bounds" value="5,315,125,111"/>
 			<property name="location_set_by_user" value="true"/>
 			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.view.Structure3DImpl:IStructure3D">
-				<property name="sourceAnchor" value="123,320"/>
+				<property name="sourceAnchor" value="135,320"/>
 				<property name="targetAnchor" value="160,319"/>
 			</reference>
 		</reference>
@@ -200,7 +200,7 @@
 		</reference>
 		<reference referencedUin="design:view:::Vd7rsvffbzv494j-5w2766">
 			<property name="$shortcutReference" value="true"/>
-			<property name="bounds" value="0,465,187,177"/>
+			<property name="bounds" value="0,465,201,187"/>
 			<property name="location_set_by_user" value="true"/>
 		</reference>
 		<reference referencedUin="design:view:::V-rqmxokfcdthllx-363jrq">
@@ -210,21 +210,23 @@
 		</reference>
 		<reference referencedUin="design:view:::V21xx84fcdtnik5-shb3u4">
 			<property name="$shortcutReference" value="true"/>
-			<property name="bounds" value="114,0,125,99"/>
+			<property name="bounds" value="114,0,133,103"/>
 			<property name="location_set_by_user" value="true"/>
 		</reference>
 		<reference referencedUin="design:view:::V-rqmxokfcdtqisf-8dhki">
 			<property name="$shortcutReference" value="true"/>
-			<property name="bounds" value="491,0,182,138"/>
+			<property name="bounds" value="491,0,205,145"/>
 			<property name="location_set_by_user" value="true"/>
 		</reference>
 		<reference referencedUin="design:view:::Vcqn2tgfcdx5x2q-e24hoi">
 			<property name="$shortcutReference" value="true"/>
-			<property name="bounds" value="472,157,304,203"/>
+			<property name="bounds" value="472,157,347,215"/>
 			<property name="location_set_by_user" value="true"/>
 		</reference>
 		<reference referencedUin="design:view:::Vq3zcdsfd5ciokm-n8oty8">
 			<property name="$shortcutReference" value="true"/>
+			<property name="bounds" value="857,464,148,103"/>
+			<property name="location_set_by_user" value="true"/>
 		</reference>
 	</view>
 </nodeSet>

@@ -6,27 +6,27 @@
 		<property name="$defaultDiagram" value="true"/>
 		<property name="$metaclass" value="Package Diagram"/>
 		<reference referencedUin="design:view:::V574ng9fb31fkpsjjn8ob">
-			<property name="bounds" value="172,115,84,96"/>
+			<property name="bounds" value="172,115,94,100"/>
 			<property name="location_set_by_user" value="true"/>
 		</reference>
 		<reference referencedUin="design:view:::V574ng9fb31evg2ofuz4l">
-			<property name="bounds" value="172,0,120,109"/>
+			<property name="bounds" value="172,0,133,114"/>
 			<property name="location_set_by_user" value="true"/>
 		</reference>
 		<reference referencedUin="design:view:::V574ng9fb30xesk7cadji">
-			<property name="bounds" value="5,9,152,437"/>
+			<property name="bounds" value="5,9,168,466"/>
 			<property name="location_set_by_user" value="true"/>
 		</reference>
 		<reference referencedUin="design:view:::V574ng9fb31nfpaz88qro">
-			<property name="bounds" value="172,219,80,70"/>
+			<property name="bounds" value="172,219,81,72"/>
 			<property name="location_set_by_user" value="true"/>
 		</reference>
 		<reference referencedUin="design:view:::V574ng9fb33nbsq-udazgh">
-			<property name="bounds" value="375,9,159,398"/>
+			<property name="bounds" value="375,9,192,424"/>
 			<property name="location_set_by_user" value="true"/>
 		</reference>
 		<reference referencedUin="design:view:::V574ng9fb5f4yrl-p43sh4">
-			<property name="bounds" value="176,308,86,70"/>
+			<property name="bounds" value="176,308,95,72"/>
 			<property name="location_set_by_user" value="true"/>
 		</reference>
 	</view>
