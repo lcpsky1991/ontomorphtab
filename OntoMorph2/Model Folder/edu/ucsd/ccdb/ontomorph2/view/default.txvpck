@@ -104,13 +104,16 @@
 			<property name="location_set_by_user" value="true"/>
 			<property name="bounds_setted_by_user" value="true"/>
 			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ICircuitDetailView">
-				<property name="bounds" value="319,591,0,0"/>
+				<property name="bounds" value="324,591,0,0"/>
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ISchematicView">
 			<property name="bounds" value="677,517,162,94"/>
 			<property name="location_set_by_user" value="true"/>
 			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ISchematicView">
+				<property name="bounds" value="763,626,0,0"/>
+			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.IGlobalView">
 			<property name="bounds" value="435,515,181,98"/>
@@ -164,6 +167,14 @@
 			<property name="bounds" value="595,76,109,80"/>
 			<property name="location_set_by_user" value="true"/>
 			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.EntityViewer:lnkImageViewer">
+				<property name="sourceAnchor" value="709,140"/>
+				<property name="targetAnchor" value="740,140"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.EntityViewer:lnkMorphologyViewer">
+				<property name="sourceAnchor" value="709,90"/>
+				<property name="targetAnchor" value="740,90"/>
+			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ImageViewer">
 			<property name="bounds" value="735,115,133,80"/>
@@ -191,6 +202,29 @@
 			<property name="$shortcutReference" value="true"/>
 			<property name="bounds" value="0,465,187,177"/>
 			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="design:view:::V-rqmxokfcdthllx-363jrq">
+			<property name="$shortcutReference" value="true"/>
+			<property name="bounds" value="146,158,121,57"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="design:view:::V21xx84fcdtnik5-shb3u4">
+			<property name="$shortcutReference" value="true"/>
+			<property name="bounds" value="114,0,125,99"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="design:view:::V-rqmxokfcdtqisf-8dhki">
+			<property name="$shortcutReference" value="true"/>
+			<property name="bounds" value="491,0,182,138"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="design:view:::Vcqn2tgfcdx5x2q-e24hoi">
+			<property name="$shortcutReference" value="true"/>
+			<property name="bounds" value="472,157,304,203"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="design:view:::Vq3zcdsfd5ciokm-n8oty8">
+			<property name="$shortcutReference" value="true"/>
 		</reference>
 	</view>
 </nodeSet>

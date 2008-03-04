@@ -15,8 +15,8 @@
 				<property name="targetAnchor" value="245,213"/>
 			</reference>
 			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.EntityDetailView:lnkStatementWizard">
-				<property name="sourceAnchor" value="383,253"/>
-				<property name="targetAnchor" value="467,320"/>
+				<property name="sourceAnchor" value="386,253"/>
+				<property name="targetAnchor" value="386,300"/>
 			</reference>
 			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.EntityDetailView:lnkMorphologyViewer">
 				<property name="sourceAnchor" value="372,173"/>
@@ -37,6 +37,14 @@
 			<property name="bounds" value="395,55,83,80"/>
 			<property name="location_set_by_user" value="true"/>
 			<property name="$shortcutReference" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.EntityViewer:lnkImageViewer">
+				<property name="sourceAnchor" value="483,109"/>
+				<property name="targetAnchor" value="614,109"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.view.EntityViewer:lnkMorphologyViewer">
+				<property name="sourceAnchor" value="483,123"/>
+				<property name="targetAnchor" value="603,189"/>
+			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ExplicitImplicitEntityTreePanel">
 			<property name="bounds" value="55,168,185,80"/>
@@ -52,7 +60,7 @@
 			</reference>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.StatementWizard">
-			<property name="bounds" value="455,315,112,80"/>
+			<property name="bounds" value="381,295,112,80"/>
 			<property name="location_set_by_user" value="true"/>
 			<property name="$shortcutReference" value="true"/>
 		</reference>

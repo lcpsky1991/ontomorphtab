@@ -20,14 +20,14 @@
 				<property name="targetAnchor" value="228,310"/>
 			</reference>
 			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ICell">
-				<property name="bounds" value="408,350,0,0"/>
+				<property name="bounds" value="408,355,0,0"/>
 			</reference>
 			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ICell:lnkPopulation">
-				<property name="sourceAnchor" value="450,260"/>
+				<property name="sourceAnchor" value="450,265"/>
 				<property name="targetAnchor" value="450,129"/>
 			</reference>
 			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ICell:lnkSemanticThing">
-				<property name="sourceAnchor" value="318,260"/>
+				<property name="sourceAnchor" value="318,265"/>
 				<property name="targetAnchor" value="318,241"/>
 			</reference>
 		</reference>
@@ -40,10 +40,10 @@
 				<property name="bounds" value="-21,45,186,13"/>
 			</reference>
 			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology">
-				<property name="bounds" value="134,391,0,0"/>
+				<property name="bounds" value="134,396,0,0"/>
 			</reference>
 			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology:lnkSegment">
-				<property name="sourceAnchor" value="97,280"/>
+				<property name="sourceAnchor" value="97,285"/>
 				<property name="targetAnchor" value="97,99"/>
 			</reference>
 		</reference>
@@ -104,6 +104,10 @@
 			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticThing:lnkCompartment">
 				<property name="sourceAnchor" value="228,161"/>
 				<property name="targetAnchor" value="148,99"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticThing:lnkIPopulation">
+				<property name="sourceAnchor" value="340,163"/>
+				<property name="targetAnchor" value="396,129"/>
 			</reference>
 			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticThing">
 				<property name="bounds" value="280,251,0,0"/>
