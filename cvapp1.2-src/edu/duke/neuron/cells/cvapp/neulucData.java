@@ -374,15 +374,23 @@ class neulucData extends Object {
 		headerText = headerBuffer.toString();
 	}
 
-	private final int ptconv(int minor) {
+	private final int ptconv(int minor)
+	{
 		int m = minor;
-		if (minor == 1 || minor == 2) {
+		if (minor == 1 || minor == 2)
+		{
 			m = 3; // dendrite;
-		} else if (minor == 21 || minor == 22) {
+		}
+		else if (minor == 21 || minor == 22)
+		{
 			m = 2; // axon;
-		} else if (minor == 41 || minor == 42) {
+		}
+		else if (minor == 41 || minor == 42)
+		{
 			m = 1; // somal
-		} else if (minor == 61 || minor == 62) {
+		}
+		else if (minor == 61 || minor == 62)
+		{
 			m = 4; // apical dendrite;
 		}
 		return m;

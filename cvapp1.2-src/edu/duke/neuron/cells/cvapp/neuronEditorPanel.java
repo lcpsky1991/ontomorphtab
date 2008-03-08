@@ -1024,7 +1024,11 @@ class optionBar extends sbPanel implements ItemListener, ActionListener {
 		mi[9] = new MenuItem("auto save as swc");
 		mi[10] = new MenuItem("quit");
 
-		for (int i = 0; i < mi.length; i++) {
+		//TODO: add support for open file
+		//start at 1 because I want to leave out 'open' on purpose
+		//change to 0 for full menu
+		for (int i = 1; i < mi.length; i++)	//start at 1 to avoid 'open' change to 0 
+		{
 			mi[i].addActionListener(this);
 			pmfile.add(mi[i]);
 		}
