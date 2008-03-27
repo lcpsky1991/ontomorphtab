@@ -119,6 +119,8 @@ public class FengJME extends BaseGame
  
 		input = new FengJMEInputHandler(disp);
  
+	
+		
 		//	 Create a dialog and set it to some location on the screen
 		Window frame = new Window();
 		disp.addWidget(frame);

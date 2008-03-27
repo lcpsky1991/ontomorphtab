@@ -56,7 +56,7 @@ public class HelloMousePick extends SimpleGame{
 		Texture t = TextureManager.loadTexture(cursorLoc, Texture.MM_LINEAR, 
 				Texture.FM_LINEAR);
 		ts.setTexture(t);
-		am.setRenderState(ts);
+		am.setRenderState(ts);HashMap handlerProps = null;
 		
 		//Make the mouse's background blend with what's already there
 		AlphaState as = display.getRenderer().createAlphaState();
@@ -110,7 +110,7 @@ public class HelloMousePick extends SimpleGame{
 		input.setActionSpeed(250.0f);
 
 		HashMap chaserProps = new HashMap();
-		chaserProps.put(ChaseCamera.PROP_ENABLESPRING, "true");
+		
 		chaserProps.put(ChaseCamera.PROP_DAMPINGK, "55.0");
 		chaserProps.put(ChaseCamera.PROP_SPRINGK, "756.25");
 		chaserProps.put(ChaseCamera.PROP_MAXDISTANCE, "0.0");

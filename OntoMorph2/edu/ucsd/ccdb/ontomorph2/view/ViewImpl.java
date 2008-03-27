@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.FloatBuffer;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,13 +17,17 @@ import org.fenggui.event.ISelectionChangedListener;
 import org.fenggui.event.SelectionChangedEvent;
 import org.fenggui.layout.StaticLayout;
 
-
 import com.jme.app.SimpleGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
+import com.jme.input.AbsoluteMouse;
+import com.jme.input.FirstPersonHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
+import com.jme.input.MouseInput;
+import com.jme.input.ThirdPersonHandler;
+import com.jme.input.controls.binding.KeyboardBinding;
 import com.jme.light.PointLight;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -34,6 +39,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Sphere;
+import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
@@ -46,6 +52,7 @@ import com.jmex.model.converters.MaxToJme;
 
 import edu.ucsd.ccdb.ontomorph2.core.IScene;
 import edu.ucsd.ccdb.ontomorph2.core.SceneImpl;
+import edu.ucsd.ccdb.ontomorph2.misc.HelloMousePick;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
@@ -66,9 +73,12 @@ public class ViewImpl extends SimpleGame implements IView{
 	float coordDelta;
 	private SceneImpl _scene = null;
 
+	AbsoluteMouse amouse; 	//the mouse object ref to entire screen
+
 	org.fenggui.Display disp; // FengGUI's display
 
-	FengJMEInputHandler input;
+//	there are two kinds of input, the FPS input and also FENG
+	FengJMEInputHandler menuinput;	
 	
 	View3DImpl view3D = null;
 	
@@ -83,14 +93,17 @@ public class ViewImpl extends SimpleGame implements IView{
 		return instance;
 	}
 	
-	protected ViewImpl() {
-		this.setDialogBehaviour(SimpleGame.ALWAYS_SHOW_PROPS_DIALOG);
+	protected ViewImpl() 
+	{
+		//this.setDialogBehaviour(SimpleGame.ALWAYS_SHOW_PROPS_DIALOG);	
+		this.setDialogBehaviour(FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG);
 		view3D = new View3DImpl();
 	}
 	
 	public void setScene(SceneImpl scene){
 		_scene = scene;
 	}
+	
 	
 	protected void simpleInitGame() {
 
@@ -99,10 +112,13 @@ public class ViewImpl extends SimpleGame implements IView{
 		rootNode.attachChild(view3D);
 		
 		//load neurons
-		Node n2 = new Node();
-		Node n3 = new Node();
+		//Node n2 = new Node();
+		//Node n3 = new Node();
 		Quaternion x90 = new Quaternion();
 		x90.fromAngleAxis(FastMath.DEG_TO_RAD*-90, new Vector3f(0,1,0));
+		
+		/*
+		
 		for (int i = 0; i < 3; i++) {
 			Node neuron = getNeuron();
 			neuron.setLocalTranslation(new Vector3f(12+(i/2),i+10,2));
@@ -115,22 +131,118 @@ public class ViewImpl extends SimpleGame implements IView{
 			neuron.setLocalTranslation(new Vector3f(18,i+10,2));
 			n3.attachChild(neuron);
 		}
-		rootNode.attachChild(n2);
-		rootNode.attachChild(n3);
+		*/
+		//rootNode.attachChild(n2);	//commented out because they are already being attached somehow
+		//rootNode.attachChild(n3); 
 		
-		//assign the "+" key on the keypad to the command "coordsUp"
-		KeyBindingManager.getKeyBindingManager().set("coordsUp", 
-				KeyInput.KEY_ADD);
-		//adds the "u" key to the command "coordsUp"
-		KeyBindingManager.getKeyBindingManager().add("coordsUp", KeyInput.KEY_U);
-		//assign the "-" key on the keypad to the command "coordsDown"
-		KeyBindingManager.getKeyBindingManager().set("coordsDown", KeyInput.KEY_SUBTRACT);
+		///** Set a black background.*/
+		display.getRenderer().setBackgroundColor(ColorRGBA.black);
+		
+		
+		///** Set up how our camera sees. */
+		cam.setFrustumPerspective(45.0f, (float) display.getWidth() / (float) display.getHeight(), 1, 1000);
+		
+		//a locaiton on the Z axis a ways away
+		Vector3f loc = new Vector3f(0.0f, 0.0f, 200.0f);
+		Vector3f left = new Vector3f(-1.0f, 0.0f, 0.0f);
+		Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
+		Vector3f dir = new Vector3f(0.0f, 0f, -1.0f);
+
+		///** Move our camera to a correct place and orientation. */
+		//pX, pY, pZ, orientation
+		cam.setFrame(loc, left, up, dir);
+		
+		///** Signal that we've changed our camera's location/frustum. */
+		cam.update();
+		
+		///** Assign the camera to this renderer.*/
+		display.getRenderer().setCamera(cam);
+		
+		//the code for keybindings was previously here, it's been seperated for code readability
+		//Section for setting up the mouse and other input controls	
+		configureControls();
 		
 
 		// Create the GUI
 		initGUI();
 	}
 	
+	
+	
+	
+	private void configureControls()
+	{
+		
+		//This is where we disable the FPShooter controls that are created by default by JME	
+		FirstPersonHandler fpHandler = new FirstPersonHandler(cam, 50, 5); //(cam, moveSpeed, turnSpeed)
+        input = fpHandler;
+        
+        //Disable both of these because I want to track things with the camera
+        fpHandler.getKeyboardLookHandler().setEnabled( false );
+        fpHandler.getMouseLookHandler().setEnabled( false);
+		
+        input.clearActions();	//removes all input actions not specifically programmed
+        
+                
+		
+		//Bind the Escape key to kill our test app
+		KeyBindingManager.getKeyBindingManager().set("quit", KeyInput.KEY_ESCAPE);
+		
+		//assign 'R' to reload the view to inital state
+		KeyBindingManager.getKeyBindingManager().set("reinit", KeyInput.KEY_R);
+		
+		//assignt he camera to up, down, left, right
+		KeyBindingManager.getKeyBindingManager().set("cam_forward", KeyInput.KEY_UP);
+		KeyBindingManager.getKeyBindingManager().set("cam_back", KeyInput.KEY_DOWN);
+		KeyBindingManager.getKeyBindingManager().set("cam_turn_ccw", KeyInput.KEY_LEFT);
+		KeyBindingManager.getKeyBindingManager().set("cam_turn_cw", KeyInput.KEY_RIGHT);
+	
+		KeyBindingManager.getKeyBindingManager().set("info", KeyInput.KEY_I);
+		
+		//assign the "+" key on the keypad to the command "coordsUp"
+		KeyBindingManager.getKeyBindingManager().set("coordsUp", KeyInput.KEY_ADD);
+		//adds the "u" key to the command "coordsUp"
+		KeyBindingManager.getKeyBindingManager().add("coordsUp", KeyInput.KEY_U);
+		//assign the "-" key on the keypad to the command "coordsDown"
+		KeyBindingManager.getKeyBindingManager().set("coordsDown", KeyInput.KEY_SUBTRACT);
+		
+
+		// We want a cursor to interact with FengGUI
+		MouseInput.get().setCursorVisible(true);
+	}
+	
+	private void handleInput() 
+	{
+		{
+			//exit the program cleanly on ESC
+			if (isAction("quit")) finish();
+			
+			if ( isAction("cam_forward")) 	cam.setLocation( cam.getLocation().add(0,0,1.1f) );			
+			
+			if ( isAction("cam_back"))		cam.setLocation( cam.getLocation().add(0,0,-1.1f) );
+			
+			//if ( isAction("cam_turn_ccw"))	cam.setDirection( );
+			
+			//if ( isAction("cam_turn_cw"))	cam.setDirection( );
+		
+			//if ( isAction("reinit") ) reinit();
+			
+			if ( isAction("info"))
+			{
+				logger.log(Level.INFO, "Location: " + cam.getLocation().toString() + "\nDirection: " + cam.getDirection().toString());
+			}
+			
+			logger.log(Level.FINEST, cam.getDirection().toString() );
+			
+		}	
+	}
+	
+	
+	/*
+	 * 
+	 * This function isn't evne used anymore!? - CA
+	 *  
+	 * 
 	protected TriMesh getTriMesh() {
 		//Vertex positions for the mesh
 		Vector3f[] vertexes={
@@ -171,10 +283,12 @@ public class ViewImpl extends SimpleGame implements IView{
 		ts.setTexture(t);
 		//assign the texturestate to the square
 		square.setRenderState(ts);
-		//scale my square 10x larger
-		square.setLocalScale(50);
+		//scale my square x larger
+		square.setLocalScale(1);
 		return square;
 	}
+	*/
+	
 	
 	public DisplaySystem getDisplaySystem(){
 		return display;
@@ -252,7 +366,28 @@ public class ViewImpl extends SimpleGame implements IView{
 			stBuffer.put(7, coordDelta);
 			//The texture coordinates are updated
 		}
+		
+		handleInput();
 	}
+	
+	/* 
+	 * isAction(String command)
+	 * 
+	 * Because JME works with the keybinding manager using 'commands'
+	 * this function helps to simplify/make pretty the code elsewhere in the program
+	 * so that it is more human-readable
+	*/
+	private boolean isAction(String command)
+	{
+		if (KeyBindingManager.getKeyBindingManager().isValidCommand(command))
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+
 	
 	/**
 	 * Create our GUI.  FengGUI init code goes in here
@@ -260,44 +395,29 @@ public class ViewImpl extends SimpleGame implements IView{
 	 */
 	protected void initGUI()
 	{
-		// Grab a display using an LWJGL binding
-		//	   (obviously, since jME uses LWJGL)
-		disp = new org.fenggui.Display(new org.fenggui.render.lwjgl.LWJGLBinding());
- 
-		input = new FengJMEInputHandler(disp);
- 
-		//	 Create a dialog and set it to some location on the screen
-		Window frame = new Window();
-		disp.addWidget(frame);
-		frame.setX(20);
-		frame.setY(350);
-		frame.setSize(200, 100);
-		frame.setShrinkable(false);
-		//frame.setExpandable(true);
-		frame.setTitle("Pick a file...");
-		frame.getContentContainer().setLayoutManager(new StaticLayout());
- 
-		// Create a combobox with some random values in it
-		//   we'll change these values to something more useful later on.
-		ComboBox<String> list = new ComboBox<String>();
-		frame.addWidget(list);
-		list.setSize(150, list.getMinHeight());
-		list.setShrinkable(false);
-		list.setX(25);
-		list.setY(25);
-		list.addItem("c20466");
-		list.addItem("1220882a");
-		 
-		list.addSelectionChangedListener(new CBListener());
- 
-		//try to add TextArea here but get OpenGLException
-		TextEditor ta = new TextEditor(false);
-		disp.addWidget(ta);
-		ta.setText("Hallo Text");
-		ta.setX(40);
-		ta.setY(50);
-		//ta.setSize(100, ta.getAppearance().getFont().get)
-		ta.setSizeToMinSize();
+		try
+		{
+			int test=0;
+			test=test+1;
+			
+			// Grab a display using an LWJGL binding
+			//	   (obviously, since jME uses LWJGL)
+			disp = new org.fenggui.Display(new org.fenggui.render.lwjgl.LWJGLBinding());
+	 
+			//try to add TextArea here but get OpenGLException
+			TextEditor ta = new TextEditor(false);
+			disp.addWidget(ta);
+			ta.setText("Hallo Text");
+			ta.setX(40);
+			ta.setY(50);
+			ta.setSizeToMinSize();
+			
+		}
+		catch (Exception e)
+		{
+			logger.logp(Level.SEVERE, "ViewImpl", "initGUI", e.getMessage());
+		}
+		
  
 		// Update the display with the newly added components
 		disp.layout();

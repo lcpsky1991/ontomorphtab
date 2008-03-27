@@ -11,7 +11,7 @@ import edu.ucsd.ccdb.ontomorph2.util.XSLTransformManager;
 import edu.ucsd.ccdb.ontomorph2.view.IStructure3D;
 import edu.ucsd.ccdb.ontomorph2.view.Structure3DImpl;
 
-public class MorphologyImpl implements IMorphology {
+public class MorphologyImpl implements IMorphology  {
 
 	URL _morphLoc = null;
 	IPosition _position = null;

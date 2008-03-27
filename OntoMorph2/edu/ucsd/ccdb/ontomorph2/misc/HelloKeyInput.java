@@ -252,6 +252,8 @@ public class HelloKeyInput extends SimpleGame{
 		frame.setTitle("Pick a file...");
 		frame.getContentContainer().setLayoutManager(new StaticLayout());
  
+				
+		
 		// Create a combobox with some random values in it
 		//   we'll change these values to something more useful later on.
 		ComboBox<String> list = new ComboBox<String>();

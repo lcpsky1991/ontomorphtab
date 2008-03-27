@@ -11,4 +11,5 @@ public class PositionImpl extends Vector3f implements IPosition{
 	public Vector3f asVector3f() {
 		return this;
 	}
+	
 }

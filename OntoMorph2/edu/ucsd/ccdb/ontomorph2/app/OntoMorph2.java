@@ -1,5 +1,8 @@
 package edu.ucsd.ccdb.ontomorph2.app;
 
+import com.jme.input.KeyBindingManager;
+import com.jme.input.KeyInput;
+
 import edu.ucsd.ccdb.ontomorph2.core.SceneImpl;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
@@ -18,6 +21,12 @@ public class OntoMorph2 {
 		//need to have the view do the initial loading of the scene.
 		view.setScene(scene);
 		view.start();
+		
+		
 	}
+	
+	
+	
+
 
 }

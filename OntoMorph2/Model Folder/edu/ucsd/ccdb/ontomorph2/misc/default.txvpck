@@ -5,5 +5,33 @@
 	<view uin="V574ng9fb31fkpsjjn8ob">
 		<property name="$defaultDiagram" value="true"/>
 		<property name="$metaclass" value="Package Diagram"/>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.misc.HelloKeyInput">
+			<property name="bounds" value="358,5,182,317"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.misc.DisplayTest">
+			<property name="bounds" value="207,365,200,198"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.misc.FengJME">
+			<property name="bounds" value="5,285,182,368"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.misc.HelloInput">
+			<property name="bounds" value="185,5,153,164"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.misc.HelloMousePick">
+			<property name="bounds" value="5,5,160,232"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.misc.concept">
+			<property name="bounds" value="5,685,182,487"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.misc.WindowCreationTest">
+			<property name="bounds" value="560,5,200,368"/>
+			<property name="location_set_by_user" value="true"/>
+		</reference>
 	</view>
 </nodeSet>
