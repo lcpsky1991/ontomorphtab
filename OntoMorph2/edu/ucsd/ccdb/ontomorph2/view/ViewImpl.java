@@ -221,15 +221,31 @@ public class ViewImpl extends SimpleGame implements IView{
 			
 			if ( isAction("cam_back"))		cam.setLocation( cam.getLocation().add(0,0,-1.1f) );
 			
-			//if ( isAction("cam_turn_ccw"))	cam.setDirection( );
+			if ( isAction("cam_turn_ccw"))	
+			{
+				{
+					//cam.setDirection( cam.getDirection().add(new Vector3f(-0.2f, 0, 0)));
+					Quaternion rotQuat = new Quaternion();
+					
+				    rotQuat.fromAngleAxis(-45, new Vector3f(1, 0, 0));
+				    rootNode.setLocalRotation(rotQuat);
+					
+				}
+			}
 			
-			//if ( isAction("cam_turn_cw"))	cam.setDirection( );
-		
-			//if ( isAction("reinit") ) reinit();
+			if ( isAction("cam_turn_cw"))	
+			{
+				//cam.setDirection( cam.getDirection().add(new Vector3f(-0.2f, 0, 0)));
+				Quaternion rotQuat = new Quaternion();
+				
+			    rotQuat.fromAngleAxis(45, new Vector3f(1, 0, 0));
+			    rootNode.setLocalRotation(rotQuat);
+				
+			}
 			
 			if ( isAction("info"))
 			{
-				logger.log(Level.INFO, "Location: " + cam.getLocation().toString() + "\nDirection: " + cam.getDirection().toString());
+				logger.log(Level.INFO, "\nLocation: " + cam.getLocation().toString() + "\nDirection: " + cam.getDirection().toString());
 			}
 			
 			logger.log(Level.FINEST, cam.getDirection().toString() );
