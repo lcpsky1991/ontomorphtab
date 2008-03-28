@@ -16,6 +16,7 @@ public class MorphologyImpl implements IMorphology  {
 	URL _morphLoc = null;
 	IPosition _position = null;
 	IRotation _rotation = null;
+	float _scale = 1F;
 	
 	public MorphologyImpl(URL morphLoc, IPosition position, IRotation rotation) {
 		_morphLoc = morphLoc;
@@ -33,6 +34,22 @@ public class MorphologyImpl implements IMorphology  {
 
 	public IPosition getPosition() {
 		return _position;
+	}
+	
+	public float getScale() {
+		return _scale;
+	}
+
+	public void setPosition(IPosition pos) {
+		_position = pos;
+	}
+	
+	public void setRotation(IRotation rot) {
+		_rotation = rot;
+	}
+	
+	public void setScale(float f) {
+		_scale = f;
 	}
 
 }

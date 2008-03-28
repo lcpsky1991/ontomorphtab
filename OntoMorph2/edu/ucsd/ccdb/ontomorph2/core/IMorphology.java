@@ -33,4 +33,12 @@ public interface IMorphology {
 	public IRotation getRotation();
 
 	public IPosition getPosition();
+	
+	public void setPosition(IPosition pos);
+	
+	public void setRotation(IRotation rot);
+
+	public void setScale(float f);
+
+	public float getScale();
 }

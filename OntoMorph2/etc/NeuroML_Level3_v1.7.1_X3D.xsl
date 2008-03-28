@@ -16,7 +16,7 @@
     
 -->
 
-<xsl:variable name="showAxes">1</xsl:variable>
+<xsl:variable name="showAxes">0</xsl:variable>
 <xsl:variable name="defaultCellRadius">5</xsl:variable>
 
 <xsl:output method="xml" indent="yes" />
@@ -72,7 +72,7 @@
             <Transform>
                 <Shape>
                     <Appearance>
-                        <Material/>
+ 	                   <Material/>
                     </Appearance>
                     <LineSet vertexCount="2">
                         <xsl:element name="Coordinate">
@@ -82,6 +82,7 @@
                     </LineSet>
                 </Shape>
             </Transform>
+            
             <!--
             <xsl:element name="Transform">
                 <xsl:attribute name="translation"><xsl:value-of select="$proximal"/></xsl:attribute>

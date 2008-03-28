@@ -3,18 +3,31 @@ package edu.ucsd.ccdb.ontomorph2.core;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 
-public class RotationImpl extends Vector3f implements IRotation{
+public class RotationImpl extends com.jme.math.Quaternion implements IRotation{
 
-	public RotationImpl(float x, float y, float z) {
-		super(x,y,z);
+	public RotationImpl(float offset, Vector3f start) {
+		this.fromAngleAxis(offset, start);
+		
 	}
-
-	public Vector3f asVector3f() {
-		return this;
-	}
-
+	
 	public Matrix3f asQuaternion() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.toRotationMatrix();
 	}
+
+	public float getX() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public float getY() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public float getZ() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
 }

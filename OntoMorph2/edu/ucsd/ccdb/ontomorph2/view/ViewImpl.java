@@ -111,6 +111,7 @@ public class ViewImpl extends SimpleGame implements IView{
 		_scene.load();
 		rootNode.attachChild(view3D);
 		
+		/*
 		//load neurons
 		//Node n2 = new Node();
 		//Node n3 = new Node();
@@ -211,6 +212,7 @@ public class ViewImpl extends SimpleGame implements IView{
 		MouseInput.get().setCursorVisible(true);
 	}
 	
+
 	private void handleInput() 
 	{
 		{
@@ -302,14 +304,14 @@ public class ViewImpl extends SimpleGame implements IView{
 		//scale my square x larger
 		square.setLocalScale(1);
 		return square;
-	}
-	*/
+	}*/
 	
 	
 	public DisplaySystem getDisplaySystem(){
 		return display;
 	}
 	
+	/*
 	protected Node getNeuron() {
 //		 point to a URL of my model
 		URL model = ViewImpl.class.getClassLoader().getResource("neuron.3ds");
@@ -336,7 +338,7 @@ public class ViewImpl extends SimpleGame implements IView{
 			System.exit(0);
 		}
 		return neuron;
-	}
+	}*/
 	
 	protected Node getX3DNeuron(String fileName) {
 		Node n = null;

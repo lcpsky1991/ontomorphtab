@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
 
+import com.jme.math.FastMath;
+import com.jme.math.Vector3f;
+
 import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
 
 public class SceneImpl extends Observable implements IScene {
@@ -29,6 +32,9 @@ public class SceneImpl extends Observable implements IScene {
 		CellImpl cell1 = new CellImpl();
 		URL cell1URL = SceneImpl.class.getClassLoader().getResource("1220882a.morph.xml");
 		cell1.setMorphology(cell1URL);
+		cell1.getMorphology().setPosition(new PositionImpl(3,3,3));
+		cell1.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new Vector3f(0,1,0)));
+		cell1.getMorphology().setScale(0.01f);
 		cells.add(cell1);
 		changed();
 	}

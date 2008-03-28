@@ -9,7 +9,6 @@ public interface IRotation {
 	public float getX();
 	public float getY();
 	public float getZ();
-	public Vector3f asVector3f();
 	public Matrix3f asQuaternion();
 
 }
