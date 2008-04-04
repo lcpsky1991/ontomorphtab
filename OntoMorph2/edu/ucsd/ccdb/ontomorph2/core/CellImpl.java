@@ -9,12 +9,16 @@ public class CellImpl implements ICell {
 	public CellImpl() {
 	}
 	
-	public void setMorphology(URL morphLoc) {
+	public void setMorphologyViaURL(URL morphLoc) {
 		_morph = new MorphologyImpl(morphLoc, null, null);
 	}
 
 	public IMorphology getMorphology() {
 		return _morph;
+	}
+
+	public void setMorphology(IMorphology morph) {
+		_morph = morph;
 	}
 
 }

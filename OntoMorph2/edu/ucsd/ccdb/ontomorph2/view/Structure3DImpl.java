@@ -11,6 +11,8 @@ import java.io.PipedOutputStream;
 import java.io.RandomAccessFile;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import org.w3c.dom.Document;
@@ -26,6 +28,7 @@ import com.jme.scene.state.LightState;
 import edu.ucsd.ccdb.ontomorph2.core.IMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.IPosition;
 import edu.ucsd.ccdb.ontomorph2.core.IRotation;
+import edu.ucsd.ccdb.ontomorph2.util.MorphMLLoader;
 import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
 import edu.ucsd.ccdb.ontomorph2.util.XSLTransformManager;
 
@@ -33,9 +36,13 @@ public class Structure3DImpl extends Node implements IStructure3D {
 	
 	
 	public Structure3DImpl(IMorphology morph) {
+		MorphMLLoader loader = new MorphMLLoader();
+		loader.loadscene(morph.getMorphML());
+		/*
 		InputStream input = XSLTransformManager.getInstance().convertMorphMLToX3D(morph.getMorphML());
 
 		this.setX3DNeuron(input, morph.getPosition(), morph.getRotation(), morph.getScale());
+		*/
 	}
 
 
@@ -43,10 +50,35 @@ public class Structure3DImpl extends Node implements IStructure3D {
 		return this;
 	}
 	
+	/*
+	public void convertLinesToCylinders(Spatial n) {
+		if (n instanceof Line) {
+			swapLineForCylinder((Line)n);
+		} else {
+			if (n instanceof Node) {
+				for(Spatial nn : ((Node)n).getChildren()){
+					convertLinesToCylinders(nn);
+				}
+			}
+		}
+	}
+	
+	private Cylinder swapLineForCylinder(Line l) {
+		FloatBuffer buf1 = l.getVertexBuffer(0);
+
+		Cylinder c = new Cylinder();
+		System.out.println(buf1);
+		System.out.println(buf1.get(0) + ", " + buf1.get(1) + ", " + buf1.get(2)+ ", " + buf1.get(3)+ ", " + buf1.get(4)+ ", " + buf1.get(5));
+		return null;
+	}*/
+	
 	public void setX3DNeuron(InputStream input, IPosition _position, IRotation _rotation, float _scale) {
 		try {
 			X3DLoader converter = new X3DLoader();
 			Spatial scene = converter.loadScene(input, null, null);
+			
+				//convertLinesToCylinders(scene);
+				/*
 			if (scene instanceof Node) {
 				Node sceneNode = (Node) scene;
 				sceneNode.setLightCombineMode(LightState.INHERIT);
@@ -58,7 +90,7 @@ public class Structure3DImpl extends Node implements IStructure3D {
 				c.setRandomColors();
 				sceneNode.attachChild(c);
 				
-				/*
+				
 				for (Spatial s : sceneNode.getChildren()) {
 					
 					if (s instanceof Line) {
@@ -68,8 +100,9 @@ public class Structure3DImpl extends Node implements IStructure3D {
 						l.setRandomColors();
 					}
 				}
+							}
 				*/
-			}
+
 		
 			this.detachAllChildren();
 			this.attachChild(scene);
