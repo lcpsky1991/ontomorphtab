@@ -1,12 +1,12 @@
 package edu.ucsd.ccdb.ontomorph2.core;
 
-import edu.stanford.smi.protege.model.Cls;
+//import edu.stanford.smi.protege.model.Cls;
 
 /**
  * @$comment Contains the semantic description of a biological object (OWL)
  */
 
-public interface ISemanticThing extends Cls{
+public interface ISemanticThing {
 
 	public edu.ucsd.ccdb.ontomorph2.core.IPopulation lnkIPopulation = null;
 

@@ -22,9 +22,11 @@ import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
 import com.jme.input.AbsoluteMouse;
+import com.jme.input.ChaseCamera;
 import com.jme.input.FirstPersonHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
+import com.jme.input.Mouse;
 import com.jme.input.MouseInput;
 import com.jme.input.ThirdPersonHandler;
 import com.jme.input.controls.binding.KeyboardBinding;
@@ -111,30 +113,18 @@ public class ViewImpl extends SimpleGame implements IView{
 		_scene.load();
 		rootNode.attachChild(view3D);
 		
-		/*
-		//load neurons
-		//Node n2 = new Node();
-		//Node n3 = new Node();
-		Quaternion x90 = new Quaternion();
-		x90.fromAngleAxis(FastMath.DEG_TO_RAD*-90, new Vector3f(0,1,0));
-		
-		/*
-		
-		for (int i = 0; i < 3; i++) {
-			Node neuron = getNeuron();
-			neuron.setLocalTranslation(new Vector3f(12+(i/2),i+10,2));
-			neuron.setLocalRotation(x90);
-			n2.attachChild(neuron);
-		}
-		
-		for (int i = 0; i < 3; i++) {
-			Node neuron = getNeuron();
-			neuron.setLocalTranslation(new Vector3f(18,i+10,2));
-			n3.attachChild(neuron);
-		}
-		*/
-		//rootNode.attachChild(n2);	//commented out because they are already being attached somehow
-		//rootNode.attachChild(n3); 
+		//This sphere is for debugging purposes, need to see something to indicate
+		 Sphere s=new Sphere("My sphere",10,10,20f);
+		  // Do bounds for the sphere, but we'll use a BoundingBox this time
+		  s.setModelBound(new BoundingBox());
+		  s.updateModelBound();
+		  // Give the sphere random colors
+		  s.setRandomColors();
+		  s.setLocalTranslation(80,0,0);
+		  //s.setSolidColor(ColorRGBA.blue);
+		  
+		  rootNode.attachChild(s);
+		  
 		
 		///** Set a black background.*/
 		display.getRenderer().setBackgroundColor(ColorRGBA.black);
@@ -142,6 +132,7 @@ public class ViewImpl extends SimpleGame implements IView{
 		
 		///** Set up how our camera sees. */
 		cam.setFrustumPerspective(45.0f, (float) display.getWidth() / (float) display.getHeight(), 1, 1000);
+		
 		
 		//a locaiton on the Z axis a ways away
 		Vector3f loc = new Vector3f(0.0f, 0.0f, 200.0f);
@@ -164,6 +155,10 @@ public class ViewImpl extends SimpleGame implements IView{
 		configureControls();
 		
 
+		//Remove lighting for rootNode so that it will use our basic colors
+		rootNode.setLightCombineMode(LightState.OFF);
+		
+		
 		// Create the GUI
 		initGUI();
 	}
@@ -207,7 +202,8 @@ public class ViewImpl extends SimpleGame implements IView{
 		//assign the "-" key on the keypad to the command "coordsDown"
 		KeyBindingManager.getKeyBindingManager().set("coordsDown", KeyInput.KEY_SUBTRACT);
 		
-
+		
+		
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
 	}
@@ -224,30 +220,34 @@ public class ViewImpl extends SimpleGame implements IView{
 			if ( isAction("cam_back"))		cam.setLocation( cam.getLocation().add(0,0,-1.1f) );
 			
 			if ( isAction("cam_turn_ccw"))	
-			{
+			{ //left key
 				{
-					//cam.setDirection( cam.getDirection().add(new Vector3f(-0.2f, 0, 0)));
-					Quaternion rotQuat = new Quaternion();
-					
-				    rotQuat.fromAngleAxis(-45, new Vector3f(1, 0, 0));
-				    rootNode.setLocalRotation(rotQuat);
-					
+					/* This quaternion stores a 180 degree rolling rotation */ 
+					 Quaternion roll = new Quaternion(); 
+					 int a = 5;
+					 roll.fromAngleAxis( FastMath.PI * a /180 , new Vector3f(0,0,1) ); //rotates a degrees 
+					 
+					 
+					 
+					 rootNode.setLocalRotation(roll);;
 				}
 			}
 			
 			if ( isAction("cam_turn_cw"))	
 			{
 				//cam.setDirection( cam.getDirection().add(new Vector3f(-0.2f, 0, 0)));
-				Quaternion rotQuat = new Quaternion();
-				
-			    rotQuat.fromAngleAxis(45, new Vector3f(1, 0, 0));
-			    rootNode.setLocalRotation(rotQuat);
-				
+				Quaternion roll = new Quaternion(); 
+				int a = -5;
+				roll.fromAngleAxis( FastMath.PI * a /180 , new Vector3f(0,0,1) ); //rotates a degrees 
+				 
+				 rootNode.setLocalRotation(roll);
+
 			}
 			
 			if ( isAction("info"))
 			{
-				logger.log(Level.INFO, "\nLocation: " + cam.getLocation().toString() + "\nDirection: " + cam.getDirection().toString());
+				logger.log(Level.INFO, "\nLocation: " + cam.getLocation().toString() + 
+						"\nDirection: " + cam.getDirection().toString());						
 			}
 			
 			logger.log(Level.FINEST, cam.getDirection().toString() );
