@@ -36,13 +36,13 @@ public class Structure3DImpl extends Node implements IStructure3D {
 	
 	
 	public Structure3DImpl(IMorphology morph) {
-		MorphMLLoader loader = new MorphMLLoader();
-		loader.loadscene(morph.getMorphML());
-		/*
-		InputStream input = XSLTransformManager.getInstance().convertMorphMLToX3D(morph.getMorphML());
-
-		this.setX3DNeuron(input, morph.getPosition(), morph.getRotation(), morph.getScale());
-		*/
+		if (morph.getRenderOption().equals(IMorphology.RENDER_AS_CYLINDERS)) {
+			MorphMLLoader loader = new MorphMLLoader();
+			this.setMorphMLNeuron(loader.loadscene(morph.getMorphML()), morph.getPosition(), morph.getRotation(), morph.getScale());
+		} else if (morph.getRenderOption().equals(IMorphology.RENDER_AS_LINES)) {
+			InputStream input = XSLTransformManager.getInstance().convertMorphMLToX3D(morph.getMorphML());
+			this.setX3DNeuron(input, morph.getPosition(), morph.getRotation(), morph.getScale());
+		}
 	}
 
 
@@ -71,6 +71,21 @@ public class Structure3DImpl extends Node implements IStructure3D {
 		System.out.println(buf1.get(0) + ", " + buf1.get(1) + ", " + buf1.get(2)+ ", " + buf1.get(3)+ ", " + buf1.get(4)+ ", " + buf1.get(5));
 		return null;
 	}*/
+	
+	public void setMorphMLNeuron(Node n, IPosition _position, IRotation _rotation, float _scale) {
+		this.detachAllChildren();
+		this.attachChild(n);
+		
+		if (_position != null) {
+			this.setLocalTranslation(_position.asVector3f());
+		}
+		if (_rotation != null) {
+			this.setLocalRotation(_rotation.asQuaternion());
+		}
+		if (_scale != 1) {
+			this.setLocalScale(_scale);
+		}
+	}
 	
 	public void setX3DNeuron(InputStream input, IPosition _position, IRotation _rotation, float _scale) {
 		try {

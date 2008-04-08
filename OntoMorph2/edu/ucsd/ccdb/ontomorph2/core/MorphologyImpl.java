@@ -12,10 +12,6 @@ import edu.ucsd.ccdb.ontomorph2.view.IStructure3D;
 import edu.ucsd.ccdb.ontomorph2.view.Structure3DImpl;
 
 public class MorphologyImpl implements IMorphology  {
-
-	//render options.  don't forget to update the test in the constructor when adding to this
-	public final static String RENDER_AS_LINES = "lines";
-	public final static String RENDER_AS_CYLINDERS = "cylinders";
 	
 	URL _morphLoc = null;
 	IPosition _position = null;
@@ -31,9 +27,7 @@ public class MorphologyImpl implements IMorphology  {
 	
 	public MorphologyImpl(URL morphLoc, IPosition position, IRotation rotation, String renderOption) {
 		this(morphLoc, position, rotation);
-		if (RENDER_AS_LINES.equals(renderOption) || RENDER_AS_CYLINDERS.equals(renderOption)) {
-			_renderOption = renderOption;
-		}
+		setRenderOption(renderOption);
 	}
 
 	public URL getMorphML() {
@@ -50,6 +44,12 @@ public class MorphologyImpl implements IMorphology  {
 	
 	public String getRenderOption() {
 		return _renderOption;
+	}
+	
+	public void setRenderOption(String renderOption) {
+		if (IMorphology.RENDER_AS_LINES.equals(renderOption) || IMorphology.RENDER_AS_CYLINDERS.equals(renderOption)) {
+			_renderOption = renderOption;
+		}
 	}
 	
 	public float getScale() {

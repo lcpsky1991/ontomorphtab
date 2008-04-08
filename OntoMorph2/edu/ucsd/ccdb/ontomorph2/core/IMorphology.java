@@ -10,6 +10,10 @@ import edu.ucsd.ccdb.ontomorph2.view.IStructure3D;
  */
 
 public interface IMorphology {
+	
+	//render options.
+	public final static String RENDER_AS_LINES = "lines";
+	public final static String RENDER_AS_CYLINDERS = "cylinders";
 
 			public edu.ucsd.ccdb.ontomorph2.core.IRotation lnkIRotation = null;
 
@@ -39,6 +43,10 @@ public interface IMorphology {
 	public void setRotation(IRotation rot);
 
 	public void setScale(float f);
+	
+	public void setRenderOption(String s);
+	
+	public String getRenderOption();
 
 	public float getScale();
 }

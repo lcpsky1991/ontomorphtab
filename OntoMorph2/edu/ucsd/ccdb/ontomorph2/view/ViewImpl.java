@@ -52,6 +52,7 @@ import com.jme.util.geom.BufferUtils;
 import com.jmex.model.converters.FormatConverter;
 import com.jmex.model.converters.MaxToJme;
 
+import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.IScene;
 import edu.ucsd.ccdb.ontomorph2.core.SceneImpl;
 import edu.ucsd.ccdb.ontomorph2.misc.HelloMousePick;
@@ -108,9 +109,10 @@ public class ViewImpl extends SimpleGame implements IView{
 	
 	
 	protected void simpleInitGame() {
-
-		//load the current scene
-		_scene.load();
+		//as a hack, calling the main application class to do initialization
+		//this is because model loading needs to have the view running in order to work
+		OntoMorph2.initialization();
+		
 		rootNode.attachChild(view3D);
 		
 		//This sphere is for debugging purposes, need to see something to indicate
@@ -450,7 +452,7 @@ public class ViewImpl extends SimpleGame implements IView{
 			
 
 			Node x3dNeuron = getX3DNeuron(value+".x3d");
-			x3dNeuron.setLocalScale(0.05f);
+			//x3dNeuron.setLocalScale(0.05f);
 			rootNode.attachChild(x3dNeuron);
 		}
  

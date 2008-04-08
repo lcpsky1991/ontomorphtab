@@ -34,7 +34,8 @@ public class SceneImpl extends Observable implements IScene {
 		cell1.setMorphologyViaURL(cell1URL);
 		cell1.getMorphology().setPosition(new PositionImpl(3,3,3));
 		cell1.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new Vector3f(0,1,0)));
-		cell1.getMorphology().setScale(0.01f);
+		cell1.getMorphology().setScale(0.15f);
+		cell1.getMorphology().setRenderOption(IMorphology.RENDER_AS_LINES);
 		cells.add(cell1);
 		changed();
 	}
