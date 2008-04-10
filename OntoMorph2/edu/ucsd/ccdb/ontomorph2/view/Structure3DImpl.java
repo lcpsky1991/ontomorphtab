@@ -156,7 +156,7 @@ public class Structure3DImpl extends Node implements IStructure3D {
         	//sceneRoot.attachChild(l);						
         	
         	
-        	Cylinder cyl = new Cylinder("neuron_cyl", 10, 10, 0.5f, height);
+        	Cylinder cyl = new Cylinder("neuron_cyl", 2, 5, 0.5f, height);
         	cyl.setRadius1(seg.getProximalRadius());
         	cyl.setRadius2(seg.getDistalRadius());
         	
