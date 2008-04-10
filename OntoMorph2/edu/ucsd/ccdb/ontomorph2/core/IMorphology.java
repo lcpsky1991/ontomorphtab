@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import edu.ucsd.ccdb.ontomorph2.view.IStructure3D;
 
@@ -49,4 +50,13 @@ public interface IMorphology {
 	public String getRenderOption();
 
 	public float getScale();
+	
+	public ArrayList<ISegment> getSegments();
+	
+	public void selectSegment(ISegment s);
+	
+	public void unselectSegment(ISegment s);
+	
+	public ArrayList<ISegment> getSelectedSegments();
+	
 }

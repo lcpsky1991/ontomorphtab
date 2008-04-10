@@ -1,76 +1,51 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.RandomAccessFile;
-import java.net.Socket;
 import java.net.URL;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-import org.w3c.dom.Document;
-
+import com.jme.bounding.BoundingSphere;
+import com.jme.math.Quaternion;
+import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Geometry;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
-import com.jme.scene.shape.Cone;
+import com.jme.scene.TriMesh;
+import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.shape.Cylinder;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.RenderState;
+import com.jme.system.DisplaySystem;
+import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.IMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.IPosition;
 import edu.ucsd.ccdb.ontomorph2.core.IRotation;
-import edu.ucsd.ccdb.ontomorph2.util.MorphMLLoader;
+import edu.ucsd.ccdb.ontomorph2.core.ISegment;
 import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
 import edu.ucsd.ccdb.ontomorph2.util.XSLTransformManager;
 
 public class Structure3DImpl extends Node implements IStructure3D {
 	
+	HashMap<ISegment, Geometry> segmentToGeom = new HashMap();
 	
 	public Structure3DImpl(IMorphology morph) {
 		if (morph.getRenderOption().equals(IMorphology.RENDER_AS_CYLINDERS)) {
-			MorphMLLoader loader = new MorphMLLoader();
-			this.setMorphMLNeuron(loader.loadscene(morph.getMorphML()), morph.getPosition(), morph.getRotation(), morph.getScale());
+			this.setMorphMLNeuron(this.loadscene(morph), morph.getPosition(), morph.getRotation(), morph.getScale());
 		} else if (morph.getRenderOption().equals(IMorphology.RENDER_AS_LINES)) {
 			InputStream input = XSLTransformManager.getInstance().convertMorphMLToX3D(morph.getMorphML());
 			this.setX3DNeuron(input, morph.getPosition(), morph.getRotation(), morph.getScale());
 		}
 	}
 
-
 	public Node getNode() {
 		return this;
 	}
-	
-	/*
-	public void convertLinesToCylinders(Spatial n) {
-		if (n instanceof Line) {
-			swapLineForCylinder((Line)n);
-		} else {
-			if (n instanceof Node) {
-				for(Spatial nn : ((Node)n).getChildren()){
-					convertLinesToCylinders(nn);
-				}
-			}
-		}
-	}
-	
-	private Cylinder swapLineForCylinder(Line l) {
-		FloatBuffer buf1 = l.getVertexBuffer(0);
-
-		Cylinder c = new Cylinder();
-		System.out.println(buf1);
-		System.out.println(buf1.get(0) + ", " + buf1.get(1) + ", " + buf1.get(2)+ ", " + buf1.get(3)+ ", " + buf1.get(4)+ ", " + buf1.get(5));
-		return null;
-	}*/
 	
 	public void setMorphMLNeuron(Node n, IPosition _position, IRotation _rotation, float _scale) {
 		this.detachAllChildren();
@@ -92,33 +67,6 @@ public class Structure3DImpl extends Node implements IStructure3D {
 			X3DLoader converter = new X3DLoader();
 			Spatial scene = converter.loadScene(input, null, null);
 			
-				//convertLinesToCylinders(scene);
-				/*
-			if (scene instanceof Node) {
-				Node sceneNode = (Node) scene;
-				sceneNode.setLightCombineMode(LightState.INHERIT);
-				Line l = (Line)sceneNode.getChild("X3D_LineSet");
-				Cylinder c = new Cylinder("cyl", 10,10 , 3.0f, 3.0f);
-				c.setLocalTranslation(l.getLocalTranslation());
-				c.setLocalRotation(l.getLocalRotation());
-				c.setLightCombineMode(LightState.INHERIT);
-				c.setRandomColors();
-				sceneNode.attachChild(c);
-				
-				
-				for (Spatial s : sceneNode.getChildren()) {
-					
-					if (s instanceof Line) {
-						Line l = (Line) s;
-						l.setDefaultColor(ColorRGBA.yellow);
-						
-						l.setRandomColors();
-					}
-				}
-							}
-				*/
-
-		
 			this.detachAllChildren();
 			this.attachChild(scene);
 			
@@ -145,4 +93,116 @@ public class Structure3DImpl extends Node implements IStructure3D {
 			e.printStackTrace();
 		}
 	}
+	
+	//needs to be updated by a controller
+	//does not unselect yet
+	public void updateSelectedSegments(List<ISegment> segments) {
+		for (ISegment seg : segments) {
+			Geometry g = segmentToGeom.get(seg);
+			g.setColorBuffer(1, BufferUtils.createFloatBuffer(ColorRGBA.red.getColorArray()));
+		}
+	}
+	
+	public Node loadscene(IMorphology morph) {
+		Node sceneRoot = new Node();
+		 /* 
+         * Check the LightState. If none has been passed, create a new one and
+         * attach it to the scene root
+         */ 
+		LightState lightState = null;
+		lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
+        lightState.setEnabled(true);	
+        sceneRoot.setRenderState(lightState);
+        
+        for (ISegment seg : morph.getSegments()) {
+						        	
+        	Vector3f base = new Vector3f();
+        	base.x = seg.getProximalPoint()[0];
+        	base.y = seg.getProximalPoint()[1];
+        	base.z = seg.getProximalPoint()[2];
+        	Vector3f apex = new Vector3f();
+        	apex.x = seg.getDistalPoint()[0];
+        	apex.y = seg.getDistalPoint()[1];
+        	apex.z = seg.getDistalPoint()[2];
+        	
+        	/*
+        	 Sphere s1 = new Sphere("my sphere", 10, 10, 0.5f);
+        	 s1.setLocalTranslation(base);
+        	 s1.setRandomColors();
+        	 Sphere s2 = new Sphere("my 2nd sphere", 10, 10, 0.5f);
+        	 s2.setLocalTranslation(apex);
+        	 s2.setRandomColors();
+        	 sceneRoot.attachChild(s1);
+        	 sceneRoot.attachChild(s2);
+        	 */
+        	
+        	float scale = 10f;
+        	
+        	//calculate new center
+        	float xCenter = (float)((apex.x - base.x)/2 + base.x);
+        	float yCenter = (float)((apex.y - base.y)/2 + base.y);
+        	float zCenter = (float)((apex.z - base.z)/2 + base.z);
+        	
+        	Vector3f center = new Vector3f(xCenter, yCenter, zCenter);
+        	
+        	Vector3f unit = new Vector3f();
+        	unit = apex.subtract(base); // unit = apex - base;
+        	float height = unit.length();
+        	unit = unit.normalize();
+        	
+        	float[] vertices = {apex.x, apex.y, apex.z, base.x, base.y, base.z};
+        	
+        	Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, null, null);
+        	//sceneRoot.attachChild(l);						
+        	
+        	
+        	Cylinder cyl = new Cylinder("neuron_cyl", 10, 10, 0.5f, height);
+        	cyl.setRadius1(seg.getProximalRadius());
+        	cyl.setRadius2(seg.getDistalRadius());
+        	
+        	Quaternion q = new Quaternion();
+        	q.lookAt(unit, Vector3f.UNIT_Y);
+        	
+        	cyl.setLocalRotation(q);
+        	
+        	cyl.setLocalTranslation(center);
+        	cyl.setRandomColors();
+        	
+        	//cyl.setLocalScale(scale);
+        	segmentToGeom.put(seg, cyl);
+        	sceneRoot.attachChild(cyl);
+
+        }
+		 return getClodNodeFromParent(sceneRoot);
+		//return sceneRoot;
+	}
+	
+	private Node getClodNodeFromParent(Node meshParent) {
+	    // Create a node to hold my cLOD mesh objects
+	    Node clodNode = new Node("Clod node");
+	    // For each mesh in maggie
+	    for (int i = 0; i < meshParent.getQuantity(); i++) {
+	        // Create an AreaClodMesh for that mesh. Let it compute
+	        // records automatically
+	        AreaClodMesh acm = new AreaClodMesh("part" + i,
+	                (TriMesh) meshParent.getChild(i), null);
+	        acm.setLocalTranslation(meshParent.getChild(i).getLocalTranslation());
+	        acm.setLocalRotation(meshParent.getChild(i).getLocalRotation());
+	        acm.setModelBound(new BoundingSphere());
+	        acm.updateModelBound();
+	        // Allow 1/2 of a triangle in every pixel on the screen in
+	        // the bounds.
+	        acm.setTrisPerPixel(.5f);
+	        // Force a move of 2 units before updating the mesh geometry
+	        acm.setDistanceTolerance(2);
+	        // Give the clodMe sh node the material state that the
+	        // original had.
+	        //acm.setRenderState(meshParent.getChild(i).getRenderStateList()[RenderState.RS_MATERIAL]); //Note: Deprecated
+	        acm.setRenderState(meshParent.getChild(i).getRenderState(RenderState.RS_MATERIAL));
+	        // Attach clod node.
+	        clodNode.attachChild(acm);
+	    }
+	    return clodNode;
+	}
+
 }

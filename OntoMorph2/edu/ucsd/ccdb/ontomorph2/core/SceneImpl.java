@@ -32,11 +32,20 @@ public class SceneImpl extends Observable implements IScene {
 		CellImpl cell1 = new CellImpl();
 		URL cell1URL = SceneImpl.class.getClassLoader().getResource("1220882a.morph.xml");
 		cell1.setMorphologyViaURL(cell1URL);
-		cell1.getMorphology().setPosition(new PositionImpl(3,3,3));
+		cell1.getMorphology().setPosition(new PositionImpl(6,-30,106));
 		cell1.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new Vector3f(0,1,0)));
 		cell1.getMorphology().setScale(0.15f);
-		cell1.getMorphology().setRenderOption(IMorphology.RENDER_AS_LINES);
+		cell1.getMorphology().setRenderOption(IMorphology.RENDER_AS_CYLINDERS);
 		cells.add(cell1);
+		
+		CellImpl cell2 = new CellImpl();
+		URL cell2URL = SceneImpl.class.getClassLoader().getResource("1220882a.morph.xml");
+		cell2.setMorphologyViaURL(cell1URL);
+		cell2.getMorphology().setPosition(new PositionImpl(6,6,106));
+		//cell2.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new Vector3f(0,1,0)));
+		cell2.getMorphology().setScale(0.15f);
+		cell2.getMorphology().setRenderOption(IMorphology.RENDER_AS_LINES);
+		cells.add(cell2);
 		changed();
 	}
 
