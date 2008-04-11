@@ -1,5 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core;
 
+import java.math.BigInteger;
+
 /**
  * Defines the smallest unit of an IMorphology.  A segment has a proximal and a distal point,
  * and each has a radius.
@@ -32,4 +34,10 @@ public interface ISegment {
 	 * @return a float value representing the distal radius
 	 */
 	public float getDistalRadius();
+	
+	/**
+	 * 
+	 * @return the id of the larger segment group this segment belongs to
+	 */
+	public BigInteger getSegmentGroupId();
 }

@@ -4,13 +4,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.jme.bounding.BoundingSphere;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Geometry;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
@@ -21,12 +25,14 @@ import com.jme.scene.shape.Cylinder;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.system.DisplaySystem;
+import com.jme.util.AreaUtils;
 import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.IMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.IPosition;
 import edu.ucsd.ccdb.ontomorph2.core.IRotation;
 import edu.ucsd.ccdb.ontomorph2.core.ISegment;
+import edu.ucsd.ccdb.ontomorph2.core.SegmentImpl;
 import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
 import edu.ucsd.ccdb.ontomorph2.util.XSLTransformManager;
 
@@ -34,13 +40,28 @@ public class Structure3DImpl extends Node implements IStructure3D {
 	
 	HashMap<ISegment, Geometry> segmentToGeom = new HashMap();
 	
+    private static final Logger logger = Logger.getLogger(AreaClodMesh.class
+            .getName());
+
+	private float trisPerPixel = 1f;
+
+	private float distTolerance = 1f;
+
+	private float lastDistance = 0f;
+	
+	int targetRecord = 1;
+	
+	IMorphology currentMorph = null;
+	
 	public Structure3DImpl(IMorphology morph) {
-		if (morph.getRenderOption().equals(IMorphology.RENDER_AS_CYLINDERS)) {
+		currentMorph = morph;
+		//if (morph.getRenderOption().equals(IMorphology.RENDER_AS_CYLINDERS)) {
 			this.setMorphMLNeuron(this.loadscene(morph), morph.getPosition(), morph.getRotation(), morph.getScale());
-		} else if (morph.getRenderOption().equals(IMorphology.RENDER_AS_LINES)) {
-			InputStream input = XSLTransformManager.getInstance().convertMorphMLToX3D(morph.getMorphML());
-			this.setX3DNeuron(input, morph.getPosition(), morph.getRotation(), morph.getScale());
-		}
+		//} else if (morph.getRenderOption().equals(IMorphology.RENDER_AS_LINES)) {
+			//InputStream input = XSLTransformManager.getInstance().convertMorphMLToX3D(morph.getMorphMLURL());
+			//this.setX3DNeuron(input, morph.getPosition(), morph.getRotation(), morph.getScale());
+		//}
+			updateModelBound();
 	}
 
 	public Node getNode() {
@@ -103,6 +124,47 @@ public class Structure3DImpl extends Node implements IStructure3D {
 		}
 	}
 	
+	/**
+	 * Provides segments with an arbitrary degradation.
+	 * Don't use for values other than 1 or Integer.MAX_VALUE
+	 * 
+	 * @param morph - Morphology file you want segments from
+	 * @param numberOfSegsPerGroup - number of desired segments.  For full resolution, use Integer.MAX_VALUE
+	 * @return
+	 */
+	private List<ISegment> getSegments(IMorphology morph, int numberOfSegsPerGroup) {
+		assert (numberOfSegsPerGroup == 1 || numberOfSegsPerGroup == Integer.MAX_VALUE);
+		if (numberOfSegsPerGroup == Integer.MAX_VALUE) {
+			 return morph.getSegments();
+		} 
+		ArrayList<ISegment> segments = new ArrayList<ISegment>();
+		for (edu.ucsd.ccdb.ontomorph2.core.ISegmentGroup sg : morph.getSegmentGroups()) {
+			if (sg.getSegments().size() <= numberOfSegsPerGroup ){
+				segments.addAll(sg.getSegments());
+			} else if (numberOfSegsPerGroup == 1){
+				
+				ISegment firstSeg = sg.getSegments().get(0);
+				float[] proximalPoint = firstSeg.getProximalPoint();
+				float proximalRadius = firstSeg.getProximalRadius();
+				ISegment lastSeg = sg.getSegments().get(sg.getSegments().size() - 1);
+				float[] distalPoint = lastSeg.getDistalPoint();
+				float distalRadius = lastSeg.getDistalRadius();
+				
+				
+				SegmentImpl singleSegment = new SegmentImpl(null, proximalPoint, distalPoint, 
+						proximalRadius, distalRadius, null);
+				
+				segments.add(singleSegment);
+			} /*else {
+				int cutIncrement = (int)Math.rint(numberOfSegsPerGroup / (sg.getSegments().size()+1));
+				for (int i = 0; i < numberOfSegsPerGroup-1; i++) {
+					sg.getSegments().get(cutIncrement*i);
+				}
+			} */
+		}
+		return segments;
+	}
+	
 	public Node loadscene(IMorphology morph) {
 		Node sceneRoot = new Node();
 		 /* 
@@ -114,7 +176,7 @@ public class Structure3DImpl extends Node implements IStructure3D {
         lightState.setEnabled(true);	
         sceneRoot.setRenderState(lightState);
         
-        for (ISegment seg : morph.getSegments()) {
+        for (ISegment seg : this.getSegments(morph, targetRecord)) {
 						        	
         	Vector3f base = new Vector3f();
         	base.x = seg.getProximalPoint()[0];
@@ -135,48 +197,129 @@ public class Structure3DImpl extends Node implements IStructure3D {
         	 sceneRoot.attachChild(s1);
         	 sceneRoot.attachChild(s2);
         	 */
+            
+        	ColorRGBA defaultColor = ColorRGBA.red;
         	
-        	float scale = 10f;
+        	float[] colorValues2 = {defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a, 
+              		defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a};
+        	FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colorValues2);
         	
-        	//calculate new center
-        	float xCenter = (float)((apex.x - base.x)/2 + base.x);
-        	float yCenter = (float)((apex.y - base.y)/2 + base.y);
-        	float zCenter = (float)((apex.z - base.z)/2 + base.z);
+        	if (morph.getRenderOption().equals(IMorphology.RENDER_AS_LINES)) {
+        		
+        		float[] vertices = {apex.x, apex.y, apex.z, base.x, base.y, base.z};
+        		
+              
+        		
+        		Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, colorBuffer, null);
+        		l.updateModelBound();
+        		sceneRoot.attachChild(l);						
         	
-        	Vector3f center = new Vector3f(xCenter, yCenter, zCenter);
-        	
-        	Vector3f unit = new Vector3f();
-        	unit = apex.subtract(base); // unit = apex - base;
-        	float height = unit.length();
-        	unit = unit.normalize();
-        	
-        	float[] vertices = {apex.x, apex.y, apex.z, base.x, base.y, base.z};
-        	
-        	Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, null, null);
-        	//sceneRoot.attachChild(l);						
-        	
-        	
-        	Cylinder cyl = new Cylinder("neuron_cyl", 2, 5, 0.5f, height);
-        	cyl.setRadius1(seg.getProximalRadius());
-        	cyl.setRadius2(seg.getDistalRadius());
-        	
-        	Quaternion q = new Quaternion();
-        	q.lookAt(unit, Vector3f.UNIT_Y);
-        	
-        	cyl.setLocalRotation(q);
-        	
-        	cyl.setLocalTranslation(center);
-        	cyl.setRandomColors();
-        	
-        	//cyl.setLocalScale(scale);
-        	segmentToGeom.put(seg, cyl);
-        	sceneRoot.attachChild(cyl);
+        	} else if (morph.getRenderOption().equals(IMorphology.RENDER_AS_CYLINDERS)) {
+        		
+            	//calculate new center
+            	float xCenter = (float)((apex.x - base.x)/2 + base.x);
+            	float yCenter = (float)((apex.y - base.y)/2 + base.y);
+            	float zCenter = (float)((apex.z - base.z)/2 + base.z);
+            	
+            	Vector3f center = new Vector3f(xCenter, yCenter, zCenter);
+            	
+            	Vector3f unit = new Vector3f();
+            	unit = apex.subtract(base); // unit = apex - base;
+            	float height = unit.length();
+            	unit = unit.normalize();
+            	
+        		Cylinder cyl = new Cylinder("neuron_cyl", 2, 4, 0.5f, height);
+        		cyl.setRadius1(seg.getProximalRadius());
+        		cyl.setRadius2(seg.getDistalRadius());
+        		//cyl.setColorBuffer(2, colorBuffer);
+        		cyl.updateModelBound();
+        		
+        		Quaternion q = new Quaternion();
+        		q.lookAt(unit, Vector3f.UNIT_Y);
+        		
+        		cyl.setLocalRotation(q);
+        		
+        		cyl.setLocalTranslation(center);
+        		cyl.setRandomColors();
+        		
+        		//cyl.setLocalScale(scale);
+        		segmentToGeom.put(seg, cyl);
+        		
+        		sceneRoot.attachChild(cyl); 
+        	}
 
         }
-		 return getClodNodeFromParent(sceneRoot);
-		//return sceneRoot;
+        
+    	if (morph.getRenderOption().equals(IMorphology.RENDER_AS_CYLINDERS)) {
+    		sceneRoot = getClodNodeFromParent(sceneRoot);
+    	}
+    	return sceneRoot;
 	}
 	
+	 /**
+	   * Called during rendering.  Should not be called directly.
+	   * @param r The renderer to draw this TriMesh with.
+	   */
+	/*
+	  public void draw(Renderer r) {
+	    selectLevelOfDetail(r);
+	    super.draw(r);
+	  }*/
+	  
+	  public void selectLevelOfDetail(Renderer r) {
+		  int target = chooseTargetRecord(r);
+		  if (target == 0) {
+			  if (targetRecord == Integer.MAX_VALUE) {
+				  reload();
+			  }
+		  } else if (target == Integer.MAX_VALUE){
+			 if (targetRecord == 1) {
+				 reload();
+			 }
+		  }
+	  }
+	  
+	  public void reload() {
+		  this.detachAllChildren();
+		  this.attachChild(loadscene(currentMorph));
+		  updateModelBound();
+	  }
+	
+	  /**
+		 * This function is used during rendering to choose the correct target record for the
+		 * AreaClodMesh acording to the information in the renderer.  This should not be called
+		 * manually.  Instead, allow it to be called automatically during rendering.
+		 * @param r The Renderer to use.
+		 * @return the target record this AreaClodMesh will use to collapse vertexes.
+		 */
+		public int chooseTargetRecord(Renderer r) {
+			if (this.getWorldBound() == null) {
+				logger.warning("Structure3DImpl found with no Bounds.");
+				return 0;
+			}
+
+			float newDistance = getWorldBound().distanceTo(
+					r.getCamera().getLocation());
+			if (Math.abs(newDistance - lastDistance) <= distTolerance)
+				return targetRecord; // we haven't moved relative to the model, send the old measurement back.
+			if (lastDistance > newDistance && targetRecord == 1)
+				return targetRecord; // we're already at the lowest setting and we just got closer to the model, no need to keep trying.
+			if (lastDistance < newDistance && targetRecord == Integer.MAX_VALUE)
+				return targetRecord; // we're already at the highest setting and we just got further from the model, no need to keep trying.
+
+			lastDistance = newDistance;
+
+			// estimate area of polygon via bounding volume
+			float area = AreaUtils.calcScreenArea(getWorldBound(), lastDistance, r
+					.getWidth());
+			if (area > (640*480/2)) {
+				targetRecord = Integer.MAX_VALUE;
+			} else {
+				targetRecord = 1;
+			}
+			return targetRecord;
+		}
+	  
 	private Node getClodNodeFromParent(Node meshParent) {
 	    // Create a node to hold my cLOD mesh objects
 	    Node clodNode = new Node("Clod node");

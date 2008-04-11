@@ -1,7 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core;
 
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 
 import edu.ucsd.ccdb.ontomorph2.view.IStructure3D;
 
@@ -15,6 +15,7 @@ public interface IMorphology {
 	//render options.
 	public final static String RENDER_AS_LINES = "lines";
 	public final static String RENDER_AS_CYLINDERS = "cylinders";
+	public final static String SPHERES_AT_JOINTS = "spheres";
 
 			public edu.ucsd.ccdb.ontomorph2.core.IRotation lnkIRotation = null;
 
@@ -33,7 +34,7 @@ public interface IMorphology {
 
 	public MorphologyRepository lnkMorphologyRepository = null;
 
-	public URL getMorphML();
+	public URL getMorphMLURL();
 
 	public IRotation getRotation();
 
@@ -51,12 +52,14 @@ public interface IMorphology {
 
 	public float getScale();
 	
-	public ArrayList<ISegment> getSegments();
+	public List<ISegment> getSegments();
 	
 	public void selectSegment(ISegment s);
 	
 	public void unselectSegment(ISegment s);
 	
-	public ArrayList<ISegment> getSelectedSegments();
+	public List<ISegment> getSelectedSegments();
+	
+	public List<ISegmentGroup> getSegmentGroups();
 	
 }

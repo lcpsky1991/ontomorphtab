@@ -9,13 +9,16 @@ public class SegmentImpl implements ISegment {
 	float[] _distPoint;
 	float _proxRad;
 	float _distRad;
+	BigInteger _segGroupId;
 	
-	public SegmentImpl(BigInteger id, float[] proximalPoint, float[] distalPoint, float proxRadius, float distRadius) {
+	public SegmentImpl(BigInteger id, float[] proximalPoint, float[] distalPoint, 
+			           float proxRadius, float distRadius, BigInteger segGroupId) {
 		_id = id;
 		_proxPoint = proximalPoint;
 		_distPoint = distalPoint;
 		_proxRad = proxRadius;
 		_distRad = distRadius;
+		_segGroupId = segGroupId;
 	}
 	
 	public float[] getProximalPoint() {
@@ -32,6 +35,10 @@ public class SegmentImpl implements ISegment {
 
 	public float getDistalRadius() {
 		return _distRad;
+	}
+
+	public BigInteger getSegmentGroupId() {
+		return _segGroupId;
 	}
 	
 }

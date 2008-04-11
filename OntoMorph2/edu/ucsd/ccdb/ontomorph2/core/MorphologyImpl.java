@@ -1,9 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +15,9 @@ import neuroml.generated.Level2Cell;
 import neuroml.generated.NeuroMLLevel2;
 import neuroml.generated.Point;
 import neuroml.generated.Segment;
+import neuroml.generated.Cell.Cables;
 import neuroml.generated.Cell.Segments;
 import neuroml.generated.NeuroMLLevel2.Cells;
-
-import org.w3c.dom.Document;
-
-import edu.ucsd.ccdb.ontomorph2.util.XSLTransformManager;
-import edu.ucsd.ccdb.ontomorph2.view.IStructure3D;
-import edu.ucsd.ccdb.ontomorph2.view.Structure3DImpl;
 
 public class MorphologyImpl implements IMorphology  {
 	
@@ -36,6 +29,7 @@ public class MorphologyImpl implements IMorphology  {
 	ArrayList<ISegment> segmentList = null;
 	ArrayList<ISegment> selectedSegmentList = new ArrayList<ISegment>();
 	Level2Cell theCell;
+	ArrayList<ISegmentGroup> segmentGroupList = null;
 	
 	public MorphologyImpl(URL morphLoc, IPosition position, IRotation rotation) {
 		_morphLoc = morphLoc;
@@ -64,7 +58,7 @@ public class MorphologyImpl implements IMorphology  {
 		setRenderOption(renderOption);
 	}
 
-	public URL getMorphML() {
+	public URL getMorphMLURL() {
 		return _morphLoc;
 	}
 
@@ -102,7 +96,7 @@ public class MorphologyImpl implements IMorphology  {
 		_scale = f;
 	}
 
-	public ArrayList<ISegment> getSegments() {
+	public List<ISegment> getSegments() {
 		if (segmentList == null) {
 			segmentList = new ArrayList<ISegment>();
 			
@@ -122,12 +116,31 @@ public class MorphologyImpl implements IMorphology  {
 					float[] prox = {(float)p1.getX(), (float)p1.getY(), (float)p1.getZ()};
 					float[] dist = {(float)p2.getX(), (float)p2.getY(), (float)p2.getZ()};
 					
-					SegmentImpl si = new SegmentImpl(seg.getId(), prox, dist, p1.getDiameter().floatValue(), p2.getDiameter().floatValue());
+					SegmentImpl si = new SegmentImpl(seg.getId(), prox, dist, 
+							p1.getDiameter().floatValue(), p2.getDiameter().floatValue(), seg.getCable());
 					segmentList.add(si);
 				}
 			}
 		}
 		return segmentList;
+	}
+	
+	public List<ISegmentGroup> getSegmentGroups() {
+		if (segmentGroupList == null) {
+			segmentGroupList = new ArrayList<ISegmentGroup>();
+			Cables c = theCell.getCables();
+			for(neuroml.generated.Cable cab : c.getCable()) {
+				BigInteger id = cab.getId();
+				ArrayList<ISegment> childSegments = new ArrayList<ISegment>();
+				for (ISegment s : this.getSegments()) {
+					if (id.equals(s.getSegmentGroupId())) {
+						childSegments.add(s);
+					}
+				}
+				segmentGroupList.add(new SegmentGroupImpl(id, childSegments, cab.getGroup()));
+			}
+		}
+		return segmentGroupList;
 	}
 	
 	public void selectSegment(ISegment s) {
@@ -138,7 +151,7 @@ public class MorphologyImpl implements IMorphology  {
 		selectedSegmentList.remove(s);
 	}
 	
-	public ArrayList<ISegment> getSelectedSegments() {
+	public List<ISegment> getSelectedSegments() {
 		return selectedSegmentList;
 	}
 	
