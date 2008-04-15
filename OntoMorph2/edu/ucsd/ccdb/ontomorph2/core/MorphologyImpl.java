@@ -11,6 +11,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import edu.ucsd.ccdb.ontomorph2.util.OMTException;
+
 import neuroml.generated.Level2Cell;
 import neuroml.generated.NeuroMLLevel2;
 import neuroml.generated.Point;
@@ -49,7 +51,7 @@ public class MorphologyImpl implements IMorphology  {
 			theCell = c.getCell().get(0);
 			
 		} catch (JAXBException e) {
-			e.printStackTrace();
+			throw new OMTException("Problem loading " + _morphLoc.getFile(), e);
 		}
 	}
 	

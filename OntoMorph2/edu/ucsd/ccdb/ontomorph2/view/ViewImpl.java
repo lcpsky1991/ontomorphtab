@@ -17,6 +17,8 @@ import org.fenggui.event.ISelectionChangedListener;
 import org.fenggui.event.SelectionChangedEvent;
 import org.fenggui.layout.StaticLayout;
 
+import com.jme.app.BaseGame;
+import com.jme.app.BaseSimpleGame;
 import com.jme.app.SimpleGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
@@ -36,6 +38,7 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
@@ -49,6 +52,7 @@ import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jme.util.export.binary.BinaryImporter;
 import com.jme.util.geom.BufferUtils;
+import com.jme.util.geom.Debugger;
 import com.jmex.model.converters.FormatConverter;
 import com.jmex.model.converters.MaxToJme;
 
@@ -66,7 +70,7 @@ import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
  * Represents a singleton.
  */
 
-public class ViewImpl extends SimpleGame implements IView{
+public class ViewImpl extends BaseSimpleGame implements IView{
 
 	private static ViewImpl instance = null;
 	private static final Logger logger = Logger.getLogger(ViewImpl.class.getName());
@@ -160,9 +164,7 @@ public class ViewImpl extends SimpleGame implements IView{
 		//Remove lighting for rootNode so that it will use our basic colors
 		rootNode.setLightCombineMode(LightState.OFF);
 		
-		
-		// Create the GUI
-		initGUI();
+		disp = View2DImpl.getInstance();
 	}
 	
 	
@@ -331,42 +333,67 @@ public class ViewImpl extends SimpleGame implements IView{
 		
 		return false;
 	}
-	
 
 	
-	/**
-	 * Create our GUI.  FengGUI init code goes in here
-	 *
-	 */
-	protected void initGUI()
-	{
-		try
-		{
-			int test=0;
-			test=test+1;
-			
-			// Grab a display using an LWJGL binding
-			//	   (obviously, since jME uses LWJGL)
-			disp = new org.fenggui.Display(new org.fenggui.render.lwjgl.LWJGLBinding());
-	 
-			//try to add TextArea here but get OpenGLException
-			TextEditor ta = new TextEditor(false);
-			disp.addWidget(ta);
-			ta.setText("Hallo Text");
-			ta.setX(40);
-			ta.setY(50);
-			ta.setSizeToMinSize();
-			
-		}
-		catch (Exception e)
-		{
-			logger.logp(Level.SEVERE, "ViewImpl", "initGUI", e.getMessage());
-		}
-		
- 
-		// Update the display with the newly added components
-		disp.layout();
-	}
+    /**
+     * This is called every frame in BaseGame.start(), after update()
+     * 
+     * @param interpolation
+     *            unused in this implementation
+     * @see AbstractGame#render(float interpolation)
+     */
+    protected final void render(float interpolation) {
+        super.render(interpolation);
+        
+        Renderer r = display.getRenderer();
+        
+        r.clearBuffers();
+
+        /** Draw the rootNode and all its children. */
+        r.draw(rootNode);
+        
+        /** Call simpleRender() in any derived classes. */
+        simpleRender();
+        
+		// Then we display the GUI
+		disp.display();
+        
+        /** Draw the fps node to show the fancy information at the bottom. */
+        r.draw(fpsNode);
+        
+        doDebug(r);
+    }
+
+	 /**
+     * Called every frame to update scene information.
+     * 
+     * @param interpolation
+     *            unused in this implementation
+     * @see BaseSimpleGame#update(float interpolation)
+     */
+    protected final void update(float interpolation) {
+        super.update(interpolation);
+
+        if ( !pause ) {
+            /** Call simpleUpdate in any derived classes of SimpleGame. */
+            simpleUpdate();
+
+            /** Update controllers/render states/transforms/bounds for rootNode. */
+            rootNode.updateGeometricState(tpf, true);
+        }
+    }
+
+
+
+    @Override
+    protected void doDebug(Renderer r) {
+        super.doDebug(r);
+
+        if (showDepth) {
+            r.renderQueue();
+            Debugger.drawBuffer(Texture.RTT_SOURCE_DEPTH, Debugger.NORTHEAST, r);
+        }
+    }
 	
 	private class CBListener implements ISelectionChangedListener
 	{
@@ -388,8 +415,7 @@ public class ViewImpl extends SimpleGame implements IView{
 	}
 
 	public IView2D getView2D() {
-		// TODO Auto-generated method stub
-		return null;
+		return View2DImpl.getInstance();
 	}
 	
 }

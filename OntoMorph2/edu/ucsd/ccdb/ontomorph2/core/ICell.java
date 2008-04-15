@@ -4,7 +4,7 @@ import java.net.URL;
 
 public interface ICell {
 
-		public edu.ucsd.ccdb.ontomorph2.core.IStructure2D lnkStructure2D = null;
+		public IStructure2D lnkStructure2D = null;
 
 	public ISemanticThing lnkSemanticThing = null;
 
@@ -17,4 +17,8 @@ public interface ICell {
 	public void setMorphologyViaURL(URL morphLoc);
 	
 	public void setMorphology(IMorphology morph);
+	
+	public void setSemanticThing(ISemanticThing thing);
+	
+	public ISemanticThing getSemanticThing();
 }

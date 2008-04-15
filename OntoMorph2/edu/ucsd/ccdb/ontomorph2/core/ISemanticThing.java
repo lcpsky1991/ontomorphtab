@@ -1,5 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core;
 
+import edu.stanford.smi.protege.model.Cls;
+
 //import edu.stanford.smi.protege.model.Cls;
 
 /**

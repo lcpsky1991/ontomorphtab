@@ -22,7 +22,7 @@ public class OntoMorph2 {
 		
 		//since the view takes over the thread after it is started
 		//need to have the view do the initial loading of the scene.
-		view.setScene(_scene);
+		view.setScene(_scene);	
 		view.start();
 	}
 	
@@ -30,6 +30,8 @@ public class OntoMorph2 {
 	public static void initialization() {
 		//scene can't be loaded before ViewImpl has been initializaed
 		_scene.load();
+		
+		ViewImpl.getInstance().getView2D().addInfoText("This is an example of \nloading neuronal morphologies...");
 	}
 	
 	

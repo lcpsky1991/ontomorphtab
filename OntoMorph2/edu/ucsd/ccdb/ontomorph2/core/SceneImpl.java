@@ -30,7 +30,7 @@ public class SceneImpl extends Observable implements IScene {
 		slides.add(slide2);
 		
 		
-		CellImpl cell1 = new CellImpl();
+		ICell cell1 = new CellImpl();
 		URL cell1URL = SceneImpl.class.getClassLoader().getResource("1220882a.morph.xml");
 		cell1.setMorphologyViaURL(cell1URL);
 		cell1.getMorphology().setPosition(new PositionImpl(6,-30,106));
@@ -39,16 +39,23 @@ public class SceneImpl extends Observable implements IScene {
 		cell1.getMorphology().setRenderOption(IMorphology.RENDER_AS_CYLINDERS);
 		cells.add(cell1);
 		
-		CellImpl cell2 = new CellImpl();
+		ICell cell2 = new CellImpl();
 		URL cell2URL = SceneImpl.class.getClassLoader().getResource("1220882a.morph.xml");
 		cell2.setMorphologyViaURL(cell1URL);
 		cell2.getMorphology().setPosition(new PositionImpl(6,6,106));
 		//cell2.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new Vector3f(0,1,0)));
 		cell2.getMorphology().setScale(0.15f);
 		cell2.getMorphology().setRenderOption(IMorphology.RENDER_AS_LINES);
+		
+		/*
+		//get semantic thing for a pyramidal cell
+		ISemanticThing pyramCell = SemanticRepository.getInstance().getSemanticThing("sao:sao830368389");
+		cell2.setSemanticThing(pyramCell);
+		*/
+		
 		cells.add(cell2);
 		
-		CellImpl cell3 = new CellImpl(); 
+		ICell cell3 = new CellImpl(); 
 		URL cell3URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/cell1zr.morph.xml");
 		cell3.setMorphologyViaURL(cell3URL);
 		cell3.getMorphology().setPosition(new PositionImpl(-10,-5,20));
@@ -57,7 +64,7 @@ public class SceneImpl extends Observable implements IScene {
 		cell3.getMorphology().setRenderOption(IMorphology.RENDER_AS_LINES);
 		cells.add(cell3);
 		
-		CellImpl cell4 = new CellImpl(); 
+		ICell cell4 = new CellImpl(); 
 		URL cell4URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/cell2zr.morph.xml");
 		cell4.setMorphologyViaURL(cell4URL);
 		cell4.getMorphology().setPosition(new PositionImpl(0,-5,20));
@@ -66,7 +73,7 @@ public class SceneImpl extends Observable implements IScene {
 		cell4.getMorphology().setRenderOption(IMorphology.RENDER_AS_LINES);
 		cells.add(cell4);
 		
-		CellImpl cell5 = new CellImpl(); 
+		ICell cell5 = new CellImpl(); 
 		URL cell5URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/cell6zr.morph.xml");
 		cell5.setMorphologyViaURL(cell5URL);
 		cell5.getMorphology().setPosition(new PositionImpl(0,0,20));
@@ -76,7 +83,7 @@ public class SceneImpl extends Observable implements IScene {
 		cells.add(cell5);
 		
 		
-		CellImpl cell6 = new CellImpl(); 
+		ICell cell6 = new CellImpl(); 
 		URL cell6URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/pc1c.morph.xml");
 		cell6.setMorphologyViaURL(cell6URL);
 		cell6.getMorphology().setPosition(new PositionImpl(-12,15,20));
@@ -86,7 +93,7 @@ public class SceneImpl extends Observable implements IScene {
 		cells.add(cell6);
 		
 		
-		CellImpl cell7 = new CellImpl(); 
+		ICell cell7 = new CellImpl(); 
 		URL cell7URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/pc2a.morph.xml");
 		cell7.setMorphologyViaURL(cell7URL);
 		cell7.getMorphology().setPosition(new PositionImpl(-23,15,20));
@@ -97,7 +104,7 @@ public class SceneImpl extends Observable implements IScene {
 		
 		
 		/*
-		CellImpl cell8 = new CellImpl(); 
+		ICell cell8 = new CellImpl(); 
 		URL cell8URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/cb27e.morph.xml");
 		cell8.setMorphologyViaURL(cell8URL);
 		cell8.getMorphology().setPosition(new PositionImpl(-10,0,20));
@@ -106,7 +113,7 @@ public class SceneImpl extends Observable implements IScene {
 		cell8.getMorphology().setRenderOption(IMorphology.RENDER_AS_LINES);
 		cells.add(cell8);
 		
-		CellImpl cell9 = new CellImpl(); 
+		ICell cell9 = new CellImpl(); 
 		URL cell9URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/cb27g.morph.xml");
 		cell9.setMorphologyViaURL(cell9URL);
 		cell9.getMorphology().setPosition(new PositionImpl(-15,0,20));
@@ -115,7 +122,7 @@ public class SceneImpl extends Observable implements IScene {
 		cell9.getMorphology().setRenderOption(IMorphology.RENDER_AS_LINES);
 		cells.add(cell9);
 		
-		CellImpl cell10 = new CellImpl(); 
+		ICell cell10 = new CellImpl(); 
 		URL cell10URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/cd1152.morph.xml");
 		cell10.setMorphologyViaURL(cell10URL);
 		cell10.getMorphology().setPosition(new PositionImpl(20,0,20));
@@ -124,7 +131,7 @@ public class SceneImpl extends Observable implements IScene {
 		cell10.getMorphology().setRenderOption(IMorphology.RENDER_AS_LINES);
 		cells.add(cell10); */
 		
-		CellImpl cell11 = new CellImpl(); 
+		ICell cell11 = new CellImpl(); 
 		URL cell11URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/5199202a.morph.xml");
 		cell11.setMorphologyViaURL(cell11URL);
 		cell11.getMorphology().setPosition(new PositionImpl(-20,0,20));
@@ -133,7 +140,7 @@ public class SceneImpl extends Observable implements IScene {
 		cell11.getMorphology().setRenderOption(IMorphology.RENDER_AS_CYLINDERS);
 		cells.add(cell11);
 		
-		CellImpl cell11a = new CellImpl(); 
+		ICell cell11a = new CellImpl(); 
 		cell11a.setMorphologyViaURL(cell11URL);
 		cell11a.getMorphology().setPosition(new PositionImpl(-27,-5,20));
 		cell11a.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*90,Vector3f.UNIT_Z));
@@ -141,7 +148,7 @@ public class SceneImpl extends Observable implements IScene {
 		cell11a.getMorphology().setRenderOption(IMorphology.RENDER_AS_CYLINDERS);
 		cells.add(cell11a);
 		
-		CellImpl cell11b = new CellImpl(); 
+		ICell cell11b = new CellImpl(); 
 		cell11b.setMorphologyViaURL(cell11URL);
 		cell11b.getMorphology().setPosition(new PositionImpl(-20,-10,20));
 		cell11b.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*180,Vector3f.UNIT_Z));
@@ -150,7 +157,7 @@ public class SceneImpl extends Observable implements IScene {
 		cells.add(cell11b);
 		
 		/*
-		CellImpl cell12 = new CellImpl(); 
+		ICell cell12 = new CellImpl(); 
 		URL cell12URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/pv08d.morph.xml");
 		cell12.setMorphologyViaURL(cell12URL);
 		cell12.getMorphology().setPosition(new PositionImpl(-25,0,20));
@@ -159,7 +166,7 @@ public class SceneImpl extends Observable implements IScene {
 		cell12.getMorphology().setRenderOption(IMorphology.RENDER_AS_LINES);
 		cells.add(cell12);
 		
-		CellImpl cell13 = new CellImpl(); 
+		ICell cell13 = new CellImpl(); 
 		URL cell13URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/pv22b.morph.xml");
 		cell13.setMorphologyViaURL(cell13URL);
 		cell13.getMorphology().setPosition(new PositionImpl(25,0,20));

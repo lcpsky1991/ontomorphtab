@@ -5,6 +5,7 @@ import java.net.URL;
 public class CellImpl implements ICell {
 	
 	IMorphology _morph = null;
+	ISemanticThing semanticThing = null;
 	
 	public CellImpl() {
 	}
@@ -19,6 +20,15 @@ public class CellImpl implements ICell {
 
 	public void setMorphology(IMorphology morph) {
 		_morph = morph;
+	}
+
+	public void setSemanticThing(ISemanticThing thing) {
+		semanticThing = thing;
+		
+	}
+
+	public ISemanticThing getSemanticThing() {
+		return semanticThing;
 	}
 
 }
