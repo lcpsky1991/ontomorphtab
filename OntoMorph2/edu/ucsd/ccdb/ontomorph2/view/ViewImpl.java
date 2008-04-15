@@ -258,89 +258,14 @@ public class ViewImpl extends SimpleGame implements IView{
 	}
 	
 	
-	/*
-	 * 
-	 * This function isn't evne used anymore!? - CA
-	 *  
-	 * 
-	protected TriMesh getTriMesh() {
-		//Vertex positions for the mesh
-		Vector3f[] vertexes={
-				new Vector3f(0,0,0),
-				new Vector3f(1,0,0),
-				new Vector3f(0,1,0),
-				new Vector3f(1,1,0)
-		};
-		
-		//texture coordinates for each position
-		coordDelta=1;
-		Vector2f[] texCoords ={
-				new Vector2f(0,0),
-				new Vector2f(coordDelta,0),
-				new Vector2f(0,coordDelta),
-				new Vector2f(coordDelta,coordDelta),
-		};
-		//The indexes of Vertex/Normal/Color/TexCoord sets.  Every 3
-		//makes a triangle.
-		int[] indexes={
-				0,1,2,1,3,2
-		};
-		//create the square
-		square = new TriMesh("my mesh", BufferUtils.createFloatBuffer(vertexes),
-				null,null, BufferUtils.createFloatBuffer(texCoords), 
-				BufferUtils.createIntBuffer(indexes));
-		
-		//Point to slice image
-		URL sliceLoc = ViewImpl.class.getClassLoader().getResource("slice.jpg");
-		//get my texturestate
-		TextureState ts = display.getRenderer().createTextureState();
-		//get my texture
-		Texture t= TextureManager.loadTexture(sliceLoc,
-				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		//set a wrap for my texture so it repeats
-		t.setWrap(Texture.WM_WRAP_S_WRAP_T);
-		//set the texture to the texturestate
-		ts.setTexture(t);
-		//assign the texturestate to the square
-		square.setRenderState(ts);
-		//scale my square x larger
-		square.setLocalScale(1);
-		return square;
-	}*/
+	
 	
 	
 	public DisplaySystem getDisplaySystem(){
 		return display;
 	}
 	
-	/*
-	protected Node getNeuron() {
-//		 point to a URL of my model
-		URL model = ViewImpl.class.getClassLoader().getResource("neuron.3ds");
-		
-		//Create something to convert .obj format to .jme
-		FormatConverter converter = new MaxToJme();
-		//Point the converter to where it will find the .mtl file from
-		//converter.setProperty("mtllib", model);
-		
-		//This byte array will hold my .jme file
-		ByteArrayOutputStream BO = new ByteArrayOutputStream();
-		Node neuron = null;
-		try {
-			//Use the format converter to convert .obj to .jme
-			converter.convert(model.openStream(), BO);
-			neuron = 
-				(Node)BinaryImporter.getInstance().load(new ByteArrayInputStream(BO.toByteArray()));
-			neuron.setLocalScale(.1f);
-			neuron.setModelBound(new BoundingBox());
-			neuron.updateModelBound();
-			
-		} catch (IOException e) {
-			logger.logp(Level.SEVERE, this.getClass().toString(), "simpleInitGame()", "Exception", e);
-			System.exit(0);
-		}
-		return neuron;
-	}*/
+	
 	
 	protected Node getX3DNeuron(String fileName) {
 		Node n = null;
