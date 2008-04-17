@@ -3,6 +3,7 @@ package edu.ucsd.ccdb.ontomorph2.view;
 import org.fenggui.ComboBox;
 import org.fenggui.Display;
 import org.fenggui.TextEditor;
+import org.fenggui.ScrollContainer.ScrollContainerAppearance;
 import org.fenggui.composites.TextArea;
 import org.fenggui.composites.Window;
 import org.fenggui.event.IMenuItemPressedListener;
@@ -66,7 +67,7 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 //		generate the menu
         MenuBar mB = new MenuBar();
         mB.setSize(640, 20);
-        mB.setPosition(new Point(0,460));
+        mB.setPosition(new Point(0,ViewImpl.getInstance().getDisplaySystem().getHeight()-20));
         mB.setShrinkable(false);
 
         this.addWidget(mB);

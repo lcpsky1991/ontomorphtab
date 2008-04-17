@@ -22,6 +22,7 @@ import com.jme.app.BaseSimpleGame;
 import com.jme.app.SimpleGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
+import com.jme.curve.BezierCurve;
 import com.jme.image.Texture;
 import com.jme.input.AbsoluteMouse;
 import com.jme.input.ChaseCamera;
@@ -57,7 +58,12 @@ import com.jmex.model.converters.FormatConverter;
 import com.jmex.model.converters.MaxToJme;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
+import edu.ucsd.ccdb.ontomorph2.core.CellImpl;
+import edu.ucsd.ccdb.ontomorph2.core.ICell;
+import edu.ucsd.ccdb.ontomorph2.core.IMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.IScene;
+import edu.ucsd.ccdb.ontomorph2.core.PositionImpl;
+import edu.ucsd.ccdb.ontomorph2.core.RotationImpl;
 import edu.ucsd.ccdb.ontomorph2.core.SceneImpl;
 import edu.ucsd.ccdb.ontomorph2.misc.HelloMousePick;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
@@ -120,16 +126,58 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		rootNode.attachChild(view3D);
 		
 		//This sphere is for debugging purposes, need to see something to indicate
-		 Sphere s=new Sphere("My sphere",10,10,20f);
-		  // Do bounds for the sphere, but we'll use a BoundingBox this time
-		  s.setModelBound(new BoundingBox());
-		  s.updateModelBound();
-		  // Give the sphere random colors
-		  s.setRandomColors();
-		  s.setLocalTranslation(80,0,0);
-		  //s.setSolidColor(ColorRGBA.blue);
-		  
-		  rootNode.attachChild(s);
+		Sphere s=new Sphere("My sphere",10,10,20f);
+		// Do bounds for the sphere, but we'll use a BoundingBox this time
+		s.setModelBound(new BoundingBox());
+		s.updateModelBound();
+		// Give the sphere random colors
+		s.setRandomColors();
+		s.setLocalTranslation(80,0,0);
+		//s.setSolidColor(ColorRGBA.blue);
+		
+		rootNode.attachChild(s);
+
+		
+		Vector3f p1 = new Vector3f(-20,0,20);
+		Vector3f p2 = new Vector3f(-34,-5,20);
+		Vector3f p3 = new Vector3f(-20,-10,20);
+		Vector3f[] array = {p1, p2, p3};
+		BezierCurve c1 = new BezierCurve("Dentate Gyrus",array);
+    	ColorRGBA defaultColor = ColorRGBA.yellow;
+    	
+    	float[] colorValues2 = {defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a, 
+          		                defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
+          		                defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a};
+    	FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colorValues2);
+    	
+		c1.setColorBuffer(0,colorBuffer);
+		
+		rootNode.attachChild(c1);
+		
+
+		p1 = new Vector3f(-10,-5,20);
+
+		p2 = new Vector3f(3,-9,20);
+
+		p3 = new Vector3f(7,0,20);
+
+		Vector3f p4 = new Vector3f(-9,20,20);
+
+		Vector3f p5 = new Vector3f(-23,15,20);
+		
+		Vector3f[] array2 = {p1, p2, p3, p4, p5};
+		BezierCurve c2 = new BezierCurve("CA",array2);
+    	
+    	float[] colorValues3 = {defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a, 
+          		                defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
+          		              defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
+          		            defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
+          		            defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a};
+    	colorBuffer = BufferUtils.createFloatBuffer(colorValues3);
+    	
+		c2.setColorBuffer(0,colorBuffer);
+		
+		rootNode.attachChild(c2);
 		  
 		
 		///** Set a black background.*/
