@@ -136,16 +136,58 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		rootNode.attachChild(view3D);
 		
 		//This sphere is for debugging purposes, need to see something to indicate
-		 Sphere s=new Sphere("My sphere",10,10,20f);
-		  // Do bounds for the sphere, but we'll use a BoundingBox this time
-		  s.setModelBound(new BoundingBox());
-		  s.updateModelBound();
-		  // Give the sphere random colors
-		  s.setRandomColors();
-		  s.setLocalTranslation(80,0,0);
-		  //s.setSolidColor(ColorRGBA.blue);
-		  
-		  rootNode.attachChild(s);
+		Sphere s=new Sphere("My sphere",10,10,20f);
+		// Do bounds for the sphere, but we'll use a BoundingBox this time
+		s.setModelBound(new BoundingBox());
+		s.updateModelBound();
+		// Give the sphere random colors
+		s.setRandomColors();
+		s.setLocalTranslation(80,0,0);
+		//s.setSolidColor(ColorRGBA.blue);
+		
+		rootNode.attachChild(s);
+
+		
+		Vector3f p1 = new Vector3f(-20,0,20);
+		Vector3f p2 = new Vector3f(-34,-5,20);
+		Vector3f p3 = new Vector3f(-20,-10,20);
+		Vector3f[] array = {p1, p2, p3};
+		BezierCurve c1 = new BezierCurve("Dentate Gyrus",array);
+    	ColorRGBA defaultColor = ColorRGBA.yellow;
+    	
+    	float[] colorValues2 = {defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a, 
+          		                defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
+          		                defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a};
+    	FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colorValues2);
+    	
+		c1.setColorBuffer(0,colorBuffer);
+		
+		rootNode.attachChild(c1);
+		
+
+		p1 = new Vector3f(-10,-5,20);
+
+		p2 = new Vector3f(3,-9,20);
+
+		p3 = new Vector3f(7,0,20);
+
+		Vector3f p4 = new Vector3f(-9,20,20);
+
+		Vector3f p5 = new Vector3f(-23,15,20);
+		
+		Vector3f[] array2 = {p1, p2, p3, p4, p5};
+		BezierCurve c2 = new BezierCurve("CA",array2);
+    	
+    	float[] colorValues3 = {defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a, 
+          		                defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
+          		              defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
+          		            defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
+          		            defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a};
+    	colorBuffer = BufferUtils.createFloatBuffer(colorValues3);
+    	
+		c2.setColorBuffer(0,colorBuffer);
+		
+		rootNode.attachChild(c2);
 		  
 		
 		///** Set a black background.*/
@@ -282,29 +324,18 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 	            // Get the world location of that X,Y value
 	            Vector3f farPoint = display.getWorldCoordinates(mPos, 1.0f);
 	            Vector3f closePoint = display.getWorldCoordinates(mPos, 0.0f);
-	            
-	            /*
-	             * Ray ray = new Ray(camera.getLocation(), camera.getDirection());
-	             PickResults results = new TrianglePickResults();
-	             results.setCheckDistance(true);
-	             scene.findPick(ray,results);
-	             */
+
 	            
 	            // Create a ray starting from the camera, and going in the direction
 	            // of the mouse's location
-	            //Ray mouseRay = new Ray(cam.getLocation(), farPoint.subtractLocal(closePoint).normalizeLocal());
+	            Ray mouseRay = new Ray(cam.getLocation(), farPoint.subtractLocal(closePoint).normalizeLocal());
 	            //Ray mouseRay = new Ray(cam.getLocation(), closePoint);
-	            Ray mouseRay = new Ray();
-	            mouseRay.setOrigin(closePoint);
-	            mouseRay.setDirection(farPoint.normalizeLocal());
 	            
 	            // Does the mouse's ray intersect the box's world bounds?
 	            pr.clear();
-	            pr.setCheckDistance(true);
+	            pr.setCheckDistance(true); 			//this function is undocumented
 	            rootNode.findPick(mouseRay, pr);
 			
-	            
-	            
 	            //set up for deselection
 				if ( pr.getNumber() > 0)
 				{
@@ -315,17 +346,15 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 					{
 						PickData item= pr.getPickData(i);
 						GeomBatch thing = item.getTargetMesh();
-						thing.setRandomColors();
+						//thing.setRandomColors();
 						//thing.setSolidColor(ColorRGBA.cyan);
-						
-						//System.out.println("Dis from Cam " + 4);
 					}
 					
 					
 					//find the one that is closest
-					
-					//prevPick = pr.getPickData(0);	//take the closest pick and set
-					prevPick = pr.getPickData(pr.getNumber() - 1);	//take the closest pick and set
+					//the 0th element is closest to the origin of the ray with checkdistance
+					//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
+					prevPick = pr.getPickData(0);	//take the closest pick and set
 					prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
 				}
 				
@@ -360,12 +389,22 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			
 			if ( isAction("cam_turn_cw"))	
 			{
-				//cam.setDirection( cam.getDirection().add(new Vector3f(-0.2f, 0, 0)));
-				Quaternion roll = new Quaternion(); 
-				int a = -5;
-				roll.fromAngleAxis( FastMath.PI * a /180 , new Vector3f(0,0,1) ); //rotates a degrees 
-				 
-				 rootNode.setLocalRotation(roll);
+				//key right
+	       		Quaternion q = new Quaternion();
+	       		Vector3f unit = new Vector3f();
+	       		Vector3f dir = new Vector3f();
+	       		
+	       		dir = cam.getDirection();
+	       		//unit = new Vector3f(1f,0f,0f);
+	       		
+            	
+	       		unit = unit.normalize();
+            	
+        		q.lookAt(unit, cam.getUp());
+        		
+        		cam.setAxes(q);
+				
+				
 
 			}
 			
