@@ -31,6 +31,11 @@ import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.Mouse;
 import com.jme.input.MouseInput;
+import com.jme.intersection.BoundingPickResults;
+import com.jme.intersection.TrianglePickResults;
+import com.jme.intersection.PickResults;
+import com.jme.intersection.PickData;
+import com.jme.math.Ray;
 import com.jme.input.ThirdPersonHandler;
 import com.jme.input.controls.binding.KeyboardBinding;
 import com.jme.light.PointLight;
@@ -43,8 +48,11 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.shape.Box;
+import com.jme.scene.shape.Cylinder;
 import com.jme.scene.shape.Sphere;
+import com.jme.scene.Line;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
@@ -58,6 +66,7 @@ import com.jmex.model.converters.FormatConverter;
 import com.jmex.model.converters.MaxToJme;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
+import edu.ucsd.ccdb.ontomorph2.core.IMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.CellImpl;
 import edu.ucsd.ccdb.ontomorph2.core.ICell;
 import edu.ucsd.ccdb.ontomorph2.core.IMorphology;
@@ -87,7 +96,8 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 	private SceneImpl _scene = null;
 
 	AbsoluteMouse amouse; 	//the mouse object ref to entire screen
-
+	PickData prevPick;		//made global because it's a conveiniant way to deselect the previous selection since it's stored
+	
 	org.fenggui.Display disp; // FengGUI's display
 
 //	there are two kinds of input, the FPS input and also FENG
@@ -126,58 +136,16 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		rootNode.attachChild(view3D);
 		
 		//This sphere is for debugging purposes, need to see something to indicate
-		Sphere s=new Sphere("My sphere",10,10,20f);
-		// Do bounds for the sphere, but we'll use a BoundingBox this time
-		s.setModelBound(new BoundingBox());
-		s.updateModelBound();
-		// Give the sphere random colors
-		s.setRandomColors();
-		s.setLocalTranslation(80,0,0);
-		//s.setSolidColor(ColorRGBA.blue);
-		
-		rootNode.attachChild(s);
-
-		
-		Vector3f p1 = new Vector3f(-20,0,20);
-		Vector3f p2 = new Vector3f(-34,-5,20);
-		Vector3f p3 = new Vector3f(-20,-10,20);
-		Vector3f[] array = {p1, p2, p3};
-		BezierCurve c1 = new BezierCurve("Dentate Gyrus",array);
-    	ColorRGBA defaultColor = ColorRGBA.yellow;
-    	
-    	float[] colorValues2 = {defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a, 
-          		                defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
-          		                defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a};
-    	FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colorValues2);
-    	
-		c1.setColorBuffer(0,colorBuffer);
-		
-		rootNode.attachChild(c1);
-		
-
-		p1 = new Vector3f(-10,-5,20);
-
-		p2 = new Vector3f(3,-9,20);
-
-		p3 = new Vector3f(7,0,20);
-
-		Vector3f p4 = new Vector3f(-9,20,20);
-
-		Vector3f p5 = new Vector3f(-23,15,20);
-		
-		Vector3f[] array2 = {p1, p2, p3, p4, p5};
-		BezierCurve c2 = new BezierCurve("CA",array2);
-    	
-    	float[] colorValues3 = {defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a, 
-          		                defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
-          		              defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
-          		            defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
-          		            defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a};
-    	colorBuffer = BufferUtils.createFloatBuffer(colorValues3);
-    	
-		c2.setColorBuffer(0,colorBuffer);
-		
-		rootNode.attachChild(c2);
+		 Sphere s=new Sphere("My sphere",10,10,20f);
+		  // Do bounds for the sphere, but we'll use a BoundingBox this time
+		  s.setModelBound(new BoundingBox());
+		  s.updateModelBound();
+		  // Give the sphere random colors
+		  s.setRandomColors();
+		  s.setLocalTranslation(80,0,0);
+		  //s.setSolidColor(ColorRGBA.blue);
+		  
+		  rootNode.attachChild(s);
 		  
 		
 		///** Set a black background.*/
@@ -216,8 +184,45 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 	}
 	
 	
+	//this ismostly for debugging
+	//TODO: remove this function
+	private void createSphere(Vector3f p1)
+	{
+		//Cylinder(java.lang.String name, int axisSamples, int radialSamples, float radius, float height, boolean closed)
+		
+		float x,y,z;
+		x = p1.getX();
+		y = p1.getY();
+		z = p1.getZ();
+		
+		 Sphere s=new Sphere("My sphere",10,10,3f); //last number is radius
+		 s.setModelBound(new BoundingBox());
+		 s.updateModelBound();
+		 s.setRandomColors();
+		 s.setLocalTranslation(x,y,z);
+		 
+		 rootNode.attachChild(s);
+	}
 	
-	
+	//for debugging
+	private void createLine(Vector3f apex, Vector3f base)
+	{
+
+    	ColorRGBA defaultColor = ColorRGBA.red;
+    	
+    	float[] colorValues2 = {defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a, 
+          		defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a};
+    	FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colorValues2);
+    	
+    	
+    	float[] vertices = {apex.x, apex.y, apex.z, base.x, base.y, base.z};
+    		
+          
+    		Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, colorBuffer, null);
+    		l.updateModelBound();
+    		rootNode.attachChild(l);    	
+	}
+    	
 	private void configureControls()
 	{
 		
@@ -263,6 +268,74 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 
 	private void handleInput() 
 	{
+		//handle mouse input
+		{
+			if (MouseInput.get().isButtonDown(0)) 
+			{
+				
+				PickResults pr = new TrianglePickResults();
+				
+				//Get the position that the mouse is pointing to
+	            Vector2f mPos = new Vector2f();
+	            mPos.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
+	     
+	            // Get the world location of that X,Y value
+	            Vector3f farPoint = display.getWorldCoordinates(mPos, 1.0f);
+	            Vector3f closePoint = display.getWorldCoordinates(mPos, 0.0f);
+	            
+	            /*
+	             * Ray ray = new Ray(camera.getLocation(), camera.getDirection());
+	             PickResults results = new TrianglePickResults();
+	             results.setCheckDistance(true);
+	             scene.findPick(ray,results);
+	             */
+	            
+	            // Create a ray starting from the camera, and going in the direction
+	            // of the mouse's location
+	            //Ray mouseRay = new Ray(cam.getLocation(), farPoint.subtractLocal(closePoint).normalizeLocal());
+	            //Ray mouseRay = new Ray(cam.getLocation(), closePoint);
+	            Ray mouseRay = new Ray();
+	            mouseRay.setOrigin(closePoint);
+	            mouseRay.setDirection(farPoint.normalizeLocal());
+	            
+	            // Does the mouse's ray intersect the box's world bounds?
+	            pr.clear();
+	            pr.setCheckDistance(true);
+	            rootNode.findPick(mouseRay, pr);
+			
+	            
+	            
+	            //set up for deselection
+				if ( pr.getNumber() > 0)
+				{
+					//deselect the previous 
+					if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
+		           
+					for (int i = 0; i < pr.getNumber(); i++)
+					{
+						PickData item= pr.getPickData(i);
+						GeomBatch thing = item.getTargetMesh();
+						thing.setRandomColors();
+						//thing.setSolidColor(ColorRGBA.cyan);
+						
+						//System.out.println("Dis from Cam " + 4);
+					}
+					
+					
+					//find the one that is closest
+					
+					//prevPick = pr.getPickData(0);	//take the closest pick and set
+					prevPick = pr.getPickData(pr.getNumber() - 1);	//take the closest pick and set
+					prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
+				}
+				
+				//createLine(closePoint, farPoint); //debugging
+				//createSphere(closePoint); //for debugging
+			}
+		}
+		
+		
+		//key input handle
 		{
 			//exit the program cleanly on ESC
 			if (isAction("quit")) finish();
@@ -301,6 +374,12 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 				logger.log(Level.INFO, "\nLocation: " + cam.getLocation().toString() + 
 						"\nDirection: " + cam.getDirection().toString());						
 			}
+			
+			if ( isAction("reset"))
+			{
+				logger.log(Level.INFO, "\nResetting");
+			}
+			
 			
 			logger.log(Level.FINEST, cam.getDirection().toString() );
 			
