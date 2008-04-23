@@ -3,8 +3,6 @@ package edu.ucsd.ccdb.ontomorph2.core;
 import java.net.URL;
 import java.util.List;
 
-import edu.ucsd.ccdb.ontomorph2.view.IStructure3D;
-
 /**
  * @$comment Describes the morphology of the cell, independent of different ways of visualizing it.  
  * Since it is a three-dimensional morphology, this will describe points in a local 3D space (MorphML?)
@@ -54,12 +52,28 @@ public interface IMorphology {
 	
 	public List<ISegment> getSegments();
 	
+	public void select();
+	
+	public void selectSegmentGroup(ISegmentGroup g);
+	
+	public void unselect();
+	
+	public void unselectSegmentGroup(ISegmentGroup g);
+	
 	public void selectSegment(ISegment s);
 	
 	public void unselectSegment(ISegment s);
 	
 	public List<ISegment> getSelectedSegments();
 	
+	public List<ISegmentGroup> getSelectedSegmentGroups();
+	
+	public boolean isSelected();
+	
+	public boolean hasSelectedSegmentGroups();
+	
 	public List<ISegmentGroup> getSegmentGroups();
+	
+	public ICell getParentCell();
 	
 }

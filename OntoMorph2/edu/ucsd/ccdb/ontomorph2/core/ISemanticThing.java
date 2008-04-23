@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core;
 
-import edu.stanford.smi.protege.model.Cls;
+import java.util.List;
+
 
 //import edu.stanford.smi.protege.model.Cls;
 
@@ -19,4 +20,10 @@ public interface ISemanticThing {
 	public SemanticRepository lnkSemanticRepository = null;
 
 	public ISegment lnkCompartment = null;
+	
+	public List<ISemanticsAware> getSemanticsAwareAssociations();
+	
+	public void addSemanticsAwareAssociation(ISemanticsAware obj);
+	
+	public void removeSemanticsAwareAssociation(ISemanticsAware obj);
 }

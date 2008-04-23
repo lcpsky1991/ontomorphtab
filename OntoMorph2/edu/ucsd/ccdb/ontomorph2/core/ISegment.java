@@ -1,5 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.core;
 
+import java.awt.Color;
 import java.math.BigInteger;
 
 /**
@@ -40,4 +41,12 @@ public interface ISegment {
 	 * @return the id of the larger segment group this segment belongs to
 	 */
 	public BigInteger getSegmentGroupId();
+
+	public Color getColor();
+	
+	public ICell getParentCell();
+	
+	public void select();
+	
+	public void unselect();
 }

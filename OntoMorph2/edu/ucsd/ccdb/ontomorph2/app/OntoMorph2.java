@@ -1,8 +1,5 @@
 package edu.ucsd.ccdb.ontomorph2.app;
 
-import com.jme.input.KeyBindingManager;
-import com.jme.input.KeyInput;
-
 import edu.ucsd.ccdb.ontomorph2.core.SceneImpl;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;

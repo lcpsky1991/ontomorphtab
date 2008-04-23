@@ -2,8 +2,6 @@ package edu.ucsd.ccdb.ontomorph2.view;
 
 import org.fenggui.ComboBox;
 import org.fenggui.Display;
-import org.fenggui.TextEditor;
-import org.fenggui.ScrollContainer.ScrollContainerAppearance;
 import org.fenggui.composites.TextArea;
 import org.fenggui.composites.Window;
 import org.fenggui.event.IMenuItemPressedListener;
@@ -13,11 +11,8 @@ import org.fenggui.event.SelectionChangedEvent;
 import org.fenggui.layout.StaticLayout;
 import org.fenggui.menu.Menu;
 import org.fenggui.menu.MenuBar;
-import org.fenggui.menu.MenuBarItem;
 import org.fenggui.menu.MenuItem;
 import org.fenggui.util.Point;
-
-import com.jme.renderer.ColorRGBA;
 
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 
@@ -41,7 +36,7 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 	protected TextArea getInfoText() {
 		if (infoText == null ) {
 			infoText = new TextArea();
-			infoText.setSize(200,100);
+			infoText.setSize(300,100);
 			infoText.setExpandable(false);
 			infoText.setShrinkable(false);
 			infoText.setPosition(new Point(0,20));
@@ -52,6 +47,11 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 	
 	public void addInfoText(String s) {
 		getInfoText().addTextLine(s);
+	}
+	
+
+	public void setInfoText(String s) {
+		getInfoText().setText(s);
 	}
 
 	
@@ -200,4 +200,5 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
  
 		list.addSelectionChangedListener(new CBListener());
 	}
+
 }

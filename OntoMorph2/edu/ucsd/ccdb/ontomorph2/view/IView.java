@@ -10,7 +10,4 @@ public interface IView {
 
 		public  IView3D getView3D();
 		public  IView2D getView2D();
-/*#edu.ucsd.ccdb.ontomorph2.view.IView3D Dependency_Link*/
-/*#edu.ucsd.ccdb.ontomorph2.view.IView2D Dependency_Link1*/
-
 }

@@ -4,41 +4,35 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
 import com.jme.bounding.BoundingSphere;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Geometry;
-import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.lod.AreaClodMesh;
-import com.jme.scene.shape.Cylinder;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.AreaUtils;
-import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.IMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.IPosition;
 import edu.ucsd.ccdb.ontomorph2.core.IRotation;
 import edu.ucsd.ccdb.ontomorph2.core.ISegment;
-import edu.ucsd.ccdb.ontomorph2.core.SegmentImpl;
+import edu.ucsd.ccdb.ontomorph2.core.ISegmentGroup;
+import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
-import edu.ucsd.ccdb.ontomorph2.util.XSLTransformManager;
 
 public class Structure3DImpl extends Node implements IStructure3D {
-	
-	HashMap<ISegment, Geometry> segmentToGeom = new HashMap();
+
+	List<ISegmentView> segViews;
 	
     private static final Logger logger = Logger.getLogger(AreaClodMesh.class
             .getName());
@@ -54,6 +48,7 @@ public class Structure3DImpl extends Node implements IStructure3D {
 	IMorphology currentMorph = null;
 	
 	public Structure3DImpl(IMorphology morph) {
+		segViews = new ArrayList<ISegmentView>();
 		currentMorph = morph;
 		//if (morph.getRenderOption().equals(IMorphology.RENDER_AS_CYLINDERS)) {
 			this.setMorphMLNeuron(this.loadscene(morph), morph.getPosition(), morph.getRotation(), morph.getScale());
@@ -61,11 +56,26 @@ public class Structure3DImpl extends Node implements IStructure3D {
 			//InputStream input = XSLTransformManager.getInstance().convertMorphMLToX3D(morph.getMorphMLURL());
 			//this.setX3DNeuron(input, morph.getPosition(), morph.getRotation(), morph.getScale());
 		//}
-			updateModelBound();
+			//updateModelBound();
 	}
 
 	public Node getNode() {
 		return this;
+	}
+	
+	public boolean containsGeomBatch(GeomBatch gb) {
+		return getSegmentFromGeomBatch(gb) != null;
+	}
+	
+	public ISegmentView getSegmentFromGeomBatch(GeomBatch gb) {
+		Geometry g = gb.getParentGeom();
+		ISegmentView pick = null;
+		for (ISegmentView sv : this.segViews) {
+			if (((SegmentViewImpl)sv).getCurrentGeometry() == g) {
+				pick = sv;
+			}
+		}
+		return pick;
 	}
 	
 	public void setMorphMLNeuron(Node n, IPosition _position, IRotation _rotation, float _scale) {
@@ -115,13 +125,28 @@ public class Structure3DImpl extends Node implements IStructure3D {
 		}
 	}
 	
-	//needs to be updated by a controller
-	//does not unselect yet
-	public void updateSelectedSegments(List<ISegment> segments) {
-		for (ISegment seg : segments) {
-			Geometry g = segmentToGeom.get(seg);
-			g.setColorBuffer(1, BufferUtils.createFloatBuffer(ColorRGBA.red.getColorArray()));
+	/**
+	 * Provides segments with an arbitrary degradation.
+	 * Don't use for values other than 1 or Integer.MAX_VALUE
+	 * 
+	 * @param morph - Morphology file you want segments from
+	 * @param numberOfSegsPerGroup - number of desired segments.  For full resolution, use Integer.MAX_VALUE
+	 * @return
+	 */
+	private List<ISegmentView> getSegments(IMorphology morph, int numberOfSegsPerGroup) {
+		assert (numberOfSegsPerGroup == 1 || numberOfSegsPerGroup == Integer.MAX_VALUE);
+		List<ISegmentView> segmentView = new ArrayList<ISegmentView>();
+		if (numberOfSegsPerGroup == Integer.MAX_VALUE) {
+			for (ISegment s : morph.getSegments()) {
+				segmentView.add(new SegmentViewImpl(s));
+			}
+			
+		} else {
+			for (ISegmentGroup sg: morph.getSegmentGroups()) {
+				segmentView.add(new SegmentViewImpl(sg));
+			}
 		}
+		return segmentView;
 	}
 	
 	/**
@@ -132,7 +157,7 @@ public class Structure3DImpl extends Node implements IStructure3D {
 	 * @param numberOfSegsPerGroup - number of desired segments.  For full resolution, use Integer.MAX_VALUE
 	 * @return
 	 */
-	private List<ISegment> getSegments(IMorphology morph, int numberOfSegsPerGroup) {
+/*	private List<ISegment> getSegments(IMorphology morph, int numberOfSegsPerGroup) {
 		assert (numberOfSegsPerGroup == 1 || numberOfSegsPerGroup == Integer.MAX_VALUE);
 		if (numberOfSegsPerGroup == Integer.MAX_VALUE) {
 			 return morph.getSegments();
@@ -155,15 +180,15 @@ public class Structure3DImpl extends Node implements IStructure3D {
 						proximalRadius, distalRadius, null);
 				
 				segments.add(singleSegment);
-			} /*else {
+			} else {
 				int cutIncrement = (int)Math.rint(numberOfSegsPerGroup / (sg.getSegments().size()+1));
 				for (int i = 0; i < numberOfSegsPerGroup-1; i++) {
 					sg.getSegments().get(cutIncrement*i);
 				}
-			} */
+			} 
 		}
 		return segments;
-	}
+	}*/
 	
 	public Node loadscene(IMorphology morph) {
 		Node sceneRoot = new Node();
@@ -176,16 +201,7 @@ public class Structure3DImpl extends Node implements IStructure3D {
         lightState.setEnabled(true);	
         sceneRoot.setRenderState(lightState);
         
-        for (ISegment seg : this.getSegments(morph, targetRecord)) {
-						        	
-        	Vector3f base = new Vector3f();
-        	base.x = seg.getProximalPoint()[0];
-        	base.y = seg.getProximalPoint()[1];
-        	base.z = seg.getProximalPoint()[2];
-        	Vector3f apex = new Vector3f();
-        	apex.x = seg.getDistalPoint()[0];
-        	apex.y = seg.getDistalPoint()[1];
-        	apex.z = seg.getDistalPoint()[2];
+        for (ISegmentView seg : this.getSegments(morph, targetRecord)) {
         	
         	/*
         	 Sphere s1 = new Sphere("my sphere", 10, 10, 0.5f);
@@ -197,62 +213,25 @@ public class Structure3DImpl extends Node implements IStructure3D {
         	 sceneRoot.attachChild(s1);
         	 sceneRoot.attachChild(s2);
         	 */
-            
-        	ColorRGBA defaultColor = ColorRGBA.red;
-        	
-        	float[] colorValues2 = {defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a, 
-              		defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a};
-        	FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colorValues2);
+           
+        	Geometry g = null;
         	
         	if (morph.getRenderOption().equals(IMorphology.RENDER_AS_LINES)) {
-        		
-        		float[] vertices = {apex.x, apex.y, apex.z, base.x, base.y, base.z};
-        		
-              
-        		
-        		Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, colorBuffer, null);
-        		l.updateModelBound();
-        		sceneRoot.attachChild(l);						
-        	
+        		g = ((SegmentViewImpl)seg).getLine();
         	} else if (morph.getRenderOption().equals(IMorphology.RENDER_AS_CYLINDERS)) {
-        		
-            	//calculate new center
-            	float xCenter = (float)((apex.x - base.x)/2 + base.x);
-            	float yCenter = (float)((apex.y - base.y)/2 + base.y);
-            	float zCenter = (float)((apex.z - base.z)/2 + base.z);
-            	
-            	Vector3f center = new Vector3f(xCenter, yCenter, zCenter);
-            	
-            	Vector3f unit = new Vector3f();
-            	unit = apex.subtract(base); // unit = apex - base;
-            	float height = unit.length();
-            	unit = unit.normalize();
-            	
-        		Cylinder cyl = new Cylinder("neuron_cyl", 2, 4, 0.5f, height);
-        		cyl.setRadius1(seg.getProximalRadius());
-        		cyl.setRadius2(seg.getDistalRadius());
-        		//cyl.setColorBuffer(2, colorBuffer);
-        		cyl.updateModelBound();
-        		
-        		Quaternion q = new Quaternion();
-        		q.lookAt(unit, Vector3f.UNIT_Y);
-        		
-        		cyl.setLocalRotation(q);
-        		
-        		cyl.setLocalTranslation(center);
-        		cyl.setRandomColors();
-        		
-        		//cyl.setLocalScale(scale);
-        		segmentToGeom.put(seg, cyl);
-        		
-        		sceneRoot.attachChild(cyl); 
+        		//g = ((SegmentViewImpl)seg).getCylinder();
+        		g = ((SegmentViewImpl)seg).getClodMeshCylinder();
         	}
+        	
+        	this.segViews.add(seg);
+        	    		
+    		sceneRoot.attachChild(g);	
 
         }
         
-    	if (morph.getRenderOption().equals(IMorphology.RENDER_AS_CYLINDERS)) {
-    		sceneRoot = getClodNodeFromParent(sceneRoot);
-    	}
+    	//if (morph.getRenderOption().equals(IMorphology.RENDER_AS_CYLINDERS)) {
+    		//sceneRoot = getClodNodeFromParent(sceneRoot);
+    	//}
     	return sceneRoot;
 	}
 	
@@ -285,6 +264,10 @@ public class Structure3DImpl extends Node implements IStructure3D {
 		  updateModelBound();
 	  }
 	
+	  public IMorphology getMorphology() {
+		  return currentMorph;
+	  }
+	  
 	  /**
 		 * This function is used during rendering to choose the correct target record for the
 		 * AreaClodMesh acording to the information in the renderer.  This should not be called
@@ -319,8 +302,8 @@ public class Structure3DImpl extends Node implements IStructure3D {
 			}
 			return targetRecord;
 		}
-	  
-	private Node getClodNodeFromParent(Node meshParent) {
+		
+	private Node getClodMeshFromParent(Node meshParent) {
 	    // Create a node to hold my cLOD mesh objects
 	    Node clodNode = new Node("Clod node");
 	    // For each mesh in maggie
@@ -346,6 +329,38 @@ public class Structure3DImpl extends Node implements IStructure3D {
 	        clodNode.attachChild(acm);
 	    }
 	    return clodNode;
+	}
+
+//	needs to be updated by a controller
+	//does not unselect yet
+	public void updateSelectedSegments(List<ISegment> segments) {
+		for (ISegment seg : segments) {
+			for (ISegmentView sv : this.segViews) {
+				if (seg.equals(sv.getCorrespondingSegment())) {
+					((SegmentViewImpl)sv).getCurrentGeometry().setSolidColor(ColorRGBA.yellow);
+				} else { // or set to the default color of the segment 
+					((SegmentViewImpl)sv).getCurrentGeometry().setSolidColor(ColorUtil.convertColorToColorRGBA(sv.getCorrespondingSegment().getColor()));
+				}
+			}
+		}
+	}
+
+	public void updateSelectedSegmentGroups(List<ISegmentGroup> sgs) {
+		for (ISegmentGroup seg : sgs) {
+			for (ISegmentView sv : this.segViews) {
+				if (seg.equals(sv.getCorrespondingSegmentGroup())) {
+					((SegmentViewImpl)sv).getCurrentGeometry().setSolidColor(ColorRGBA.yellow); //set to selected color yellow
+				} else { // or set to the default color of the segment group
+					((SegmentViewImpl)sv).getCurrentGeometry().setSolidColor(ColorUtil.convertColorToColorRGBA(sv.getCorrespondingSegmentGroup().getColor()));
+				}
+			}
+		}
+	}
+
+	public void updateSelected(boolean selected) {
+		if (selected) {
+			
+		}
 	}
 
 }

@@ -4,7 +4,7 @@ import org.fenggui.Display;
 import org.fenggui.event.Key;
 import org.fenggui.event.mouse.MouseButton;
 import org.lwjgl.input.Keyboard;
- 
+
 import com.jme.input.InputHandler;
 import com.jme.input.MouseInput;
 import com.jme.input.MouseInputListener;

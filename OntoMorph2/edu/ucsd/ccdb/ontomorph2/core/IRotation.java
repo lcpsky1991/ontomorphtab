@@ -1,7 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.core;
 
 import com.jme.math.Matrix3f;
-import com.jme.math.Vector3f;
 
 public interface IRotation {
 	

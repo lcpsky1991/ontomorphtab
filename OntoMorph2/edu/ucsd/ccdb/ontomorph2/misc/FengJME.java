@@ -6,7 +6,7 @@ import org.fenggui.composites.Window;
 import org.fenggui.event.ISelectionChangedListener;
 import org.fenggui.event.SelectionChangedEvent;
 import org.fenggui.layout.StaticLayout;
- 
+
 import com.jme.app.BaseGame;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;

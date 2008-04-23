@@ -1,85 +1,40 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
 import java.nio.FloatBuffer;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.fenggui.ComboBox;
-import org.fenggui.TextEditor;
-import org.fenggui.composites.Window;
-import org.fenggui.event.ISelectionChangedListener;
-import org.fenggui.event.SelectionChangedEvent;
-import org.fenggui.layout.StaticLayout;
-
-import com.jme.app.BaseGame;
+import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
-import com.jme.app.SimpleGame;
 import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingSphere;
-import com.jme.curve.BezierCurve;
 import com.jme.image.Texture;
 import com.jme.input.AbsoluteMouse;
-import com.jme.input.ChaseCamera;
 import com.jme.input.FirstPersonHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
-import com.jme.input.Mouse;
 import com.jme.input.MouseInput;
-import com.jme.intersection.BoundingPickResults;
-import com.jme.intersection.TrianglePickResults;
-import com.jme.intersection.PickResults;
 import com.jme.intersection.PickData;
-import com.jme.math.Ray;
-import com.jme.input.ThirdPersonHandler;
-import com.jme.input.controls.binding.KeyboardBinding;
-import com.jme.light.PointLight;
+import com.jme.intersection.PickResults;
+import com.jme.intersection.TrianglePickResults;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
+import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.scene.TriMesh;
 import com.jme.scene.CameraNode;
-import com.jme.scene.batch.GeomBatch;
-import com.jme.scene.shape.Box;
-import com.jme.scene.shape.Cylinder;
-import com.jme.scene.shape.Sphere;
 import com.jme.scene.Line;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.TriMesh;
+import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
-import com.jme.scene.state.MaterialState;
-import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
-import com.jme.util.TextureManager;
-import com.jme.util.export.binary.BinaryImporter;
 import com.jme.util.geom.BufferUtils;
 import com.jme.util.geom.Debugger;
-import com.jmex.model.collada.schema.angularType;
-import com.jmex.model.converters.FormatConverter;
-import com.jmex.model.converters.MaxToJme;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
-import edu.ucsd.ccdb.ontomorph2.core.IMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.CellImpl;
-import edu.ucsd.ccdb.ontomorph2.core.ICell;
-import edu.ucsd.ccdb.ontomorph2.core.IMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.IScene;
-import edu.ucsd.ccdb.ontomorph2.core.PositionImpl;
-import edu.ucsd.ccdb.ontomorph2.core.RotationImpl;
 import edu.ucsd.ccdb.ontomorph2.core.SceneImpl;
-import edu.ucsd.ccdb.ontomorph2.misc.HelloMousePick;
-import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
-import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
 
 
 
@@ -163,6 +118,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		rootNode.attachChild(view3D);
 		
 		
+		/*
 		//This sphere is for debugging purposes, need to see something to indicate cam space/rotation
 		Sphere s=new Sphere("My sphere",10,10,20f);
 		// Do bounds for the sphere, use a BoundingBox
@@ -172,49 +128,8 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		s.setLocalTranslation(80,0,0);
 		
 		rootNode.attachChild(s);
-
+		*/
 		
-		Vector3f p1 = new Vector3f(-20,0,20);
-		Vector3f p2 = new Vector3f(-34,-5,20);
-		Vector3f p3 = new Vector3f(-20,-10,20);
-		Vector3f[] array = {p1, p2, p3};
-		BezierCurve c1 = new BezierCurve("Dentate Gyrus",array);
-    	ColorRGBA defaultColor = ColorRGBA.yellow;
-    	
-    	float[] colorValues2 = {defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a, 
-          		                defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
-          		                defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a};
-    	FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colorValues2);
-    	
-		c1.setColorBuffer(0,colorBuffer);
-		
-		rootNode.attachChild(c1);
-		
-
-		p1 = new Vector3f(-10,-5,20);
-
-		p2 = new Vector3f(3,-9,20);
-
-		p3 = new Vector3f(7,0,20);
-
-		Vector3f p4 = new Vector3f(-9,20,20);
-
-		Vector3f p5 = new Vector3f(-23,15,20);
-		
-		Vector3f[] array2 = {p1, p2, p3, p4, p5};
-		BezierCurve c2 = new BezierCurve("CA",array2);
-    	
-    	float[] colorValues3 = {defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a, 
-          		                defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
-          		              defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
-          		            defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a,
-          		            defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a};
-    	colorBuffer = BufferUtils.createFloatBuffer(colorValues3);
-    	
-		c2.setColorBuffer(0,colorBuffer);
-		
-		rootNode.attachChild(c2);
-		  
 		
 		///** Set a black background.*/
 		display.getRenderer().setBackgroundColor(ColorRGBA.black);
@@ -229,7 +144,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		cam.setFrustumPerspective(45.0f, (float) display.getWidth() / (float) display.getHeight(), 1, 1000);
 		
 		//a locaiton on the Z axis a ways away
-		Vector3f loc = new Vector3f(0.0f, 0.0f, -200.0f);
+		Vector3f loc = new Vector3f(-10f, -5f, -15.0f);
 		//Vector3f left = new Vector3f(-1.0f, 0.0f, 0.0f);
 		//Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
 		//Vector3f dir = new Vector3f(0.0f, 0f, -1.0f);
@@ -438,42 +353,55 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			if ( pr.getNumber() > 0)
 			{
 				//deselect the previous 
-				if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
-				
+				//if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
+				if (prevPick != null) {
+					/* this should be done in a listener after firing an event here*/
+					for (IStructure3D c : getView3D().getCells()) {
+						ISegmentView segView = ((Structure3DImpl)c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+						if (segView != null) {
+							if (segView.correspondsToSegment()) {
+								c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
+							} else if (segView.correspondsToSegmentGroup()) {
+								c.getMorphology().unselectSegmentGroup(segView.getCorrespondingSegmentGroup());
+							}
+						}
+					}
+				}
+								
 				//find the one that is closest
 				//the 0th element is closest to the origin of the ray with checkdistance
 				//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
 				prevPick = pr.getPickData(0);	//take the closest pick and set
-				prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
+				
+				/* this should be done in a listener after firing an event here*/
+				for (IStructure3D c : getView3D().getCells()) { //loop over all IStructure3Ds (the view representation of the morphology)
+					/* Try to get a segView (view representation of a segment or segment group) that matches the target mesh 
+					 * from the pick results within this IStructure3D*/
+					ISegmentView segView = ((Structure3DImpl)c).getSegmentFromGeomBatch(prevPick.getTargetMesh()); 
+					if (segView != null) { //if we found one
+						/* tell the IMorphology (the model representation of the morphology)
+						 * to note that we have selected a segment or a segment group.  
+						 * The SceneObserver will then get updated and change the color on the 
+						 * appropriate geometry in the IStructure3D
+						 */
+						if (segView.correspondsToSegment()) {
+							c.getMorphology().selectSegment(segView.getCorrespondingSegment()); 
+						} else if (segView.correspondsToSegmentGroup()) {
+							c.getMorphology().selectSegmentGroup(segView.getCorrespondingSegmentGroup());
+						}
+					}
+				}
+				
+				//prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
 				System.out.println("Picked: " + prevPick.getTargetMesh().getName());
 			} //end if of pr > 0
 		} //end if mouse button down
 	}
 	
-	
-	
-	
-	
 	public DisplaySystem getDisplaySystem(){
 		return display;
 	}
-	
-	
-	
-	protected Node getX3DNeuron(String fileName) {
-		Node n = null;
-		try {
-		X3DLoader converter = new X3DLoader();
-		Spatial scene = converter.loadScene(new FileInputStream(fileName), null, null);
-		
-		n = new Node();
-		n.attachChild(scene);
-		} catch (Exception e) {
-			logger.logp(Level.SEVERE, this.getClass().toString(), "simpleInitGame()", "Exception", e);
-			System.exit(0);
-		}
-		return n;
-	}
+
 	
 	//called every frame update
 	protected void simpleUpdate() {
@@ -586,21 +514,6 @@ public class ViewImpl extends BaseSimpleGame implements IView{
         }
     }
 	
-	private class CBListener implements ISelectionChangedListener
-	{
-		public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
-		{
-			if (!selectionChangedEvent.isSelected()) return;
-			String value = selectionChangedEvent.getToggableWidget().getText();
-			
-
-			Node x3dNeuron = getX3DNeuron(value+".x3d");
-			//x3dNeuron.setLocalScale(0.05f);
-			rootNode.attachChild(x3dNeuron);
-		}
- 
-	}
-
 	public IView3D getView3D() {
 		return view3D;
 	}

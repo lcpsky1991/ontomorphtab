@@ -1,11 +1,13 @@
 package edu.ucsd.ccdb.ontomorph2.core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import edu.stanford.smi.protege.model.Cls;
+import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.util.ApplicationProperties;
-import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 
@@ -15,7 +17,9 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 public class SemanticRepository {
 	
-	JenaOWLModel owlModel = null;
+	//JenaOWLModel owlModel = null;
+	KnowledgeBase owlModel = null;
+	Map<String, Cls> clsFlyweightStore = new HashMap<String,Cls>();
 	/**
 	 * Holds singleton instance
 	 */
@@ -24,15 +28,30 @@ public class SemanticRepository {
 	private SemanticRepository() {
 		this.loadOntology();
 	}
+	
+	public static void main(String[] args) {
+		SemanticRepository.getInstance();
+		//get semantic thing for a pyramidal cell
+		ISemanticThing pyramCell = SemanticRepository.getInstance().getSemanticThing("sao:sao830368389");
+		
+	}
+	
+	public KnowledgeBase getOWLModel() {
+		return owlModel;
+	}
 
 	public ISemanticThing getSemanticThing(String URI) {
 		Cls cls = null;
 		try {
-			owlModel.getCls(URI);
+			cls = clsFlyweightStore.get(URI);
+			if (cls == null) {
+				cls = owlModel.getCls(URI);
+				clsFlyweightStore.put(URI, cls);
+			}
 		} catch (Exception e ) {
 			throw new OMTException("Problem finding URI in semantic repository" + URI, e);
 		}
-		return new SemanticThingImpl(cls);
+		return new SemanticThingImpl(cls, URI);
 	}
 	
 	private void loadOntology() {
@@ -50,10 +69,10 @@ public class SemanticRepository {
 			//ProjectManager projectManager = ProjectManager.getProjectManager();
 			//URI uri = new URI("file://C:\/Documents\and\ Settings\/stephen\/Desktop\/nifSaved\/nif.pprj");
 						
-			Project p = Project.loadProjectFromFile("NIF/nif.pprj", new ArrayList());
+			Project p = Project.loadProjectFromFile("etc/NIF/CKB_db.pprj", new ArrayList());
 						
 			//projectManager.loadProject(uri);
-			owlModel = (JenaOWLModel) p.getKnowledgeBase();
+			owlModel = p.getKnowledgeBase();
 					    			
 			/*
 			JenaOWLModel owlModel = ProtegeOWL.createJenaOWLModel();

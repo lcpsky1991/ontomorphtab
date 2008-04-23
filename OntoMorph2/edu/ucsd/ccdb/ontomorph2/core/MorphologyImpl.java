@@ -1,17 +1,17 @@
 package edu.ucsd.ccdb.ontomorph2.core;
 
+import java.awt.Color;
 import java.io.File;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-
-import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 import neuroml.generated.Level2Cell;
 import neuroml.generated.NeuroMLLevel2;
@@ -20,8 +20,10 @@ import neuroml.generated.Segment;
 import neuroml.generated.Cell.Cables;
 import neuroml.generated.Cell.Segments;
 import neuroml.generated.NeuroMLLevel2.Cells;
+import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
+import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
-public class MorphologyImpl implements IMorphology  {
+public class MorphologyImpl extends Observable implements IMorphology  {
 	
 	URL _morphLoc = null;
 	IPosition _position = null;
@@ -30,10 +32,14 @@ public class MorphologyImpl implements IMorphology  {
 	String _renderOption = RENDER_AS_LINES; //default render option
 	ArrayList<ISegment> segmentList = null;
 	ArrayList<ISegment> selectedSegmentList = new ArrayList<ISegment>();
+	ArrayList<ISegmentGroup> selectedSegmentGroupList = new ArrayList<ISegmentGroup>();
 	Level2Cell theCell;
 	ArrayList<ISegmentGroup> segmentGroupList = null;
+	boolean selected = false;
+	ICell parentCell = null;
 	
-	public MorphologyImpl(URL morphLoc, IPosition position, IRotation rotation) {
+	public MorphologyImpl(ICell parent, URL morphLoc, IPosition position, IRotation rotation) {
+		this.parentCell = parent;
 		_morphLoc = morphLoc;
 		_position = position;
 		_rotation = rotation;
@@ -53,13 +59,19 @@ public class MorphologyImpl implements IMorphology  {
 		} catch (JAXBException e) {
 			throw new OMTException("Problem loading " + _morphLoc.getFile(), e);
 		}
+		
+		this.addObserver(SceneObserver.getInstance());
 	}
 	
-	public MorphologyImpl(URL morphLoc, IPosition position, IRotation rotation, String renderOption) {
-		this(morphLoc, position, rotation);
+	public MorphologyImpl(ICell parent, URL morphLoc, IPosition position, IRotation rotation, String renderOption) {
+		this(parent, morphLoc, position, rotation);
 		setRenderOption(renderOption);
 	}
 
+	public Level2Cell getMorphMLCell() {
+		return theCell;
+	}
+	
 	public URL getMorphMLURL() {
 		return _morphLoc;
 	}
@@ -88,14 +100,17 @@ public class MorphologyImpl implements IMorphology  {
 
 	public void setPosition(IPosition pos) {
 		_position = pos;
+		changed();
 	}
 	
 	public void setRotation(IRotation rot) {
 		_rotation = rot;
+		changed();
 	}
 	
 	public void setScale(float f) {
 		_scale = f;
+		changed();
 	}
 
 	public List<ISegment> getSegments() {
@@ -118,7 +133,7 @@ public class MorphologyImpl implements IMorphology  {
 					float[] prox = {(float)p1.getX(), (float)p1.getY(), (float)p1.getZ()};
 					float[] dist = {(float)p2.getX(), (float)p2.getY(), (float)p2.getZ()};
 					
-					SegmentImpl si = new SegmentImpl(seg.getId(), prox, dist, 
+					SegmentImpl si = new SegmentImpl(getParentCell(), seg.getId(), prox, dist, 
 							p1.getDiameter().floatValue(), p2.getDiameter().floatValue(), seg.getCable());
 					segmentList.add(si);
 				}
@@ -139,7 +154,36 @@ public class MorphologyImpl implements IMorphology  {
 						childSegments.add(s);
 					}
 				}
-				segmentGroupList.add(new SegmentGroupImpl(id, childSegments, cab.getGroup()));
+				ISegmentGroup segGroup = new SegmentGroupImpl(this.getParentCell(), id, childSegments, cab.getGroup());
+				segmentGroupList.add(segGroup);
+				/* Hackish way to extract some info from the MorphML Files I happen to have
+				 * This needs to be generalized
+				 */
+				for (String s : cab.getGroup()) {
+					if ("dendrite_group".equals(s)) {
+						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("sao:sao1211023249"));
+					}
+					if ("soma_group".equals(s)) {
+						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("sao:sao1044911821"));
+					} 
+					if ("axon_group".equals(s)) {
+						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("sao:sao1770195789"));
+					}
+					if ("apical_dendrite".equals(s)) {
+						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("sao:sao273773228"));
+					}
+					if (s.startsWith("Colour_")) {
+						if (s.endsWith("Magenta")) {
+							segGroup.setColor(Color.magenta);
+						} else if (s.endsWith("Green")) {
+							segGroup.setColor(Color.green);
+						} else if (s.endsWith("White")) {
+							segGroup.setColor(Color.WHITE);
+						} else if (s.endsWith("DarkGrey")) {
+							segGroup.setColor(Color.darkGray);
+						}
+					}
+				}
 			}
 		}
 		return segmentGroupList;
@@ -147,14 +191,57 @@ public class MorphologyImpl implements IMorphology  {
 	
 	public void selectSegment(ISegment s) {
 		selectedSegmentList.add(s);
+		changed();
 	}
 	
 	public void unselectSegment(ISegment s) {
 		selectedSegmentList.remove(s);
+		changed();
 	}
 	
 	public List<ISegment> getSelectedSegments() {
 		return selectedSegmentList;
+	}
+
+	public void select() {
+		this.selected = true;		
+		changed();
+	}
+
+	public void selectSegmentGroup(ISegmentGroup g) {
+		selectedSegmentGroupList.add(g);
+		changed();
+	}
+
+	public void unselect() {
+		this.selected = false;
+		changed();
+	}
+
+	public void unselectSegmentGroup(ISegmentGroup g) {
+		selectedSegmentGroupList.remove(g);
+		changed();
+	}
+
+	public List<ISegmentGroup> getSelectedSegmentGroups() {
+		return selectedSegmentGroupList;
+	}
+
+	public boolean isSelected() {
+		return this.selected;
+	}
+	
+	protected void changed() {
+		setChanged();
+		notifyObservers();
+	}
+
+	public boolean hasSelectedSegmentGroups() {
+		return getSelectedSegmentGroups().size() > 0;
+	}
+	
+	public ICell getParentCell() {
+		return this.parentCell;
 	}
 	
 }

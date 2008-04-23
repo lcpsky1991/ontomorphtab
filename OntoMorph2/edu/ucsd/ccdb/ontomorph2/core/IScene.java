@@ -33,4 +33,8 @@ public interface IScene {
 	ArrayList<ISlide> getSlides();
 
 	Set<ICell> getCells();
+
+	Set<ICurve> getCurves();
+
+	Set<ISurface> getSurfaces();
 }

@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core;
 
 import java.net.URL;
+import java.util.List;
 
 public interface ICell {
 
@@ -18,7 +19,9 @@ public interface ICell {
 	
 	public void setMorphology(IMorphology morph);
 	
-	public void setSemanticThing(ISemanticThing thing);
+	public void addSemanticThing(ISemanticThing thing);
+
+	public List<ISemanticThing> getSemanticThings();
 	
-	public ISemanticThing getSemanticThing();
+	public void removeSemanticThing(ISemanticThing thing);
 }
