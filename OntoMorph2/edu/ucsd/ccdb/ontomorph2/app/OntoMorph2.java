@@ -1,8 +1,8 @@
 package edu.ucsd.ccdb.ontomorph2.app;
 
-import edu.ucsd.ccdb.ontomorph2.core.SceneImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
-import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.scene.ViewImpl;
 
 public class OntoMorph2 {
 	

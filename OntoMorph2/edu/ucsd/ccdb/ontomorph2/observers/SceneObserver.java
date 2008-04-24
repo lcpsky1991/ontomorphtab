@@ -3,15 +3,15 @@ package edu.ucsd.ccdb.ontomorph2.observers;
 import java.util.Observable;
 import java.util.Observer;
 
-import edu.ucsd.ccdb.ontomorph2.core.ICell;
-import edu.ucsd.ccdb.ontomorph2.core.IMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.IScene;
-import edu.ucsd.ccdb.ontomorph2.core.ISegmentGroup;
-import edu.ucsd.ccdb.ontomorph2.core.ISemanticThing;
-import edu.ucsd.ccdb.ontomorph2.core.MorphologyImpl;
-import edu.ucsd.ccdb.ontomorph2.view.IStructure3D;
-import edu.ucsd.ccdb.ontomorph2.view.IView;
-import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.IScene;
+import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
+import edu.ucsd.ccdb.ontomorph2.core.scene.NeuronMorphologyImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.SegmentGroupImpl;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
+import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.IView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.ViewImpl;
 
 
 /**
@@ -31,27 +31,29 @@ public class SceneObserver implements Observer{
 			IScene scene = (IScene)o;
 			_view.getView3D().setSlides(scene.getSlides());
 			_view.getView3D().setCells(scene.getCells());
-			for (ICell c: scene.getCells()) {
-				MorphologyImpl mi = (MorphologyImpl)c.getMorphology();
+			for (INeuronMorphology c: scene.getCells()) {
+				NeuronMorphologyImpl mi = (NeuronMorphologyImpl)c;
 				mi.addObserver(this);
 			}
 			_view.getView3D().setCurves(scene.getCurves());
 			_view.getView3D().setSurfaces(scene.getSurfaces());
-		} else if (o instanceof IMorphology) { //if an IMorphology is changed
-			for (IStructure3D struct3d : _view.getView3D().getCells()) { //for all IStructure3Ds that are known
-				if (struct3d.getMorphology() == o) { // find the one that matches this IMorphology and update it
-					struct3d.updateSelected(struct3d.getMorphology().isSelected());
-					struct3d.updateSelectedSegments(struct3d.getMorphology().getSelectedSegments());
-					struct3d.updateSelectedSegmentGroups(struct3d.getMorphology().getSelectedSegmentGroups());
+		} else if (o instanceof INeuronMorphology) { //if an INeuronMorphology is changed
+			for (INeuronMorphologyView struct3d : _view.getView3D().getCells()) { //for all IStructure3Ds that are known
+				NeuronMorphologyImpl morph = (NeuronMorphologyImpl)struct3d.getMorphology();
+				if (morph == o) { // find the one that matches this INeuronMorphology and update it
+					struct3d.updateSelected(morph.isSelected());
+					struct3d.updateSelectedSegments(morph.getSelectedSegments());
+					struct3d.updateSelectedSegmentGroups(morph.getSelectedSegmentGroups());
 				}
-				if (((IMorphology)o).hasSelectedSegmentGroups()) {
-					for (ISegmentGroup sg : ((IMorphology)o).getSelectedSegmentGroups()) {
+				if (((INeuronMorphology)o).hasSelectedSegmentGroups()) {
+					for (ISegmentGroup isg : ((NeuronMorphologyImpl)o).getSelectedSegmentGroups()) {
+						SegmentGroupImpl sg = (SegmentGroupImpl)isg;
 						//this is getting called more times than it should
 						String infoString = sg.getTags().toString() + "\n";
 						for (ISemanticThing s: sg.getSemanticThings()) {
 							infoString += (s.toString() + "\n"); 
 						}
-						infoString += sg.getParentCell().getSemanticThings();
+						infoString += ((NeuronMorphologyImpl)sg.getParentCell()).getSemanticThings();
 						ViewImpl.getInstance().getView2D().setInfoText(infoString);
 					}
 				}
