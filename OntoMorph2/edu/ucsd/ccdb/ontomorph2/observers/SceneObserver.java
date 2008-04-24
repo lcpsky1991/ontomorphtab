@@ -38,11 +38,11 @@ public class SceneObserver implements Observer{
 			_view.getView3D().setCurves(scene.getCurves());
 			_view.getView3D().setSurfaces(scene.getSurfaces());
 		} else if (o instanceof IMorphology) { //if an IMorphology is changed
-			for (IStructure3D morph : _view.getView3D().getCells()) { //for all IStructure3Ds that are known
-				if (morph.getMorphology() == o) { // find the one that matches this IMorphology and update it
-					morph.updateSelected(morph.getMorphology().isSelected());
-					morph.updateSelectedSegments(morph.getMorphology().getSelectedSegments());
-					morph.updateSelectedSegmentGroups(morph.getMorphology().getSelectedSegmentGroups());
+			for (IStructure3D struct3d : _view.getView3D().getCells()) { //for all IStructure3Ds that are known
+				if (struct3d.getMorphology() == o) { // find the one that matches this IMorphology and update it
+					struct3d.updateSelected(struct3d.getMorphology().isSelected());
+					struct3d.updateSelectedSegments(struct3d.getMorphology().getSelectedSegments());
+					struct3d.updateSelectedSegmentGroups(struct3d.getMorphology().getSelectedSegmentGroups());
 				}
 				if (((IMorphology)o).hasSelectedSegmentGroups()) {
 					for (ISegmentGroup sg : ((IMorphology)o).getSelectedSegmentGroups()) {
