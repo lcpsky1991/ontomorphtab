@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<nodeSet  version="1.1">
+	<view uin="Vd7rsvffferyb3jznkqw">
+		<property name="$metaclass" value="Class Diagram"/>
+		<property name="$name" value="Semantic Things"/>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ICell">
+			<property name="bounds" value="82,122,294,134"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<property name="collapsedCompartments" value="Operation"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ICell:lnkMorphology">
+				<property name="sourceAnchor" value="380,261"/>
+				<property name="targetAnchor" value="380,300"/>
+			</reference>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ICell">
+				<property name="bounds" value="234,271,0,0"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.ICell:lnkSemanticThing">
+				<property name="sourceAnchor" value="380,127"/>
+				<property name="targetAnchor" value="380,20"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology">
+			<property name="bounds" value="375,295,401,81"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<property name="collapsedCompartments" value="Operation,Attribute"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.IMorphology">
+				<property name="bounds" value="580,391,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.MorphologyImpl">
+			<property name="bounds" value="354,515,401,101"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<property name="collapsedCompartments" value="Attribute,Operation"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.MorphologyImpl:parentCell">
+				<property name="sourceAnchor" value="378,520"/>
+				<property name="targetAnchor" value="378,261"/>
+			</reference>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.core.MorphologyImpl:IMorphology">
+				<property name="sourceAnchor" value="570,520"/>
+				<property name="targetAnchor" value="570,381"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.CellImpl">
+			<property name="bounds" value="35,395,320,107"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<property name="collapsedCompartments" value="Operation,Attribute"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.CellImpl:_morph">
+				<property name="sourceAnchor" value="360,405"/>
+				<property name="targetAnchor" value="441,381"/>
+			</reference>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.core.CellImpl:ISemanticsAware">
+				<property name="sourceAnchor" value="360,438"/>
+				<property name="targetAnchor" value="760,438"/>
+			</reference>
+			<reference referencedUin="property:e_property:jdt=e_class=src=edu.ucsd.ccdb.ontomorph2.core.CellImpl:semanticThings">
+				<property name="bounds" value="-2,8,318,17"/>
+			</reference>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.core.CellImpl:ICell">
+				<property name="sourceAnchor" value="223,400"/>
+				<property name="targetAnchor" value="223,261"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticsAware">
+			<property name="bounds" value="755,356,381,116"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticsAware">
+				<property name="bounds" value="950,487,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticThing">
+			<property name="bounds" value="375,15,415,116"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="label:$name:jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.ISemanticThing">
+				<property name="bounds" value="587,146,0,0"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.SegmentImpl">
+			<property name="bounds" value="575,175,420,96"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<property name="collapsedCompartments" value="Attribute,Operation,Property"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.core.SegmentImpl:ISemanticsAware">
+				<property name="sourceAnchor" value="900,276"/>
+				<property name="targetAnchor" value="900,361"/>
+			</reference>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.SegmentImpl:parentCell">
+				<property name="sourceAnchor" value="580,220"/>
+				<property name="targetAnchor" value="381,220"/>
+			</reference>
+		</reference>
+		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.core.SegmentGroupImpl">
+			<property name="bounds" value="915,74,318,82"/>
+			<property name="location_set_by_user" value="true"/>
+			<property name="$shortcutReference" value="true"/>
+			<property name="collapsedCompartments" value="Operation,Property"/>
+			<property name="bounds_setted_by_user" value="true"/>
+			<reference referencedUin="jdt:l_ast:src:edu.ucsd.ccdb.ontomorph2.core.SegmentGroupImpl:parentCell">
+				<property name="sourceAnchor" value="920,144"/>
+				<property name="targetAnchor" value="381,144"/>
+			</reference>
+			<reference referencedUin="jdt:l_impl:src:edu.ucsd.ccdb.ontomorph2.core.SegmentGroupImpl:ISemanticsAware">
+				<property name="sourceAnchor" value="1030,161"/>
+				<property name="targetAnchor" value="1030,361"/>
+			</reference>
+		</reference>
+	</view>
+</nodeSet>
