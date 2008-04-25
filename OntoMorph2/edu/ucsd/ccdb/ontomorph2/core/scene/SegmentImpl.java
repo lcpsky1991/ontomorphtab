@@ -86,4 +86,8 @@ public class SegmentImpl implements ISegment, ISemanticsAware, ISelectable {
 	public boolean isSelected() {
 		return getParentCell().getSelectedSegments().contains(this);
 	}
+
+	public void setColor(Color c) {
+		this.c = c;
+	}
 }

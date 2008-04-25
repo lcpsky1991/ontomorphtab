@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.IMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISlide;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
@@ -19,4 +20,5 @@ public interface IView3D {
 	public Set<INeuronMorphologyView> getCells();
 	public void setCurves(Set<ICurve> curves);
 	public void setSurfaces(Set<ISurface> surfaces);
+	public void setMeshes(Set<IMesh> meshes);
 }

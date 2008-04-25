@@ -14,11 +14,13 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation;
  * Since it is a three-dimensional morphology, this will describe points in a local 3D space (MorphML?)
  */
 
-public interface INeuronMorphology {
+public interface INeuronMorphology extends ISceneObject{
 	
 	//render options.
 	public final static String RENDER_AS_LINES = "lines";
 	public final static String RENDER_AS_CYLINDERS = "cylinders";
+	public final static String RENDER_AS_LOD = "lod";
+	public final static String RENDER_AS_LOD_2 = "lod2";
 	public final static String SPHERES_AT_JOINTS = "spheres";
 
 			public edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation lnkIRotation = null;
@@ -44,42 +46,10 @@ public interface INeuronMorphology {
 	 */
 	public URL getMorphMLURL();
 
-	/**
-	 * get the IRotation that defines this INeuronMorphology's rotation
-	 * @return - the IRotation
-	 */
-	public IRotation getRotation();
-
-	/**
-	 * get the IPosition that defines this INeuronMorphology's position 
-	 * @return
-	 */
-	public IPosition getPosition();
-	
-	/** 
-	 * set the IPosition for this INeuronMorphology
-	 * @param pos - desired position
-	 */
-	public void setPosition(IPosition pos);
-	
-	/**
-	 * set the IRotation for this INeuronMorphology
-	 * @param rot - desiredRotation
-	 */
-	public void setRotation(IRotation rot);
-
-	/**
-	 * set the scale for this INeuronMorphology
-	 * @param f - scale
-	 */
-	public void setScale(float f);
-	
 	public void setRenderOption(String s);
 	
 	public String getRenderOption();
 
-	public float getScale();
-	
 	public List<ISegment> getSegments();
 	
 	public void selectSegmentGroup(ISegmentGroup g);

@@ -11,7 +11,11 @@ public class RotationImpl extends com.jme.math.Quaternion implements IRotation{
 		
 	}
 	
-	public Matrix3f asQuaternion() {
+	public RotationImpl() {
+		
+	}
+	
+	public Matrix3f asMatrix3f() {
 		// TODO Auto-generated method stub
 		return this.toRotationMatrix();
 	}

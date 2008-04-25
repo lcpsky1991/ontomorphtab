@@ -37,6 +37,7 @@ public class SceneObserver implements Observer{
 			}
 			_view.getView3D().setCurves(scene.getCurves());
 			_view.getView3D().setSurfaces(scene.getSurfaces());
+			_view.getView3D().setMeshes(scene.getMeshes());
 		} else if (o instanceof INeuronMorphology) { //if an INeuronMorphology is changed
 			for (INeuronMorphologyView struct3d : _view.getView3D().getCells()) { //for all IStructure3Ds that are known
 				NeuronMorphologyImpl morph = (NeuronMorphologyImpl)struct3d.getMorphology();

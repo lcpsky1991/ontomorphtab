@@ -1,10 +1,13 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
+import java.util.ArrayList;
+
 import com.jme.bounding.BoundingSphere;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Geometry;
 import com.jme.scene.Line;
+import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.shape.Cylinder;
@@ -13,6 +16,7 @@ import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 
 public class SegmentViewImpl implements ISegmentView {
@@ -162,6 +166,43 @@ public class SegmentViewImpl implements ISegmentView {
 		this.currentGeometry = out;
 		this.setToDefaultColor();
 		return out;
+	}
+	
+	//this doesn't work right 
+	public Node getCurveFromSegGroup() {
+		Node n = new Node();
+		ArrayList<Vector3f> l = new ArrayList<Vector3f>();
+		if (correspondsToSegmentGroup()) {
+			for (ISegment seg : this.getCorrespondingSegmentGroup().getSegments()) {
+				SegmentViewImpl s = new SegmentViewImpl(seg);
+				if (l.size() == 0) {
+					l.add(s.getBase());
+				} 
+				l.add(s.getApex());
+			}
+		}
+		Vector3f[] array = new Vector3f[l.size()];
+		array = l.toArray(array);
+		CurveImpl c = new CurveImpl("name", array);
+		n.attachChild(c);
+		this.currentGeometry = c;
+		this.setToDefaultColor();
+		return n;
+	}
+	
+	public Node getCylindersFromSegGroup() {
+		Node n = new Node();
+		
+		if (correspondsToSegmentGroup()) {
+			for (ISegment seg : this.getCorrespondingSegmentGroup().getSegments()) {
+				SegmentViewImpl sv = new SegmentViewImpl(seg);
+				sv.currentGeometry = sv.getCylinder();
+				sv.setToDefaultColor();
+				n.attachChild(sv.getCylinder());
+			}
+		}
+		
+		return n;
 	}
 	
 	private AreaClodMesh getClodMeshFromGeometry(Geometry cylinder) {

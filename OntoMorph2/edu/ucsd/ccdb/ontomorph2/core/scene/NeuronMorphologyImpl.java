@@ -30,12 +30,9 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
-public class NeuronMorphologyImpl extends Observable implements INeuronMorphology, ISemanticsAware, ISelectable  {
+public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorphology, ISemanticsAware, ISelectable  {
 	
 	URL _morphLoc = null;
-	IPosition _position = null;
-	IRotation _rotation = null;
-	float _scale = 1F;
 	String _renderOption = RENDER_AS_LINES; //default render option
 	ArrayList<ISegment> segmentList = null;
 	Set<ISegment> selectedSegmentList = new HashSet<ISegment>();
@@ -47,8 +44,8 @@ public class NeuronMorphologyImpl extends Observable implements INeuronMorpholog
 	
 	public NeuronMorphologyImpl(URL morphLoc, IPosition position, IRotation rotation) {
 		_morphLoc = morphLoc;
-		_position = position;
-		_rotation = rotation;
+		setPosition(position);
+		setRotation(rotation);
 		
 		JAXBContext context;
 		try {
@@ -81,42 +78,18 @@ public class NeuronMorphologyImpl extends Observable implements INeuronMorpholog
 	public URL getMorphMLURL() {
 		return _morphLoc;
 	}
-
-	public IRotation getRotation() {
-		return _rotation;
-	}
-
-	public IPosition getPosition() {
-		return _position;
-	}
 	
 	public String getRenderOption() {
 		return _renderOption;
 	}
 	
 	public void setRenderOption(String renderOption) {
-		if (INeuronMorphology.RENDER_AS_LINES.equals(renderOption) || INeuronMorphology.RENDER_AS_CYLINDERS.equals(renderOption)) {
+		if (INeuronMorphology.RENDER_AS_LINES.equals(renderOption) || 
+				INeuronMorphology.RENDER_AS_CYLINDERS.equals(renderOption) ||
+				INeuronMorphology.RENDER_AS_LOD.equals(renderOption) ||
+				INeuronMorphology.RENDER_AS_LOD_2.equals(renderOption)) {
 			_renderOption = renderOption;
 		}
-	}
-	
-	public float getScale() {
-		return _scale;
-	}
-
-	public void setPosition(IPosition pos) {
-		_position = pos;
-		changed();
-	}
-	
-	public void setRotation(IRotation rot) {
-		_rotation = rot;
-		changed();
-	}
-	
-	public void setScale(float f) {
-		_scale = f;
-		changed();
 	}
 
 	public List<ISegment> getSegments() {
@@ -236,11 +209,7 @@ public class NeuronMorphologyImpl extends Observable implements INeuronMorpholog
 	public boolean isSelected() {
 		return this.selected;
 	}
-	
-	protected void changed() {
-		setChanged();
-		notifyObservers();
-	}
+
 
 	public boolean hasSelectedSegmentGroups() {
 		return getSelectedSegmentGroups().size() > 0;

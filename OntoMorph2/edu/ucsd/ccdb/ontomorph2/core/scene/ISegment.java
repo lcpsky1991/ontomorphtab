@@ -44,6 +44,8 @@ public interface ISegment {
 
 	public Color getColor();
 	
+	public void setColor(Color c);
+	
 	public INeuronMorphology getParentCell();
 
 }

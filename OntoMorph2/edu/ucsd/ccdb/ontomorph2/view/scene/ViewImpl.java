@@ -1,5 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
+import java.awt.Color;
 import java.nio.FloatBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +26,10 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.CameraNode;
 import com.jme.scene.Line;
+import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
@@ -33,7 +37,9 @@ import com.jme.util.geom.BufferUtils;
 import com.jme.util.geom.Debugger;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
+import edu.ucsd.ccdb.ontomorph2.core.scene.MeshImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 
 
@@ -130,6 +136,23 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		rootNode.attachChild(s);
 		*/
 		
+		/*
+		Vector3f p1 = new Vector3f(-20,0,20);
+		Vector3f p2 = new Vector3f(-34,-5,20);
+		Vector3f p3 = new Vector3f(-20,-10,20);
+		Vector3f[] array = {p1, p2, p3};
+		CurveImpl curve1 = new CurveImpl("Dentate Gyrus", array);
+		curve1.setColor(Color.BLUE);
+		rootNode.attachChild(curve1);
+		
+		float time = 0.8f;
+		Vector3f px = curve1.getPoint(time-0.01f);
+		Vector3f py = curve1.getPoint(time+0.01f);
+		createLine(px,py);
+		
+		Vector3f pe = curve1.getPoint(time);
+		Vector3f pf = new Vector3f((py.x - px.x)/2+px.x, (py.y - px.y)/2+px.y, (py.z - px.z)/2+px.z);
+		createLine(pe,pf);*/
 		
 		///** Set a black background.*/
 		display.getRenderer().setBackgroundColor(ColorRGBA.black);
@@ -141,6 +164,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		//====================================
 		
 		///** Set up how our camera sees. */
+		//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
 		cam.setFrustumPerspective(45.0f, (float) display.getWidth() / (float) display.getHeight(), 1, 1000);
 		
 		//a locaiton on the Z axis a ways away
@@ -393,7 +417,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 				}
 				
 				//prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
-				System.out.println("Picked: " + prevPick.getTargetMesh().getName());
+				//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
 			} //end if of pr > 0
 		} //end if mouse button down
 	}

@@ -10,10 +10,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation;
  * @$comment Panel in 3D space that displays an image of a brain slice
  */
 
-public interface ISlide {
+public interface ISlide extends ISceneObject{
 
-        public IPosition lnkIPosition = null;
 		public URL getImageURL();
-		public IPosition getPosition();
-		public IRotation getRotation();
 }

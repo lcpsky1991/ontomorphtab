@@ -19,6 +19,7 @@ public class SegmentGroupImpl implements ISegmentGroup, ISemanticsAware , ISelec
 	
 	public SegmentGroupImpl(INeuronMorphology parentCell, BigInteger id, List<ISegment> segments, List<String> tags) {
 		this.id = id;
+		
 		this.segments.addAll(segments);
 		this.tags.addAll(tags);
 		this.parentCell = parentCell;
@@ -29,6 +30,9 @@ public class SegmentGroupImpl implements ISegmentGroup, ISemanticsAware , ISelec
 	}
 
 	public List<ISegment> getSegments() {
+		for (ISegment s : segments) {
+			s.setColor(color);
+		}
 		return segments;
 	}
 	

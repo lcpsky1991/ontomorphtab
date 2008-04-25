@@ -47,4 +47,6 @@ public interface IScene {
 	Set<ICurve> getCurves();
 
 	Set<ISurface> getSurfaces();
+
+	Set<IMesh> getMeshes();
 }

@@ -18,6 +18,7 @@ import neuroml.generated.NeuroMLLevel2.Cells;
 
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
+import com.sun.org.apache.xml.internal.security.c14n.helper.C14nHelper;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
@@ -33,22 +34,25 @@ public class SceneImpl extends Observable implements IScene {
 	Set<INeuronMorphology> cells = null;
 	Set<ICurve> curves = null;
 	Set<ISurface> surfaces = null;
+	Set<IMesh> meshes = null;
 	
 	public SceneImpl() {
 		slides = new ArrayList<ISlide>();
 		cells = new HashSet<INeuronMorphology>();
 		curves = new HashSet<ICurve>();
 		surfaces = new HashSet<ISurface>();
+		meshes = new HashSet<IMesh>();
 	}
 	
 	public void load() {
 		//temporary hack to load a mockup
 		
+		/*
 		URL sliceLoc = SceneImpl.class.getClassLoader().getResource("slice.jpg");
 		SlideImpl slide1 = new SlideImpl(sliceLoc, null, null);
 		SlideImpl slide2 = new SlideImpl(sliceLoc, new PositionImpl(0,0,2), null);
 		slides.add(slide1);
-		slides.add(slide2);
+		slides.add(slide2);*/
 		
 		
 		/*
@@ -79,10 +83,10 @@ public class SceneImpl extends Observable implements IScene {
 		Vector3f p2 = new Vector3f(-34,-5,20);
 		Vector3f p3 = new Vector3f(-20,-10,20);
 		Vector3f[] array = {p1, p2, p3};
-		ICurve curve1 = new CurveImpl("Dentate Gyrus", array);
+		CurveImpl curve1 = new CurveImpl("Dentate Gyrus", array);
 		curve1.setColor(Color.BLUE);
 		this.curves.add(curve1);
-		
+
 		p1 = new Vector3f(-10,-5,20);
 		p2 = new Vector3f(3,-9,20);
 		p3 = new Vector3f(7,0,20);
@@ -97,7 +101,7 @@ public class SceneImpl extends Observable implements IScene {
 		
 		URL cell3URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/cell1zr.morph.xml");
 		NeuronMorphologyImpl cell3 = new NeuronMorphologyImpl(cell3URL, new PositionImpl(-10,-5,20), 
-				null, INeuronMorphology.RENDER_AS_CYLINDERS);
+				null, INeuronMorphology.RENDER_AS_LOD_2);
 		cell3.setScale(0.01f);
 		//semantic thing for hippocampal CA1 neuron
 		cell3.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("nif_cell:nifext_158"));
@@ -150,14 +154,16 @@ public class SceneImpl extends Observable implements IScene {
 		cells.add(cell10); */
 		
 
-		Vector3f point0 = ((CurveImpl)curve1).getPoint(0);
+		Vector3f point0 = ((CurveImpl)curve1).getPoint(0.01f);
 		Vector3f pointhalf = ((CurveImpl)curve1).getPoint(0.5f);
 		Vector3f point1 = ((CurveImpl)curve1).getPoint(0.99f);
 		
-		
+		RotationImpl r = new RotationImpl();
+		r.lookAt(curve1.getNormal(0.01f), Vector3f.UNIT_Y);
 		URL cell11URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/5199202a.morph.xml");
 		NeuronMorphologyImpl cell11 = new NeuronMorphologyImpl(cell11URL, new PositionImpl(point0.x,point0.y,point0.z), 
-				null, INeuronMorphology.RENDER_AS_CYLINDERS);
+				null, 
+				INeuronMorphology.RENDER_AS_CYLINDERS);
 		cell11.setScale(0.01f);
 		cell11.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("nif_cell:nifext_153"));
 		cells.add(cell11);
@@ -221,6 +227,15 @@ public class SceneImpl extends Observable implements IScene {
 		ISurface surf2 = new SurfaceImpl("my mesh", array4, 16);
 		//surfaces.add(surf2);
 		
+		
+		IMesh mesh = new MeshImpl();
+		//mesh.loadMaxFile("etc/mito/mito_outer.3ds");
+		mesh.loadObjFile("etc/mito/mito_outer.obj");
+		mesh.setPosition(new PositionImpl(-10, -5, 20));
+		mesh.setRotation(new RotationImpl(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_X));
+		mesh.setScale(0.0005f);
+		//meshes.add(mesh);
+		
 		changed();
 	}
 
@@ -271,6 +286,10 @@ public class SceneImpl extends Observable implements IScene {
 
 	public Set<ISurface> getSurfaces() {
 		return this.surfaces;
+	}
+
+	public Set<IMesh> getMeshes() {
+		return this.meshes;
 	}
 
 	
