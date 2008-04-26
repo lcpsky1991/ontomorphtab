@@ -49,10 +49,9 @@ public class View3DImpl extends Node implements IView3D {
 	public void setSlides(List<ISlide> slides) {
 		slidesNode.detachAllChildren();
 		for(ISlide slide : slides){
-			URL imageURL = slide.getImageURL();
-			IPosition position = slide.getPosition();
-			IRotation rotation = slide.getRotation();
-			slidesNode.attachChild(new SlideViewImpl(imageURL, position, rotation));
+			slidesNode.attachChild(new SlideViewImpl(slide.getImageURL(), 
+					slide.getPosition(), slide.getRotation(), slide.getScale(), 
+					slide.getRatio()));
 		}
 	}
 	

@@ -168,7 +168,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		cam.setFrustumPerspective(45.0f, (float) display.getWidth() / (float) display.getHeight(), 1, 1000);
 		
 		//a locaiton on the Z axis a ways away
-		Vector3f loc = new Vector3f(-10f, -5f, -15.0f);
+		Vector3f loc = new Vector3f(0, -3f, -400.0f);
 		//Vector3f left = new Vector3f(-1.0f, 0.0f, 0.0f);
 		//Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
 		//Vector3f dir = new Vector3f(0.0f, 0f, -1.0f);

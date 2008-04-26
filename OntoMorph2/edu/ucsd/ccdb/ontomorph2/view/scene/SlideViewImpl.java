@@ -18,20 +18,26 @@ public class SlideViewImpl extends TriMesh implements ISlideView{
 	URL imageURL = null;
 	IPosition _position = null;
 	IRotation _rotation = null;
+	float _scale = 1;
+	float ratio = 1;
 	
-	public SlideViewImpl(URL imageURL, IPosition position, IRotation rotation) {
+	public SlideViewImpl(URL imageURL, IPosition position, IRotation rotation, float scale, float ratio) {
 		setImageURL(imageURL);
 		_position = position;
 		_rotation = rotation;
+		_scale = scale;
+		this.ratio = ratio;
 		init();
 	}
 	
 	private void init() {
+		
 //		Vertex positions for the mesh
-		Vector3f[] vertexes={				new Vector3f(0,0,0),
-				new Vector3f(1,0,0),
+		Vector3f[] vertexes={				
+				new Vector3f(0,0,0),
+				new Vector3f(ratio,0,0),
 				new Vector3f(0,1,0),
-				new Vector3f(1,1,0)
+				new Vector3f(ratio,1,0)
 		};
 		
 		//texture coordinates for each position
@@ -69,7 +75,7 @@ public class SlideViewImpl extends TriMesh implements ISlideView{
 		//assign the texturestate to the square
 		this.setRenderState(ts);
 		//scale my square 10x larger
-		this.setLocalScale(50);
+		this.setLocalScale(_scale);
 		
 		if (_position != null) {
 			this.setLocalTranslation(_position.asVector3f());

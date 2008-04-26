@@ -186,21 +186,20 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
             	
             	node = new DiscreteLodNode("node", dsm);
             	
-            	node.attachChildAt(((SegmentViewImpl)seg).getCylinder(), 0);
+            	node.attachChildAt(((SegmentViewImpl)seg).getClodMeshCylinder(), 0);
             	node.attachChildAt(((SegmentViewImpl)seg).getLine(), 1);
         	} else if (morph.getRenderOption().equals(INeuronMorphology.RENDER_AS_LOD_2)){
 
-            	DistanceSwitchModel dsm = new DistanceSwitchModel(3);
-            	dsm.setModelDistance(0, 0, 500);
-            	dsm.setModelDistance(1, 500, 1000);
-            	dsm.setModelDistance(2, 1000, 10000);
+            	DistanceSwitchModel dsm = new DistanceSwitchModel(2);
+            	dsm.setModelDistance(0, 0, 800);
+            	dsm.setModelDistance(1, 800, 10000);
             	
             	node = new DiscreteLodNode("node", dsm);
             	
             	//node.attachChildAt(((SegmentViewImpl)seg).getCurveFromSegGroup(), 0);
             	node.attachChildAt(((SegmentViewImpl)seg).getCylindersFromSegGroup(), 0);
-            	node.attachChildAt(((SegmentViewImpl)seg).getCylinder(), 1);
-            	node.attachChildAt(((SegmentViewImpl)seg).getLine(), 2);
+            	//node.attachChildAt(((SegmentViewImpl)seg).getCylinder(), 1);
+            	node.attachChildAt(((SegmentViewImpl)seg).getLine(), 1);
             	
         	}
            	        	

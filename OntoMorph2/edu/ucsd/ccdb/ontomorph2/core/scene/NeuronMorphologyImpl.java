@@ -25,8 +25,11 @@ import neuroml.generated.NeuroMLLevel2.Cells;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.IPosition;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionImpl;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
@@ -226,6 +229,10 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 
 	public void removeSemanticThing(ISemanticThing thing) {
 		semanticThings.remove(thing);
+	}
+
+	public void positionAlongCurve(ICurve c, float time) {
+		setPosition(new PositionImpl(((CurveImpl)c).getPoint(time)));
 	}
 	
 }

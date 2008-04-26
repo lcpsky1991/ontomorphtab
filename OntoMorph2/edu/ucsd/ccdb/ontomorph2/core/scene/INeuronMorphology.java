@@ -6,6 +6,7 @@ import java.util.Set;
 
 import edu.ucsd.ccdb.ontomorph2.core.misc.IPrototype;
 import edu.ucsd.ccdb.ontomorph2.core.misc.MorphologyRepository;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.IPosition;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation;
 
@@ -91,5 +92,12 @@ public interface INeuronMorphology extends ISceneObject{
 	 * @return the ISegmentGroups that are associated with this INeuronMorphology
 	 */
 	public Set<ISegmentGroup> getSegmentGroups();
+	
+	/**
+	 * Set the position of this NeuronMorphology at point time
+	 * along curve c
+	 *
+	 */
+	public void positionAlongCurve(ICurve c, float time);
 	
 }

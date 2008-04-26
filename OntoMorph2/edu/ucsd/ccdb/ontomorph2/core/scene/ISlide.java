@@ -13,4 +13,6 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation;
 public interface ISlide extends ISceneObject{
 
 		public URL getImageURL();
+
+		public float getRatio();
 }

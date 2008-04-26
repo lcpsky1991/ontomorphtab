@@ -46,13 +46,16 @@ public class SceneImpl extends Observable implements IScene {
 	
 	public void load() {
 		//temporary hack to load a mockup
-		
-		/*
-		URL sliceLoc = SceneImpl.class.getClassLoader().getResource("slice.jpg");
-		SlideImpl slide1 = new SlideImpl(sliceLoc, null, null);
-		SlideImpl slide2 = new SlideImpl(sliceLoc, new PositionImpl(0,0,2), null);
-		slides.add(slide1);
-		slides.add(slide2);*/
+
+		slides.add(new SlideImpl("etc/img/hippo_slice1.jpg", new PositionImpl(-60,-100,22), null, 170, 0.87f));
+		slides.add(new SlideImpl("etc/img/hippo_slice2.jpg", new PositionImpl(-55,-30, 22), null, 62, 1.34f));
+		slides.add(new SlideImpl("etc/img/hippo_slice3a.jpg", new PositionImpl(-45,-13,21.5f), null, 15, 1.33f));
+		slides.add(new SlideImpl("etc/img/hippo_slice3b.jpg", new PositionImpl(-24,-9,21.5f), null, 15,1.31f ));
+		slides.add(new SlideImpl("etc/img/hippo_slice3c.jpg", new PositionImpl(-5,-8.5f,21.5f), null, 15,1.33f));
+		//slides.add(new SlideImpl("etc/img/hippo_slice3d.jpg", new PositionImpl(-10,-10,22), null, 10,1));
+		//slides.add(new SlideImpl("etc/img/hippo_slice3e.jpg", new PositionImpl(-50,-10,22), null, 10,1));
+		//slides.add(new SlideImpl("etc/img/hippo_slice3f.jpg", new PositionImpl(10,0,22), null, 10,1));
+		//slides.add(new SlideImpl("etc/img/hippo_slice3g.jpg", new PositionImpl(-20,30,22), null, 10,1));
 		
 		
 		/*
@@ -79,19 +82,23 @@ public class SceneImpl extends Observable implements IScene {
 		cells.add(cell2);
 		*/
 		
-		Vector3f p1 = new Vector3f(-20,0,20);
-		Vector3f p2 = new Vector3f(-34,-5,20);
-		Vector3f p3 = new Vector3f(-20,-10,20);
-		Vector3f[] array = {p1, p2, p3};
+		Vector3f p1 = new Vector3f(-5,2,20);
+		Vector3f p2 = new Vector3f(-16,10,20);
+		Vector3f p2a = new Vector3f(-40, -12,20);
+		Vector3f p3 = new Vector3f(-50,-8,20);
+		Vector3f p4 = new Vector3f(-30,-3,20);
+		Vector3f p5 = new Vector3f(-10,-4,20);
+				
+		Vector3f[] array = {p1, p2, p2a, p3, p4, p5};
 		CurveImpl curve1 = new CurveImpl("Dentate Gyrus", array);
 		curve1.setColor(Color.BLUE);
 		this.curves.add(curve1);
 
-		p1 = new Vector3f(-10,-5,20);
-		p2 = new Vector3f(3,-9,20);
-		p3 = new Vector3f(7,0,20);
-		Vector3f p4 = new Vector3f(-9,20,20);
-		Vector3f p5 = new Vector3f(-23,15,20);
+		p1 = new Vector3f(-5,-3,20);
+		p2 = new Vector3f(45,-10,20);
+		p3 = new Vector3f(12,10,20);
+		p4 = new Vector3f(-9,30,20);
+		p5 = new Vector3f(-23,25,20);
 		
 		Vector3f[] array2 = {p1, p2, p3, p4, p5};
 		CurveImpl c2 = new CurveImpl("CA",array2);
@@ -100,8 +107,9 @@ public class SceneImpl extends Observable implements IScene {
 		
 		
 		URL cell3URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/cell1zr.morph.xml");
-		NeuronMorphologyImpl cell3 = new NeuronMorphologyImpl(cell3URL, new PositionImpl(-10,-5,20), 
+		NeuronMorphologyImpl cell3 = new NeuronMorphologyImpl(cell3URL, null, 
 				null, INeuronMorphology.RENDER_AS_LOD_2);
+		cell3.positionAlongCurve(c2, 0.03f);
 		cell3.setScale(0.01f);
 		//semantic thing for hippocampal CA1 neuron
 		cell3.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("nif_cell:nifext_158"));
@@ -109,25 +117,28 @@ public class SceneImpl extends Observable implements IScene {
 		
 		
 		URL cell4URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/cell2zr.morph.xml");
-		NeuronMorphologyImpl cell4 = new NeuronMorphologyImpl(cell4URL, new PositionImpl(0,-5,20), 
-				new RotationImpl(FastMath.DEG_TO_RAD*45, Vector3f.UNIT_Z), INeuronMorphology.RENDER_AS_CYLINDERS);
+		NeuronMorphologyImpl cell4 = new NeuronMorphologyImpl(cell4URL, null, 
+				new RotationImpl(FastMath.DEG_TO_RAD*45, Vector3f.UNIT_Z), INeuronMorphology.RENDER_AS_LOD);
+		cell4.positionAlongCurve(c2, 0.2f);
 		cell4.setScale(0.01f);
 		cell4.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("nif_cell:nifext_158"));
 		cells.add(cell4);
 		
 		
 		URL cell5URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/cell6zr.morph.xml");
-		NeuronMorphologyImpl cell5 = new NeuronMorphologyImpl(cell5URL, new PositionImpl(0,0,20), 
-				new RotationImpl(FastMath.DEG_TO_RAD*80, Vector3f.UNIT_Z), INeuronMorphology.RENDER_AS_CYLINDERS);
+		NeuronMorphologyImpl cell5 = new NeuronMorphologyImpl(cell5URL, null, 
+				new RotationImpl(FastMath.DEG_TO_RAD*80, Vector3f.UNIT_Z), INeuronMorphology.RENDER_AS_LOD);
+		cell5.positionAlongCurve(c2, 0.35f);
 		cell5.setScale(0.01f);
 		cell5.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("nif_cell:nifext_158"));
 		cells.add(cell5);
 		
 		
-		
+		/*
 		URL cell6URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/pc1c.morph.xml");
-		NeuronMorphologyImpl cell6 = new NeuronMorphologyImpl(cell6URL, new PositionImpl(-12,15,20),
-				new RotationImpl(FastMath.DEG_TO_RAD*-90, Vector3f.UNIT_Z), INeuronMorphology.RENDER_AS_CYLINDERS);
+		NeuronMorphologyImpl cell6 = new NeuronMorphologyImpl(cell6URL, null,
+				new RotationImpl(FastMath.DEG_TO_RAD*-90, Vector3f.UNIT_Z), INeuronMorphology.RENDER_AS_LOD);
+		cell6.positionAlongCurve(c2, 0.8f);
 		cell6.setScale(0.02f);
 		cell6.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("nif_cell:nifext_157"));
 		cells.add(cell6);
@@ -135,12 +146,13 @@ public class SceneImpl extends Observable implements IScene {
 		
 		
 		URL cell7URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/pc2a.morph.xml");
-		NeuronMorphologyImpl cell7 = new NeuronMorphologyImpl(cell7URL, new PositionImpl(-23,15,20), 
-				new RotationImpl(FastMath.DEG_TO_RAD*-90, Vector3f.UNIT_Z), INeuronMorphology.RENDER_AS_CYLINDERS);
+		NeuronMorphologyImpl cell7 = new NeuronMorphologyImpl(cell7URL, null, 
+				new RotationImpl(FastMath.DEG_TO_RAD*-90, Vector3f.UNIT_Z), INeuronMorphology.RENDER_AS_LOD);
+		cell7.positionAlongCurve(c2, 0.9f);
 		cell7.setScale(0.02f);
 		cell7.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("nif_cell:nifext_157"));
 		cells.add(cell7);
-		
+		*/
 		
 		/*
 		
@@ -153,29 +165,27 @@ public class SceneImpl extends Observable implements IScene {
 		URL cell10URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/cd1152.morph.xml");
 		cells.add(cell10); */
 		
-
-		Vector3f point0 = ((CurveImpl)curve1).getPoint(0.01f);
-		Vector3f pointhalf = ((CurveImpl)curve1).getPoint(0.5f);
-		Vector3f point1 = ((CurveImpl)curve1).getPoint(0.99f);
-		
 		RotationImpl r = new RotationImpl();
 		r.lookAt(curve1.getNormal(0.01f), Vector3f.UNIT_Y);
 		URL cell11URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/5199202a.morph.xml");
-		NeuronMorphologyImpl cell11 = new NeuronMorphologyImpl(cell11URL, new PositionImpl(point0.x,point0.y,point0.z), 
+		NeuronMorphologyImpl cell11 = new NeuronMorphologyImpl(cell11URL, null, 
 				null, 
-				INeuronMorphology.RENDER_AS_CYLINDERS);
+				INeuronMorphology.RENDER_AS_LOD);
+		cell11.positionAlongCurve(curve1, 0.01f);
 		cell11.setScale(0.01f);
 		cell11.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("nif_cell:nifext_153"));
 		cells.add(cell11);
 		
-		NeuronMorphologyImpl cell11a = new NeuronMorphologyImpl(cell11URL, new PositionImpl(pointhalf.x,pointhalf.y,pointhalf.z), 
-				new RotationImpl(FastMath.DEG_TO_RAD*90,Vector3f.UNIT_Z), INeuronMorphology.RENDER_AS_CYLINDERS);
+		NeuronMorphologyImpl cell11a = new NeuronMorphologyImpl(cell11URL, null, 
+				new RotationImpl(FastMath.DEG_TO_RAD*90,Vector3f.UNIT_Z), INeuronMorphology.RENDER_AS_LOD);
+		cell11a.positionAlongCurve(curve1, 0.5f);
 		cell11a.setScale(0.01f);
 		cell11a.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("nif_cell:nifext_153"));
 		cells.add(cell11a);
 		
-		NeuronMorphologyImpl cell11b = new NeuronMorphologyImpl(cell11URL, new PositionImpl(point1.x,point1.y,point1.z),
-				new RotationImpl(FastMath.DEG_TO_RAD*180,Vector3f.UNIT_Z), INeuronMorphology.RENDER_AS_CYLINDERS);
+		NeuronMorphologyImpl cell11b = new NeuronMorphologyImpl(cell11URL, null,
+				new RotationImpl(FastMath.DEG_TO_RAD*180,Vector3f.UNIT_Z), INeuronMorphology.RENDER_AS_LOD);
+		cell11b.positionAlongCurve(curve1, 0.99f);
 		cell11b.setScale(0.01f);
 		cell11b.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("nif_cell:nifext_153"));
 		cells.add(cell11b);
@@ -261,8 +271,7 @@ public class SceneImpl extends Observable implements IScene {
 		NetworkML nml = new NetworkML();
 		nml.setPopulations(p);
 		
-		
-		
+
 		NeuroMLLevel2 nml2 = new NeuroMLLevel2();
 		nml2.setCells(thecells);
 	}
