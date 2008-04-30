@@ -1,7 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import java.awt.Color;
-import java.nio.FloatBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +34,7 @@ import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 import com.jme.util.geom.Debugger;
+import java.nio.FloatBuffer;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.MeshImpl;
@@ -110,7 +110,10 @@ public class ViewImpl extends BaseSimpleGame implements IView{
             {
             	angle = angle - 360;
             }
-            if (angle < 0 ) angle = 0;	//error checking, just in case
+            else if ( angle < 0 )
+            {
+            	angle = 360 - angle;
+            }
         }
 
 		return angle;
@@ -268,21 +271,14 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		KeyBindingManager.getKeyBindingManager().set("reset", KeyInput.KEY_R);
 		
 		//assignt he camera to up, down, left, right
-		KeyBindingManager.getKeyBindingManager().set("cam_forward", KeyInput.KEY_UP);
-		KeyBindingManager.getKeyBindingManager().set("cam_back", KeyInput.KEY_DOWN);
+		KeyBindingManager.getKeyBindingManager().set("cam_forward", KeyInput.KEY_ADD);
+		KeyBindingManager.getKeyBindingManager().set("cam_back", KeyInput.KEY_SUBTRACT);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_ccw", KeyInput.KEY_LEFT);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_cw", KeyInput.KEY_RIGHT);
-	
+		KeyBindingManager.getKeyBindingManager().set("cam_turn_up", KeyInput.KEY_UP);
+		KeyBindingManager.getKeyBindingManager().set("cam_turn_down", KeyInput.KEY_DOWN);
+		
 		KeyBindingManager.getKeyBindingManager().set("info", KeyInput.KEY_I);
-		
-		//assign the "+" key on the keypad to the command "coordsUp"
-		KeyBindingManager.getKeyBindingManager().set("coordsUp", KeyInput.KEY_ADD);
-		//adds the "u" key to the command "coordsUp"
-		KeyBindingManager.getKeyBindingManager().add("coordsUp", KeyInput.KEY_U);
-		//assign the "-" key on the keypad to the command "coordsDown"
-		KeyBindingManager.getKeyBindingManager().set("coordsDown", KeyInput.KEY_SUBTRACT);
-		
-		
 		
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
@@ -298,12 +294,16 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			
 			if ( isAction("cam_forward")) 
 			{
-				camNode.setLocalTranslation( camNode.getLocalTranslation().add(0,0,1.1f));
+				//find the vector of the direction pointing towards
+				Vector3f dir = camNode.getCamera().getDirection().normalize();
+				camNode.setLocalTranslation( camNode.getLocalTranslation().add(dir.normalize()));
 			}
 			
 			if ( isAction("cam_back"))
 			{
-				camNode.setLocalTranslation( camNode.getLocalTranslation().add(0,0,-1.1f));
+				//find the vector of the direction pointing towards
+				Vector3f dir = camNode.getCamera().getDirection().normalize().negate();
+				camNode.setLocalTranslation( camNode.getLocalTranslation().add(dir.normalize()));
 			}
 
 			
@@ -311,8 +311,8 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			{
 				//key right
 				 Quaternion roll = new Quaternion(); 
-				 view_angleZ = changeAngle(view_angleZ, 500);					 
-				 roll.fromAngleAxis( FastMath.PI * view_angleZ / 180 , Vector3f.UNIT_Z ); //rotates a degrees 
+				 view_angleY = changeAngle(view_angleY, -500);					 
+				 roll.fromAngleAxis( FastMath.PI * view_angleY / 180 , Vector3f.UNIT_Y ); //rotates a degrees 
 				 camNode.setLocalRotation(roll);
 			}
 			
@@ -320,8 +320,17 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			if ( isAction("cam_turn_ccw"))	
 			{ //left key
 					 Quaternion roll = new Quaternion(); 
-					 view_angleZ = changeAngle(view_angleZ, -500);					 
-					 roll.fromAngleAxis( FastMath.PI * view_angleZ / 180 , Vector3f.UNIT_Z ); //rotates a degrees 
+					 view_angleY = changeAngle(view_angleY, 500);					 
+					 roll.fromAngleAxis( FastMath.PI * view_angleY / 180 , Vector3f.UNIT_Y ); //rotates a degrees 
+					 camNode.setLocalRotation(roll);
+			}
+			
+			if ( isAction("cam_turn_down"))	
+			{ //left key
+					 Quaternion roll = new Quaternion();
+					 Quaternion curr = camNode.getLocalRotation();
+					 roll.fromAngleAxis( FastMath.PI * 5 / 180 , Vector3f.UNIT_Z );
+					 roll.mult(curr);
 					 camNode.setLocalRotation(roll);
 			}
 			
@@ -367,10 +376,10 @@ public class ViewImpl extends BaseSimpleGame implements IView{
             
             // Does the mouse's ray intersect the box's world bounds?
             pr.clear();
-            pr.setCheckDistance(true); 			//this function is undocumented
+            pr.setCheckDistance(true);  //this function is undocumented
             rootNode.findPick(mouseRay, pr);
 		
-			//createLine(closePoint, farPoint); //debugging
+			createLine(closePoint, farPoint); //debugging
 			//createSphere(closePoint); //for debugging
             
             //set up for deselection
@@ -416,7 +425,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 					}
 				}
 				
-				//prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
+				prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
 				//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
 			} //end if of pr > 0
 		} //end if mouse button down
