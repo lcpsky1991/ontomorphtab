@@ -111,9 +111,9 @@ public class ViewImpl extends BaseSimpleGame implements IView{
             {
             	angle = angle - 360;
             }
-            else if ( angle < 0 )
+            else if ( angle < -360 )
             {
-            	angle = 360 - angle;
+            	angle = angle + 360;
             }
         }
 
@@ -130,12 +130,12 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		
 		
 		//This sphere is for debugging purposes, need to see something to indicate cam space/rotation
-		Sphere s=new Sphere("DEBUG SPHERE",10,10,10f);
+		Sphere s=new Sphere("DEBUG SPHERE",10,10,3f);
 		// Do bounds for the sphere, use a BoundingBox
 		s.setModelBound(new BoundingBox());
 		s.updateModelBound();
 		s.setRandomColors();
-		s.setLocalTranslation(0,0,0);
+		s.setLocalTranslation(20,0,0);
 		
 		rootNode.attachChild(s);
 		
@@ -310,7 +310,8 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 				camNode.setLocalTranslation( camNode.getLocalTranslation().add(dir.normalize()));
 			}
 
-			
+			//TODO: All camera rotation is done poorly, because its tracking camera angle
+			//the proper way to do it is to use quaternions and incriment (multiply?)
 			if ( isAction("cam_turn_cw"))	
 			{
 				//key right
@@ -331,17 +332,31 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			
 			if ( isAction("cam_turn_down"))	
 			{ //down
-				Quaternion roll = new Quaternion(); 
-				 view_angleX = changeAngle(view_angleX, -500);					 
+				
+				Quaternion curr = camNode.getLocalRotation();
+				Quaternion roll = new Quaternion();
+				Quaternion m = new Quaternion();
+				roll.fromAngleAxis( FastMath.PI * 5 / 180 , Vector3f.UNIT_X ); //rotates x degrees
+				
+				m = curr.multLocal(roll); // (q, save)
+				
+				System.out.println("roll " + roll + "\ncurr " + curr + "\nm " + m);
+				
+				camNode.setLocalRotation(m);
+				/*
+				 Quaternion roll = new Quaternion();  
+				 view_angleX = changeAngle(view_angleX, 500);					 
 				 roll.fromAngleAxis( FastMath.PI * view_angleX / 180 , Vector3f.UNIT_X ); //rotates a degrees 
 				 camNode.setLocalRotation(roll);
+				 */
 			}
 			
 			if ( isAction("cam_turn_up"))	
 			{ //up
 				Quaternion roll = new Quaternion(); 
-				 view_angleX = changeAngle(view_angleX, 500);					 
+				 view_angleX = changeAngle(view_angleX, -500);					 
 				 roll.fromAngleAxis( FastMath.PI * view_angleX / 180 , Vector3f.UNIT_X ); //rotates a degrees 
+				 System.out.println("up curr: " + roll);
 				 camNode.setLocalRotation(roll);
 			}
 			
@@ -374,7 +389,6 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			//because dendrites can be densely packed need precision of triangles instead of bounding boxes
 			PickResults pr = new TrianglePickResults(); 
 			
-			
 			//Get the position that the mouse is pointing to
             Vector2f mPos = new Vector2f();
             mPos.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
@@ -391,7 +405,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
             
             // Does the mouse's ray intersect the box's world bounds?
             pr.clear();
-            pr.setCheckDistance(true);  //this function is undocumented
+            pr.setCheckDistance(true);  //this function is undocumented, orders the items in pickresults
             rootNode.findPick(mouseRay, pr);
 		
 			//createLine(mouseRay.origin, mouseRay.direction); //debugging
