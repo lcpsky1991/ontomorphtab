@@ -394,7 +394,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
             pr.setCheckDistance(true);  //this function is undocumented
             rootNode.findPick(mouseRay, pr);
 		
-			createLine(mouseRay.origin, mouseRay.direction); //debugging
+			//createLine(mouseRay.origin, mouseRay.direction); //debugging
 			//createSphere(closePoint); //for debugging
             
             //set up for deselection
