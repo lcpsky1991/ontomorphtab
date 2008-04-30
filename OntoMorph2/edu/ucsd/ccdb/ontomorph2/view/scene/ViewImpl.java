@@ -127,17 +127,17 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		rootNode.attachChild(view3D);
 		
 		
-		/*
+		
 		//This sphere is for debugging purposes, need to see something to indicate cam space/rotation
-		Sphere s=new Sphere("My sphere",10,10,20f);
+		Sphere s=new Sphere("DEBUG SPHERE",10,10,10f);
 		// Do bounds for the sphere, use a BoundingBox
 		s.setModelBound(new BoundingBox());
 		s.updateModelBound();
 		s.setRandomColors();
-		s.setLocalTranslation(80,0,0);
+		s.setLocalTranslation(0,0,0);
 		
 		rootNode.attachChild(s);
-		*/
+		
 		
 		/*
 		Vector3f p1 = new Vector3f(-20,0,20);
@@ -272,11 +272,14 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		
 		//assignt he camera to up, down, left, right
 		KeyBindingManager.getKeyBindingManager().set("cam_forward", KeyInput.KEY_ADD);
+		//KeyBindingManager.getKeyBindingManager().set("cam_forward", KeyInput.KEY_EQUALS); //for shift not pressed;
 		KeyBindingManager.getKeyBindingManager().set("cam_back", KeyInput.KEY_SUBTRACT);
+		//KeyBindingManager.getKeyBindingManager().set("cam_back", KeyInput.KEY_MINUS); //for no-shift control
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_ccw", KeyInput.KEY_LEFT);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_cw", KeyInput.KEY_RIGHT);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_up", KeyInput.KEY_UP);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_down", KeyInput.KEY_DOWN);
+
 		
 		KeyBindingManager.getKeyBindingManager().set("info", KeyInput.KEY_I);
 		
@@ -326,12 +329,19 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			}
 			
 			if ( isAction("cam_turn_down"))	
-			{ //left key
-					 Quaternion roll = new Quaternion();
-					 Quaternion curr = camNode.getLocalRotation();
-					 roll.fromAngleAxis( FastMath.PI * 5 / 180 , Vector3f.UNIT_Z );
-					 roll.mult(curr);
-					 camNode.setLocalRotation(roll);
+			{ //down
+				Quaternion roll = new Quaternion(); 
+				 view_angleX = changeAngle(view_angleX, -500);					 
+				 roll.fromAngleAxis( FastMath.PI * view_angleX / 180 , Vector3f.UNIT_X ); //rotates a degrees 
+				 camNode.setLocalRotation(roll);
+			}
+			
+			if ( isAction("cam_turn_up"))	
+			{ //up
+				Quaternion roll = new Quaternion(); 
+				 view_angleX = changeAngle(view_angleX, 500);					 
+				 roll.fromAngleAxis( FastMath.PI * view_angleX / 180 , Vector3f.UNIT_X ); //rotates a degrees 
+				 camNode.setLocalRotation(roll);
 			}
 			
 			if ( isAction("info"))
