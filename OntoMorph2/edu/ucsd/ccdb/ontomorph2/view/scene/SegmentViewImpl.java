@@ -2,6 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import java.util.ArrayList;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -148,6 +149,7 @@ public class SegmentViewImpl implements ISegmentView {
 		cyl.setRadius1(getBaseRadius());
 		cyl.setRadius2(getApexRadius());
 		//cyl.setColorBuffer(2, colorBuffer);
+		cyl.setModelBound(new BoundingBox());
 		cyl.updateModelBound();
 		
 		Quaternion q = new Quaternion();
@@ -156,6 +158,7 @@ public class SegmentViewImpl implements ISegmentView {
 		cyl.setLocalRotation(q);
 		
 		cyl.setLocalTranslation(center);
+		
 		this.currentGeometry = cyl;
 		this.setToDefaultColor();
 		return cyl;
