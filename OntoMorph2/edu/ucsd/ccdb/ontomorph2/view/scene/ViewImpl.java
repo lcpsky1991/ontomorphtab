@@ -16,6 +16,7 @@ import com.jme.input.MouseInput;
 import com.jme.intersection.PickData;
 import com.jme.intersection.PickResults;
 import com.jme.intersection.TrianglePickResults;
+import com.jme.intersection.BoundingPickResults;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Ray;
@@ -370,7 +371,9 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		if (MouseInput.get().isButtonDown(0)) 
 		{
 			
-			PickResults pr = new TrianglePickResults();
+			//because dendrites can be densely packed need precision of triangles instead of bounding boxes
+			PickResults pr = new TrianglePickResults(); 
+			
 			
 			//Get the position that the mouse is pointing to
             Vector2f mPos = new Vector2f();
@@ -379,6 +382,8 @@ public class ViewImpl extends BaseSimpleGame implements IView{
             // Get the world location of that X,Y value
             Vector3f farPoint = display.getWorldCoordinates(mPos, 1.0f);
             Vector3f closePoint = display.getWorldCoordinates(mPos, 0.0f);
+            //closePoint = camNode.getWorldTranslation(); //forget the displays location, tell me where camnode is
+            
             
             // Create a ray starting from the camera, and going in the direction
             // of the mouse's location
@@ -389,14 +394,15 @@ public class ViewImpl extends BaseSimpleGame implements IView{
             pr.setCheckDistance(true);  //this function is undocumented
             rootNode.findPick(mouseRay, pr);
 		
-			createLine(closePoint, farPoint); //debugging
+			createLine(mouseRay.origin, mouseRay.direction); //debugging
 			//createSphere(closePoint); //for debugging
             
             //set up for deselection
 			if ( pr.getNumber() > 0)
 			{
 				//deselect the previous 
-				//if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
+				if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
+				
 				if (prevPick != null) {
 					/* this should be done in a listener after firing an event here*/
 					for (INeuronMorphologyView c : getView3D().getCells()) {
@@ -447,35 +453,10 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 
 	
 	//called every frame update
-	protected void simpleUpdate() {
-		//if the coordsDowncommand was activated
-		if (KeyBindingManager.getKeyBindingManager().isValidCommand("coordsDown",false)) {
-			//scale my texture down
-			coordDelta -= .01f;
-			//get my square's texture array
-			FloatBuffer stBuffer = square.getTextureBuffer(0, 0);
-			//change the values of the texture array
-			stBuffer.put(2, coordDelta);
-			stBuffer.put(5, coordDelta);
-			stBuffer.put(6, coordDelta);
-			stBuffer.put(7, coordDelta);
-			//The texture coordinates are updated
-		}
-		
-		//if the coordsUp Command was activated
-		if (KeyBindingManager.getKeyBindingManager().isValidCommand("coordsUp",false)) {
-			//scale my texture down
-			coordDelta += .01f;
-			//get my square's texture array
-			FloatBuffer stBuffer = square.getTextureBuffer(0, 0);
-			//change the values of the texture array
-			stBuffer.put(2, coordDelta);
-			stBuffer.put(5, coordDelta);
-			stBuffer.put(6, coordDelta);
-			stBuffer.put(7, coordDelta);
-			//The texture coordinates are updated
-		}
-		
+	//now it's just a wrapper to handleInput
+	protected void simpleUpdate() 
+	{
+		//the coordsDown and coordsUp code used to go here. It's gone now.
 		handleInput();
 	}
 	
