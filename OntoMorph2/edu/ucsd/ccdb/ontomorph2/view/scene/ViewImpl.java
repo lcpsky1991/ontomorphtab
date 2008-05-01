@@ -64,10 +64,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 	PickData prevPick;		//made global because it's a conveiniant way to deselect the previous selection since it's stored
 	
 	
-	//TODO: these variables track the direction of the camera - why can't the cameranode track this info itself?
-	float view_angleX=0;
-	float view_angleY=0;
-	float view_angleZ=0;
+	float camRotationRate = FastMath.PI * 5 / 180;	//(FastMath.PI * X / 180) corresponds to X degrees per (FPS?) = Rate/UnitOfUpdate 
 	
 	org.fenggui.Display disp; // FengGUI's display
 
@@ -98,27 +95,6 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		_scene = scene;
 	}
 	
-
-	//This function provides a conveiniance to update view_angleX/Y/Z 
-	//it also keeps it within bounds of 360
-	private float changeAngle(float angle, float angleFactor)
-	{
-	   /* recalculate rotation for the cylinder */
-        if (tpf < 1) //time_per_frame is provided
-        {
-            angle += (1 * (tpf * angleFactor));
-            if (angle > 360)
-            {
-            	angle = angle - 360;
-            }
-            else if ( angle < -360 )
-            {
-            	angle = angle + 360;
-            }
-        }
-
-		return angle;
-	}
 	
 	protected void simpleInitGame() {
 		//as a hack, calling the main application class to do initialization
@@ -315,49 +291,35 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			if ( isAction("cam_turn_cw"))	
 			{
 				//key right
-				 Quaternion roll = new Quaternion(); 
-				 view_angleY = changeAngle(view_angleY, -500);					 
-				 roll.fromAngleAxis( FastMath.PI * view_angleY / 180 , Vector3f.UNIT_Y ); //rotates a degrees 
-				 camNode.setLocalRotation(roll);
+				Quaternion roll = new Quaternion();
+				roll.fromAngleAxis( -camRotationRate, Vector3f.UNIT_Y ); //rotates x degrees
+				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
+				camNode.setLocalRotation(roll);
 			}
 			
 			
 			if ( isAction("cam_turn_ccw"))	
 			{ //left key
-					 Quaternion roll = new Quaternion(); 
-					 view_angleY = changeAngle(view_angleY, 500);					 
-					 roll.fromAngleAxis( FastMath.PI * view_angleY / 180 , Vector3f.UNIT_Y ); //rotates a degrees 
-					 camNode.setLocalRotation(roll);
+				Quaternion roll = new Quaternion();
+				roll.fromAngleAxis( camRotationRate, Vector3f.UNIT_Y ); //rotates x degrees
+				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
+				camNode.setLocalRotation(roll);
 			}
 			
 			if ( isAction("cam_turn_down"))	
 			{ //down
-				
-				Quaternion curr = camNode.getLocalRotation();
 				Quaternion roll = new Quaternion();
-				Quaternion m = new Quaternion();
-				roll.fromAngleAxis( FastMath.PI * 5 / 180 , Vector3f.UNIT_X ); //rotates x degrees
-				
-				m = curr.multLocal(roll); // (q, save)
-				
-				System.out.println("roll " + roll + "\ncurr " + curr + "\nm " + m);
-				
-				camNode.setLocalRotation(m);
-				/*
-				 Quaternion roll = new Quaternion();  
-				 view_angleX = changeAngle(view_angleX, 500);					 
-				 roll.fromAngleAxis( FastMath.PI * view_angleX / 180 , Vector3f.UNIT_X ); //rotates a degrees 
-				 camNode.setLocalRotation(roll);
-				 */
+				roll.fromAngleAxis( camRotationRate, Vector3f.UNIT_X ); //rotates x degrees
+				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
+				camNode.setLocalRotation(roll);
 			}
 			
 			if ( isAction("cam_turn_up"))	
 			{ //up
-				Quaternion roll = new Quaternion(); 
-				 view_angleX = changeAngle(view_angleX, -500);					 
-				 roll.fromAngleAxis( FastMath.PI * view_angleX / 180 , Vector3f.UNIT_X ); //rotates a degrees 
-				 System.out.println("up curr: " + roll);
-				 camNode.setLocalRotation(roll);
+				Quaternion roll = new Quaternion();
+				roll.fromAngleAxis( -camRotationRate, Vector3f.UNIT_X ); //rotates x degrees
+				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
+				camNode.setLocalRotation(roll);
 			}
 			
 			if ( isAction("info"))
