@@ -240,7 +240,8 @@ public class ViewImpl extends BaseSimpleGame implements IView{
         input.clearActions();	//removes all input actions not specifically programmed
         
                 
-		
+		//TODO: wouldn't it be nice to move the camera based on mouse position?
+        
 		//Bind the Escape key to kill our test app
 		KeyBindingManager.getKeyBindingManager().set("quit", KeyInput.KEY_ESCAPE);
 		
@@ -249,9 +250,9 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		
 		//assignt he camera to up, down, left, right
 		KeyBindingManager.getKeyBindingManager().set("cam_forward", KeyInput.KEY_ADD);
-		//KeyBindingManager.getKeyBindingManager().set("cam_forward", KeyInput.KEY_EQUALS); //for shift not pressed;
+		KeyBindingManager.getKeyBindingManager().set("cam_forward_ns", KeyInput.KEY_EQUALS); //for shift not pressed;
 		KeyBindingManager.getKeyBindingManager().set("cam_back", KeyInput.KEY_SUBTRACT);
-		//KeyBindingManager.getKeyBindingManager().set("cam_back", KeyInput.KEY_MINUS); //for no-shift control
+		KeyBindingManager.getKeyBindingManager().set("cam_back_ns", KeyInput.KEY_MINUS); //for no-shift control
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_ccw", KeyInput.KEY_LEFT);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_cw", KeyInput.KEY_RIGHT);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_up", KeyInput.KEY_UP);
@@ -272,22 +273,20 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			//exit the program cleanly on ESC
 			if (isAction("quit")) finish();
 			
-			if ( isAction("cam_forward")) 
+			if ( isAction("cam_forward") || isAction("cam_forward_ns") ) 
 			{
 				//find the vector of the direction pointing towards
 				Vector3f dir = camNode.getCamera().getDirection().normalize();
 				camNode.setLocalTranslation( camNode.getLocalTranslation().add(dir.normalize()));
 			}
 			
-			if ( isAction("cam_back"))
+			if ( isAction("cam_back") || isAction("cam_back_ns"))
 			{
 				//find the vector of the direction pointing towards
 				Vector3f dir = camNode.getCamera().getDirection().normalize().negate();
 				camNode.setLocalTranslation( camNode.getLocalTranslation().add(dir.normalize()));
 			}
 
-			//TODO: All camera rotation is done poorly, because its tracking camera angle
-			//the proper way to do it is to use quaternions and incriment (multiply?)
 			if ( isAction("cam_turn_cw"))	
 			{
 				//key right
