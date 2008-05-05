@@ -149,14 +149,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		
 		//a locaiton on the Z axis a ways away
 		Vector3f loc = new Vector3f(0, -3f, -400.0f);
-		//Vector3f left = new Vector3f(-1.0f, 0.0f, 0.0f);
-		//Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
-		//Vector3f dir = new Vector3f(0.0f, 0f, -1.0f);
 
-		///** Move our camera to a correct place and orientation. */
-		//pX, pY, pZ, orientation
-		//cam.setFrame(loc, left, up, dir); //commented out because now using a camNode
-		
 		///** Signal that we've changed our camera's location/frustum. */
 		cam.update();
 
@@ -265,8 +258,100 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		MouseInput.get().setCursorVisible(true);
 	}
 	
-
-	private void handleInput() 
+	private void handleMouseInput()
+	{
+		//handle mouse input
+		//TODO: get more sophisticated way of dealing with mouse input (pickresults has handler)
+		if (MouseInput.get().isButtonDown(0)) 
+		{
+			
+			//because dendrites can be densely packed need precision of triangles instead of bounding boxes
+			PickResults pr = new TrianglePickResults(); 
+			
+			//Get the position that the mouse is pointing to
+            Vector2f mPos = new Vector2f();
+            mPos.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
+     
+            // Get the world location of that X,Y value
+            Vector3f farPoint = display.getWorldCoordinates(mPos, 1.0f);
+            Vector3f closePoint = display.getWorldCoordinates(mPos, 0.0f);
+            
+            // Create a ray starting from the camera, and going in the direction
+            // of the mouse's location
+            Ray mouseRay = new Ray(closePoint, farPoint.subtractLocal(closePoint).normalizeLocal());
+            
+            // Does the mouse's ray intersect the box's world bounds?
+            pr.clear();
+            pr.setCheckDistance(true);  //this function is undocumented, orders the items in pickresults
+            rootNode.findPick(mouseRay, pr);
+		
+			//createLine(mouseRay.origin, mouseRay.direction); //debugging
+			//createSphere(closePoint); //for debugging
+            
+            //set up for deselection
+			if ( pr.getNumber() > 0)
+			{
+				//deselect the previous 
+				if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
+				
+				if (prevPick != null) {
+					/* this should be done in a listener after firing an event here*/
+					
+					for (INeuronMorphologyView c : getView3D().getCells()) {
+						ISegmentView segView = ((NeuronMorphologyViewImpl)c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+						if (segView != null) {
+							if (segView.correspondsToSegment()) {
+								c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
+							} else if (segView.correspondsToSegmentGroup()) {
+								c.getMorphology().unselectSegmentGroup(segView.getCorrespondingSegmentGroup());
+							}
+						}
+					}
+				}
+								
+				//find the one that is closest
+				//the 0th element is closest to the origin of the ray with checkdistance
+				//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
+				prevPick = pr.getPickData(0);	//take the closest pick and set
+				
+				/* this should be done in a listener after firing an event here*/
+				for (INeuronMorphologyView c : getView3D().getCells())
+				{ // loop over all IStructure3Ds (the view representation of
+					// the morphology)
+					/*
+					 * Try to get a segView (view representation of a segment or
+					 * segment group) that matches the target mesh from the pick
+					 * results within this INeuronMorphologyView
+					 */
+					
+					ISegmentView segView = ((NeuronMorphologyViewImpl) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+					if (segView != null)
+					{ // if we found one
+						/*
+						 * tell the INeuronMorphology (the model representation
+						 * of the morphology) to note that we have selected a
+						 * segment or a segment group. The SceneObserver will
+						 * then get updated and change the color on the
+						 * appropriate geometry in the INeuronMorphologyView
+						 */
+						if (segView.correspondsToSegment())
+						{
+							c.getMorphology().selectSegment(segView.getCorrespondingSegment());
+						}
+						else if (segView.correspondsToSegmentGroup())
+						{
+							c.getMorphology().selectSegmentGroup(segView.getCorrespondingSegmentGroup());
+						}
+					}
+				}
+				
+				prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
+				//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
+			} //end if of pr > 0
+		} //end if mouse button down
+	}
+	
+	private void handleKeyInput() 
 	{
 		//key input handle
 		{
@@ -277,21 +362,21 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			{
 				//find the vector of the direction pointing towards
 				Vector3f dir = camNode.getCamera().getDirection().normalize();
-				camNode.setLocalTranslation( camNode.getLocalTranslation().add(dir.normalize()));
+				camNode.setLocalTranslation( camNode.getLocalTranslation().add(dir));
 			}
 			
 			if ( isAction("cam_back") || isAction("cam_back_ns"))
 			{
 				//find the vector of the direction pointing towards
 				Vector3f dir = camNode.getCamera().getDirection().normalize().negate();
-				camNode.setLocalTranslation( camNode.getLocalTranslation().add(dir.normalize()));
+				camNode.setLocalTranslation( camNode.getLocalTranslation().add(dir));
 			}
 
 			if ( isAction("cam_turn_cw"))	
 			{
 				//key right
 				Quaternion roll = new Quaternion();
-				roll.fromAngleAxis( -camRotationRate, Vector3f.UNIT_Y ); //rotates x degrees
+				roll.fromAngleAxis( -camRotationRate, Vector3f.UNIT_Y ); //rotates Rate degrees
 				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
 				camNode.setLocalRotation(roll);
 			}
@@ -300,7 +385,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			if ( isAction("cam_turn_ccw"))	
 			{ //left key
 				Quaternion roll = new Quaternion();
-				roll.fromAngleAxis( camRotationRate, Vector3f.UNIT_Y ); //rotates x degrees
+				roll.fromAngleAxis( camRotationRate, Vector3f.UNIT_Y ); //rotates Rate degrees
 				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
 				camNode.setLocalRotation(roll);
 			}
@@ -308,7 +393,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			if ( isAction("cam_turn_down"))	
 			{ //down
 				Quaternion roll = new Quaternion();
-				roll.fromAngleAxis( camRotationRate, Vector3f.UNIT_X ); //rotates x degrees
+				roll.fromAngleAxis( camRotationRate, Vector3f.UNIT_X );//rotates Rate degrees
 				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
 				camNode.setLocalRotation(roll);
 			}
@@ -316,7 +401,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			if ( isAction("cam_turn_up"))	
 			{ //up
 				Quaternion roll = new Quaternion();
-				roll.fromAngleAxis( -camRotationRate, Vector3f.UNIT_X ); //rotates x degrees
+				roll.fromAngleAxis( -camRotationRate, Vector3f.UNIT_X ); //rotates Rate degrees
 				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
 				camNode.setLocalRotation(roll);
 			}
@@ -341,85 +426,6 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			}
 			
 		}//end key input
-		
-		
-		//handle mouse input
-		if (MouseInput.get().isButtonDown(0)) 
-		{
-			
-			//because dendrites can be densely packed need precision of triangles instead of bounding boxes
-			PickResults pr = new TrianglePickResults(); 
-			
-			//Get the position that the mouse is pointing to
-            Vector2f mPos = new Vector2f();
-            mPos.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
-     
-            // Get the world location of that X,Y value
-            Vector3f farPoint = display.getWorldCoordinates(mPos, 1.0f);
-            Vector3f closePoint = display.getWorldCoordinates(mPos, 0.0f);
-            //closePoint = camNode.getWorldTranslation(); //forget the displays location, tell me where camnode is
-            
-            
-            // Create a ray starting from the camera, and going in the direction
-            // of the mouse's location
-            Ray mouseRay = new Ray(closePoint, farPoint.subtractLocal(closePoint).normalizeLocal());
-            
-            // Does the mouse's ray intersect the box's world bounds?
-            pr.clear();
-            pr.setCheckDistance(true);  //this function is undocumented, orders the items in pickresults
-            rootNode.findPick(mouseRay, pr);
-		
-			//createLine(mouseRay.origin, mouseRay.direction); //debugging
-			//createSphere(closePoint); //for debugging
-            
-            //set up for deselection
-			if ( pr.getNumber() > 0)
-			{
-				//deselect the previous 
-				if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
-				
-				if (prevPick != null) {
-					/* this should be done in a listener after firing an event here*/
-					for (INeuronMorphologyView c : getView3D().getCells()) {
-						ISegmentView segView = ((NeuronMorphologyViewImpl)c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
-						if (segView != null) {
-							if (segView.correspondsToSegment()) {
-								c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
-							} else if (segView.correspondsToSegmentGroup()) {
-								c.getMorphology().unselectSegmentGroup(segView.getCorrespondingSegmentGroup());
-							}
-						}
-					}
-				}
-								
-				//find the one that is closest
-				//the 0th element is closest to the origin of the ray with checkdistance
-				//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
-				prevPick = pr.getPickData(0);	//take the closest pick and set
-				
-				/* this should be done in a listener after firing an event here*/
-				for (INeuronMorphologyView c : getView3D().getCells()) { //loop over all IStructure3Ds (the view representation of the morphology)
-					/* Try to get a segView (view representation of a segment or segment group) that matches the target mesh 
-					 * from the pick results within this INeuronMorphologyView*/
-					ISegmentView segView = ((NeuronMorphologyViewImpl)c).getSegmentFromGeomBatch(prevPick.getTargetMesh()); 
-					if (segView != null) { //if we found one
-						/* tell the INeuronMorphology (the model representation of the morphology)
-						 * to note that we have selected a segment or a segment group.  
-						 * The SceneObserver will then get updated and change the color on the 
-						 * appropriate geometry in the INeuronMorphologyView
-						 */
-						if (segView.correspondsToSegment()) {
-							c.getMorphology().selectSegment(segView.getCorrespondingSegment()); 
-						} else if (segView.correspondsToSegmentGroup()) {
-							c.getMorphology().selectSegmentGroup(segView.getCorrespondingSegmentGroup());
-						}
-					}
-				}
-				
-				prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
-				//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
-			} //end if of pr > 0
-		} //end if mouse button down
 	}
 	
 	public DisplaySystem getDisplaySystem(){
@@ -432,7 +438,8 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 	protected void simpleUpdate() 
 	{
 		//the coordsDown and coordsUp code used to go here. It's gone now.
-		handleInput();
+		handleMouseInput();
+		handleKeyInput();
 	}
 	
 	/* 
