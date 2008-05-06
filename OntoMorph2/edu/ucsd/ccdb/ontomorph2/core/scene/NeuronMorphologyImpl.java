@@ -33,7 +33,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionImpl;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
-public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorphology, ISemanticsAware, ISelectable  {
+public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorphology, ISemanticsAware  {
 	
 	URL _morphLoc = null;
 	String _renderOption = RENDER_AS_LINES; //default render option
@@ -44,6 +44,7 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 	Set<ISegmentGroup> segmentGroupList = null;
 	boolean selected = false;
 	List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
+	IPosition lookAtPosition = null;
 	
 	public NeuronMorphologyImpl(URL morphLoc, IPosition position, IRotation rotation) {
 		_morphLoc = morphLoc;
@@ -233,6 +234,19 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 
 	public void positionAlongCurve(ICurve c, float time) {
 		setPosition(new PositionImpl(((CurveImpl)c).getPoint(time)));
+	}
+
+	public void lookAt(IPosition p) {
+		lookAtPosition = p;
+	}
+
+	public IPosition getLookAtPosition() {
+		return lookAtPosition;
+	}
+
+	public String getName() {
+		int len = _morphLoc.getFile().length();
+		return _morphLoc.getFile().substring(len-14, len);
 	}
 	
 }

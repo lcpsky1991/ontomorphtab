@@ -34,4 +34,22 @@ public class SlideImpl extends SceneObjectImpl implements ISlide {
 		return ratio;
 	}
 
+
+	public void select() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void unselect() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public boolean isSelected() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

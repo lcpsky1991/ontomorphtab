@@ -3,7 +3,7 @@ package edu.ucsd.ccdb.ontomorph2.core.scene;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.IPosition;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation;
 
-public interface ISceneObject {
+public interface ISceneObject extends ISelectable{
 
 	/**
 	 * get the IRotation that defines this INeuronMorphology's rotation

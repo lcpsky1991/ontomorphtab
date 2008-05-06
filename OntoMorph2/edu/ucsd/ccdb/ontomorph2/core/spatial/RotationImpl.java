@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core.spatial;
 
 import com.jme.math.Matrix3f;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 
@@ -15,6 +16,10 @@ public class RotationImpl extends com.jme.math.Quaternion implements IRotation{
 		
 	}
 	
+	public RotationImpl(Quaternion localRotation) {
+		super(localRotation);
+	}
+
 	public Matrix3f asMatrix3f() {
 		// TODO Auto-generated method stub
 		return this.toRotationMatrix();

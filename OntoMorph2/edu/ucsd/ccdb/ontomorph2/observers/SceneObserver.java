@@ -29,6 +29,7 @@ public class SceneObserver implements Observer{
 	public void update(Observable o, Object arg) {
 		if (o instanceof IScene) {
 			IScene scene = (IScene)o;
+			_view.getView3D().setVolumes(scene.getVolumes());
 			_view.getView3D().setSlides(scene.getSlides());
 			_view.getView3D().setCells(scene.getCells());
 			for (INeuronMorphology c: scene.getCells()) {
@@ -38,6 +39,7 @@ public class SceneObserver implements Observer{
 			_view.getView3D().setCurves(scene.getCurves());
 			_view.getView3D().setSurfaces(scene.getSurfaces());
 			_view.getView3D().setMeshes(scene.getMeshes());
+			
 		} else if (o instanceof INeuronMorphology) { //if an INeuronMorphology is changed
 			for (INeuronMorphologyView struct3d : _view.getView3D().getCells()) { //for all IStructure3Ds that are known
 				NeuronMorphologyImpl morph = (NeuronMorphologyImpl)struct3d.getMorphology();
@@ -46,6 +48,7 @@ public class SceneObserver implements Observer{
 					struct3d.updateSelectedSegments(morph.getSelectedSegments());
 					struct3d.updateSelectedSegmentGroups(morph.getSelectedSegmentGroups());
 				}
+				//UPDATE INFO STRING ON VIEW 2D
 				if (((INeuronMorphology)o).hasSelectedSegmentGroups()) {
 					for (ISegmentGroup isg : ((NeuronMorphologyImpl)o).getSelectedSegmentGroups()) {
 						SegmentGroupImpl sg = (SegmentGroupImpl)isg;

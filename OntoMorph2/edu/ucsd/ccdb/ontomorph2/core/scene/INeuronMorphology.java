@@ -100,4 +100,14 @@ public interface INeuronMorphology extends ISceneObject{
 	 */
 	public void positionAlongCurve(ICurve c, float time);
 	
+	/**
+	 * Rotates the NeuronMorphology to aim its 'up' direction towards p
+	 * @param p
+	 */
+	public void lookAt(IPosition p);
+	
+	public IPosition getLookAtPosition();
+
+	public String getName();
+
 }

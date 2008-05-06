@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import com.jme.bounding.BoundingSphere;
+import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.DistanceSwitchModel;
@@ -20,6 +21,7 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.lod.DiscreteLodNode;
+import com.jme.scene.shape.AxisRods;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.system.DisplaySystem;
@@ -53,8 +55,8 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
 	public NeuronMorphologyViewImpl(INeuronMorphology morph) {
 		segViews = new ArrayList<ISegmentView>();
 		currentMorph = morph;
-		
-		this.setMorphMLNeuron(this.loadscene(morph), morph.getPosition(), morph.getRotation(), morph.getScale());
+		//this.attachChild(new AxisRods());
+		this.setMorphMLNeuron(this.loadscene(morph), morph);
 	}
 
 	public Node getNode() {
@@ -69,26 +71,31 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
 		Geometry g = gb.getParentGeom();
 		ISegmentView pick = null;
 		for (ISegmentView sv : this.segViews) {
-			if (((SegmentViewImpl)sv).getCurrentGeometry() == g) {
+			
+			if (sv.containsCurrentGeometry(g)) {
 				pick = sv;
 			}
 		}
 		return pick;
 	}
 	
-	public void setMorphMLNeuron(Node n, IPosition _position, IRotation _rotation, float _scale) {
+	public void setMorphMLNeuron(Node n, INeuronMorphology morph) {
 		this.detachAllChildren();
 		this.attachChild(n);
 		
-		if (_position != null) {
-			this.setLocalTranslation(_position.asVector3f());
+		if (morph.getPosition() != null) {
+			this.setLocalTranslation(morph.getPosition().asVector3f());
 		}
-		if (_rotation != null) {
-			this.setLocalRotation(_rotation.asMatrix3f());
+		if (morph.getRotation() != null) {
+			this.setLocalRotation(morph.getRotation().asMatrix3f());
 		}
-		if (_scale != 1) {
-			this.setLocalScale(_scale);
+		if (morph.getScale() != 1) {
+			this.setLocalScale(morph.getScale());
 		}
+		if (morph.getLookAtPosition() != null) {
+			this.lookAt(morph.getLookAtPosition().asVector3f(), Vector3f.UNIT_X);
+		}
+		
 	}
 	
 	public void setX3DNeuron(InputStream input, IPosition _position, IRotation _rotation, float _scale) {
@@ -173,35 +180,7 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
         	 sceneRoot.attachChild(s2);
         	 */
            
-        	Node node = new Node();
-        	
-        	if (morph.getRenderOption().equals(INeuronMorphology.RENDER_AS_LINES)) {
-        		node.attachChild(((SegmentViewImpl)seg).getLine());
-        	} else if (morph.getRenderOption().equals(INeuronMorphology.RENDER_AS_CYLINDERS)) {
-        		node.attachChild(((SegmentViewImpl)seg).getClodMeshCylinder());
-        	} else if (morph.getRenderOption().equals(INeuronMorphology.RENDER_AS_LOD)) {
-        		DistanceSwitchModel dsm = new DistanceSwitchModel(2);
-            	dsm.setModelDistance(0, 0, 1000);
-            	dsm.setModelDistance(1, 1000, 10000);
-            	
-            	node = new DiscreteLodNode("node", dsm);
-            	
-            	node.attachChildAt(((SegmentViewImpl)seg).getClodMeshCylinder(), 0);
-            	node.attachChildAt(((SegmentViewImpl)seg).getLine(), 1);
-        	} else if (morph.getRenderOption().equals(INeuronMorphology.RENDER_AS_LOD_2)){
-
-            	DistanceSwitchModel dsm = new DistanceSwitchModel(2);
-            	dsm.setModelDistance(0, 0, 800);
-            	dsm.setModelDistance(1, 800, 10000);
-            	
-            	node = new DiscreteLodNode("node", dsm);
-            	
-            	//node.attachChildAt(((SegmentViewImpl)seg).getCurveFromSegGroup(), 0);
-            	node.attachChildAt(((SegmentViewImpl)seg).getCylindersFromSegGroup(), 0);
-            	//node.attachChildAt(((SegmentViewImpl)seg).getCylinder(), 1);
-            	node.attachChildAt(((SegmentViewImpl)seg).getLine(), 1);
-            	
-        	}
+        	Node node = seg.getViewNode(morph.getRenderOption());
            	        	
         	this.segViews.add(seg);
         	    		
@@ -223,7 +202,7 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
 	  }*/
 	  
 	  public void selectLevelOfDetail(Renderer r) {
-		  int target = chooseTargetRecord(r);
+		  int target = chooseCableResolution(r);
 		  if (target == 0) {
 			  if (cableResolution == Integer.MAX_VALUE) {
 				  reload();
@@ -252,7 +231,7 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
 		 * @param r The Renderer to use.
 		 * @return the target record this AreaClodMesh will use to collapse vertexes.
 		 */
-		public int chooseTargetRecord(Renderer r) {
+		private int chooseCableResolution(Renderer r) {
 			if (this.getWorldBound() == null) {
 				logger.warning("NeuronMorphologyViewImpl found with no Bounds.");
 				return 0;
@@ -281,14 +260,13 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
 		}
 
 //	needs to be updated by a controller
-	//does not unselect yet
 	public void updateSelectedSegments(Set<ISegment> segments) {
 		for (ISegment seg : segments) {
 			for (ISegmentView sv : this.segViews) {
 				if (seg.equals(sv.getCorrespondingSegment())) {
-					((SegmentViewImpl)sv).getCurrentGeometry().setSolidColor(ColorRGBA.yellow);
+					sv.highlight();
 				} else { // or set to the default color of the segment 
-					((SegmentViewImpl)sv).getCurrentGeometry().setSolidColor(ColorUtil.convertColorToColorRGBA(sv.getCorrespondingSegment().getColor()));
+					sv.unhighlight();
 				}
 			}
 		}
@@ -298,17 +276,24 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
 		for (ISegmentGroup seg : sgs) {
 			for (ISegmentView sv : this.segViews) {
 				if (seg.equals(sv.getCorrespondingSegmentGroup())) {
-					((SegmentViewImpl)sv).getCurrentGeometry().setSolidColor(ColorRGBA.yellow); //set to selected color yellow
-				} else { // or set to the default color of the segment group
-					((SegmentViewImpl)sv).getCurrentGeometry().setSolidColor(ColorUtil.convertColorToColorRGBA(sv.getCorrespondingSegmentGroup().getColor()));
+					sv.highlight();
+				} else {
+					sv.unhighlight();
 				}
 			}
 		}
 	}
 
+	
 	public void updateSelected(boolean selected) {
 		if (selected) {
-			
+			for (ISegmentView sv : this.segViews) {
+				sv.highlight();
+			}
+		} else {
+			for (ISegmentView sv: this.segViews) {
+				sv.unhighlight();
+			}
 		}
 	}
 

@@ -49,4 +49,6 @@ public interface IScene {
 	Set<ISurface> getSurfaces();
 
 	Set<IMesh> getMeshes();
+
+	Set<IVolume> getVolumes();
 }

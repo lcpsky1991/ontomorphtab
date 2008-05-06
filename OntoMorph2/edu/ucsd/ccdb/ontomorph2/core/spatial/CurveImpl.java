@@ -32,7 +32,7 @@ public class CurveImpl extends BezierCurve implements ICurve{
 	public Vector3f getTangent(float time) {
 		Vector3f p1 = getPoint(time-0.01f);
 		Vector3f p2 = getPoint(time+0.01f);
-		return p1.subtract(p2);
+		return p2.subtract(p1).normalize();
 	}
 	
 	/**
@@ -49,7 +49,7 @@ public class CurveImpl extends BezierCurve implements ICurve{
 		Vector3f pe = getPoint(time);
 		Vector3f pf = new Vector3f((py.x - px.x)/2+px.x, (py.y - px.y)/2+px.y, (py.z - px.z)/2+px.z);
 
-		return pf.subtract(pe);
+		return pf.subtract(pe).normalize();
 	}
 
 }

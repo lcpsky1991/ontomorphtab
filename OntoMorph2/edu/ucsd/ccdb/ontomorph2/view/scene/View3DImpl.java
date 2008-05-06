@@ -13,6 +13,7 @@ import com.jme.scene.Node;
 import edu.ucsd.ccdb.ontomorph2.core.scene.IMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISlide;
+import edu.ucsd.ccdb.ontomorph2.core.scene.IVolume;
 import edu.ucsd.ccdb.ontomorph2.core.scene.MeshImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SlideImpl;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
@@ -30,7 +31,9 @@ public class View3DImpl extends Node implements IView3D {
 	private Node curvesNode = null;
 	private Node surfacesNode = null;
 	private Node meshesNode = null;
+	private Node volumesNode = null;
 	private Set<INeuronMorphologyView> cells = null;
+	private Set<VolumeViewImpl> volumes = null;
 	
 	public View3DImpl() {
 		slidesNode = new Node();
@@ -38,12 +41,15 @@ public class View3DImpl extends Node implements IView3D {
 		curvesNode = new Node();
 		surfacesNode = new Node();
 		meshesNode = new Node();
+		volumesNode = new Node();
 		cells = new HashSet<INeuronMorphologyView>();
+		volumes = new HashSet<VolumeViewImpl>();
 		this.attachChild(slidesNode);
 		this.attachChild(cellsNode);
 		this.attachChild(curvesNode);
 		this.attachChild(surfacesNode);
 		this.attachChild(meshesNode);
+		this.attachChild(volumesNode);
 	}
 	
 	public void setSlides(List<ISlide> slides) {
@@ -92,4 +98,18 @@ public class View3DImpl extends Node implements IView3D {
 		}
 	}
 
+	public void setVolumes(Set<IVolume> volumes) {
+		
+		volumesNode.detachAllChildren();
+		for (IVolume vol : volumes) {
+			VolumeViewImpl volView = new VolumeViewImpl(vol);
+			this.volumes.add(volView);
+			volumesNode.attachChild(volView.getNode());
+		}
+	}
+	
+	public Set<VolumeViewImpl> getVolumes() {
+		return volumes;
+	}
+	
 }

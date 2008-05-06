@@ -1,30 +1,39 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
+import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.Geometry;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
+import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Cylinder;
 import com.jme.scene.state.RenderState;
 import com.jme.util.geom.BufferUtils;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
+import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
 
 public class SegmentViewImpl implements ISegmentView {
 
 	private ISegment seg = null;
 	private ISegmentGroup sg = null;
-	private Geometry currentGeometry = null;
+	//list of lists of geometries.  
+	private boolean highlighted = false;
+	private OMTDiscreteLodNode node = null;
 	
 	public SegmentViewImpl(ISegment seg) {
 		assert seg != null;
@@ -75,7 +84,7 @@ public class SegmentViewImpl implements ISegmentView {
 		return distalRadius;
 	}
 
-	private Vector3f getBase() {
+	public Vector3f getBase() {
 		Vector3f base = new Vector3f();
 		if (correspondsToSegment()) {
 	    	base.x = seg.getProximalPoint()[0];
@@ -91,7 +100,7 @@ public class SegmentViewImpl implements ISegmentView {
 		return base;
 	}
 	
-	private Vector3f getApex() {
+	public Vector3f getApex() {
 		Vector3f apex = new Vector3f();
 		if (correspondsToSegment()) {
 	    	apex.x = seg.getDistalPoint()[0];
@@ -107,7 +116,8 @@ public class SegmentViewImpl implements ISegmentView {
 		return apex;
 	}
 	
-	public Line getLine() {
+	// render this SegmentViewImpl as a Line
+	private Line getLine() {
 		
 		Vector3f base = getBase();
     	Vector3f apex = getApex();
@@ -116,20 +126,36 @@ public class SegmentViewImpl implements ISegmentView {
 		
 		//Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, colorBuffer, null);
 		Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, null, null);
-		this.currentGeometry = l;
-		this.setToDefaultColor();
+		setCurrentGeometry(l);
 		return l;
 	}
 	
-	public void setToDefaultColor() {
-		if (correspondsToSegment()) {
-		this.currentGeometry.setSolidColor(ColorUtil.convertColorToColorRGBA(getCorrespondingSegment().getColor())); 
+	/**
+	 * @return True if this segment finds itself inside some IVolume
+	 */
+	public boolean insideVolume() {
+		for (VolumeViewImpl vol : ViewImpl.getInstance().getView3D().getVolumes()) {
+			for (Geometry g : this.getCurrentGeometries()) {
+				if (vol.getVolume().containsObject(g)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private void setToDefaultColor(Geometry g) {
+		if (insideVolume()) {
+			g.setSolidColor(ColorRGBA.red);
+		} else if (correspondsToSegment()) {
+			g.setSolidColor(ColorUtil.convertColorToColorRGBA(getCorrespondingSegment().getColor()));
 		} else if (correspondsToSegmentGroup()) {
-			this.currentGeometry.setSolidColor(ColorUtil.convertColorToColorRGBA(getCorrespondingSegmentGroup().getColor()));
+			g.setSolidColor(ColorUtil.convertColorToColorRGBA(getCorrespondingSegmentGroup().getColor()));
 		}
 	}
 	
-	public Cylinder getCylinder() {
+	//Render this SegmentViewImpl as a Cylinder
+	private Cylinder getCylinder() {
 		Vector3f base = getBase();
     	Vector3f apex = getApex();
     	
@@ -149,9 +175,7 @@ public class SegmentViewImpl implements ISegmentView {
 		cyl.setRadius1(getBaseRadius());
 		cyl.setRadius2(getApexRadius());
 		//cyl.setColorBuffer(2, colorBuffer);
-		cyl.setModelBound(new BoundingBox());
-		cyl.updateModelBound();
-		
+				
 		Quaternion q = new Quaternion();
 		q.lookAt(unit, Vector3f.UNIT_Y);
 		
@@ -159,20 +183,19 @@ public class SegmentViewImpl implements ISegmentView {
 		
 		cyl.setLocalTranslation(center);
 		
-		this.currentGeometry = cyl;
-		this.setToDefaultColor();
+		setCurrentGeometry(cyl);
 		return cyl;
 	}
 	
-	public AreaClodMesh getClodMeshCylinder() {
+	//render this SegmentViewImpl as a ClodMeshCylinder
+	private AreaClodMesh getClodMeshCylinder() {
 		AreaClodMesh out =  getClodMeshFromGeometry(getCylinder());
-		this.currentGeometry = out;
-		this.setToDefaultColor();
+		setCurrentGeometry(out);
 		return out;
 	}
 	
 	//this doesn't work right 
-	public Node getCurveFromSegGroup() {
+	private Node getCurveFromSegGroup() {
 		Node n = new Node();
 		ArrayList<Vector3f> l = new ArrayList<Vector3f>();
 		if (correspondsToSegmentGroup()) {
@@ -188,24 +211,24 @@ public class SegmentViewImpl implements ISegmentView {
 		array = l.toArray(array);
 		CurveImpl c = new CurveImpl("name", array);
 		n.attachChild(c);
-		this.currentGeometry = c;
-		this.setToDefaultColor();
+		setCurrentGeometry(c);
 		return n;
 	}
 	
-	public Node getCylindersFromSegGroup() {
-		Node n = new Node();
+	//Render this SegmentViewImpl as a series of cylinders corresponding to the underlying
+	//individual segments of this segment group
+	private List<Geometry> getCylindersFromSegGroup() {
+		List<Geometry> l = new ArrayList<Geometry>();
 		
 		if (correspondsToSegmentGroup()) {
 			for (ISegment seg : this.getCorrespondingSegmentGroup().getSegments()) {
 				SegmentViewImpl sv = new SegmentViewImpl(seg);
-				sv.currentGeometry = sv.getCylinder();
-				sv.setToDefaultColor();
-				n.attachChild(sv.getCylinder());
+				Cylinder c = sv.getCylinder();
+				l.add(c);
 			}
 		}
 		
-		return n;
+		return l;
 	}
 	
 	private AreaClodMesh getClodMeshFromGeometry(Geometry cylinder) {
@@ -228,8 +251,86 @@ public class SegmentViewImpl implements ISegmentView {
         return acm;
 	}
 	
-	public Geometry getCurrentGeometry() {
-		return this.currentGeometry;
+	private List<Geometry> getCurrentGeometries() {
+		if (node != null) {
+			return this.node.getActiveGeometries();
+		} else {
+			return new ArrayList<Geometry>();
+		}
+	}
+	
+	private void setCurrentGeometry(Geometry g) {
+		g.setModelBound(new BoundingBox());
+		g.updateModelBound();
+		this.chooseColor(g);
+	}
+	
+	private void setCurrentGeometries(List<Geometry> l) {
+		for (Geometry g : l) {
+			setCurrentGeometry(g);
+		}
+	}
+	
+	public void highlight() {
+		highlighted = true;
+		refreshColor();
+	}
+	
+	private void chooseColor(Geometry g) {
+		if (highlighted) {
+			g.setSolidColor(ColorRGBA.yellow);
+		} else {
+			this.setToDefaultColor(g);	
+		}
+	}
+	
+	private void refreshColor() {
+		for (Geometry g : this.node.getAllGeometries()) {
+			chooseColor(g);
+		}
+	}
+
+	public void unhighlight() {
+		highlighted = false;
+		refreshColor();
+	}
+
+	public boolean containsCurrentGeometry(Geometry g) {
+		for (Geometry ge: this.getCurrentGeometries()) {
+			if (ge == g) { 
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isHighlighted() {
+		return this.highlighted;
+	}
+
+	
+	public Node getViewNode(String renderOption) {
+		if (this.node == null) {
+			this.node = new OMTDiscreteLodNode(new DistanceSwitchModel(10));
+			
+			if (renderOption.equals(INeuronMorphology.RENDER_AS_LINES)) {
+				this.node.attachChild(this.getLine());
+			} else if (renderOption.equals(INeuronMorphology.RENDER_AS_CYLINDERS)) {
+				//node.attachChild(((SegmentViewImpl)seg).getClodMeshCylinder());
+				this.node.attachChild(this.getCylinder());
+			} else if (renderOption.equals(INeuronMorphology.RENDER_AS_LOD)) {
+				
+				this.node.addDiscreteLodNodeChild(this.getCylinder(), 0, 1000);
+				this.node.addDiscreteLodNodeChild(this.getLine(), 1000, 10000);
+				
+			} else if (renderOption.equals(INeuronMorphology.RENDER_AS_LOD_2)){
+				
+				this.node.addDiscreteLodNodeChild(this.getCylindersFromSegGroup(), 0, 800);
+				this.node.addDiscreteLodNodeChild(this.getLine(), 800, 10000);
+				
+			}
+		}
+		return this.node;
 	}
 
 }

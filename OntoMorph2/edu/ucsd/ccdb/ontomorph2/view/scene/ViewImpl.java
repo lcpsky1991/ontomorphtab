@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import java.awt.Color;
+import java.nio.FloatBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,14 +31,15 @@ import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.DiscreteLodNode;
+import com.jme.scene.shape.Cylinder;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 import com.jme.util.geom.Debugger;
-import java.nio.FloatBuffer;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
+import edu.ucsd.ccdb.ontomorph2.core.scene.IScene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.MeshImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
@@ -95,6 +97,9 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		_scene = scene;
 	}
 	
+	public IScene getScene() {
+		return _scene;
+	}
 	
 	protected void simpleInitGame() {
 		//as a hack, calling the main application class to do initialization
@@ -104,7 +109,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		rootNode.attachChild(view3D);
 		
 		
-		
+		/*
 		//This sphere is for debugging purposes, need to see something to indicate cam space/rotation
 		Sphere s=new Sphere("DEBUG SPHERE",10,10,3f);
 		// Do bounds for the sphere, use a BoundingBox
@@ -114,25 +119,37 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		s.setLocalTranslation(20,0,0);
 		
 		rootNode.attachChild(s);
+		*/
 		
+		Vector3f p1 = new Vector3f(-5,-3,20);
+		Vector3f p2 = new Vector3f(45,-10,20);
+		Vector3f p3 = new Vector3f(12,10,20);
+		Vector3f p4 = new Vector3f(-9,30,20);
+		Vector3f p5 = new Vector3f(-23,25,20);
 		
-		/*
-		Vector3f p1 = new Vector3f(-20,0,20);
-		Vector3f p2 = new Vector3f(-34,-5,20);
-		Vector3f p3 = new Vector3f(-20,-10,20);
-		Vector3f[] array = {p1, p2, p3};
-		CurveImpl curve1 = new CurveImpl("Dentate Gyrus", array);
+		Vector3f[] array2 = {p1, p2, p3, p4, p5};
+		CurveImpl curve1 = new CurveImpl("CA",array2);
 		curve1.setColor(Color.BLUE);
 		rootNode.attachChild(curve1);
 		
-		float time = 0.8f;
+		float time = 0.027f;
 		Vector3f px = curve1.getPoint(time-0.01f);
 		Vector3f py = curve1.getPoint(time+0.01f);
 		createLine(px,py);
 		
 		Vector3f pe = curve1.getPoint(time);
 		Vector3f pf = new Vector3f((py.x - px.x)/2+px.x, (py.y - px.y)/2+px.y, (py.z - px.z)/2+px.z);
-		createLine(pe,pf);*/
+		//createLine(pe,pf);
+		createSphere(pe);
+		createSphere(px);
+		createSphere(py);
+		//createSphere(pf);
+		
+		//Cylinder c = new Cylinder("name", 10, 10, 2f, 3f);
+		//c.setLocalTranslation(pe);
+		//c.lookAt(px, Vector3f.UNIT_Y);
+		
+		//rootNode.attachChild(c);
 		
 		///** Set a black background.*/
 		display.getRenderer().setBackgroundColor(ColorRGBA.black);
@@ -149,7 +166,14 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		
 		//a locaiton on the Z axis a ways away
 		Vector3f loc = new Vector3f(0, -3f, -400.0f);
+		//Vector3f left = new Vector3f(-1.0f, 0.0f, 0.0f);
+		//Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
+		//Vector3f dir = new Vector3f(0.0f, 0f, -1.0f);
 
+		///** Move our camera to a correct place and orientation. */
+		//pX, pY, pZ, orientation
+		//cam.setFrame(loc, left, up, dir); //commented out because now using a camNode
+		
 		///** Signal that we've changed our camera's location/frustum. */
 		cam.update();
 
@@ -191,7 +215,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		y = p1.getY();
 		z = p1.getZ();
 		
-		 Sphere s=new Sphere("My sphere",10,10,3f); //last number is radius
+		 Sphere s=new Sphere("My sphere",10,10,0.01f); //last number is radius
 		 s.setModelBound(new BoundingBox());
 		 s.updateModelBound();
 		 s.setRandomColors();
@@ -250,7 +274,6 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_cw", KeyInput.KEY_RIGHT);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_up", KeyInput.KEY_UP);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_down", KeyInput.KEY_DOWN);
-
 		
 		KeyBindingManager.getKeyBindingManager().set("info", KeyInput.KEY_I);
 		
@@ -434,7 +457,6 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 
 	
 	//called every frame update
-	//now it's just a wrapper to handleInput
 	protected void simpleUpdate() 
 	{
 		//the coordsDown and coordsUp code used to go here. It's gone now.
@@ -526,6 +548,10 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 
 	public IView2D getView2D() {
 		return View2DImpl.getInstance();
+	}
+
+	public Renderer getRenderer() {
+		return display.getRenderer();
 	}
 	
 }
