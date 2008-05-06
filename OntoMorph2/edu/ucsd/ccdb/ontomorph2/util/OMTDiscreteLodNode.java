@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.Geometry;
+import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.lod.DiscreteLodNode;
 
@@ -40,9 +41,11 @@ public class OMTDiscreteLodNode extends DiscreteLodNode {
     	//add the geoemetries to the currentGeometry list of lists
     	currentGeometries.add(activeChildren, g);
     	//attach the children at the 'activeChildren' index
+    	Node n = new Node();
     	for (Geometry ge: g) {
-    		this.attachChildAt(ge, activeChildren);
+    		n.attachChild(ge);
     	}
+    	this.attachChildAt(n, activeChildren);
     	//increment the 'activeChildren' index
     	activeChildren++;
 	}
