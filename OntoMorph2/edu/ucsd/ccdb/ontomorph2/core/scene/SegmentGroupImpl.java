@@ -8,7 +8,7 @@ import java.util.List;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 
-public class SegmentGroupImpl implements ISegmentGroup, ISemanticsAware , ISelectable{
+public class SegmentGroupImpl implements ISegmentGroup, ISemanticsAware{
 
 	BigInteger id;
 	List<ISegment> segments = new ArrayList<ISegment>();
@@ -40,8 +40,13 @@ public class SegmentGroupImpl implements ISegmentGroup, ISemanticsAware , ISelec
 		return tags;
 	}
 	
-	public List<ISemanticThing> getSemanticThings(){
-		return this.semanticThings;
+	public List<ISemanticThing> getSemanticThings() {
+		List<ISemanticThing> l = new ArrayList<ISemanticThing>();
+		l.addAll(this.semanticThings);
+		for (ISegment sg : this.getSegments()) {
+			l.addAll(sg.getSemanticThings());
+		}
+		return l;
 	}
 	
 	public void addSemanticThing(ISemanticThing thing) {

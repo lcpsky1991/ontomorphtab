@@ -49,4 +49,8 @@ public interface IVolume extends ISceneObject {
 	public boolean isExplicit();
 	
 	public boolean containsObject(Spatial s);
+
+	public boolean isVisible();
+	
+	public void setVisible(boolean b);
 }

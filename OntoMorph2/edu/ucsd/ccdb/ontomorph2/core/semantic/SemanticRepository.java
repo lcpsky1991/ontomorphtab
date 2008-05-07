@@ -8,6 +8,7 @@ import edu.stanford.smi.protege.model.Cls;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.util.ApplicationProperties;
+import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 
@@ -32,7 +33,7 @@ public class SemanticRepository {
 	public static void main(String[] args) {
 		SemanticRepository.getInstance();
 		//get semantic thing for a pyramidal cell
-		ISemanticThing pyramCell = SemanticRepository.getInstance().getSemanticThing("sao:sao830368389");
+		ISemanticThing pyramCell = SemanticRepository.getInstance().getSemanticClass("sao:sao830368389");
 		
 	}
 	
@@ -40,18 +41,20 @@ public class SemanticRepository {
 		return owlModel;
 	}
 
-	public ISemanticThing getSemanticThing(String URI) {
+	public ISemanticClass getSemanticClass(String uri) {
 		Cls cls = null;
 		try {
-			cls = clsFlyweightStore.get(URI);
+			cls = clsFlyweightStore.get(uri);
 			if (cls == null) {
-				cls = owlModel.getCls(URI);
-				clsFlyweightStore.put(URI, cls);
+				cls = owlModel.getCls(uri);
+				clsFlyweightStore.put(uri, cls);
 			}
 		} catch (Exception e ) {
-			throw new OMTException("Problem finding URI in semantic repository" + URI, e);
+			throw new OMTException("Problem finding URI in semantic repository" + uri, e);
 		}
-		return new SemanticThingImpl(cls, URI);
+		SemanticClassImpl s = new SemanticClassImpl(cls, uri);
+		s.addObserver(SceneObserver.getInstance());
+		return s;
 	}
 	
 	private void loadOntology() {

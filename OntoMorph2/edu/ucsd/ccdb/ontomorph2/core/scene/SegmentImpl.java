@@ -8,7 +8,7 @@ import java.util.List;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 
-public class SegmentImpl implements ISegment, ISemanticsAware, ISelectable {
+public class SegmentImpl implements ISegment, ISemanticsAware {
 
 	BigInteger _id;
 	float[] _proxPoint;

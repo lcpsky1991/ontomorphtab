@@ -32,6 +32,7 @@ public class VolumeImpl extends SceneObjectImpl implements IVolume, ISemanticsAw
 	int _shape = 0;
 	Geometry _expShape = null;
 	List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
+	private boolean _visible = true;
 	
 	
 	public VolumeImpl(Geometry g) {
@@ -116,6 +117,15 @@ public class VolumeImpl extends SceneObjectImpl implements IVolume, ISemanticsAw
 	public boolean isSelected() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	
+	public boolean isVisible() {
+		return _visible;
+	}
+
+	public void setVisible(boolean b) {
+		_visible = b;
 	}
 
 }

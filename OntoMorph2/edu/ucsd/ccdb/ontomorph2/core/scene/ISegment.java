@@ -3,6 +3,8 @@ package edu.ucsd.ccdb.ontomorph2.core.scene;
 import java.awt.Color;
 import java.math.BigInteger;
 
+import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+
 /**
  * Defines the smallest unit of an INeuronMorphology.  A segment has a proximal and a distal point,
  * and each has a radius.
@@ -10,7 +12,7 @@ import java.math.BigInteger;
  * @author stephen
  *
  */
-public interface ISegment {
+public interface ISegment extends ISemanticsAware{
 	
 	/**
 	 * 

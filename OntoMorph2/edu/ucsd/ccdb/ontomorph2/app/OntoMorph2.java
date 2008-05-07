@@ -27,7 +27,6 @@ public class OntoMorph2 {
 	public static void initialization() {
 		//scene can't be loaded before ViewImpl has been initializaed
 		_scene.load();
-		
 		ViewImpl.getInstance().getView2D().addInfoText("This is an example of \nloading neuronal morphologies...");
 	}
 	

@@ -38,8 +38,9 @@ public class VolumeViewImpl {
 
 	        g.setRenderState(ws);
 			
-			
-			n.attachChild(g);
+			if (_vol.isVisible()) {
+				n.attachChild(g);
+			}
 		} else {
 			Vector3f p = _vol.getPosition().asVector3f();
 			if (_vol.getShape() == IVolume.BOX_SHAPE) {

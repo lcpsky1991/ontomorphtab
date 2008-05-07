@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
+import com.jme.math.Vector3f;
+
 import edu.ucsd.ccdb.ontomorph2.core.misc.IPrototype;
 import edu.ucsd.ccdb.ontomorph2.core.misc.MorphologyRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
@@ -109,5 +111,21 @@ public interface INeuronMorphology extends ISceneObject{
 	public IPosition getLookAtPosition();
 
 	public String getName();
+
+	/**
+	 * Get the ICurve that this INeuronMorphology has been associated with
+	 * @return
+	 */
+	public ICurve getCurve();
+	
+	/**
+	 * Retrieves the "time" along the curve that this INeuronMorphology is positioned at
+	 * @return
+	 */
+	public float getTime();
+	
+	public void setUpVector(Vector3f vector3f);
+	
+	public Vector3f getUpVector();
 
 }

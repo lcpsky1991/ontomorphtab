@@ -15,6 +15,9 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import com.jme.curve.CurveController;
+import com.jme.math.Vector3f;
+
 import neuroml.generated.Level2Cell;
 import neuroml.generated.NeuroMLLevel2;
 import neuroml.generated.Point;
@@ -46,10 +49,12 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 	List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
 	IPosition lookAtPosition = null;
 	
-	public NeuronMorphologyImpl(URL morphLoc, IPosition position, IRotation rotation) {
+	ICurve _curve = null;
+	float _time = 0.0f;
+	private Vector3f _upVector;
+	
+	public NeuronMorphologyImpl(URL morphLoc) {
 		_morphLoc = morphLoc;
-		setPosition(position);
-		setRotation(rotation);
 		
 		JAXBContext context;
 		try {
@@ -70,9 +75,31 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		this.addObserver(SceneObserver.getInstance());
 	}
 	
+	public NeuronMorphologyImpl(URL morphLoc, IPosition position, IRotation rotation) {
+		this(morphLoc);
+		setPosition(position);
+		setRotation(rotation);
+	}
+	
 	public NeuronMorphologyImpl(URL morphLoc, IPosition position, IRotation rotation, String renderOption) {
 		this(morphLoc, position, rotation);
 		setRenderOption(renderOption);
+	}
+	
+	public NeuronMorphologyImpl(URL morphLoc, ICurve curve, float time, String renderOption) {
+		this(morphLoc);
+		_curve = curve;
+		_time = time;
+		this.positionAlongCurve(curve, time);
+		setRenderOption(renderOption);
+	}
+	
+	public ICurve getCurve() {
+		return _curve;
+	}
+	
+	public float getTime() {
+		return _time;
 	}
 
 	public Level2Cell getMorphMLCell() {
@@ -144,16 +171,16 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 				 */
 				for (String s : cab.getGroup()) {
 					if ("dendrite_group".equals(s)) {
-						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("sao:sao1211023249"));
+						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("sao:sao1211023249"));
 					}
 					if ("soma_group".equals(s)) {
-						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("sao:sao1044911821"));
+						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("sao:sao1044911821"));
 					} 
 					if ("axon_group".equals(s)) {
-						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("sao:sao1770195789"));
+						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("sao:sao1770195789"));
 					}
 					if ("apical_dendrite".equals(s)) {
-						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticThing("sao:sao273773228"));
+						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("sao:sao273773228"));
 					}
 					if (s.startsWith("Colour_")) {
 						if (s.endsWith("Magenta")) {
@@ -220,7 +247,12 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 	}
 
 	public List<ISemanticThing> getSemanticThings() {
-		return semanticThings;
+		List<ISemanticThing> l = new ArrayList<ISemanticThing>();
+		l.addAll(this.semanticThings);
+		for (ISegmentGroup sg : this.getSegmentGroups()) {
+			l.addAll(sg.getSemanticThings());
+		}
+		return l;
 	}
 
 	public void addSemanticThing(ISemanticThing thing) {
@@ -247,6 +279,17 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 	public String getName() {
 		int len = _morphLoc.getFile().length();
 		return _morphLoc.getFile().substring(len-14, len);
+	}
+
+	public void setUpVector(Vector3f vector3f) {
+		_upVector = vector3f;
+	}
+	
+	public Vector3f getUpVector() {
+		if (_upVector != null) {
+			return _upVector;
+		}
+		return Vector3f.UNIT_Y;
 	}
 	
 }

@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.math.BigInteger;
 import java.util.List;
 
-public interface ISegmentGroup {
+import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+
+public interface ISegmentGroup extends ISemanticsAware{
 
 	/**
 	 * @link aggregation

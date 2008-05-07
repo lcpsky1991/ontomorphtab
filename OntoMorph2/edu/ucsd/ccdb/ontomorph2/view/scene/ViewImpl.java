@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
 import com.jme.bounding.BoundingBox;
+import com.jme.curve.CurveController;
 import com.jme.image.Texture;
 import com.jme.input.AbsoluteMouse;
 import com.jme.input.FirstPersonHandler;
@@ -119,41 +120,12 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		s.setLocalTranslation(20,0,0);
 		
 		rootNode.attachChild(s);
-		*/
-		
-		Vector3f p1 = new Vector3f(-5,-3,20);
-		Vector3f p2 = new Vector3f(45,-10,20);
-		Vector3f p3 = new Vector3f(12,10,20);
-		Vector3f p4 = new Vector3f(-9,30,20);
-		Vector3f p5 = new Vector3f(-23,25,20);
-		
-		Vector3f[] array2 = {p1, p2, p3, p4, p5};
-		CurveImpl curve1 = new CurveImpl("CA",array2);
-		curve1.setColor(Color.BLUE);
-		rootNode.attachChild(curve1);
-		
-		float time = 0.027f;
-		Vector3f px = curve1.getPoint(time-0.01f);
-		Vector3f py = curve1.getPoint(time+0.01f);
-		createLine(px,py);
-		
-		Vector3f pe = curve1.getPoint(time);
-		Vector3f pf = new Vector3f((py.x - px.x)/2+px.x, (py.y - px.y)/2+px.y, (py.z - px.z)/2+px.z);
-		//createLine(pe,pf);
-		createSphere(pe);
-		createSphere(px);
-		createSphere(py);
-		//createSphere(pf);
-		
-		//Cylinder c = new Cylinder("name", 10, 10, 2f, 3f);
-		//c.setLocalTranslation(pe);
-		//c.lookAt(px, Vector3f.UNIT_Y);
-		
-		//rootNode.attachChild(c);
-		
+		*/						
+				
 		///** Set a black background.*/
 		display.getRenderer().setBackgroundColor(ColorRGBA.black);
-		
+
+		display.setTitle("Whole Brain Catalog");
 		
 		
 		//====================================
@@ -215,7 +187,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		y = p1.getY();
 		z = p1.getZ();
 		
-		 Sphere s=new Sphere("My sphere",10,10,0.01f); //last number is radius
+		 Sphere s=new Sphere("My sphere",10,10,1f); //last number is radius
 		 s.setModelBound(new BoundingBox());
 		 s.updateModelBound();
 		 s.setRandomColors();
@@ -315,7 +287,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			if ( pr.getNumber() > 0)
 			{
 				//deselect the previous 
-				if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
+				//if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
 				
 				if (prevPick != null) {
 					/* this should be done in a listener after firing an event here*/
@@ -368,7 +340,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 					}
 				}
 				
-				prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
+				//prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
 				//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
 			} //end if of pr > 0
 		} //end if mouse button down

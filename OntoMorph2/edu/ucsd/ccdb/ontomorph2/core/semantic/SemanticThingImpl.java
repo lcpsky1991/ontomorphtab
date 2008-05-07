@@ -11,7 +11,7 @@ import edu.stanford.smi.protege.model.Slot;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISelectable;
 
-public class SemanticThingImpl extends Observable implements ISemanticThing, ISelectable {
+public class SemanticThingImpl extends Observable implements ISemanticThing {
 
 	Cls OWLClass = null;
 	Instance owlInstance = null;
@@ -31,8 +31,10 @@ public class SemanticThingImpl extends Observable implements ISemanticThing, ISe
 	public String getLabel() {
 //		must be done before getLabel() is run!!!
 		KnowledgeBase owlModel = SemanticRepository.getInstance().getOWLModel();
-		Slot rdfsLabel = owlModel.getSlot("rdfs:label");
+
 		String label = null;
+		
+		Slot rdfsLabel = owlModel.getSlot("rdfs:label");
 		if (owlModel != null) {
 
 			//Cls root = owlModel.getRootCls();
@@ -78,7 +80,8 @@ public class SemanticThingImpl extends Observable implements ISemanticThing, ISe
 	}
 
 	public void select() {
-		this.selected = false;
+		this.selected = true;
+		changed();
 	}
 	
 	public void changed() {

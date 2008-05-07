@@ -9,6 +9,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.scene.NeuronMorphologyImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SegmentGroupImpl;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.IView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.ViewImpl;
@@ -60,6 +61,15 @@ public class SceneObserver implements Observer{
 						infoString += ((NeuronMorphologyImpl)sg.getParentCell()).getSemanticThings();
 						ViewImpl.getInstance().getView2D().setInfoText(infoString);
 					}
+				}
+			}
+		} else if (o instanceof ISemanticThing) {
+			ISemanticThing st = (ISemanticThing)o;
+			for(ISemanticsAware sa : st.getSemanticsAwareAssociations()) {
+				if (st.isSelected()) {
+					sa.select();
+				} else if (!st.isSelected()) {
+					sa.unselect();
 				}
 			}
 		}

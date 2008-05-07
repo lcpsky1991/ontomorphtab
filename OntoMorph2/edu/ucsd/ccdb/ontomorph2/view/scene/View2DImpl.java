@@ -1,8 +1,13 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
+import java.util.ArrayList;
+
 import org.fenggui.ComboBox;
 import org.fenggui.Display;
+import org.fenggui.FengGUI;
+import org.fenggui.IContainer;
 import org.fenggui.ListItem;
+import org.fenggui.ScrollContainer;
 import org.fenggui.composites.TextArea;
 import org.fenggui.composites.Window;
 import org.fenggui.event.IMenuItemPressedListener;
@@ -13,9 +18,15 @@ import org.fenggui.layout.StaticLayout;
 import org.fenggui.menu.Menu;
 import org.fenggui.menu.MenuBar;
 import org.fenggui.menu.MenuItem;
+import org.fenggui.render.Pixmap;
+import org.fenggui.tree.ITreeModel;
+import org.fenggui.tree.Tree;
 import org.fenggui.util.Point;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.manager.SceneObjectManager.MyNode;
+
+import edu.ucsd.ccdb.ontomorph2.core.manager.SceneObjectManager;
+import edu.ucsd.ccdb.ontomorph2.core.scene.ISelectable;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 
 
@@ -37,7 +48,7 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 	 */
 	private static View2DImpl instance;
 	private TextArea infoText = null;
-
+	
 	protected TextArea getInfoText() {
 		if (infoText == null ) {
 			infoText = new TextArea();
@@ -177,40 +188,7 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 
 	
 	protected void loadCellChooser() {
-//		 Create a dialog and set it to some location on the screen
-		Window frame = new Window();
-		this.addWidget(frame);
-		frame.setX(20);
-		frame.setY(350);
-		frame.setSize(200, 100);
-		frame.setShrinkable(false);
-		//frame.setExpandable(true);
-		frame.setTitle("Pick a cell");
-		frame.getContentContainer().setLayoutManager(new StaticLayout());
-		
-		ComboBox<String> list = new ComboBox<String>();
-		frame.addWidget(list);
-		list.setSize(150, list.getMinHeight());
-		list.setShrinkable(false);
-		list.setX(25);
-		list.setY(25);
-		
-		for(INeuronMorphology c : ViewImpl.getInstance().getScene().getCells()) {
-			ListItem l = new ListItem();
-			l.setValue(c);
-			l.setText(c.getName());
-			list.addItem(l);
-		}
- 
-		list.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
-			{
-				if (!selectionChangedEvent.isSelected()) return;
-				INeuronMorphology value = (INeuronMorphology)selectionChangedEvent.getToggableWidget().getValue();
-				value.select();
-			}
-			
-		});
+		getCellTree(this);
 	}
 	
 	protected void loadFileChooser() {
@@ -252,6 +230,86 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 			}
 			
 		});
+	}
+	
+	//get a tree pane display showing cells and their semantic contents
+	private void getCellTree(Display display)
+	{
+		MyNode root = SceneObjectManager.getInstance().getCellTree();
+		
+		Window window = FengGUI.createWindow(display, true, false, false, true);
+		window.setTitle("Cells...");
+		
+		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
+		
+		Tree<MyNode> tree = this.<MyNode>createTree(sc);
+		
+		window.setSize(200, 300);
+		StaticLayout.center(window, display);
+		window.layout();
+		tree.setModel(new MyTreeModel(root));
+
+		tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
+			{
+				if (!selectionChangedEvent.isSelected()) {
+					MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+					n.value.unselect();
+					return;
+				}
+				MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+				n.value.select();
+				
+			}
+			
+		});
+	}
+	
+	/**
+	 * Create a Tree widget.
+	 * @param <T> type parameter
+	 * @param parent the parent container
+	 * @return new tree widget.
+	 */
+	private <T> Tree<T> createTree(IContainer parent)
+	{
+		Tree<T> result = new Tree<T>();
+		FengGUI.setUpAppearance(result);
+		parent.addWidget(result);
+		return result;
+	}
+
+	class MyTreeModel implements ITreeModel<MyNode>
+	{
+		MyNode root = null;
+		
+		public MyTreeModel(MyNode root) {
+			this.root = root;
+		}
+		public int getNumberOfChildren(MyNode node)
+		{
+			return node.children.size();
+		}
+
+		public Pixmap getPixmap(MyNode node)
+		{
+			return null;
+		}
+
+		public String getText(MyNode node)
+		{
+			return node.text;
+		}
+
+		public MyNode getRoot()
+		{
+			return root;
+		}
+
+		public MyNode getNode(MyNode parent, int index)
+		{
+			return parent.children.get(index);
+		}
 	}
 
 }

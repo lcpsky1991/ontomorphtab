@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import com.jme.bounding.BoundingSphere;
+import com.jme.curve.CurveController;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -30,6 +31,7 @@ import com.jme.util.AreaUtils;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.IPosition;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
@@ -52,10 +54,11 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
 	
 	INeuronMorphology currentMorph = null;
 	
+	CurveController _cc = null;
+	
 	public NeuronMorphologyViewImpl(INeuronMorphology morph) {
 		segViews = new ArrayList<ISegmentView>();
 		currentMorph = morph;
-		//this.attachChild(new AxisRods());
 		this.setMorphMLNeuron(this.loadscene(morph), morph);
 	}
 
@@ -94,6 +97,12 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
 		}
 		if (morph.getLookAtPosition() != null) {
 			this.lookAt(morph.getLookAtPosition().asVector3f(), Vector3f.UNIT_X);
+		}
+		if (morph.getCurve() != null) {
+			_cc = new CurveController((CurveImpl)morph.getCurve(), this);
+			_cc.setAutoRotation(true);
+			_cc.setUpVector(morph.getUpVector());
+			_cc.update(morph.getTime());
 		}
 		
 	}
