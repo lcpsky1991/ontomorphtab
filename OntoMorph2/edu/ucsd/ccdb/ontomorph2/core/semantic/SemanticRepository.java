@@ -2,12 +2,18 @@ package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import edu.stanford.smi.protege.model.Cls;
+import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Project;
+import edu.stanford.smi.protege.model.SimpleInstance;
 import edu.stanford.smi.protege.util.ApplicationProperties;
+import edu.stanford.smi.protegex.owl.model.impl.DefaultOWLIndividual;
+import edu.ucsd.ccdb.ontomorph2.core.manager.MyNode;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
@@ -55,6 +61,34 @@ public class SemanticRepository {
 		SemanticClassImpl s = new SemanticClassImpl(cls, uri);
 		s.addObserver(SceneObserver.getInstance());
 		return s;
+	}
+	
+	public MyNode getInstanceTree() {
+		MyNode root = new MyNode("Instances", null);
+		for (ISemanticInstance si : this.getCellInstances()) {
+			root.children.add(new MyNode(si.getLabel(), si));
+		}
+		return root;
+	}
+	
+	public List<ISemanticInstance> getInstancesFromRoot(Cls rootClass, List<ISemanticInstance> runningList) {
+		for (Iterator it = rootClass.getInstances().iterator(); it.hasNext(); ) {
+			Instance i = (Instance)it.next();
+			if (i instanceof SimpleInstance) {
+				SemanticInstanceImpl si = new SemanticInstanceImpl(i);
+				if (si.getLabel() != null) {
+					runningList.add(si);
+				}
+			}
+			
+		}
+		return runningList;
+	}
+	
+	public List<ISemanticInstance> getCellInstances() {
+		List<ISemanticInstance> l = new ArrayList<ISemanticInstance>();
+		
+		return getInstancesFromRoot(getSemanticClass("sao:sao1813327414").getCls(), l);
 	}
 	
 	private void loadOntology() {

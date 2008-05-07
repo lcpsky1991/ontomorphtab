@@ -59,6 +59,9 @@ public class SegmentImpl implements ISegment, ISemanticsAware {
 		return semanticThings;
 	}
 	
+	public List<ISemanticThing> getAllSemanticThings() {
+		return getSemanticThings();
+	}
 	
 	public void addSemanticThing(ISemanticThing thing) {
 		this.semanticThings.add(thing);

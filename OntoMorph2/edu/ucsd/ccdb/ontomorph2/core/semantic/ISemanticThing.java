@@ -2,6 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
 import java.util.List;
 
+import edu.stanford.smi.protege.model.Cls;
 import edu.ucsd.ccdb.ontomorph2.core.misc.IPopulation;
 import edu.ucsd.ccdb.ontomorph2.core.misc.IVariabilityTransformFunction;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
@@ -24,4 +25,6 @@ public interface ISemanticThing extends ISelectable{
 	public void removeSemanticsAwareAssociation(ISemanticsAware obj);
 	
 	public String getLabel();
+	
+	public Cls getCls();
 }

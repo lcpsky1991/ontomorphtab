@@ -64,6 +64,10 @@ public class MeshImpl extends SceneObjectImpl implements IMesh, ISemanticsAware,
 		return null;
 	}
 
+	public List<ISemanticThing> getAllSemanticThings() {
+		return getSemanticThings();
+	}
+	
 	public void addSemanticThing(ISemanticThing thing) {
 		// TODO Auto-generated method stub
 		

@@ -8,6 +8,7 @@ import org.fenggui.FengGUI;
 import org.fenggui.IContainer;
 import org.fenggui.ListItem;
 import org.fenggui.ScrollContainer;
+import org.fenggui.TextEditor;
 import org.fenggui.background.PlainBackground;
 import org.fenggui.border.Border;
 import org.fenggui.border.PlainBorder;
@@ -27,10 +28,11 @@ import org.fenggui.tree.Tree;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 
-import edu.ucsd.ccdb.ontomorph2.core.manager.SceneObjectManager.MyNode;
+import edu.ucsd.ccdb.ontomorph2.core.manager.MyNode;
 
 import edu.ucsd.ccdb.ontomorph2.core.manager.SceneObjectManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISelectable;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 
 
@@ -45,22 +47,48 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 	public static final String CELLS = "Cells...";
 	public static final String VOLUMES = "Volumes...";
 	public static final String SEMANTICS = "Semantics...";
+	public static final String LIST_INSTANCES = "List Instances...";
 
 	FengJMEInputHandler input;
 	/**
 	 * Holds singleton instance
 	 */
 	private static View2DImpl instance;
-	private TextArea infoText = null;
+	private TextEditor infoText = null;
 	
-	protected TextArea getInfoText() {
+	protected TextEditor getInfoText() {
 		if (infoText == null ) {
-			infoText = new TextArea();
-			infoText.setSize(300,100);
+			/*
+			Window window = FengGUI.createWindow(this, true, false, false, true);
+			window.getAppearance().removeAll();
+			
+			window.setTitle("info");
+			*/
+			/*ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
+			sc.getAppearance().removeAll();
+			sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
+			*/
+			
+			//infoText = FengGUI.createTextArea(window.getContentContainer());
+			infoText = FengGUI.createTextArea(this);
+			FengGUI.setUpAppearance(infoText);
+			infoText.setSize(300,80);
 			infoText.setExpandable(false);
 			infoText.setShrinkable(false);
+			infoText.setMultiline(true);
+			infoText.setWordWarp(true);
+			infoText.setSelectOnFocus(false);
 			infoText.setPosition(new Point(0,20));
-			//this.addWidget(infoText);
+			infoText.getAppearance().removeAll();
+			infoText.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
+			infoText.getAppearance().setTextColor(Color.WHITE);
+			infoText.getAppearance().add(new PlainBorder(Color.WHITE_HALF_OPAQUE));
+
+			//sc.addWidget(infoText);
+			//window.setSize(300, 100);
+			//StaticLayout.center(window, this);
+			//window.layout();
+			
 		}
 		return infoText;
 	}
@@ -110,9 +138,15 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
         volumes.addMenuItemPressedListener(this);
         semantics.addMenuItemPressedListener(this);
         objMenu.addItem(cells);
-        objMenu.addItem(volumes);
-        objMenu.addItem(semantics);
+        //objMenu.addItem(volumes);
+        //objMenu.addItem(semantics);
 		
+        Menu ckbMenu = new Menu();
+        mB.registerSubMenu(ckbMenu, "Cellular KB");
+        MenuItem listInstances = new MenuItem(LIST_INSTANCES);
+        listInstances.addMenuItemPressedListener(this);
+        ckbMenu.addItem(listInstances);
+        
         /*
 		//	 Create a dialog and set it to some location on the screen
 		Window frame = new Window();
@@ -186,6 +220,8 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 			
 		} else if (SEMANTICS.equals(arg0.getItem().getText())) {
 			
+		} else if (LIST_INSTANCES.equals(arg0.getItem().getText())) {
+			loadInstanceBrowser();
 		}
 	}
 	
@@ -252,7 +288,7 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 		Tree<MyNode> tree = this.<MyNode>createTree(sc);
 		
 		window.setSize(200, 300);
-		StaticLayout.center(window, display);
+		window.setPosition(new Point(0,100));
 		window.layout();
 		tree.setModel(new MyTreeModel(root));
 
@@ -266,6 +302,48 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 				}
 				MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
 				n.value.select();
+				
+			}
+			
+		});
+	}
+	
+//	get a tree pane display showing cells and their semantic contents
+	private void loadInstanceBrowser()
+	{
+		Display display = this;
+		MyNode root = SemanticRepository.getInstance().getInstanceTree();
+		
+		Window window = FengGUI.createWindow(display, true, false, false, true);
+		window.getAppearance().removeAll();
+		
+		window.setTitle("Instances..");
+		
+		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
+		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
+		
+		Tree<MyNode> tree = this.<MyNode>createTree(sc);
+		
+		window.setSize(200, 300);
+		//StaticLayout.center(window, display);
+		window.setPosition(new Point(0,100));
+		window.layout();
+		tree.setModel(new MyTreeModel(root));
+
+		tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
+			{
+				if (!selectionChangedEvent.isSelected()) {
+					MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+					if (n.value != null) {
+						n.value.unselect();
+					}
+					return;
+				}
+				MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+				if (n.value != null) {
+					n.value.select();
+				}
 				
 			}
 			

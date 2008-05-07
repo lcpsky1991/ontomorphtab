@@ -50,6 +50,7 @@ public class SceneObserver implements Observer{
 					struct3d.updateSelectedSegmentGroups(morph.getSelectedSegmentGroups());
 				}
 				//UPDATE INFO STRING ON VIEW 2D
+				
 				if (((INeuronMorphology)o).hasSelectedSegmentGroups()) {
 					for (ISegmentGroup isg : ((NeuronMorphologyImpl)o).getSelectedSegmentGroups()) {
 						SegmentGroupImpl sg = (SegmentGroupImpl)isg;

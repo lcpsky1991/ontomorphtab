@@ -93,6 +93,9 @@ public class VolumeImpl extends SceneObjectImpl implements IVolume, ISemanticsAw
 		return semanticThings;
 	}
 	
+	public List<ISemanticThing> getAllSemanticThings() {
+		return getSemanticThings();
+	}
 	
 	public void addSemanticThing(ISemanticThing thing) {
 		this.semanticThings.add(thing);

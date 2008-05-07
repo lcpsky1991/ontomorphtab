@@ -60,7 +60,7 @@ public class SceneObjectManager {
 		for (INeuronMorphology n : getCells()) {
 			MyNode node = new MyNode(n.getName(), n);
 			
-			for (ISemanticThing t : ((ISemanticsAware)n).getSemanticThings()) {	
+			for (ISemanticThing t : ((ISemanticsAware)n).getAllSemanticThings()) {	
 				node.children.add(new MyNode(t.getLabel(), t));
 			}
 			
@@ -116,17 +116,5 @@ public class SceneObjectManager {
 		}
 		return instance;
 	}
-	
-	public class MyNode
-	{
-		public MyNode(String string, ISelectable value)
-		{
-			this.text = string;
-			this.value = value;
-		}
-		
-		public ISelectable value = null;
-		public ArrayList<MyNode> children = new ArrayList<MyNode>();
-		public String text = null;
-	}
+
 }

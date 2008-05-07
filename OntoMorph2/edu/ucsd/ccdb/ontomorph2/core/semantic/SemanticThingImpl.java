@@ -19,6 +19,10 @@ public class SemanticThingImpl extends Observable implements ISemanticThing {
 	List<ISemanticsAware> semanticsAware = new ArrayList<ISemanticsAware>();
 	private boolean selected;
 	
+	public SemanticThingImpl() {
+		
+	}
+	
 	public SemanticThingImpl(Cls owlClass, String uri) {
 		OWLClass = owlClass;
 		this.URI = uri;
@@ -26,6 +30,10 @@ public class SemanticThingImpl extends Observable implements ISemanticThing {
 	
 	public SemanticThingImpl(Instance owlInstance) {
 		this.owlInstance = owlInstance;
+	}
+	
+	public Cls getCls() {
+		return OWLClass;
 	}
 	
 	public String getLabel() {

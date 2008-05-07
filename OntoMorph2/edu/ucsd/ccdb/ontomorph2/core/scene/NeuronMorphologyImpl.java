@@ -247,10 +247,14 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 	}
 
 	public List<ISemanticThing> getSemanticThings() {
+		return this.semanticThings;
+	}
+	
+	public List<ISemanticThing> getAllSemanticThings() {
 		List<ISemanticThing> l = new ArrayList<ISemanticThing>();
 		l.addAll(this.semanticThings);
 		for (ISegmentGroup sg : this.getSegmentGroups()) {
-			l.addAll(sg.getSemanticThings());
+			l.addAll(sg.getAllSemanticThings());
 		}
 		return l;
 	}

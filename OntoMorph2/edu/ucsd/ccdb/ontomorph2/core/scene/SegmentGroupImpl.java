@@ -40,11 +40,16 @@ public class SegmentGroupImpl implements ISegmentGroup, ISemanticsAware{
 		return tags;
 	}
 	
+	
 	public List<ISemanticThing> getSemanticThings() {
+		return this.semanticThings;
+	}
+	
+	public List<ISemanticThing> getAllSemanticThings() {
 		List<ISemanticThing> l = new ArrayList<ISemanticThing>();
 		l.addAll(this.semanticThings);
 		for (ISegment sg : this.getSegments()) {
-			l.addAll(sg.getSemanticThings());
+			l.addAll(sg.getAllSemanticThings());
 		}
 		return l;
 	}

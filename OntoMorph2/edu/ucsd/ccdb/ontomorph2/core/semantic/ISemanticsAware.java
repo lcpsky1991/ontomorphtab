@@ -14,4 +14,6 @@ public interface ISemanticsAware extends ISelectable{
 	public void addSemanticThing(ISemanticThing thing);
 	
 	public void removeSemanticThing(ISemanticThing thing);
+	
+	public List<ISemanticThing> getAllSemanticThings();
 }
