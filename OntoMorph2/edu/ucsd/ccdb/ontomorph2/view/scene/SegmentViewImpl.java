@@ -8,15 +8,18 @@ import com.jme.bounding.BoundingSphere;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.Geometry;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
+import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Cylinder;
+import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.RenderState;
 import com.jme.util.geom.BufferUtils;
 
@@ -175,6 +178,16 @@ public class SegmentViewImpl implements ISegmentView {
 		cyl.setRadius1(getBaseRadius());
 		cyl.setRadius2(getApexRadius());
 		//cyl.setColorBuffer(2, colorBuffer);
+		
+		AlphaState as = ViewImpl.getInstance().getRenderer().createAlphaState();
+	      as.setBlendEnabled(true);
+	      as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+	      as.setDstFunction(AlphaState.DB_ONE);
+	      as.setTestEnabled(true);
+	      as.setTestFunction(AlphaState.TF_GREATER);
+	      as.setEnabled(true);
+	    cyl.setRenderState(as);
+	    cyl.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 				
 		Quaternion q = new Quaternion();
 		q.lookAt(unit, Vector3f.UNIT_Y);

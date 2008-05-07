@@ -56,6 +56,17 @@ public class OMTDiscreteLodNode extends DiscreteLodNode {
 		this.addDiscreteLodNodeChild(l, minDistance, maxDistance);
 	}
 	
+	public void addDiscreteLodNodeChild(Spatial s, List<Geometry> g, int minDistance, int maxDistance) {
+//		set the min and max distance for this switch model
+    	this.getSwitchModel().setModelDistance(activeChildren, minDistance, maxDistance);
+    	//if geometries are present, add them to list
+		if (g != null) {
+			currentGeometries.add(activeChildren, g);
+		}
+		this.attachChildAt(s, activeChildren);
+		activeChildren++;
+	}
+	
 	public int attachChild(Spatial s) {
 		if (s instanceof Geometry) {
 			Geometry g = (Geometry)s;

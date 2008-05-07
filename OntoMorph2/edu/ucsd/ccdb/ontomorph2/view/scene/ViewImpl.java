@@ -70,6 +70,8 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 	float camRotationRate = FastMath.PI * 5 / 180;	//(FastMath.PI * X / 180) corresponds to X degrees per (FPS?) = Rate/UnitOfUpdate 
 	
 	org.fenggui.Display disp; // FengGUI's display
+	
+	float invZoom = 1.0f; //zoom amount
 
 	//there are two kinds of input, the FPS input and also FENG
 	FengJMEInputHandler menuinput;	
@@ -133,8 +135,12 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		//====================================
 		
 		///** Set up how our camera sees. */
+		float aspect = (float) display.getWidth() / (float) display.getHeight();
+		//cam.setParallelProjection(true);
 		//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
-		cam.setFrustumPerspective(45.0f, (float) display.getWidth() / (float) display.getHeight(), 1, 1000);
+		cam.setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
+		cam.update();
+		//cam.setFrustumPerspective(45.0f, aspect, 1, 1000);
 		
 		//a locaiton on the Z axis a ways away
 		Vector3f loc = new Vector3f(0, -3f, -400.0f);
@@ -248,6 +254,9 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_down", KeyInput.KEY_DOWN);
 		
 		KeyBindingManager.getKeyBindingManager().set("info", KeyInput.KEY_I);
+		
+		KeyBindingManager.getKeyBindingManager().set("zoom_in", KeyInput.KEY_Z);
+		KeyBindingManager.getKeyBindingManager().set("zoom_out", KeyInput.KEY_X);
 		
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
@@ -371,7 +380,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			{
 				//key right
 				Quaternion roll = new Quaternion();
-				roll.fromAngleAxis( -camRotationRate, Vector3f.UNIT_Y ); //rotates Rate degrees
+				roll.fromAngleAxis( -camRotationRate*invZoom, Vector3f.UNIT_Y ); //rotates Rate degrees
 				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
 				camNode.setLocalRotation(roll);
 			}
@@ -380,7 +389,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			if ( isAction("cam_turn_ccw"))	
 			{ //left key
 				Quaternion roll = new Quaternion();
-				roll.fromAngleAxis( camRotationRate, Vector3f.UNIT_Y ); //rotates Rate degrees
+				roll.fromAngleAxis( camRotationRate*invZoom, Vector3f.UNIT_Y ); //rotates Rate degrees
 				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
 				camNode.setLocalRotation(roll);
 			}
@@ -388,7 +397,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			if ( isAction("cam_turn_down"))	
 			{ //down
 				Quaternion roll = new Quaternion();
-				roll.fromAngleAxis( camRotationRate, Vector3f.UNIT_X );//rotates Rate degrees
+				roll.fromAngleAxis( camRotationRate*invZoom, Vector3f.UNIT_X );//rotates Rate degrees
 				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
 				camNode.setLocalRotation(roll);
 			}
@@ -396,7 +405,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 			if ( isAction("cam_turn_up"))	
 			{ //up
 				Quaternion roll = new Quaternion();
-				roll.fromAngleAxis( -camRotationRate, Vector3f.UNIT_X ); //rotates Rate degrees
+				roll.fromAngleAxis( -camRotationRate*invZoom, Vector3f.UNIT_X ); //rotates Rate degrees
 				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
 				camNode.setLocalRotation(roll);
 			}
@@ -417,7 +426,27 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 				logger.log(Level.INFO, "\nResetting");
 				Quaternion q = new Quaternion();
 				q.fromAxes(Vector3f.UNIT_X, Vector3f.UNIT_Y,Vector3f.UNIT_Z);
+				invZoom = 1.0f;
+				cam.setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
+				cam.update();
 				camNode.setLocalRotation(q);
+				
+			}
+			
+			if ( isAction("zoom_in")) {
+				invZoom -= 0.01f;
+				//float aspect = (float) display.getWidth() / (float) display.getHeight();
+				cam.setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
+				//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
+				cam.update();
+			}
+			
+			if ( isAction("zoom_out")) {
+				invZoom += 0.01f;
+				//float aspect = (float) display.getWidth() / (float) display.getHeight();
+				cam.setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
+				//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
+				cam.update();
 			}
 			
 		}//end key input
@@ -474,13 +503,15 @@ public class ViewImpl extends BaseSimpleGame implements IView{
         /** Call simpleRender() in any derived classes. */
         simpleRender();
         
-		// Then we display the GUI
-		disp.display();
+
         
         /** Draw the fps node to show the fancy information at the bottom. */
         r.draw(fpsNode);
         
         doDebug(r);
+        
+		// Then we display the GUI
+		disp.display();
     }
 
 	 /**

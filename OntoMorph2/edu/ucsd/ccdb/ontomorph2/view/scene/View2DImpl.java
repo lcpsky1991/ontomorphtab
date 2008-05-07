@@ -8,6 +8,9 @@ import org.fenggui.FengGUI;
 import org.fenggui.IContainer;
 import org.fenggui.ListItem;
 import org.fenggui.ScrollContainer;
+import org.fenggui.background.PlainBackground;
+import org.fenggui.border.Border;
+import org.fenggui.border.PlainBorder;
 import org.fenggui.composites.TextArea;
 import org.fenggui.composites.Window;
 import org.fenggui.event.IMenuItemPressedListener;
@@ -21,6 +24,7 @@ import org.fenggui.menu.MenuItem;
 import org.fenggui.render.Pixmap;
 import org.fenggui.tree.ITreeModel;
 import org.fenggui.tree.Tree;
+import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 
 import edu.ucsd.ccdb.ontomorph2.core.manager.SceneObjectManager.MyNode;
@@ -238,9 +242,12 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 		MyNode root = SceneObjectManager.getInstance().getCellTree();
 		
 		Window window = FengGUI.createWindow(display, true, false, false, true);
+		window.getAppearance().removeAll();
+		
 		window.setTitle("Cells...");
 		
 		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
+		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
 		
 		Tree<MyNode> tree = this.<MyNode>createTree(sc);
 		
@@ -275,6 +282,11 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 	{
 		Tree<T> result = new Tree<T>();
 		FengGUI.setUpAppearance(result);
+		result.getAppearance().removeAll();
+		result.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
+		result.getAppearance().setTextColor(Color.WHITE);
+		result.getAppearance().add(new PlainBorder(Color.WHITE_HALF_OPAQUE));
+		
 		parent.addWidget(result);
 		return result;
 	}

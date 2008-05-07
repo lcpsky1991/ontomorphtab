@@ -24,7 +24,7 @@
 			<property name="bounds_setted_by_user" value="true"/>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.app.OntoMorph2">
-			<property name="bounds" value="5,9,96,80"/>
+			<property name="bounds" value="5,9,90,80"/>
 			<property name="location_set_by_user" value="true"/>
 		</reference>
 		<reference referencedUin="jdt:e_class:src:edu.ucsd.ccdb.ontomorph2.view.ViewImpl">

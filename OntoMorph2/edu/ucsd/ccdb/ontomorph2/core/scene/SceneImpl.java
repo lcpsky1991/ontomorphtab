@@ -234,10 +234,11 @@ public class SceneImpl extends Observable implements IScene {
 		IMesh mesh = new MeshImpl();
 		//mesh.loadMaxFile("etc/mito/mito_outer.3ds");
 		mesh.loadObjFile("etc/mito/mito_outer.obj");
-		mesh.setPosition(new PositionImpl(-10, -5, 20));
+		mesh.setPosition(new PositionImpl(0.49f, -3.5f, 20.01f));
 		mesh.setRotation(new RotationImpl(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_X));
-		mesh.setScale(0.0005f);
-		//addSceneObject(mesh);
+		mesh.setScale(0.0002f);
+	
+		addSceneObject(mesh);
 		
 		changed();
 	}
