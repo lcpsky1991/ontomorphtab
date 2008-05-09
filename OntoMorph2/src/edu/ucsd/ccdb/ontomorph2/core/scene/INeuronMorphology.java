@@ -6,8 +6,6 @@ import java.util.Set;
 
 import com.jme.math.Vector3f;
 
-import edu.ucsd.ccdb.ontomorph2.core.misc.IPrototype;
-import edu.ucsd.ccdb.ontomorph2.core.misc.MorphologyRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.IPosition;
 
@@ -38,9 +36,6 @@ public interface INeuronMorphology extends ISceneObject{
 	 */
 	java.util.Collection lnkSegmentGroup = null;
 
-	public IPrototype lnkPrototype = null;
-
-	public MorphologyRepository lnkMorphologyRepository = null;
 
 	/**
 	 * Get the URL for the MorphML file that corresponds to this INeuronMorphology
