@@ -24,6 +24,7 @@ import com.jme.math.Vector3f;
 import com.jme.scene.shape.Box;
 
 import edu.ucsd.ccdb.ontomorph2.core.manager.SceneObjectManager;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
@@ -36,11 +37,13 @@ public class SceneImpl extends Observable implements IScene {
 	
 	SceneObjectManager manager = null;
 	
-	//String baseDir = "C:\\Documents and Settings\\stephen\\workspace2\\OntoMorph2";
-	String baseDir = ".";
-	String imgDir = baseDir + "/etc/img";
-	String morphMLDir = baseDir + "/etc/morphml/hippocampus";
-	String mitoDir = baseDir + "/etc/mito";
+	public static final String baseDir = "." + File.separatorChar + "etc" + File.separatorChar;
+	public static final String imgDir = baseDir + "img" + File.separatorChar;
+	public static final String morphMLDir = baseDir + "morphml" 
+											+ File.separatorChar + "hippocampus" + File.separatorChar;
+	public static final String mitoDir = baseDir + File.separatorChar + "mito" + File.separatorChar;
+	public static final String allenMeshDir = baseDir + File.separatorChar + "allen" 
+											+ File.separatorChar + "Mesh25" + File.separatorChar;
 	
 	URL cell3URL = null;
 	URL cell4URL = null;
@@ -59,22 +62,21 @@ public class SceneImpl extends Observable implements IScene {
 		manager = SceneObjectManager.getInstance();
 				
 		try {
-			cell3URL = new File(morphMLDir + "/cell1zr.morph.xml").toURI().toURL();
-			cell4URL = new File(morphMLDir + "/cell2zr.morph.xml").toURI().toURL();
-			cell5URL = new File(morphMLDir + "/cell6zr.morph.xml").toURI().toURL();
-			cell6URL = new File(morphMLDir + "/pc1c.morph.xml").toURI().toURL();
-			cell7URL = new File(morphMLDir + "/pc2a.morph.xml").toURI().toURL();
-			cell11URL = new File(morphMLDir + "/5199202a.morph.xml").toURI().toURL();
-			mitoObjURL = new File(mitoDir + "/mito_outer.obj").toURI().toURL();
+			cell3URL = new File(morphMLDir + "cell1zr.morph.xml").toURI().toURL();
+			cell4URL = new File(morphMLDir + "cell2zr.morph.xml").toURI().toURL();
+			cell5URL = new File(morphMLDir + "cell6zr.morph.xml").toURI().toURL();
+			cell6URL = new File(morphMLDir + "pc1c.morph.xml").toURI().toURL();
+			cell7URL = new File(morphMLDir + "pc2a.morph.xml").toURI().toURL();
+			cell11URL = new File(morphMLDir + "5199202a.morph.xml").toURI().toURL();
+			mitoObjURL = new File(mitoDir + "mito_outer.obj").toURI().toURL();
 			
-			hippo1URL = new File(imgDir + "/hippo_slice1.jpg").toURI().toURL();
-			hippo2URL = new File(imgDir + "/hippo_slice2.jpg").toURI().toURL();
-			hippo3aURL = new File(imgDir + "/hippo_slice3a.jpg").toURI().toURL();
-			hippo3bURL = new File(imgDir + "/hippo_slice3b.jpg").toURI().toURL();
-			hippo3cURL = new File(imgDir + "/hippo_slice3c.jpg").toURI().toURL();
+			hippo1URL = new File(imgDir + "hippo_slice1.jpg").toURI().toURL();
+			hippo2URL = new File(imgDir + "hippo_slice2.jpg").toURI().toURL();
+			hippo3aURL = new File(imgDir + "hippo_slice3a.jpg").toURI().toURL();
+			hippo3bURL = new File(imgDir + "hippo_slice3b.jpg").toURI().toURL();
+			hippo3cURL = new File(imgDir + "hippo_slice3c.jpg").toURI().toURL();
 			
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -160,24 +162,27 @@ public class SceneImpl extends Observable implements IScene {
 		
 
 		
-		NeuronMorphologyImpl cell3 = new NeuronMorphologyImpl(cell3URL, c2, 0.03f, INeuronMorphology.RENDER_AS_LOD_2);
+		NeuronMorphologyImpl cell3 = new NeuronMorphologyImpl(cell3URL, c2, 0.03f, 
+				INeuronMorphology.RENDER_AS_LOD_2);
 		cell3.setScale(0.01f);
-		//semantic thing for hippocampal CA1 neuron
-		cell3.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("nif_cell:nifext_158"));
+		//semantic thing for hippocampal CA3 neuron
+		cell3.addSemanticClass(ISemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
 		addSceneObject(cell3);
 
 		
 		
 		
-		NeuronMorphologyImpl cell4 = new NeuronMorphologyImpl(cell4URL, c2, 0.2f, INeuronMorphology.RENDER_AS_LOD);
+		NeuronMorphologyImpl cell4 = new NeuronMorphologyImpl(cell4URL, c2, 0.2f, 
+				INeuronMorphology.RENDER_AS_LOD);
 		cell4.setScale(0.01f);
-		cell4.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("nif_cell:nifext_158"));
+		cell4.addSemanticClass(ISemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
 		addSceneObject(cell4);
 		
 		
-		NeuronMorphologyImpl cell5 = new NeuronMorphologyImpl(cell5URL, c2, 0.35f, INeuronMorphology.RENDER_AS_LOD);
+		NeuronMorphologyImpl cell5 = new NeuronMorphologyImpl(cell5URL, c2, 0.35f, 
+				INeuronMorphology.RENDER_AS_LOD);
 		cell5.setScale(0.01f);
-		cell5.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("nif_cell:nifext_158"));
+		cell5.addSemanticClass(ISemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
 		addSceneObject(cell5);
 		
 
@@ -186,19 +191,21 @@ public class SceneImpl extends Observable implements IScene {
 		 *  Curve may need different model vectors for different NeuronMorphologies
 		 */
 
-		NeuronMorphologyImpl cell6 = new NeuronMorphologyImpl(cell6URL, c2, 0.8f, INeuronMorphology.RENDER_AS_LOD);
+		NeuronMorphologyImpl cell6 = new NeuronMorphologyImpl(cell6URL, c2, 0.8f, 
+				INeuronMorphology.RENDER_AS_LOD);
 		//NeuronMorphologyImpl cell6 = new NeuronMorphologyImpl(cell6URL, null, null, INeuronMorphology.RENDER_AS_LOD);
 		cell6.setScale(0.02f);
 		cell6.setUpVector(new Vector3f(1,0,0));
-		cell6.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("nif_cell:nifext_157"));
+		cell6.addSemanticClass(ISemanticClass.CA1_PYRAMIDAL_CELL_CLASS);
 		//addSceneObject(cell6);
 				
 		
 
-		NeuronMorphologyImpl cell7 = new NeuronMorphologyImpl(cell7URL, c2, 0.91f, INeuronMorphology.RENDER_AS_LOD);
+		NeuronMorphologyImpl cell7 = new NeuronMorphologyImpl(cell7URL, c2, 0.91f, 
+				INeuronMorphology.RENDER_AS_LOD);
 		cell7.setScale(0.02f);
 		cell7.setUpVector(new Vector3f(1,0,0));
-		cell7.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("nif_cell:nifext_157"));
+		cell7.addSemanticClass(ISemanticClass.CA1_PYRAMIDAL_CELL_CLASS);
 		//addSceneObject(cell7);
 		
 		/*
@@ -218,7 +225,7 @@ public class SceneImpl extends Observable implements IScene {
 			NeuronMorphologyImpl cell11 = new NeuronMorphologyImpl(cell11URL, curve1, ((float)i)/20f-0.01f, 
 					INeuronMorphology.RENDER_AS_LOD);
 			cell11.setScale(0.01f);
-			cell11.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("nif_cell:nifext_153"));
+			cell11.addSemanticClass(ISemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS);
 			addSceneObject(cell11);
 		}
 		
@@ -278,7 +285,7 @@ public class SceneImpl extends Observable implements IScene {
 		mesh.setRotation(new RotationImpl(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_X));
 		mesh.setScale(0.0002f);
 	
-		addSceneObject(mesh);
+		//addSceneObject(mesh);
 		
 		changed();
 	}

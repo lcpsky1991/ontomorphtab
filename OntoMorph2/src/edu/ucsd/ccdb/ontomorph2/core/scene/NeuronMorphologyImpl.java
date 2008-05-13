@@ -267,6 +267,10 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 	public void removeSemanticThing(ISemanticThing thing) {
 		semanticThings.remove(thing);
 	}
+	
+	public void addSemanticClass(String classURI) {
+		semanticThings.add(SemanticRepository.getInstance().getSemanticClass(classURI));
+	}
 
 	public void positionAlongCurve(ICurve c, float time) {
 		setPosition(new PositionImpl(((CurveImpl)c).getPoint(time)));

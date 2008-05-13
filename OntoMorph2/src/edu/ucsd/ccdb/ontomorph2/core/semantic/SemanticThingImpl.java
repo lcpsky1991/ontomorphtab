@@ -35,29 +35,7 @@ public class SemanticThingImpl extends Observable implements ISemanticThing {
 	}
 	
 	public String getLabel() {
-//		must be done before getLabel() is run!!!
-		KnowledgeBase owlModel = SemanticRepository.getInstance().getOWLModel();
-
-		String label = null;
-		
-		Slot rdfsLabel = owlModel.getSlot("rdfs:label");
-		if (owlModel != null) {
-
-			//Cls root = owlModel.getRootCls();
-			//Cls entity = owlModel.getCls("bfo:Entity");
-			//System.out.println("The root class is: " + entity.getName());
-			//Node rootNode = getTree().addRoot();
-			rdfsLabel = owlModel.getSlot("rdfs:label");
-			label = (String)this.OWLClass.getDirectOwnSlotValue(rdfsLabel);
-			String prefix = null;//owlModel.getPrefixForResourceName(entity.getName());
-			if (prefix != null) {
-				label =  prefix + ":" + label;
-			}
-			if (this.URI != null) {
-				label = label + "(" + this.URI + ")";
-			}
-		}
-		return label;
+		return SemanticRepository.getInstance().getClassLabel(OWLClass, URI);
 	}
 	
 	public String toString() {

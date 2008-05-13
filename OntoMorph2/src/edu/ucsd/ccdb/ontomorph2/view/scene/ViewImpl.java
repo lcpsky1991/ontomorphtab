@@ -1,5 +1,8 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.FloatBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +38,7 @@ import com.jme.util.geom.Debugger;
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.IScene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
+import edu.ucsd.ccdb.ontomorph2.util.ABEMeshLoader;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 
 
@@ -114,6 +118,19 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		
 		rootNode.attachChild(s);
 		*/						
+		
+		/*
+		ABEMeshLoader meshLoader = new ABEMeshLoader();
+		URL DGURL = null;
+		try {
+			DGURL = new File(SceneImpl.allenMeshDir + "DG.msh").toURI().toURL();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rootNode.attachChild(meshLoader.load(DGURL));
+		*/
+		
 				
 		///** Set a black background.*/
 		display.getRenderer().setBackgroundColor(ColorRGBA.black);

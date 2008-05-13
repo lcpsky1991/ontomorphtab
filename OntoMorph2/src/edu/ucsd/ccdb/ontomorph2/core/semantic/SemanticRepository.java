@@ -1,5 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,6 +12,7 @@ import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.model.SimpleInstance;
+import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protege.util.ApplicationProperties;
 import edu.stanford.smi.protegex.owl.model.impl.DefaultOWLIndividual;
 import edu.ucsd.ccdb.ontomorph2.core.manager.MyNode;
@@ -49,14 +51,16 @@ public class SemanticRepository {
 
 	public ISemanticClass getSemanticClass(String uri) {
 		Cls cls = null;
-		try {
-			cls = clsFlyweightStore.get(uri);
-			if (cls == null) {
-				cls = owlModel.getCls(uri);
-				clsFlyweightStore.put(uri, cls);
+		if (owlModel != null) {
+			try {
+				cls = clsFlyweightStore.get(uri);
+				if (cls == null) {
+					cls = owlModel.getCls(uri);
+					clsFlyweightStore.put(uri, cls);
+				}
+			} catch (Exception e ) {
+				throw new OMTException("Problem finding URI in semantic repository" + uri, e);
 			}
-		} catch (Exception e ) {
-			throw new OMTException("Problem finding URI in semantic repository" + uri, e);
 		}
 		SemanticClassImpl s = new SemanticClassImpl(cls, uri);
 		s.addObserver(SceneObserver.getInstance());
@@ -71,7 +75,14 @@ public class SemanticRepository {
 		return root;
 	}
 	
-	public List<ISemanticInstance> getInstancesFromRoot(Cls rootClass, List<ISemanticInstance> runningList) {
+	/**
+	 * Get the Instances in the database for all children of the root rootClass
+	 * 
+	 * @param rootClass - the class at the top of the hierarchy from which you want to retrieve instances
+	 * @return
+	 */
+	public List<ISemanticInstance> getInstancesFromRoot(Cls rootClass) {
+		List<ISemanticInstance> runningList = new ArrayList<ISemanticInstance>();
 		for (Iterator it = rootClass.getInstances().iterator(); it.hasNext(); ) {
 			Instance i = (Instance)it.next();
 			if (i instanceof SimpleInstance) {
@@ -84,13 +95,17 @@ public class SemanticRepository {
 		}
 		return runningList;
 	}
-	
+
+	/**
+	 * Get all instances in the database under the root of Cell
+	 * @return a list of ISemanticInstances
+	 */
 	public List<ISemanticInstance> getCellInstances() {
-		List<ISemanticInstance> l = new ArrayList<ISemanticInstance>();
-		
-		return getInstancesFromRoot(getSemanticClass("sao:sao1813327414").getCls(), l);
+		return getInstancesFromRoot(getSemanticClass("sao:sao1813327414").getCls());
 	}
 	
+	//initialize the semantic repository by connecting to the 
+	//database and retriving a knowledge base object
 	private void loadOntology() {
     	try {
     		    		
@@ -141,7 +156,7 @@ public class SemanticRepository {
     			
     		}*/
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		throw new OMTException("Cannot connect to OWL Database!", e);
     	}	
     }
 
@@ -154,5 +169,34 @@ public class SemanticRepository {
 			instance = new SemanticRepository();
 		}
 		return instance;
+	}
+
+	/**
+	 * Retrieve the rdfs:Label for an OWL Class from the database
+	 */
+	public String getClassLabel(Cls OWLClass, String URI) {
+//		must be done before getLabel() is run!!!
+
+		String label = null;
+		
+		if (owlModel != null) {
+			Slot rdfsLabel = owlModel.getSlot("rdfs:label");
+			
+			//Cls root = owlModel.getRootCls();
+			//Cls entity = owlModel.getCls("bfo:Entity");
+			//System.out.println("The root class is: " + entity.getName());
+			//Node rootNode = getTree().addRoot();
+			rdfsLabel = owlModel.getSlot("rdfs:label");
+			label = (String)OWLClass.getDirectOwnSlotValue(rdfsLabel);
+			String prefix = null;//owlModel.getPrefixForResourceName(entity.getName());
+			if (prefix != null) {
+				label =  prefix + ":" + label;
+			}
+			if (URI != null) {
+				label = label + "(" + URI + ")";
+			}
+		}			
+		return label;
+
 	}
 }
