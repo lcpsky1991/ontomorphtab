@@ -3,6 +3,7 @@ package edu.ucsd.ccdb.ontomorph2.view.scene;
 import java.util.List;
 import java.util.Set;
 
+import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.IMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISlide;
@@ -23,4 +24,6 @@ public interface IView3D {
 	public void setSurfaces(Set<ISurface> surfaces);
 	public void setMeshes(Set<IMesh> meshes);
 	public void setVolumes(Set<IVolume> volumes);
+	public void displayBrainRegion(BrainRegion br);
+	public void unDisplayBrainRegion(BrainRegion br);
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.FloatBuffer;
@@ -16,6 +17,8 @@ import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.TriangleBatch;
 import com.jme.util.geom.BufferUtils;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
+
 /**
  * A pure java implementation of a mesh reader that can read the format that 
  * the Allen Brain Institute has encoded meshes that are derived from an atlas
@@ -27,6 +30,7 @@ import com.jme.util.geom.BufferUtils;
  * followed by a list of indices describing triangle strips. 
  * (http://en.wikipedia.org/wiki/Triangle_strip) 
  * The byte order is little endian. 
+ * (http://en.wikipedia.org/wiki/Little_endian#Little-endian)
 
 <code>
 unsigned int numberOfPoints
@@ -50,7 +54,7 @@ array of triangleStrips
  * @author stephen
  *
  */
-public class ABEMeshLoader {
+public class AllenAtlasMeshLoader {
 
 	int sizeOfUnsignedInt = 4;
 	int sizeOfFloat = 4;
@@ -68,6 +72,16 @@ public class ABEMeshLoader {
 	List<TriangleBatch> triangleStrips = null;
 	private FloatBuffer verticesBuff;
 	private FloatBuffer normalsBuff;
+	
+	public BatchMesh loadByAbbreviation(String abbrev) {
+		try {
+			return load(new File(SceneImpl.allenMeshDir + abbrev + ".msh").toURI().toURL());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	public BatchMesh load(URL filePath) { 
 		triangleStrips = new ArrayList<TriangleBatch>();
@@ -126,6 +140,7 @@ public class ABEMeshLoader {
 			e.printStackTrace();
 		}
 		
+		//System.gc();
 		return new BatchMesh("object", (GeomBatch[])triangleStrips.toArray(new GeomBatch[1]));
 	}
 
@@ -162,6 +177,8 @@ public class ABEMeshLoader {
      * problem we started with. No problem, just cast your int to long, then do the
      *  bitwise AND with 0xFFFFFFFFL. (Note the trailing L to tell Java this is a 
      *  literal of type 'long' integer.) 
+     *  
+     *  Modified for little endianness (http://en.wikipedia.org/wiki/Little_endian#Little-endian)
 	 */
 	private int convertByteArrayToInt(byte[] buf) {
 		int firstByte = 0;
@@ -243,7 +260,7 @@ public class ABEMeshLoader {
 			floats[j++] = convertByteArrayToFloat(points, i);
 		}
 		
-		points = null;
+		points = null; //make space
 		
 		normals = new ArrayList<Vector3f>();
 		vertices = new ArrayList<Vector3f>();
@@ -253,6 +270,7 @@ public class ABEMeshLoader {
 			normals.add(new Vector3f(floats[k], floats[k+1], floats[k+2]));
 			vertices.add(new Vector3f(floats[k+3], floats[k+4], floats[k+5]));
 		}
+		floats = null;//make space
 	}
 
 	private FloatBuffer getVerts() {

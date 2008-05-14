@@ -41,6 +41,8 @@ import com.jme.app.SimpleGame;
 	import com.jme.scene.batch.TriangleBatch;
 import com.jme.util.geom.BufferUtils;
 
+import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 
 	/**
@@ -48,14 +50,14 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 	 * @author Joshua Slack
 	 * @version $Id: TestTriangleStrip.java,v 1.1 2006/06/01 15:05:47 nca Exp $
 	 */
-	public class TestABEMeshLoader extends SimpleGame {
+	public class TestReferenceAtlas extends SimpleGame {
 	  /**
 	   * Entry point for the test,
 	   * @param args
 	   */
 	  public static void main(String[] args) {
-	    TestABEMeshLoader app = new TestABEMeshLoader();
-	    app.setDialogBehaviour(ALWAYS_SHOW_PROPS_DIALOG);
+	    TestReferenceAtlas app = new TestReferenceAtlas();
+	    app.setDialogBehaviour(NEVER_SHOW_PROPS_DIALOG);
 	    app.start();
 	  }
 
@@ -66,14 +68,11 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 	    display.setTitle("Test Triangle Strips");
 	    
 
-		AllenAtlasMeshLoader meshLoader = new AllenAtlasMeshLoader();
-		URL DGURL = null;
-		try {
-			DGURL = new File(SceneImpl.allenMeshDir + "DG.msh").toURI().toURL();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		rootNode.attachChild(meshLoader.load(DGURL));
+		ReferenceAtlas atlas = ReferenceAtlas.getInstance();
+		/*
+		for (BrainRegion r : atlas.getBrainRegions()) {
+			rootNode.attachChild(r.getMesh());
+		}*/
+		rootNode.attachChild(atlas.getBrainRegion("CB").getMesh());
 	  }
 	}

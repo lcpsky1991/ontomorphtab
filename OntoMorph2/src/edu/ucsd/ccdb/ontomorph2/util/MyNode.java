@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.manager;
+package edu.ucsd.ccdb.ontomorph2.util;
 
 import java.util.ArrayList;
 
@@ -16,5 +16,16 @@ public class MyNode
 	public ISelectable value = null;
 	public ArrayList<MyNode> children = new ArrayList<MyNode>();
 	public String text = null;
+	
+	public int hashCode() {
+		int hashCode = 0;
+		if (this.text != null) {
+			hashCode += this.text.hashCode();
+		}
+		if (this.value != null) {
+			hashCode += this.value.hashCode();
+		}
+		return hashCode;
+	}
 }
 

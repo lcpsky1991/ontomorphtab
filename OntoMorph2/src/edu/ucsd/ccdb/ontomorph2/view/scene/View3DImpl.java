@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.jme.scene.Node;
 
+import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.IMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISlide;
@@ -23,6 +24,7 @@ public class View3DImpl extends Node implements IView3D {
 	private Node surfacesNode = null;
 	private Node meshesNode = null;
 	private Node volumesNode = null;
+	private Node atlasNode = null;
 	private Set<INeuronMorphologyView> cells = null;
 	private Set<VolumeViewImpl> volumes = null;
 	
@@ -33,6 +35,7 @@ public class View3DImpl extends Node implements IView3D {
 		surfacesNode = new Node();
 		meshesNode = new Node();
 		volumesNode = new Node();
+		atlasNode = new Node();
 		cells = new HashSet<INeuronMorphologyView>();
 		volumes = new HashSet<VolumeViewImpl>();
 		this.attachChild(slidesNode);
@@ -41,6 +44,7 @@ public class View3DImpl extends Node implements IView3D {
 		this.attachChild(surfacesNode);
 		this.attachChild(meshesNode);
 		this.attachChild(volumesNode);
+		this.attachChild(atlasNode);
 	}
 	
 	public void setSlides(List<ISlide> slides) {
@@ -101,6 +105,16 @@ public class View3DImpl extends Node implements IView3D {
 	
 	public Set<VolumeViewImpl> getVolumes() {
 		return volumes;
+	}
+
+	public void displayBrainRegion(BrainRegion br) {
+		atlasNode.attachChild(br.getMesh());
+	}
+
+	public void unDisplayBrainRegion(BrainRegion br) {
+		atlasNode.detachChild(br.getMesh());
+		br.destroyMesh();
+
 	}
 	
 }

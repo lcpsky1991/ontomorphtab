@@ -3,6 +3,7 @@ package edu.ucsd.ccdb.ontomorph2.observers;
 import java.util.Observable;
 import java.util.Observer;
 
+import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.IScene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
@@ -68,6 +69,13 @@ public class SceneObserver implements Observer{
 				} else if (!st.isSelected()) {
 					sa.unselect();
 				}
+			}
+		} else if (o instanceof BrainRegion) {
+			BrainRegion br = (BrainRegion)o;
+			if (br.isSelected()) {
+				ViewImpl.getInstance().getView3D().displayBrainRegion(br);
+			} else {
+				ViewImpl.getInstance().getView3D().unDisplayBrainRegion(br);
 			}
 		}
 	}

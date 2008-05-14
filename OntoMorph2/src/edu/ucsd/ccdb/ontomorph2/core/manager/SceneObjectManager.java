@@ -14,6 +14,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ISurface;
+import edu.ucsd.ccdb.ontomorph2.util.MyNode;
 
 
 /**

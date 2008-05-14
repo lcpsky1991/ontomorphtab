@@ -28,12 +28,13 @@ import org.fenggui.tree.Tree;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 
-import edu.ucsd.ccdb.ontomorph2.core.manager.MyNode;
 
+import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.manager.SceneObjectManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISelectable;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
+import edu.ucsd.ccdb.ontomorph2.util.MyNode;
 
 
 /**
@@ -48,6 +49,7 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 	public static final String VOLUMES = "Volumes...";
 	public static final String SEMANTICS = "Semantics...";
 	public static final String LIST_INSTANCES = "List Instances...";
+	public static final String SHOW_ATLAS = "Show Atlas...";
 
 	FengJMEInputHandler input;
 	/**
@@ -147,6 +149,12 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
         listInstances.addMenuItemPressedListener(this);
         ckbMenu.addItem(listInstances);
         
+        Menu atlasMenu = new Menu();
+        mB.registerSubMenu(atlasMenu, "Reference Atlas");
+        MenuItem showAtlas = new MenuItem(SHOW_ATLAS);
+        showAtlas.addMenuItemPressedListener(this);
+        atlasMenu.addItem(showAtlas);
+        
         /*
 		//	 Create a dialog and set it to some location on the screen
 		Window frame = new Window();
@@ -222,13 +230,81 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 			
 		} else if (LIST_INSTANCES.equals(arg0.getItem().getText())) {
 			loadInstanceBrowser();
+		} else if (SHOW_ATLAS.endsWith(arg0.getItem().getText())) {
+			loadAtlasBrowser();
 		}
 	}
 	
 
 	
 	protected void loadCellChooser() {
-		getCellTree(this);
+		MyNode root = SceneObjectManager.getInstance().getCellTree();
+		
+		Window window = FengGUI.createWindow(this, true, false, false, true);
+		window.getAppearance().removeAll();
+		
+		window.setTitle("Cells...");
+		
+		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
+		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
+		
+		Tree<MyNode> tree = this.<MyNode>createTree(sc);
+		
+		window.setSize(200, 300);
+		window.setPosition(new Point(0,100));
+		window.layout();
+		tree.setModel(new MyTreeModel(root));
+
+		tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
+			{
+				if (!selectionChangedEvent.isSelected()) {
+					MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+					n.value.unselect();
+					return;
+				}
+				MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+				n.value.select();
+				
+			}
+			
+		});
+	}
+	
+	protected void loadAtlasBrowser() {
+		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
+		
+		Window window = FengGUI.createWindow(this, true, false, false, true);
+		window.getAppearance().removeAll();
+		
+		window.setTitle("Brain Regions...");
+		
+		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
+		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
+		
+		Tree<MyNode> tree = this.<MyNode>createTree(sc);
+		
+		window.setSize(200, 300);
+		window.setPosition(new Point(0,100));
+		window.layout();
+		tree.setModel(new MyTreeModel(root));
+
+		tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
+			{
+				if (!selectionChangedEvent.isSelected()) {
+					MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+					n.value.unselect();
+					return;
+				}
+				MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+				if (n.value != null) {
+					n.value.select();
+				}
+				
+			}
+			
+		});
 	}
 	
 	protected void loadFileChooser() {
@@ -272,41 +348,6 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 		});
 	}
 	
-	//get a tree pane display showing cells and their semantic contents
-	private void getCellTree(Display display)
-	{
-		MyNode root = SceneObjectManager.getInstance().getCellTree();
-		
-		Window window = FengGUI.createWindow(display, true, false, false, true);
-		window.getAppearance().removeAll();
-		
-		window.setTitle("Cells...");
-		
-		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
-		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
-		
-		Tree<MyNode> tree = this.<MyNode>createTree(sc);
-		
-		window.setSize(200, 300);
-		window.setPosition(new Point(0,100));
-		window.layout();
-		tree.setModel(new MyTreeModel(root));
-
-		tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
-			{
-				if (!selectionChangedEvent.isSelected()) {
-					MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
-					n.value.unselect();
-					return;
-				}
-				MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
-				n.value.select();
-				
-			}
-			
-		});
-	}
 	
 //	get a tree pane display showing cells and their semantic contents
 	private void loadInstanceBrowser()

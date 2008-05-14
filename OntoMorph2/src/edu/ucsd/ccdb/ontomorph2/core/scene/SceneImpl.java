@@ -42,8 +42,11 @@ public class SceneImpl extends Observable implements IScene {
 	public static final String morphMLDir = baseDir + "morphml" 
 											+ File.separatorChar + "hippocampus" + File.separatorChar;
 	public static final String mitoDir = baseDir + File.separatorChar + "mito" + File.separatorChar;
-	public static final String allenMeshDir = baseDir + File.separatorChar + "allen" 
-											+ File.separatorChar + "Mesh25" + File.separatorChar;
+	public static final String allenDir = baseDir + File.separatorChar + "allen" 
+									+ File.separatorChar;
+	public static final String allenMeshDir = allenDir + "Mesh25" + File.separatorChar;
+
+
 	
 	URL cell3URL = null;
 	URL cell4URL = null;
