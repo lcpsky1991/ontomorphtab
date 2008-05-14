@@ -40,7 +40,7 @@ public class BrainRegion extends Observable implements ISelectable{
 		if (mesh == null) {
 			AllenAtlasMeshLoader loader = new AllenAtlasMeshLoader();
 			this.mesh = loader.loadByAbbreviation(this.getAbbreviation());
-			mesh.setSolidColor(ColorUtil.convertColorToColorRGBA(this.color));
+			//mesh.setSolidColor(ColorUtil.convertColorToColorRGBA(this.color));
 		}
 		return mesh;
 	}
