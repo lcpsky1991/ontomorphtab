@@ -1,5 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.util;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,10 +12,16 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jme.bounding.BoundingSphere;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.BatchMesh;
+import com.jme.scene.Geometry;
+import com.jme.scene.TriMesh;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.lod.AreaClodMesh;
+import com.jme.scene.state.RenderState;
 import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
@@ -72,6 +79,8 @@ public class AllenAtlasMeshLoader {
 	List<TriangleBatch> triangleStrips = null;
 	private FloatBuffer verticesBuff;
 	private FloatBuffer normalsBuff;
+	private ColorRGBA color = null;
+	private FloatBuffer colorBuff = null;
 	
 	public BatchMesh loadByAbbreviation(String abbrev) {
 		try {
@@ -83,7 +92,47 @@ public class AllenAtlasMeshLoader {
 		return null;
 	}
 	
+	public TriMesh loadTriMesh(URL filePath) {
+		List<TriangleBatch> triangleStrips = loadTriangles(filePath);
+		TriMesh triMesh = new TriMesh();
+		int i = 0;
+		for (TriangleBatch triStrip : triangleStrips) {
+			triMesh.addBatch(triStrip);
+			triMesh.setVertexBuffer(i, triStrip.getVertexBuffer());
+			triMesh.setIndexBuffer(i, triStrip.getIndexBuffer());
+			triMesh.setNormalBuffer(i, triStrip.getNormalBuffer());
+			i++;
+		}
+		return triMesh;
+	}
+	
+	public AreaClodMesh loadClodMesh(URL filePath) {
+		TriMesh t = loadTriMesh(filePath);
+		
+		AreaClodMesh acm = new AreaClodMesh(t.getName(), (TriMesh) t, null);
+        acm.setLocalTranslation(t.getLocalTranslation());
+        acm.setLocalRotation(t.getLocalRotation());
+        acm.setModelBound(new BoundingSphere());
+        acm.updateModelBound();
+        // Allow 1/2 of a triangle in every pixel on the screen in
+        // the bounds.
+        acm.setTrisPerPixel(.5f);
+        // Force a move of 2 units before updating the mesh geometry
+        acm.setDistanceTolerance(2);
+        // Give the clodMe sh node the material state that the
+        // original had.
+        //acm.setRenderState(meshParent.getChild(i).getRenderStateList()[RenderState.RS_MATERIAL]); //Note: Deprecated
+        acm.setRenderState(t.getRenderState(RenderState.RS_MATERIAL));
+        // Attach clod node.
+        return acm;
+	}
+	
 	public BatchMesh load(URL filePath) { 
+		List<TriangleBatch> triangleStrips = loadTriangles(filePath);
+		return new BatchMesh("object", (GeomBatch[])triangleStrips.toArray(new GeomBatch[1]));
+	}
+	
+	private List<TriangleBatch> loadTriangles(URL filePath) {
 		triangleStrips = new ArrayList<TriangleBatch>();
 		File fi;
 		try {
@@ -139,9 +188,7 @@ public class AllenAtlasMeshLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		//System.gc();
-		return new BatchMesh("object", (GeomBatch[])triangleStrips.toArray(new GeomBatch[1]));
+		return triangleStrips;
 	}
 
 	
@@ -245,12 +292,14 @@ public class AllenAtlasMeshLoader {
 	    tbstrip.setMode(TriangleBatch.TRIANGLE_STRIP);
 	    tbstrip.setVertexBuffer(getVerts());
 	    tbstrip.setNormalBuffer(getNormals());
+	    tbstrip.setColorBuffer(getColorBuffer());
 	    //tbstrip.setTextureBuffer(texCoords, 0);
 	    
 	    tbstrip.setIndexBuffer(BufferUtils.createIntBuffer(indices));
 	    
 	    return tbstrip;
 	}
+
 
 	private void processNormalsAndVertices() {
 		
@@ -287,6 +336,29 @@ public class AllenAtlasMeshLoader {
 			normals = null; // make space
 		}
 		return normalsBuff;
+	}
+	
+
+	private FloatBuffer getColorBuffer() {
+		if (this.color != null) {
+			if (colorBuff == null) {
+				ColorRGBA[] array = new ColorRGBA[numOfPoints];
+				for (int i = 0; i < numOfPoints; i++) {
+					array[i] = this.color.clone();
+				}
+				colorBuff = BufferUtils.createFloatBuffer(array);
+			}
+			return colorBuff;
+		}
+		return null;
+	}
+
+	/** 
+	 * Sets the color that all subsequent meshes will be loaded to have
+	 * @param color
+	 */
+	public void setColor(Color color) {
+		this.color = ColorUtil.convertColorToColorRGBA(color);
 	}
 	
 }
