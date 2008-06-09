@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.2-b05-RC1. --><xs:schema xmlns:tns="http://ws.ccdb.brainCatalog.ucsd.edu/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://ws.ccdb.brainCatalog.ucsd.edu/">
+
+<xs:element name="Exception" type="tns:Exception"></xs:element>
+
+<xs:element name="getCCDBMicroscopy" type="tns:getCCDBMicroscopy"></xs:element>
+
+<xs:element name="getCCDBMicroscopyResponse" type="tns:getCCDBMicroscopyResponse"></xs:element>
+
+<xs:complexType name="getCCDBMicroscopy">
+<xs:sequence>
+<xs:element name="mid" type="xs:int"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getCCDBMicroscopyResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:ccdbMicroscopyData" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ccdbMicroscopyData">
+<xs:sequence>
+<xs:element name="ANATOMICALDETAIL" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="EXPERIMENT" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="IMAGE2D" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="IMAGE2D_512_URL" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="IMAGE2D_ANIMATION_URL" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="IMAGE2D_DATA_URL" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="IMAGING_PARAMETER" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="IMAGING_PRODUCT_TYPES" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="MICROSCOPY" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="MICROSCOPYPRODUCT_ID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="PROJECT" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="RECONSTRUCTION" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="RECON_512_URL" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="RECON_ANIMATION_URL" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="RECON_DATA_URL" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="region" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="SEGMENTATION" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="SEG_512_URL" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="SEG_DATA_URL" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="SPECIMENPREPARATION" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="STRUCTURE" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="SUBJECT" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="SUBREGION" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="species" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Exception">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
