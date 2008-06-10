@@ -69,10 +69,14 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 	    
 
 		ReferenceAtlas atlas = ReferenceAtlas.getInstance();
-		/*
-		for (BrainRegion r : atlas.getBrainRegions()) {
-			rootNode.attachChild(r.getMesh());
-		}*/
-		rootNode.attachChild(atlas.getBrainRegion("CB").getMesh());
+
+		
+		//String[] regions = {"OLF", "HPF", "STRd", "STRv", "LSX", "sAMY", "PAL", "TH", "HY", "MBsen", "MBmot", "MBsta", "P", "MY", "CB"};
+		String[] regions = {"MBmot"};
+		
+		for (String s : regions) {
+			rootNode.attachChild(atlas.getBrainRegion(s).getClodMesh());
+		}
+
 	  }
 	}

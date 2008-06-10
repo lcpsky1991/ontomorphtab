@@ -9,7 +9,9 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.jme.bounding.BoundingSphere;
@@ -92,19 +94,81 @@ public class AllenAtlasMeshLoader {
 		return null;
 	}
 	
+	public TriMesh loadTriMeshByAbbreviation(String abbrev) { 
+		try {
+			return loadTriMesh(new File(SceneImpl.allenMeshDir + abbrev + ".msh").toURI().toURL());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public TriMesh loadTriMesh(URL filePath) {
 		List<TriangleBatch> triangleStrips = loadTriangles(filePath);
 		TriMesh triMesh = new TriMesh();
-		int i = 0;
+
+		
+		triMesh.setVertexBuffer(0, this.getVerts());
+		triMesh.setNormalBuffer(0, this.getNormals());
+		int[] triMeshIndices = new int[0];
+
 		for (TriangleBatch triStrip : triangleStrips) {
-			triMesh.addBatch(triStrip);
-			triMesh.setVertexBuffer(i, triStrip.getVertexBuffer());
-			triMesh.setIndexBuffer(i, triStrip.getIndexBuffer());
-			triMesh.setNormalBuffer(i, triStrip.getNormalBuffer());
-			i++;
+
+			IntBuffer buf = triStrip.getIndexBuffer();
+			
+			//create temporary array that is the length of the current indices array
+			//plus the length of the array of new indices to add
+			//newIndicies is just for this iteration of the for loop
+			int[] triStripIndices = new int[buf.limit()];
+			buf.get(triStripIndices);
+			
+			// have to convert a tri strip representation of indices
+			// to a tri mesh representation of indices
+			int triMeshLength = (triStripIndices.length - 2)*3;
+			
+			//populate the tmp array from the current end of the indices array
+			//tmp will get set to be the indicies array at the end of the loop
+			int[] tmp = Arrays.copyOf(triMeshIndices, triMeshLength + triMeshIndices.length);
+			
+			
+			int j = 0;
+			for (int i = 0; i < triMeshLength;) {
+				//Indicies in the triStripIndices are like: ABCDEFG
+				//We need to change them to be ABC CBD CDE EDF EFG(note swapping of ordering)
+				int offset = triMeshIndices.length;
+				if (i < 3) {
+					tmp[i+offset] = triStripIndices[j];
+					i++;
+					j++;
+				} else { 
+					if (i % 2 == 0) {
+						//implements CDE and EFG given that CBD precedes CDE and EDF precedes EFG
+						int twoAgo = tmp[i+offset-3];
+						int oneAgo = tmp[i+offset-1];
+						tmp[i+offset] = twoAgo;
+						tmp[i+offset + 1] = oneAgo;
+					} else if (i%2 == 1) {
+						//implements CBD and EDF given that ABC precedes CBD and CDE precedes EDF
+						int twoAgo = tmp[i+offset-2];
+						int oneAgo = tmp[i+offset-1];
+						tmp[i+offset] = oneAgo;
+						tmp[i+offset + 1] = twoAgo;
+					}
+					tmp[i+offset + 2] = triStripIndices[j];
+					i+=3;
+					j++;
+				}
+			}
+			triStripIndices = null;
+			triMeshIndices = tmp;
 		}
+		IntBuffer indexBuffer = BufferUtils.createIntBuffer(triMeshIndices);
+		triMesh.setIndexBuffer(0, indexBuffer);
+
 		return triMesh;
 	}
+	
 	
 	public AreaClodMesh loadClodMesh(URL filePath) {
 		TriMesh t = loadTriMesh(filePath);
@@ -116,7 +180,9 @@ public class AllenAtlasMeshLoader {
         acm.updateModelBound();
         // Allow 1/2 of a triangle in every pixel on the screen in
         // the bounds.
-        acm.setTrisPerPixel(.5f);
+
+        acm.setTrisPerPixel(.1f);
+
         // Force a move of 2 units before updating the mesh geometry
         acm.setDistanceTolerance(2);
         // Give the clodMe sh node the material state that the
@@ -132,6 +198,10 @@ public class AllenAtlasMeshLoader {
 		return new BatchMesh("object", (GeomBatch[])triangleStrips.toArray(new GeomBatch[1]));
 	}
 	
+	/*
+	 * This is the method that is doing the main algorithmic work of loading the
+	 * mesh into memory.
+	 */
 	private List<TriangleBatch> loadTriangles(URL filePath) {
 		triangleStrips = new ArrayList<TriangleBatch>();
 		File fi;
