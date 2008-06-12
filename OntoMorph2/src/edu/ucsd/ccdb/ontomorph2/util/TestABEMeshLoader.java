@@ -39,6 +39,7 @@ import com.jme.app.SimpleGame;
 	import com.jme.math.Vector3f;
 	import com.jme.scene.TriMesh;
 	import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.state.LightState;
 import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
@@ -66,6 +67,10 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 	    display.setTitle("Test Triangle Strips");
 	    
 
+		//Remove lighting for rootNode so that it will use our basic colors
+		//rootNode.setLightCombineMode(LightState.OFF);
+		
+	    
 		AllenAtlasMeshLoader meshLoader = new AllenAtlasMeshLoader();
 		URL DGURL = null;
 		try {
@@ -74,6 +79,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		rootNode.attachChild(meshLoader.load(DGURL));
+		//rootNode.attachChild(meshLoader.load(DGURL));
+		rootNode.attachChild(meshLoader.loadClodMesh(DGURL));
 	  }
 	}

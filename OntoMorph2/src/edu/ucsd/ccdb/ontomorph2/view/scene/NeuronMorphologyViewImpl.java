@@ -25,8 +25,8 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.IPosition;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
 
 public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyView {
@@ -78,28 +78,29 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
 		this.detachAllChildren();
 		this.attachChild(n);
 		
-		if (morph.getPosition() != null) {
-			this.setLocalTranslation(morph.getPosition().asVector3f());
-		}
-		if (morph.getRotation() != null) {
-			this.setLocalRotation(morph.getRotation().asMatrix3f());
-		}
-		if (morph.getScale() != 1) {
-			this.setLocalScale(morph.getScale());
-		}
-		if (morph.getLookAtPosition() != null) {
-			this.lookAt(morph.getLookAtPosition().asVector3f(), Vector3f.UNIT_X);
-		}
 		if (morph.getCurve() != null) {
-			_cc = new CurveController((CurveImpl)morph.getCurve(), this);
+			_cc = new CurveController(morph.getCurve().asBezierCurve(), this);
 			_cc.setAutoRotation(true);
 			_cc.setUpVector(morph.getUpVector());
 			_cc.update(morph.getTime());
 		}
+		if (morph.getAbsolutePosition() != null) {
+			this.setLocalTranslation(morph.getAbsolutePosition().asVector3f());
+		}
+		if (morph.getAbsoluteRotation() != null) {
+			this.setLocalRotation(morph.getAbsoluteRotation().asMatrix3f());
+		}
+		if (morph.getAbsoluteScale() != null) {
+			this.setLocalScale(morph.getAbsoluteScale());
+		}
+		if (morph.getLookAtPosition() != null) {
+			this.lookAt(morph.getLookAtPosition().asVector3f(), Vector3f.UNIT_X);
+		}
+		
 		
 	}
 	
-	public void setX3DNeuron(InputStream input, IPosition _position, IRotation _rotation, float _scale) {
+	public void setX3DNeuron(InputStream input, PositionVector _position, RotationVector _rotation, float _scale) {
 		try {
 			X3DLoader converter = new X3DLoader();
 			Spatial scene = converter.loadScene(input, null, null);

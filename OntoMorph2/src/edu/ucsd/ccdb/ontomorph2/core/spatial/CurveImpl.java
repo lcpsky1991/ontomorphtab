@@ -9,23 +9,45 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
+import edu.ucsd.ccdb.ontomorph2.core.scene.SceneObjectImpl;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
-public class CurveImpl extends BezierCurve implements ICurve{
+public class CurveImpl extends SceneObjectImpl implements ICurve{
 
+	BezierCurve theCurve = null;
+	BezierCurve absoluteCurve = null; // copy of the curve for coordinate systems
 	ColorRGBA color = null;
 	float delta = 0.1f;
 	private Vector3f _modelBinormal = null;
+	CoordinateSystem sys = null;
+	OMTVector[] controlPoints = null;
 	
-	public CurveImpl(String arg0, Vector3f[] arg1) {
-		super(arg0, arg1);
+	public CurveImpl(String arg0, OMTVector[] arg1) {
+		theCurve = new BezierCurve(arg0, arg1);
+		controlPoints = arg1;
+	}
+
+	public CurveImpl(String string, OMTVector[] array, CoordinateSystem d) {
+		this(string, array);
+		setCoordinateSystem(d);
+	}
+	
+	public void setCoordinateSystem(CoordinateSystem sys) {
+		this.sys = sys;
+		
+	}
+	
+	public CoordinateSystem getCoordinateSystem() {
+		return this.sys;
 	}
 
 	/**
 	 * Set the color of the curve.
 	 */
 	public void setColor(Color color) {
-		this.setSolidColor(ColorUtil.convertColorToColorRGBA(color));
+		theCurve.setSolidColor(ColorUtil.convertColorToColorRGBA(color));
 	}
 	
 	/**
@@ -35,8 +57,8 @@ public class CurveImpl extends BezierCurve implements ICurve{
 	 * @return - the tangent Vector3f
 	 */
 	public Vector3f getTangent(float time) {
-		Vector3f p1 = getPoint(getTimeMinusDelta(time));
-		Vector3f p2 = getPoint(getTimePlusDelta(time));
+		Vector3f p1 = theCurve.getPoint(getTimeMinusDelta(time));
+		Vector3f p2 = theCurve.getPoint(getTimePlusDelta(time));
 		return p2.subtract(p1).normalize();
 	}
 	
@@ -48,10 +70,10 @@ public class CurveImpl extends BezierCurve implements ICurve{
 	 */
 	public Vector3f getNormal(float time) {
 		
-		Vector3f px = getPoint(getTimeMinusDelta(time));
-		Vector3f py = getPoint(getTimePlusDelta(time));
+		Vector3f px = theCurve.getPoint(getTimeMinusDelta(time));
+		Vector3f py = theCurve.getPoint(getTimePlusDelta(time));
 		
-		Vector3f pe = getPoint(time);
+		Vector3f pe = theCurve.getPoint(time);
 		Vector3f pf = new Vector3f((py.x - px.x)/2+px.x, (py.y - px.y)/2+px.y, (py.z - px.z)/2+px.z);
 
 		return pf.subtract(pe).normalize();
@@ -72,7 +94,18 @@ public class CurveImpl extends BezierCurve implements ICurve{
 	}
 
 	public Curve asBezierCurve() {
-		return this;
+		Curve copy = null;
+		
+		copy = (Curve)new BezierCurve(theCurve.getName(), controlPoints);
+		copy.setSolidColor(ColorUtil.convertColorToColorRGBA(Color.GREEN));
+		
+		//apply coordinate system to this curve.
+		if (this.getCoordinateSystem() != null) {
+			this.getCoordinateSystem().applyToSpatial(copy);
+			return copy;
+		}
+
+		return theCurve;
 	}
 	
 	/**
@@ -106,12 +139,12 @@ public class CurveImpl extends BezierCurve implements ICurve{
 	 */
 	public Matrix3f getOrientation(float time, float precision, Vector3f up) {
 		if (up == null) {
-			return getOrientation(time, precision);
+			return theCurve.getOrientation(time, precision);
 		}
 		Matrix3f rotation = new Matrix3f();
 
 		//calculate tangent
-		Vector3f tangent = getPoint(time).subtract(getPoint(time + precision));
+		Vector3f tangent = theCurve.getPoint(time).subtract(theCurve.getPoint(time + precision));
 		tangent = tangent.normalize();
 
 		//calculate binormal
@@ -132,6 +165,11 @@ public class CurveImpl extends BezierCurve implements ICurve{
 		rotation.setColumn(2, binormal);
 
 		return rotation;
+	}
+
+
+	public PositionVector getPoint(float time) {
+		return new PositionVector(theCurve.getPoint(time));
 	}
 
 }

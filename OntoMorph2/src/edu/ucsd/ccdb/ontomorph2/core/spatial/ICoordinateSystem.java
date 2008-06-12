@@ -1,7 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core.spatial;
 
 /**
- * Interface that defines the Stereotaxic coordinate system that the system is using
+ * Interface that defines a coordinate system
  * 
  * @author stephen
  *
@@ -17,24 +17,31 @@ public interface ICoordinateSystem {
 	public float getMaximumXCoordinate();
 	public float getMaximumYCoordinate();
 	public float getMaximumZCoordinate();
+
 	
-	/**
-	 * Returns a string that provides the anatomical name for the brain region
-	 * at the point <x,y,z>
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return
+	/*
+	 * Returns a length 3 float array that contains x, y, and z coordinates
+	 * for a unit vector that points in the +X direction for this coordinate 
+	 * system
 	 */
-	public String getBrainRegionName(float x, float y, float z);
+	public float[] getXDirection();
 	
-	/**
-	 * Returns a string that indicates the SI type of unit that the coordinates
-	 * are expressed in (millimeters, micrometers, nanometers).
-	 * 
-	 * Ideally this method will return a type rather than a free string
-	 * 
-	 * @return SI unit of coordinate system.
+	/*
+	 * Returns a length 3 float array that contains x, y, and z coordinates
+	 * for a unit vector that points in the +Y direction for this coordinate system
 	 */
-	public String getUnits();
+	public float[] getYDirection();
+	
+	/*
+	 * Returns a length 3 float array that contains x, y, and z coordinates
+	 * for a unit vector that points in the +Z direction for this coordinate system
+	 */
+	public float[] getZDirection();
+	
+	/*
+	 * Returns a length 3 float array that contains x, y, and z coordinates
+	 * for the origin of this coordinate system, relative to the absolute 
+	 * world coordinates of the rendering system
+	 */
+	public float[] getOrigin();
 }

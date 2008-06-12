@@ -14,6 +14,7 @@ import com.jme.scene.Geometry;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.shape.Cylinder;
 import com.jme.scene.state.AlphaState;
@@ -26,6 +27,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 public class SegmentViewImpl implements ISegmentView {
 
@@ -176,6 +178,7 @@ public class SegmentViewImpl implements ISegmentView {
 		cyl.setRadius2(getApexRadius());
 		//cyl.setColorBuffer(2, colorBuffer);
 		
+		
 		AlphaState as = ViewImpl.getInstance().getRenderer().createAlphaState();
 	      as.setBlendEnabled(true);
 	      as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
@@ -185,6 +188,7 @@ public class SegmentViewImpl implements ISegmentView {
 	      as.setEnabled(true);
 	    cyl.setRenderState(as);
 	    cyl.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+	    
 				
 		Quaternion q = new Quaternion();
 		q.lookAt(unit, Vector3f.UNIT_Y);
@@ -205,6 +209,7 @@ public class SegmentViewImpl implements ISegmentView {
 	}
 	
 	//this doesn't work right 
+	/*
 	private Node getCurveFromSegGroup() {
 		Node n = new Node();
 		ArrayList<Vector3f> l = new ArrayList<Vector3f>();
@@ -217,13 +222,13 @@ public class SegmentViewImpl implements ISegmentView {
 				l.add(s.getApex());
 			}
 		}
-		Vector3f[] array = new Vector3f[l.size()];
+		OMTVector[] array = new OMTVector[l.size()];
 		array = l.toArray(array);
 		CurveImpl c = new CurveImpl("name", array);
 		n.attachChild(c);
 		setCurrentGeometry(c);
 		return n;
-	}
+	}*/
 	
 	//Render this SegmentViewImpl as a series of cylinders corresponding to the underlying
 	//individual segments of this segment group
@@ -273,6 +278,7 @@ public class SegmentViewImpl implements ISegmentView {
 		g.setModelBound(new BoundingBox());
 		g.updateModelBound();
 		this.chooseColor(g);
+		//g.setVBOInfo(new VBOInfo(true));
 	}
 	
 	private void setCurrentGeometries(List<Geometry> l) {

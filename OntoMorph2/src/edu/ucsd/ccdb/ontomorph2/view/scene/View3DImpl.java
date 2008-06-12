@@ -4,7 +4,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.jme.bounding.BoundingBox;
+import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.SceneElement;
+import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
+import com.jme.scene.lod.AreaClodMesh;
+import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.LightState;
+import com.jme.system.DisplaySystem;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.IMesh;
@@ -36,6 +46,15 @@ public class View3DImpl extends Node implements IView3D {
 		meshesNode = new Node();
 		volumesNode = new Node();
 		atlasNode = new Node();
+		
+		slidesNode.setLightCombineMode(LightState.OFF);
+		cellsNode.setLightCombineMode(LightState.OFF);
+		curvesNode.setLightCombineMode(LightState.OFF);
+		surfacesNode.setLightCombineMode(LightState.OFF);
+		meshesNode.setLightCombineMode(LightState.OFF);
+		volumesNode.setLightCombineMode(LightState.OFF);
+		atlasNode.setLightCombineMode(LightState.COMBINE_CLOSEST);
+		
 		cells = new HashSet<INeuronMorphologyView>();
 		volumes = new HashSet<VolumeViewImpl>();
 		this.attachChild(slidesNode);
@@ -50,9 +69,7 @@ public class View3DImpl extends Node implements IView3D {
 	public void setSlides(List<ISlide> slides) {
 		slidesNode.detachAllChildren();
 		for(ISlide slide : slides){
-			slidesNode.attachChild(new SlideViewImpl(slide.getImageURL(), 
-					slide.getPosition(), slide.getRotation(), slide.getScale(), 
-					slide.getRatio()));
+			slidesNode.attachChild(new SlideViewImpl(slide.getImageURL(),slide));
 		}
 	}
 	
@@ -69,7 +86,7 @@ public class View3DImpl extends Node implements IView3D {
 	public void setCurves(Set<ICurve> curves) {
 		curvesNode.detachAllChildren();
 		for(ICurve curve : curves) {
-			curvesNode.attachChild((CurveImpl)curve);
+			curvesNode.attachChild(curve.asBezierCurve());
 		}
 		
 	}
@@ -108,11 +125,42 @@ public class View3DImpl extends Node implements IView3D {
 	}
 
 	public void displayBrainRegion(BrainRegion br) {
-		atlasNode.attachChild(br.getMesh());
+		//atlasNode.attachChild(br.getMesh());
+		TriMesh mesh = br.getTriMesh();
+		mesh.setSolidColor(ColorRGBA.blue);
+		mesh.setModelBound(new BoundingBox());
+		mesh.updateModelBound();
+		VBOInfo nfo = new VBOInfo(true);
+		//nfo.setVBOIndexEnabled(true);
+		mesh.setVBOInfo(nfo);
+		mesh.setCullMode(SceneElement.CULL_DYNAMIC);
+
+		
+		LightState lightState = null;
+		lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
+        lightState.setEnabled(true);
+        
+        atlasNode.setRenderState(lightState);
+		
+		atlasNode.attachChild(mesh);
+		/*
+        AlphaState as = ViewImpl.getInstance().getRenderer().createAlphaState();
+	      as.setBlendEnabled(true);
+	      as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+	      as.setDstFunction(AlphaState.DB_ONE);
+	      as.setTestEnabled(true);
+	      as.setTestFunction(AlphaState.TF_GREATER);
+	      as.setEnabled(true);
+	    atlasNode.setRenderState(as);
+	    atlasNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+	    */
+	    atlasNode.updateRenderState();
+	    atlasNode.updateGeometricState(5f, true);
+	    
 	}
 
 	public void unDisplayBrainRegion(BrainRegion br) {
-		atlasNode.detachChild(br.getMesh());
+		atlasNode.detachChild(br.getClodMesh());
 		br.destroyMesh();
 
 	}

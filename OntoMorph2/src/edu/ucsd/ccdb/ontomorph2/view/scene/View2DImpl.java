@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.fenggui.ComboBox;
 import org.fenggui.Display;
@@ -29,6 +30,7 @@ import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 
 
+import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.manager.SceneObjectManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISelectable;
@@ -50,6 +52,9 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 	public static final String SEMANTICS = "Semantics...";
 	public static final String LIST_INSTANCES = "List Instances...";
 	public static final String SHOW_ATLAS = "Show Atlas...";
+	public static final String DISPLAY_BASIC_ATLAS = "Display Basic Atlas";
+	public static final String SLIDE_VIEW = "View Example Slide";
+	public static final String ATLAS_SIDE_VIEW = "View Atlas Side";
 
 	FengJMEInputHandler input;
 	/**
@@ -131,6 +136,15 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
         fileMenu.addItem(loadScene);
         fileMenu.addItem(saveScene);
 	
+        Menu viewMenu = new Menu();
+        mB.registerSubMenu(viewMenu, "View");
+        MenuItem slideView = new MenuItem(SLIDE_VIEW);
+        MenuItem atlasSideView = new MenuItem(ATLAS_SIDE_VIEW);
+        slideView.addMenuItemPressedListener(this);
+        atlasSideView.addMenuItemPressedListener(this);
+        viewMenu.addItem(slideView);
+        viewMenu.addItem(atlasSideView);
+        
         Menu objMenu = new Menu();
         mB.registerSubMenu(objMenu, "Objects");
         MenuItem cells = new MenuItem(CELLS);
@@ -152,8 +166,11 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
         Menu atlasMenu = new Menu();
         mB.registerSubMenu(atlasMenu, "Reference Atlas");
         MenuItem showAtlas = new MenuItem(SHOW_ATLAS);
+        MenuItem displayBasicAtlas = new MenuItem(DISPLAY_BASIC_ATLAS);
         showAtlas.addMenuItemPressedListener(this);
+        displayBasicAtlas.addMenuItemPressedListener(this);
         atlasMenu.addItem(showAtlas);
+        atlasMenu.addItem(displayBasicAtlas);
         
         /*
 		//	 Create a dialog and set it to some location on the screen
@@ -230,12 +247,19 @@ public class View2DImpl extends Display implements IView2D, IMenuItemPressedList
 			
 		} else if (LIST_INSTANCES.equals(arg0.getItem().getText())) {
 			loadInstanceBrowser();
-		} else if (SHOW_ATLAS.endsWith(arg0.getItem().getText())) {
+		} else if (SHOW_ATLAS.equals(arg0.getItem().getText())) {
 			loadAtlasBrowser();
+		} else if (DISPLAY_BASIC_ATLAS.equals(arg0.getItem().getText())) {
+			ReferenceAtlas.getInstance().displayBasicAtlas();
+		} else if (SLIDE_VIEW.equals(arg0.getItem().getText())) {
+			ViewImpl.getInstance().setCameraToSlideView();
+		} else if (ATLAS_SIDE_VIEW.equals(arg0.getItem().getText())) {
+			ViewImpl.getInstance().setCameraToAtlasSideView();
 		}
 	}
 	
 
+	
 	
 	protected void loadCellChooser() {
 		MyNode root = SceneObjectManager.getInstance().getCellTree();

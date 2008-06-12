@@ -9,36 +9,69 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 import com.jme.util.geom.BufferUtils;
+import com.sun.org.apache.bcel.internal.generic.D2L;
 
-import edu.ucsd.ccdb.ontomorph2.core.spatial.IPosition;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation;
+import edu.ucsd.ccdb.ontomorph2.core.scene.ISlide;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 public class SlideViewImpl extends TriMesh implements ISlideView{
 	
 	URL imageURL = null;
-	IPosition _position = null;
-	IRotation _rotation = null;
-	float _scale = 1;
-	float ratio = 1;
+	ISlide _slide = null;
 	
-	public SlideViewImpl(URL imageURL, IPosition position, IRotation rotation, float scale, float ratio) {
+	public SlideViewImpl(URL imageURL, ISlide slide) {
+		_slide = slide;
 		setImageURL(imageURL);
-		_position = position;
-		_rotation = rotation;
-		_scale = scale;
-		this.ratio = ratio;
 		init();
 	}
-	
+
 	private void init() {
 		
+		float ratio = _slide.getRatio();
+		float scale = _slide.getAbsoluteScale().x;
+		float x = _slide.getAbsolutePosition().x;
+		float y = _slide.getAbsolutePosition().y;
+		float z = _slide.getAbsolutePosition().z;
+		
+		y-=113;
+		x-=180;
+		z-=305;
+		
+		
+		Vector3f v1 = new Vector3f(x,y,z);
+		Vector3f v2 = new Vector3f(ratio*scale+x,y,z);
+		Vector3f v3 = new Vector3f(x,scale+y,z);
+		Vector3f v4 = new Vector3f(ratio*scale+x,scale+y,z);
+		
+		/*
+		Vector3f v1 = new Vector3f(0,0,0);
+		Vector3f v2 = new Vector3f(ratio*scale,0,0);
+		Vector3f v3 = new Vector3f(0,scale,0);
+		Vector3f v4 = new Vector3f(ratio*scale,scale,0);
+		*/
+		/*
+		CoordinateSystem d = _slide.getCoordinateSystem();
+		v1 = d.multPoint(v1);
+		v2 = d.multPoint(v2);
+		v3 = d.multPoint(v3);
+		v4 = d.multPoint(v4);
+		*/
 //		Vertex positions for the mesh
-		Vector3f[] vertexes={				
-				new Vector3f(0,0,0),
-				new Vector3f(ratio,0,0),
-				new Vector3f(0,1,0),
-				new Vector3f(ratio,1,0)
-		};
+		
+		/*
+		float xFact = -300;
+		v1.x = xFact;
+		v2.x = xFact;
+		v3.x = xFact;
+		v4.x = xFact;
+		*/
+		
+		
+		Vector3f[] vertexes={ v1,v2,v3,v4 };
 		
 		//texture coordinates for each position
 		int coordDelta=1;
@@ -75,10 +108,16 @@ public class SlideViewImpl extends TriMesh implements ISlideView{
 		//assign the texturestate to the square
 		this.setRenderState(ts);
 		//scale my square 10x larger
-		this.setLocalScale(_scale);
-		
-		if (_position != null) {
-			this.setLocalTranslation(_position.asVector3f());
+		if (_slide.getAbsoluteScale() != null) {
+			//this.setLocalTranslation(0,0,0);
+			//this.setLocalScale(_slide.getAbsoluteScale());
+		}
+			
+		if (_slide.getAbsolutePosition() != null) {
+			//this.setLocalTranslation(_slide.getAbsolutePosition());
+		}
+		if (_slide.getAbsoluteRotation() != null) {
+			this.setLocalRotation(_slide.getAbsoluteRotation());
 		}
 	}
 	

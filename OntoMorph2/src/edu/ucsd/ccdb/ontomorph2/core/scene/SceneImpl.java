@@ -27,11 +27,13 @@ import edu.ucsd.ccdb.ontomorph2.core.manager.SceneObjectManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ISurface;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionImpl;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationImpl;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.SurfaceImpl;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 public class SceneImpl extends Observable implements IScene {
 	
@@ -97,19 +99,33 @@ public class SceneImpl extends Observable implements IScene {
 	}
 	
 	public void load() {
-		//temporary hack to load a mockup
+		//temporary hack o load a mockup
+		DemoCoordinateSystem d = new DemoCoordinateSystem();
 
-		addSceneObject(new SlideImpl(hippo1URL, new PositionImpl(-60,-100,22), null, 170, 0.87f));
-		addSceneObject(new SlideImpl(hippo2URL, new PositionImpl(-55,-30, 22), null, 62, 1.34f));
-		addSceneObject(new SlideImpl(hippo3aURL, new PositionImpl(-45,-13,21.5f), null, 15, 1.33f));
-		addSceneObject(new SlideImpl(hippo3bURL, new PositionImpl(-24,-9,21.5f), null, 15,1.31f ));
-		addSceneObject(new SlideImpl(hippo3cURL, new PositionImpl(-5,-8.5f,21.5f), null, 15,1.33f));
-		//addSceneObject(new SlideImpl("etc/img/hippo_slice3d.jpg", new PositionImpl(-10,-10,22), null, 10,1));
-		//addSceneObject(new SlideImpl("etc/img/hippo_slice3e.jpg", new PositionImpl(-50,-10,22), null, 10,1));
-		//addSceneObject(new SlideImpl("etc/img/hippo_slice3f.jpg", new PositionImpl(10,0,22), null, 10,1));
-		//addSceneObject(new SlideImpl("etc/img/hippo_slice3g.jpg", new PositionImpl(-20,30,22), null, 10,1));
+		/*
+		addSceneObject(new SlideImpl(hippo1URL, new PositionVector(-60,-100,22), 170, 0.87f, d));
+		addSceneObject(new SlideImpl(hippo2URL, new PositionVector(-55,-30, 22), 62, 1.34f, d));
+		addSceneObject(new SlideImpl(hippo3aURL, new PositionVector(-45,-13,21.5f), 15, 1.33f, d));
+		addSceneObject(new SlideImpl(hippo3bURL, new PositionVector(-24,-9,21.5f), 15,1.31f, d));
+		addSceneObject(new SlideImpl(hippo3cURL, new PositionVector(-5,-8.5f,21.5f), 15,1.33f, d));
+		*/
+		addSceneObject(new SlideImpl(hippo1URL, new PositionVector(-60,-100,22), 
+				new RotationVector(d.getRotationFromAbsolute()), 170, 0.87f));
+		addSceneObject(new SlideImpl(hippo2URL, new PositionVector(-55,-30, 22), 
+				new RotationVector(d.getRotationFromAbsolute()), 62, 1.34f));
+		addSceneObject(new SlideImpl(hippo3aURL, new PositionVector(-45,-13,21.5f), 
+				new RotationVector(d.getRotationFromAbsolute()), 15, 1.33f));
+		addSceneObject(new SlideImpl(hippo3bURL, new PositionVector(-24,-9,21.5f), 
+				new RotationVector(d.getRotationFromAbsolute()), 15,1.31f));
+		addSceneObject(new SlideImpl(hippo3cURL, new PositionVector(-5,-8.5f,21.5f), 
+				new RotationVector(d.getRotationFromAbsolute()), 15,1.33f));
+
+		//addSceneObject(new SlideImpl("etc/img/hippo_slice3d.jpg", new PositionImpl(-10,-10,22), 10,1));
+		//addSceneObject(new SlideImpl("etc/img/hippo_slice3e.jpg", new PositionImpl(-50,-10,22), 10,1));
+		//addSceneObject(new SlideImpl("etc/img/hippo_slice3f.jpg", new PositionImpl(10,0,22), 10,1));
+		//addSceneObject(new SlideImpl("etc/img/hippo_slice3g.jpg", new PositionImpl(-20,30,22), 10,1));
 		
-		IVolume v1 = new VolumeImpl(new Box("my box", new Vector3f(-21,-1,15), 20f, 10f, 20f));
+		IVolume v1 = new VolumeImpl(new Box("my box", new OMTVector(-21,-1,15), 20f, 10f, 20f), d);
 		v1.setVisible(false);
 		addSceneObject(v1);
 		
@@ -119,7 +135,7 @@ public class SceneImpl extends Observable implements IScene {
 		URL cell1URL = SceneImpl.class.getClassLoader().getResource("1220882a.morph.xml");
 		cell1.setMorphologyViaURL(cell1URL);
 		cell1.getMorphology().setPosition(new PositionImpl(6,-30,106));
-		cell1.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new Vector3f(0,1,0)));
+		cell1.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new OMTVector(0,1,0)));
 		cell1.getMorphology().setScale(0.15f);
 		cell1.getMorphology().setRenderOption(INeuronMorphology.RENDER_AS_CYLINDERS);
 		cells.add(cell1);
@@ -128,7 +144,7 @@ public class SceneImpl extends Observable implements IScene {
 		URL cell2URL = SceneImpl.class.getClassLoader().getResource("1220882a.morph.xml");
 		cell2.setMorphologyViaURL(cell1URL);
 		cell2.getMorphology().setPosition(new PositionImpl(6,6,106));
-		//cell2.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new Vector3f(0,1,0)));
+		//cell2.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new OMTVector(0,1,0)));
 		cell2.getMorphology().setScale(0.15f);
 		cell2.getMorphology().setRenderOption(INeuronMorphology.RENDER_AS_LINES);
 
@@ -138,36 +154,36 @@ public class SceneImpl extends Observable implements IScene {
 		cells.add(cell2);
 		*/
 		
-		Vector3f p1 = new Vector3f(-5,2,20);
-		Vector3f p2 = new Vector3f(-16,10,20);
-		Vector3f p2a = new Vector3f(-40, -12,20);
-		Vector3f p3 = new Vector3f(-50,-8,20);
-		Vector3f p4 = new Vector3f(-30,-3,20);
-		Vector3f p5 = new Vector3f(-10,-4,20);
+		OMTVector p1 = new OMTVector(-5,2,20);
+		OMTVector p2 = new OMTVector(-16,10,20);
+		OMTVector p2a = new OMTVector(-40, -12,20);
+		OMTVector p3 = new OMTVector(-50,-8,20);
+		OMTVector p4 = new OMTVector(-30,-3,20);
+		OMTVector p5 = new OMTVector(-10,-4,20);
 				
-		Vector3f[] array = {p1, p2, p2a, p3, p4, p5};
-		CurveImpl curve1 = new CurveImpl("Dentate Gyrus", array);
+		OMTVector[] array = {p1, p2, p2a, p3, p4, p5};
+		CurveImpl curve1 = new CurveImpl("Dentate Gyrus", array, d);
 		curve1.setColor(Color.BLUE);
-		curve1.setModelBinormalWithUpVector(Vector3f.UNIT_Y, 0.01f);
+		curve1.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.01f);
 		manager.addCurve(curve1);
 
-		Vector3f c2v1 = new Vector3f(-5,-3,20);
-		Vector3f c2v2 = new Vector3f(45,-10,20);
-		Vector3f c2v3 = new Vector3f(12,10,20);
-		Vector3f c2v4 = new Vector3f(-9,30,20);
-		Vector3f c2v5 = new Vector3f(-23,25,20);
+		OMTVector c2v1 = new OMTVector(-5,-3,20);
+		OMTVector c2v2 = new OMTVector(45,-10,20);
+		OMTVector c2v3 = new OMTVector(12,10,20);
+		OMTVector c2v4 = new OMTVector(-9,30,20);
+		OMTVector c2v5 = new OMTVector(-23,25,20);
 		
-		Vector3f[] array2 = {c2v1, c2v2, c2v3, c2v4, c2v5};
-		CurveImpl c2 = new CurveImpl("CA",array2);
+		OMTVector[] array2 = {c2v1, c2v2, c2v3, c2v4, c2v5};
+		CurveImpl c2 = new CurveImpl("CA",array2, d);
 		c2.setColor(Color.BLUE);
-		c2.setModelBinormalWithUpVector(Vector3f.UNIT_Y, 0.1f);
+		c2.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.1f);
 		manager.addCurve(c2);
 		
 
 		
 		NeuronMorphologyImpl cell3 = new NeuronMorphologyImpl(cell3URL, c2, 0.03f, 
-				INeuronMorphology.RENDER_AS_LOD_2);
-		cell3.setScale(0.01f);
+				INeuronMorphology.RENDER_AS_LOD_2, d);
+		cell3.setRelativeScale(0.01f);
 		//semantic thing for hippocampal CA3 neuron
 		cell3.addSemanticClass(ISemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
 		addSceneObject(cell3);
@@ -176,15 +192,15 @@ public class SceneImpl extends Observable implements IScene {
 		
 		
 		NeuronMorphologyImpl cell4 = new NeuronMorphologyImpl(cell4URL, c2, 0.2f, 
-				INeuronMorphology.RENDER_AS_LOD);
-		cell4.setScale(0.01f);
+				INeuronMorphology.RENDER_AS_LOD, d);
+		cell4.setRelativeScale(0.01f);
 		cell4.addSemanticClass(ISemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
 		addSceneObject(cell4);
 		
 		
 		NeuronMorphologyImpl cell5 = new NeuronMorphologyImpl(cell5URL, c2, 0.35f, 
-				INeuronMorphology.RENDER_AS_LOD);
-		cell5.setScale(0.01f);
+				INeuronMorphology.RENDER_AS_LOD, d);
+		cell5.setRelativeScale(0.01f);
 		cell5.addSemanticClass(ISemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
 		addSceneObject(cell5);
 		
@@ -195,19 +211,21 @@ public class SceneImpl extends Observable implements IScene {
 		 */
 
 		NeuronMorphologyImpl cell6 = new NeuronMorphologyImpl(cell6URL, c2, 0.8f, 
-				INeuronMorphology.RENDER_AS_LOD);
+				INeuronMorphology.RENDER_AS_LOD, d);
 		//NeuronMorphologyImpl cell6 = new NeuronMorphologyImpl(cell6URL, null, null, INeuronMorphology.RENDER_AS_LOD);
-		cell6.setScale(0.02f);
-		cell6.setUpVector(new Vector3f(1,0,0));
+		cell6.setRelativeScale(0.02f);
+		//cell6.setUpVector(new OMTVector(1,0,0));
+		cell6.setUpVector(new OMTVector(0,0,1));
 		cell6.addSemanticClass(ISemanticClass.CA1_PYRAMIDAL_CELL_CLASS);
 		//addSceneObject(cell6);
 				
 		
 
 		NeuronMorphologyImpl cell7 = new NeuronMorphologyImpl(cell7URL, c2, 0.91f, 
-				INeuronMorphology.RENDER_AS_LOD);
-		cell7.setScale(0.02f);
-		cell7.setUpVector(new Vector3f(1,0,0));
+				INeuronMorphology.RENDER_AS_LOD, d);
+		cell7.setRelativeScale(0.02f);
+		//cell7.setUpVector(new OMTVector(1,0,0));
+		cell7.setUpVector(new OMTVector(0,0,1));
 		cell7.addSemanticClass(ISemanticClass.CA1_PYRAMIDAL_CELL_CLASS);
 		//addSceneObject(cell7);
 		
@@ -226,8 +244,8 @@ public class SceneImpl extends Observable implements IScene {
 		
 		for (int i = 1; i < 20; i++) {
 			NeuronMorphologyImpl cell11 = new NeuronMorphologyImpl(cell11URL, curve1, ((float)i)/20f-0.01f, 
-					INeuronMorphology.RENDER_AS_LOD);
-			cell11.setScale(0.01f);
+					INeuronMorphology.RENDER_AS_LOD, d);
+			cell11.setRelativeScale(0.01f);
 			cell11.addSemanticClass(ISemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS);
 			addSceneObject(cell11);
 		}
@@ -238,7 +256,7 @@ public class SceneImpl extends Observable implements IScene {
 		URL cell12URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/pv08d.morph.xml");
 		cell12.setMorphologyViaURL(cell12URL);
 		cell12.getMorphology().setPosition(new PositionImpl(-25,0,20));
-		//cell3.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new Vector3f(0,1,0)));
+		//cell3.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new OMTVector(0,1,0)));
 		cell12.getMorphology().setScale(0.01f);
 		cell12.getMorphology().setRenderOption(INeuronMorphology.RENDER_AS_LINES);
 		addSceneObject(cell12);
@@ -247,34 +265,34 @@ public class SceneImpl extends Observable implements IScene {
 		URL cell13URL = SceneImpl.class.getClassLoader().getResource("etc/morphml/hippocampus/pv22b.morph.xml");
 		cell13.setMorphologyViaURL(cell13URL);
 		cell13.getMorphology().setPosition(new PositionImpl(25,0,20));
-		//cell3.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new Vector3f(0,1,0)));
+		//cell3.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new OMTVector(0,1,0)));
 		cell13.getMorphology().setScale(0.01f);
 		cell13.getMorphology().setRenderOption(INeuronMorphology.RENDER_AS_LINES);
 		addSceneObject(cell13);*/
 		
-		p1 = new Vector3f(-10,-5,20);
-		p2 = new Vector3f(3,-9,20);
-		p3 = new Vector3f(14,-10,20);
-		p4 = new Vector3f(-9,20,20);
-		p5 = new Vector3f(-23,15,20);
+		p1 = new OMTVector(-10,-5,20);
+		p2 = new OMTVector(3,-9,20);
+		p3 = new OMTVector(14,-10,20);
+		p4 = new OMTVector(-9,20,20);
+		p5 = new OMTVector(-23,15,20);
 				
-		Vector3f[][] array3 = {{p1, p3, p4, p5},
-				{new Vector3f(p1.x, p1.y, p1.z-20), new Vector3f(p3.x, p3.y, p3.z-20), new Vector3f(p4.x, p4.y, p4.z-20), new Vector3f(p5.x, p5.y, p5.z-20)},   
-				{new Vector3f(p1.x, p1.y, p1.z-40), new Vector3f(p3.x, p3.y, p3.z-40), new Vector3f(p4.x, p4.y, p4.z-40), new Vector3f(p5.x, p5.y, p5.z-40)},   
-				{new Vector3f(p1.x, p1.y, p1.z-60), new Vector3f(p3.x, p3.y, p3.z-60), new Vector3f(p4.x, p4.y, p4.z-60), new Vector3f(p5.x, p5.y, p5.z-60)}
+		OMTVector[][] array3 = {{p1, p3, p4, p5},
+				{new OMTVector(p1.x, p1.y, p1.z-20), new OMTVector(p3.x, p3.y, p3.z-20), new OMTVector(p4.x, p4.y, p4.z-20), new OMTVector(p5.x, p5.y, p5.z-20)},   
+				{new OMTVector(p1.x, p1.y, p1.z-40), new OMTVector(p3.x, p3.y, p3.z-40), new OMTVector(p4.x, p4.y, p4.z-40), new OMTVector(p5.x, p5.y, p5.z-40)},   
+				{new OMTVector(p1.x, p1.y, p1.z-60), new OMTVector(p3.x, p3.y, p3.z-60), new OMTVector(p4.x, p4.y, p4.z-60), new OMTVector(p5.x, p5.y, p5.z-60)}
 		};
 		
 		ISurface surf1 = new SurfaceImpl("my surf", array3, 16);
 		//manager.addSurface(surf1);
 		
-		p1 = new Vector3f(-20,0,20);
-		p2 = new Vector3f(-29,-5,20);
-		p3 = new Vector3f(-20,-10,20);
+		p1 = new OMTVector(-20,0,20);
+		p2 = new OMTVector(-29,-5,20);
+		p3 = new OMTVector(-20,-10,20);
 		
-		Vector3f[][] array4 = {{p1, p2, p2, p3},
-				{new Vector3f(p1.x, p1.y, p1.z-20), new Vector3f(p2.x, p2.y, p2.z-20), new Vector3f(p2.x, p2.y, p2.z-20), new Vector3f(p3.x, p3.y, p3.z-20)},   
-				{new Vector3f(p1.x, p1.y, p1.z-40), new Vector3f(p2.x, p2.y, p2.z-40), new Vector3f(p2.x, p2.y, p2.z-40), new Vector3f(p3.x, p3.y, p3.z-40)},   
-				{new Vector3f(p1.x, p1.y, p1.z-60), new Vector3f(p2.x, p2.y, p2.z-60), new Vector3f(p2.x, p2.y, p2.z-60), new Vector3f(p3.x, p3.y, p3.z-60)}
+		OMTVector[][] array4 = {{p1, p2, p2, p3},
+				{new OMTVector(p1.x, p1.y, p1.z-20), new OMTVector(p2.x, p2.y, p2.z-20), new OMTVector(p2.x, p2.y, p2.z-20), new OMTVector(p3.x, p3.y, p3.z-20)},   
+				{new OMTVector(p1.x, p1.y, p1.z-40), new OMTVector(p2.x, p2.y, p2.z-40), new OMTVector(p2.x, p2.y, p2.z-40), new OMTVector(p3.x, p3.y, p3.z-40)},   
+				{new OMTVector(p1.x, p1.y, p1.z-60), new OMTVector(p2.x, p2.y, p2.z-60), new OMTVector(p2.x, p2.y, p2.z-60), new OMTVector(p3.x, p3.y, p3.z-60)}
 		};
 
 		ISurface surf2 = new SurfaceImpl("my surf", array4, 16);
@@ -284,9 +302,11 @@ public class SceneImpl extends Observable implements IScene {
 		IMesh mesh = new MeshImpl();
 		//mesh.loadMaxFile("etc/mito/mito_outer.3ds");
 		mesh.loadObjFile(mitoObjURL);
-		mesh.setPosition(new PositionImpl(0.49f, -3.5f, 20.01f));
-		mesh.setRotation(new RotationImpl(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_X));
-		mesh.setScale(0.0002f);
+		//mesh.setRelativePosition(new PositionVector(0.49f, -3.5f, 20.01f));
+		mesh.setRelativePosition(new PositionVector(0.49f, -3.3f, 20.01f));
+		mesh.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
+		mesh.setRelativeScale(0.0002f);
+		mesh.setCoordinateSystem(d);
 	
 		//addSceneObject(mesh);
 		
@@ -299,9 +319,9 @@ public class SceneImpl extends Observable implements IScene {
 		for (INeuronMorphology c : manager.getCells()) {
 			CellInstance ci = new CellInstance();
 			Point loc = new Point();
-			loc.setX(c.getPosition().getX());
-			loc.setY(c.getPosition().getY());
-			loc.setZ(c.getPosition().getZ());
+			loc.setX(c.getRelativePosition().getX());
+			loc.setY(c.getRelativePosition().getY());
+			loc.setZ(c.getRelativePosition().getZ());
 			ci.setLocation(loc);
 			//ci.setId(c.getMorphology().get)
 			ins.getInstance().add(ci);

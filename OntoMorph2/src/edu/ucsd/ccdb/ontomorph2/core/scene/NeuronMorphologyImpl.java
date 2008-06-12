@@ -28,11 +28,11 @@ import neuroml.generated.NeuroMLLevel2.Cells;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.IPosition;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionImpl;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
@@ -45,9 +45,8 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 	Set<ISegmentGroup> selectedSegmentGroupList = new HashSet<ISegmentGroup>();
 	Level2Cell theCell;
 	Set<ISegmentGroup> segmentGroupList = null;
-	boolean selected = false;
 	List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
-	IPosition lookAtPosition = null;
+	PositionVector lookAtPosition = null;
 	
 	ICurve _curve = null;
 	float _time = 0.0f;
@@ -75,15 +74,29 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		this.addObserver(SceneObserver.getInstance());
 	}
 	
-	public NeuronMorphologyImpl(URL morphLoc, IPosition position, IRotation rotation) {
+	public NeuronMorphologyImpl(URL morphLoc, PositionVector position, RotationVector rotation) {
 		this(morphLoc);
-		setPosition(position);
-		setRotation(rotation);
+		setRelativePosition(position);
+		setRelativeRotation(rotation);
 	}
 	
-	public NeuronMorphologyImpl(URL morphLoc, IPosition position, IRotation rotation, String renderOption) {
+	public NeuronMorphologyImpl(URL morphLoc, PositionVector position, RotationVector rotation, 
+			CoordinateSystem c) {
+		this(morphLoc, position, rotation);
+		this.setCoordinateSystem(c);
+	}
+
+	
+	public NeuronMorphologyImpl(URL morphLoc, PositionVector position, 
+			RotationVector rotation, String renderOption) {
 		this(morphLoc, position, rotation);
 		setRenderOption(renderOption);
+	}
+	
+	public NeuronMorphologyImpl(URL morphLoc, PositionVector position, 
+			RotationVector rotation, String renderOption, CoordinateSystem c) {
+		this(morphLoc, position, rotation, renderOption);
+		this.setCoordinateSystem(c);
 	}
 	
 	public NeuronMorphologyImpl(URL morphLoc, ICurve curve, float time, String renderOption) {
@@ -93,6 +106,13 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		this.positionAlongCurve(curve, time);
 		setRenderOption(renderOption);
 	}
+	
+	public NeuronMorphologyImpl(URL morphLoc, ICurve curve, float time, 
+			String renderOption, CoordinateSystem c) {
+		this(morphLoc, curve, time, renderOption);
+		this.setCoordinateSystem(c);
+	}
+
 	
 	public ICurve getCurve() {
 		return _curve;
@@ -213,18 +233,8 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		return selectedSegmentList;
 	}
 
-	public void select() {
-		this.selected = true;		
-		changed();
-	}
-
 	public void selectSegmentGroup(ISegmentGroup g) {
 		selectedSegmentGroupList.add(g);
-		changed();
-	}
-
-	public void unselect() {
-		this.selected = false;
 		changed();
 	}
 
@@ -236,11 +246,6 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 	public Set<ISegmentGroup> getSelectedSegmentGroups() {
 		return selectedSegmentGroupList;
 	}
-
-	public boolean isSelected() {
-		return this.selected;
-	}
-
 
 	public boolean hasSelectedSegmentGroups() {
 		return getSelectedSegmentGroups().size() > 0;
@@ -273,14 +278,14 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 	}
 
 	public void positionAlongCurve(ICurve c, float time) {
-		setPosition(new PositionImpl(((CurveImpl)c).getPoint(time)));
+		setRelativePosition(new PositionVector(((CurveImpl)c).getPoint(time)));
 	}
 
-	public void lookAt(IPosition p) {
+	public void lookAt(PositionVector p) {
 		lookAtPosition = p;
 	}
 
-	public IPosition getLookAtPosition() {
+	public PositionVector getLookAtPosition() {
 		return lookAtPosition;
 	}
 
@@ -299,5 +304,4 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		}
 		return Vector3f.UNIT_Y;
 	}
-	
 }

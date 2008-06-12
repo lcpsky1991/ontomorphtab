@@ -150,8 +150,8 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		cam.update();
 		//cam.setFrustumPerspective(45.0f, aspect, 1, 1000);
 		
-		//a locaiton on the Z axis a ways away
-		Vector3f loc = new Vector3f(0, -3f, -400.0f);
+		
+		
 		//Vector3f left = new Vector3f(-1.0f, 0.0f, 0.0f);
 		//Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
 		//Vector3f dir = new Vector3f(0.0f, 0f, -1.0f);
@@ -168,8 +168,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		
 		//camnode is for easy manipulation of the camera
 		camNode = new CameraNode("camera node", cam);
-		camNode.setLocalTranslation(loc);
-		
+		setCameraToSlideView();
 		
 		rootNode.attachChild(camNode);
 		
@@ -184,9 +183,21 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		configureControls();
 		
 		//Remove lighting for rootNode so that it will use our basic colors
-		rootNode.setLightCombineMode(LightState.OFF);
+		//rootNode.setLightCombineMode(LightState.OFF);
 		
 		disp = View2DImpl.getInstance();
+	}
+	
+	public void setCameraToSlideView() {
+		Vector3f loc = new Vector3f(-300f, -118f, -180f);
+		camNode.setLocalTranslation(loc);
+		camNode.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y));
+	}
+	
+	public void setCameraToAtlasSideView() {
+		Vector3f loc = new Vector3f(300f, -118f, 300f);
+		camNode.setLocalTranslation(loc);
+		camNode.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y));
 	}
 	
 	

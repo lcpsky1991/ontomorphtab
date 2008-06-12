@@ -7,17 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
-import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.util.MyNode;
 
 
@@ -52,10 +48,12 @@ public class ReferenceAtlas {
 		try {
 			FileReader fr = new FileReader(new File(SceneImpl.allenDir + "ontology.csv"));
 			BufferedReader br = new BufferedReader(fr);
+			AllenCoordinateSystem sys = new AllenCoordinateSystem();
 			while (br.ready()) {
 				String[] line = br.readLine().split(",");
 				brainRegions.add(new BrainRegion(line[0], line[1], line[2], 
-						new Color(Integer.parseInt(line[3]), Integer.parseInt(line[4]), Integer.parseInt(line[5]))));
+						new Color(Integer.parseInt(line[3]), Integer.parseInt(line[4]), 
+								Integer.parseInt(line[5])),sys));
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -112,9 +110,51 @@ public class ReferenceAtlas {
 					root.children.add(n);
 				}
 			}
-			
 		}
 		
 		return root;
+	}
+	
+	public void displayBasicAtlas() {
+		this.getBrainRegion("OLF").select();
+		this.getBrainRegion("HPF").select();
+		this.getBrainRegion("STRd").select();
+		this.getBrainRegion("STRv").select();
+		this.getBrainRegion("LSX").select();
+		this.getBrainRegion("sAMY").select();
+		this.getBrainRegion("PAL").select();
+		this.getBrainRegion("TH").select();
+		this.getBrainRegion("HY").select();
+		this.getBrainRegion("MBsen").select();
+		this.getBrainRegion("MBmot").select();
+		this.getBrainRegion("MBsta").select();
+		this.getBrainRegion("P").select();
+		this.getBrainRegion("MY").select();
+		this.getBrainRegion("CB").select();
+	}
+	
+	public void displayLeafAtlas() {
+		List<BrainRegion> regions = getBrainRegionLeaves();
+		for (BrainRegion reg : regions) {
+			reg.select();
+		}
+	}
+	
+	public List<BrainRegion> getBrainRegionLeaves() {
+		List<BrainRegion> leaves = new ArrayList<BrainRegion>();
+		MyNode tree = getBrainRegionTree();
+		Stack<MyNode> s = new Stack<MyNode>();
+		s.add(tree);
+		while (!s.isEmpty()) {
+			MyNode i = s.pop();
+			for (MyNode n : i.children) {
+				if (!n.children.isEmpty()) {
+					s.addAll(n.children);
+				} else {
+					leaves.add((BrainRegion)n.value);
+				}
+			}
+		}
+		return leaves;
 	}
 }

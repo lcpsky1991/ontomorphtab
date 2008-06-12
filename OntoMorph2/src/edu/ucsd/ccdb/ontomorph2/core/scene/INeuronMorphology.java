@@ -7,7 +7,7 @@ import java.util.Set;
 import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.IPosition;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 
 /**
  * @$comment Describes the morphology of the cell, independent of different ways of visualizing it.  
@@ -22,20 +22,6 @@ public interface INeuronMorphology extends ISceneObject{
 	public final static String RENDER_AS_LOD = "lod";
 	public final static String RENDER_AS_LOD_2 = "lod2";
 	public final static String SPHERES_AT_JOINTS = "spheres";
-
-			public edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation lnkIRotation = null;
-
-		public edu.ucsd.ccdb.ontomorph2.core.spatial.IPosition lnkIPosition = null;
-
-	public ISegment lnkSegment = null;
-
-	/**
-	 * @associates SegmentGroup
-	 * @directed directed
-	 * @supplierCardinality 0..*
-	 */
-	java.util.Collection lnkSegmentGroup = null;
-
 
 	/**
 	 * Get the URL for the MorphML file that corresponds to this INeuronMorphology
@@ -100,9 +86,9 @@ public interface INeuronMorphology extends ISceneObject{
 	 * Rotates the NeuronMorphology to aim its 'up' direction towards p
 	 * @param p
 	 */
-	public void lookAt(IPosition p);
+	public void lookAt(PositionVector p);
 	
-	public IPosition getLookAtPosition();
+	public PositionVector getLookAtPosition();
 
 	public String getName();
 

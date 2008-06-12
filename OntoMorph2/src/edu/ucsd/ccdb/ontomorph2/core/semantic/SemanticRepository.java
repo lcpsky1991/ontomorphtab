@@ -38,12 +38,7 @@ public class SemanticRepository {
 		this.loadOntology();
 	}
 	
-	public static void main(String[] args) {
-		SemanticRepository.getInstance();
-		//get semantic thing for a pyramidal cell
-		ISemanticThing pyramCell = SemanticRepository.getInstance().getSemanticClass("sao:sao830368389");
-		
-	}
+
 	
 	public KnowledgeBase getOWLModel() {
 		return owlModel;
@@ -198,5 +193,12 @@ public class SemanticRepository {
 		}			
 		return label;
 
+	}
+	
+	public static void main(String[] args) {
+		SemanticRepository.getInstance();
+		//get semantic thing for a pyramidal cell
+		ISemanticThing pyramCell = SemanticRepository.getInstance().getSemanticClass("sao:sao830368389");
+		
 	}
 }

@@ -11,9 +11,15 @@ import java.util.Set;
 import com.jme.bounding.BoundingBox;
 import com.jme.scene.Geometry;
 import com.jme.scene.Spatial;
+import com.jme.scene.shape.Box;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyViewImpl;
 import edu.ucsd.ccdb.ontomorph2.view.scene.ViewImpl;
@@ -42,6 +48,11 @@ public class VolumeImpl extends SceneObjectImpl implements IVolume, ISemanticsAw
 		
 	}
 	
+	public VolumeImpl(Box box, CoordinateSystem d) {
+		this(box);
+		this.setCoordinateSystem(d);
+	}
+
 	/* (non-Javadoc)
 	 * @see src.edu.ucsd.ccdb.ontomorph2.core.scene.IVolume#getContainedSemanticalObjects()
 	 */
@@ -100,30 +111,6 @@ public class VolumeImpl extends SceneObjectImpl implements IVolume, ISemanticsAw
 	public void removeSemanticThing(ISemanticThing thing) {
 		this.semanticThings.remove(thing);
 		thing.removeSemanticsAwareAssociation(this);
-	}
-
-	public void select() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void unselect() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public boolean isSelected() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	
-	public boolean isVisible() {
-		return _visible;
-	}
-
-	public void setVisible(boolean b) {
-		_visible = b;
 	}
 
 }

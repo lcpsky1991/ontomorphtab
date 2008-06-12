@@ -1,40 +1,79 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene;
 
-import edu.ucsd.ccdb.ontomorph2.core.spatial.IPosition;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.IRotation;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
+
 
 public interface ISceneObject extends ISelectable{
 
 	/**
-	 * get the IRotation that defines this INeuronMorphology's rotation
-	 * @return - the IRotation
+	 * get the RotationVector that defines this INeuronMorphology's rotation.
+	 * This is relative to the coordinate system that this ISceneObject has
+	 * associated with it.  By default, the coordinate system is the absolute world
+	 * coordinate system.
+	 * @return - the RotationVector
 	 */
-	public IRotation getRotation();
+	public RotationVector getRelativeRotation();
 
 	/**
-	 * get the IPosition that defines this INeuronMorphology's position 
+	 * get the PositionVector that defines this INeuronMorphology's position
+	 * This is relative to the coordinate system that this ISceneObject has
+	 * associated with it.  By default, the coordinate system is the absolute world
+	 * coordinate system. 
 	 * @return
 	 */
-	public IPosition getPosition();
+	public PositionVector getRelativePosition();
 
 	/** 
-	 * set the IPosition for this INeuronMorphology
+	 * set the PositionVector for this INeuronMorphology
+	 * This is relative to the coordinate system that this ISceneObject has
+	 * associated with it.  By default, the coordinate system is the absolute world
+	 * coordinate system.
 	 * @param pos - desired position
 	 */
-	public void setPosition(IPosition pos);
+	public void setRelativePosition(PositionVector pos);
 
 	/**
-	 * set the IRotation for this INeuronMorphology
+	 * set the RotationVector for this INeuronMorphology
+	 * This is relative to the coordinate system that this ISceneObject has
+	 * associated with it.  By default, the coordinate system is the absolute world
+	 * coordinate system.
 	 * @param rot - desiredRotation
 	 */
-	public void setRotation(IRotation rot);
+	public void setRelativeRotation(RotationVector rot);
 
 	/**
 	 * set the scale for this INeuronMorphology
-	 * @param f - scale
+	 * @param v - scale
 	 */
-	public void setScale(float f);
+	public void setRelativeScale(OMTVector v);
+	
+	public void setRelativeScale(float f);
 
-	public float getScale();
+	public OMTVector getRelativeScale();
+	
+	
+	/**
+	 * get the RotationVector that defines this INeuronMorphology's rotation.
+	 * This is always in the absolute world coordinate system.
+	 * @return - the RotationVector
+	 */
+	public RotationVector getAbsoluteRotation();
+
+	/**
+	 * get the PositionVector that defines this INeuronMorphology's position
+	 * This is always in the absolute world coordinate system.
+	 * @return
+	 */
+	public PositionVector getAbsolutePosition();
+
+	public OMTVector getAbsoluteScale();
+	
+	public void setCoordinateSystem(CoordinateSystem sys);
+	
+	public CoordinateSystem getCoordinateSystem();
 
 }

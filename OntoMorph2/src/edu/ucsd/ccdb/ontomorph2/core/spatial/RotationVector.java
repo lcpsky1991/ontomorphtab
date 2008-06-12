@@ -5,18 +5,18 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 
-public class RotationImpl extends com.jme.math.Quaternion implements IRotation{
+public class RotationVector extends com.jme.math.Quaternion{
 
-	public RotationImpl(float offset, Vector3f start) {
+	public RotationVector(float offset, Vector3f start) {
 		this.fromAngleAxis(offset, start);
 		
 	}
 	
-	public RotationImpl() {
+	public RotationVector() {
 		
 	}
 	
-	public RotationImpl(Quaternion localRotation) {
+	public RotationVector(Quaternion localRotation) {
 		super(localRotation);
 	}
 

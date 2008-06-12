@@ -70,11 +70,11 @@ public class MeshViewImpl {
 				 translateToOrigin = object.getWorldBound().getCenter().subtract(new Vector3f(0,0,0));
 				object.setLocalTranslation(translateToOrigin);
 			}*/
-			if (mesh.getPosition() != null)
-				object.setLocalTranslation(mesh.getPosition().asVector3f());
-			if (mesh.getRotation() != null)
-				object.setLocalRotation(mesh.getRotation().asMatrix3f());
-			object.setLocalScale(mesh.getScale());
+			if (mesh.getAbsolutePosition() != null)
+				object.setLocalTranslation(mesh.getAbsolutePosition().asVector3f());
+			if (mesh.getAbsoluteRotation() != null)
+				object.setLocalRotation(mesh.getAbsoluteRotation().asMatrix3f());
+			object.setLocalScale(mesh.getRelativeScale());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
