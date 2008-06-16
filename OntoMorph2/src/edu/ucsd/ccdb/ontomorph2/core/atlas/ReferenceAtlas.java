@@ -3,18 +3,26 @@ package edu.ucsd.ccdb.ontomorph2.core.atlas;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.ByteBuffer;
+import java.nio.channels.ByteChannel;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
+import com.jme.scene.batch.TriangleBatch;
+
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.util.BitMath;
 import edu.ucsd.ccdb.ontomorph2.util.MyNode;
+import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 
 /**
@@ -53,7 +61,7 @@ public class ReferenceAtlas {
 				String[] line = br.readLine().split(",");
 				brainRegions.add(new BrainRegion(line[0], line[1], line[2], 
 						new Color(Integer.parseInt(line[3]), Integer.parseInt(line[4]), 
-								Integer.parseInt(line[5])),sys));
+								Integer.parseInt(line[5])),line[6], sys));
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -85,6 +93,93 @@ public class ReferenceAtlas {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Retrieve a brain region by its x,y,z voxel coordinates in the 
+	 * Allen atlas
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
+	public BrainRegion getBrainRegion(int rostralCaudal, int dorsalVentral, int lateralMedial) {
+		if (rostralCaudal > 528 || rostralCaudal < 0 || dorsalVentral > 320 || dorsalVentral < 0 
+				|| lateralMedial > 456 || lateralMedial < 0) {
+			throw new OMTException("Invalid value entered for getting a brain region!", null);
+		}
+		BrainRegion br = null;
+		/*
+		 The meshes were extracted from a sagittally-oriented volume 
+		 with 25 micron voxel spacing and dimensions 528 x 320 x 456 
+		 voxels.  The voxel ordering is 528 voxels rostral to caudal, 
+		 320 voxels dorsal to ventral, and 456 voxels lateral left to 
+		 right.  Bregma is at 213, 41, 223.
+		 
+		 There are 2 volumes with the above dimensions you can use if 
+		 you need the volumetric atlas.  Data\Annotation25 contains 
+		 8-bit unsigned int voxels whose values correspond to column 
+		 7 (Structure ID 1) in the ontology.csv file.  The second 
+		 volume contains the Nissl sections of the atlas 
+		 reconstructed in 3d also as 8-bit unsigned ints.  On 
+		 Windows, its location is at [User profile folder (e.g., 
+		 C:\Document and Settings \ userid)]\Application Data\Allen 
+		 Institute\Brain Explorer\Atlas\Atlas25.  On the Mac, its in 
+		 ~/Library/Application Support/Brain Explorer/Atlas/Atlas25.
+		 */
+		File fi;
+		try {
+			fi = new File("etc/allen/Annotation25");
+			
+			
+			if (fi == null || !fi.canRead()) {
+				throw new OMTException("Can't open Annotation25! " + fi.toString(), null);
+			}
+			
+			FileInputStream file = new FileInputStream(fi);
+			
+			//calculate offset
+			/**
+			 * Consider a 3X3X3 cube:
+			 * 
+			 * 0 1 2   9 10 11  18 19 20
+			 * 3 4 5  12 13 14  21 22 23
+			 * 6 7 8  15 16 17  24 25 26
+			 * 
+			 * Where the 0 1 2 layer is above 9 10 11 is above 18 19 20
+			 * 
+			 * the 0 1 2 direction is analogous to the rostralCaudal direction
+			 * the 0 3 6 direction is analogous to the dorsalVentral direction
+			 * the 0 9 18 direction is analgous to the lateralMedial direction
+			 * 
+			 * so, 6 is at the 0, 2, 0 position.  To calculate that: 0*1 + 2*3 + 0*9
+			 * so, 12 is at the 0, 1, 1 position.  To calculate that: 0 + 1*3 + 1*9
+			 * 
+			 * Therefore the formula is 1*x_coord + Y_MAX*y_coord + Y_MAX*Z_MAX+z_coord; 
+			 */
+			int offset = rostralCaudal+320*dorsalVentral+456*320*lateralMedial;
+			//read byte array for unsigned int at offset
+			byte[] brainRegionIdByteArray = new byte[BitMath.sizeOf8BitUnsignedInt];
+			FileChannel c = (FileChannel)file.getChannel();
+			
+			//c.read(byteBuffer, offset);
+			file.read(brainRegionIdByteArray);
+			//convert byte array to java int
+			int brainRegionId = BitMath.convertByteArrayToInt(brainRegionIdByteArray);
+			//return BrainRegion corresponding to int
+			for (BrainRegion b : getBrainRegions()) {
+				if (b.getRegionId() == brainRegionId) {
+					return b;
+				}
+			}
+
+			file.close();
+		} catch (Exception e) {
+			throw new OMTException("Error returning brain region!", e);
+		}
+		
+		return br;
 	}
 	
 	public List<BrainRegion> getBrainRegions() {

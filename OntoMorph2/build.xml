@@ -108,6 +108,27 @@
     	
     	<!-- FengGUI Libraries-->
         <pathelement path="${lib}/FengGUI.jar"/>
+		
+		<!-- CCDB Connection Libraries -->
+        <pathelement path="${lib}/ccdb-plugin/BrainCatalogCCDBClientReader.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/activation.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/BrainCatalogCCDB_datamodel.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/FastInfoset.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/http.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/JAXB2_20061211.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/jaxws-api.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/jaxws-rt.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/jaxws-tools.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/jsr173_api.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/jsr181-api.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/jsr250-api.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/saaj-impl.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/saaj-api.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/sjsxp.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/stax-ex.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/streambuffer.jar"/>
+
+
 	</path>  
 
 
@@ -274,7 +295,28 @@
             overwrite = "true"/>
    </target>
 -->
+	<target name="javadoc">
+	  <javadoc
+	           destdir="docs/api"
+	           author="true"
+	           version="true"
+	           use="true"
+	           windowtitle="Whole Brain Catalog API">
 
+	    <packageset dir="src" defaultexcludes="yes">
+	      <include name="edu/ucsd/ccdb/**"/>
+	      <exclude name="neuroml/**"/>
+	    </packageset>
+
+	    <doctitle><![CDATA[<h1>Whole Brain Catalog</h1>]]></doctitle>
+	    <bottom><![CDATA[<i>Copyright &#169; 2008 NCMIR. All Rights Reserved.</i>]]></bottom>
+	    <!--<tag name="todo" scope="all" description="To do:"/>
+	    <group title="Group 1 Packages" packages="com.dummy.test.a*"/>
+	    <group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*"/>
+	    <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="C:\tmp"/>
+	    <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>-->
+	  </javadoc>
+	</target>
 
     <target name = "install">
       <fail message = "set the catalog.home variable to do an install">

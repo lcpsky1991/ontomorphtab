@@ -26,16 +26,18 @@ public class BrainRegion extends SceneObjectImpl implements ISemanticsAware{
 	private String name;
 	private String abbrev;
 	private String parentAbbrev;
+	private int regionId;
 	private Color color;
 	private BatchMesh mesh;
 	private AreaClodMesh aMesh;
 	private TriMesh tMesh;
 	
-	public BrainRegion(String name, String abbrev, String parentAbbrev, Color c, CoordinateSystem co){
+	public BrainRegion(String name, String abbrev, String parentAbbrev, Color c, String regionId, CoordinateSystem co){
 		this.name = name;
 		this.abbrev = abbrev;
 		this.parentAbbrev = parentAbbrev;
 		this.color = c;
+		this.regionId = Integer.parseInt(regionId);
 		
 		this.addObserver(SceneObserver.getInstance());
 		this.setCoordinateSystem(co);
@@ -47,6 +49,10 @@ public class BrainRegion extends SceneObjectImpl implements ISemanticsAware{
 
 	public String getAbbreviation() {
 		return abbrev;
+	}
+	
+	public int getRegionId() {
+		return this.regionId;
 	}
 
 	public BatchMesh getMesh() {
