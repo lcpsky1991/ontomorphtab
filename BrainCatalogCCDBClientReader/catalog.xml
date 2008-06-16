@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
-    <system systemId="http://meower-db.ucsd.edu:9090/BrainCatalog_CCDB_WS_1pt0/getCCDBMicroscopyDataService?wsdl" uri="xml-resources/web-service-references/getCCDBMicroscopyDataService/wsdl/meower-db.ucsd.edu_9090/BrainCatalog_CCDB_WS_1pt0/getCCDBMicroscopyDataService.wsdl"/>
-    <system systemId="http://meower-db.ucsd.edu:9090/BrainCatalog_CCDB_WS_1pt0/getCCDBMicroscopyDataService?xsd=1" uri="xml-resources/web-service-references/getCCDBMicroscopyDataService/wsdl/meower-db.ucsd.edu_9090/BrainCatalog_CCDB_WS_1pt0/getCCDBMicroscopyDataService.xsd_1.xsd"/>
-</catalog>
