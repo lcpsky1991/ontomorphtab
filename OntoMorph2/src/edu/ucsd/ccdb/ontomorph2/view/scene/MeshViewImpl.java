@@ -14,6 +14,12 @@ import com.jmex.model.converters.ObjToJme;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.IMesh;
 
+/**
+ * Visualizes a mesh.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class MeshViewImpl {
 
 

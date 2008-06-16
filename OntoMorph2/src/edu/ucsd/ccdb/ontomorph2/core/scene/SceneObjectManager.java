@@ -1,26 +1,20 @@
-package edu.ucsd.ccdb.ontomorph2.core.manager;
+package edu.ucsd.ccdb.ontomorph2.core.scene;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.IMesh;
-import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.ISceneObject;
-import edu.ucsd.ccdb.ontomorph2.core.scene.ISlide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.IVolume;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.ISurface;
 import edu.ucsd.ccdb.ontomorph2.util.MyNode;
 
 
 /**
- * Represents a singleton.
+ * Keeps lists of all scene objects.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
  */
-
 public class SceneObjectManager {
 
 	

@@ -6,14 +6,14 @@ import java.util.Set;
 
 import com.jme.math.Vector3f;
 
-import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 
 /**
- * @$comment Describes the morphology of the cell, independent of different ways of visualizing it.  
+ * Describes the morphology of the cell, independent of different ways of visualizing it.  
  * Since it is a three-dimensional morphology, this will describe points in a local 3D space (MorphML?)
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
-
 public interface INeuronMorphology extends ISceneObject{
 	
 	//render options.

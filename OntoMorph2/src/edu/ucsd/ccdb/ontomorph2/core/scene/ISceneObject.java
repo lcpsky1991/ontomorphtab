@@ -2,11 +2,18 @@ package edu.ucsd.ccdb.ontomorph2.core.scene;
 
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
-
+/**
+ * Defines an object that can be viewed in the scene.  This object can be made relative
+ * to an arbitrary coordinate system.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see ICoordinateSystem
+ *
+ */
 public interface ISceneObject extends ISelectable{
 
 	/**

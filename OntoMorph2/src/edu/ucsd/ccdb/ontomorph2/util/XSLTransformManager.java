@@ -16,9 +16,11 @@ import javax.xml.transform.stream.StreamSource;
 
 
 /**
- * Represents a singleton.
+ * Manages XSL transforms.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
  */
-
 public class XSLTransformManager {
 	
 	/**
@@ -27,6 +29,13 @@ public class XSLTransformManager {
 	private static XSLTransformManager instance;
 	URL _morphmlToX3dXSL = null;
 
+	/**
+	 * Uses an XSL transform that converts MorphML to X3D to return a stream to the
+	 * X3D document.
+	 * 
+	 * @param morphMLDocument
+	 * @return
+	 */
 	public InputStream convertMorphMLToX3D(URL morphMLDocument) {
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		try {

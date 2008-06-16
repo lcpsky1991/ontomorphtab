@@ -10,6 +10,11 @@ import com.jme.scene.state.WireframeState;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.IVolume;
 
+/**
+ * Visualizes an IVolume
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see IVolume
+ */
 public class VolumeViewImpl {
 
 	IVolume _vol = null;

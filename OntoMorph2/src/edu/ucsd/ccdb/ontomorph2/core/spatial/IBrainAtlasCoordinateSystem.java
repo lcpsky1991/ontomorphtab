@@ -1,5 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.core.spatial;
 
+/**
+ * Defines a coordinate system used to define a brain atlas.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public interface IBrainAtlasCoordinateSystem extends ICoordinateSystem {
 
 	

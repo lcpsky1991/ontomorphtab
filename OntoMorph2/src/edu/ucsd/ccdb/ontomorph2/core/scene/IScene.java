@@ -3,13 +3,11 @@ package edu.ucsd.ccdb.ontomorph2.core.scene;
 import java.util.List;
 import java.util.Set;
 
-import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.ISurface;
 
 /**
  * Defines the totality of the objects that can be viewed in the 3D world
  * 
- * @author stephen
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
 public interface IScene {

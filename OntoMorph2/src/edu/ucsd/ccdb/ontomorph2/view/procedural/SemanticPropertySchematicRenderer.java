@@ -7,7 +7,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;
  * Operates on scene objects and creates a visual connection between them that 
  * visually indicates the presence of a particular semantic property.
  * 
- * @author stephen
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
 public abstract class SemanticPropertySchematicRenderer {

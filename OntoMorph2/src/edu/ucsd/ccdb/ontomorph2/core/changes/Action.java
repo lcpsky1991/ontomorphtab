@@ -1,7 +1,10 @@
 package edu.ucsd.ccdb.ontomorph2.core.changes;
 
-/* Defines some kind of change that can be made within the framework that can be recorded
+/**
+ * Defines some kind of change that can be made within the framework that can be recorded
  * in revision control, can be undone, and can be redone.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
 public abstract class Action {
 

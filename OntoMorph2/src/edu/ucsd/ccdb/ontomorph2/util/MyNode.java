@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISelectable;
 
 
+/**
+ * Defines a node for a tree-hierarchy.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class MyNode
 {
 	public MyNode(String string, ISelectable value)

@@ -17,15 +17,20 @@ import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.scene.CurveImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.ICurve;
 import edu.ucsd.ccdb.ontomorph2.core.scene.IMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISlide;
+import edu.ucsd.ccdb.ontomorph2.core.scene.ISurface;
 import edu.ucsd.ccdb.ontomorph2.core.scene.IVolume;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.ISurface;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.SurfaceImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.SurfaceImpl;
 
+/**
+ * Implements IView3D
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see IView 3D
+ */
 public class View3DImpl extends Node implements IView3D {
 	
 	private Node slidesNode = null;

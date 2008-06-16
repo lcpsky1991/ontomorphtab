@@ -5,10 +5,15 @@ import java.net.URL;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
+/**
+ * Implementation of ISlide.  
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see ISlide
+ */
 public class SlideImpl extends SceneObjectImpl implements ISlide {
 	
 	URL _imageURL = null;

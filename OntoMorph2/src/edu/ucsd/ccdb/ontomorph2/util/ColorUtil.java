@@ -4,6 +4,11 @@ import java.awt.Color;
 
 import com.jme.renderer.ColorRGBA;
 
+/**
+ * Utility class to convert java Color classes to jME ColorRGBA.
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class ColorUtil {
 
 	public static ColorRGBA convertColorToColorRGBA(Color c) {

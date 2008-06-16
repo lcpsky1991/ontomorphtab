@@ -6,12 +6,11 @@ import edu.stanford.smi.protege.model.Cls;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISelectable;
 
 
-//import edu.stanford.smi.protege.model.Cls;
-
 /**
- * @$comment Contains the semantic description of a biological object (OWL)
+ * Contains the semantic description of a biological object (OWL).
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
-
 public interface ISemanticThing extends ISelectable{
 	
 	public List<ISemanticsAware> getSemanticsAwareAssociations();

@@ -14,7 +14,7 @@ import com.jme.scene.lod.DiscreteLodNode;
  * same time that a child is being added.  Also allows you to get at the currently active
  * geometries easily.
  * 
- * @author stephen
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
 public class OMTDiscreteLodNode extends DiscreteLodNode {

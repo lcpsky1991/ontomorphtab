@@ -16,6 +16,13 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.IView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.ViewImpl;
 
 
+/**
+ * This main observer is triggered when any scene object changes and updates
+ * the view accordingly.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class SceneObserver implements Observer{
 
 	IView _view;

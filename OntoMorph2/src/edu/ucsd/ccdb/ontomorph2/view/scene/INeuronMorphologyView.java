@@ -9,8 +9,9 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
 
 /**
- * @$comment Describes the 3D structure of a biological object 
- * in a format that can be easily visualized in a 3D viewer (X3D?)
+ * Describes the 3D structure of a biological object in a format that can be easily visualized in a 3D viewer (X3D?)
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
 
 public interface INeuronMorphologyView {

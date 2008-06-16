@@ -32,17 +32,19 @@ import org.fenggui.util.Point;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
-import edu.ucsd.ccdb.ontomorph2.core.manager.SceneObjectManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISelectable;
+import edu.ucsd.ccdb.ontomorph2.core.scene.SceneObjectManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.MyNode;
 
 
 /**
- * Represents a singleton.
+ * Implements IView2D
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see IView2D
+ *
  */
-
 public class View2DImpl extends Display implements IView2D, IMenuItemPressedListener {
 	
 	public static final String LOAD_SCENE = "Load Scene...";

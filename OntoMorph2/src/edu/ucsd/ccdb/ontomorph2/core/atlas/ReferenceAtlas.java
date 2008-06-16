@@ -26,7 +26,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 
 /**
- * Represents a singleton.
+ * Contains a list of brain regions of the mouse brain and methods to manage and extract information about them.
  */
 
 public class ReferenceAtlas {

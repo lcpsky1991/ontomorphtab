@@ -5,6 +5,12 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 
+/**
+ * A 3D vector that defines a rotation.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class RotationVector extends com.jme.math.Quaternion{
 
 	public RotationVector(float offset, Vector3f start) {

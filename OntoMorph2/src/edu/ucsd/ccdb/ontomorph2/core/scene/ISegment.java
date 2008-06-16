@@ -9,7 +9,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
  * Defines the smallest unit of an INeuronMorphology.  A segment has a proximal and a distal point,
  * and each has a radius.
  * 
- * @author stephen
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
 public interface ISegment extends ISemanticsAware{

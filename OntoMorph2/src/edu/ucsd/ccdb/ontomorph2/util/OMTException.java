@@ -3,7 +3,7 @@ package edu.ucsd.ccdb.ontomorph2.util;
 /**
  * Base class for all application-level exceptions
  * 
- * @author stephen
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
 public class OMTException extends RuntimeException {

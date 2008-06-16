@@ -8,6 +8,13 @@ import java.util.List;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 
+/**
+ * Implementation of ISegment.  Also aware of semantic tags.
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see ISegment
+ * @see ISemanticsAware
+ *
+ */
 public class SegmentImpl implements ISegment, ISemanticsAware {
 
 	BigInteger _id;

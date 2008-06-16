@@ -1,9 +1,9 @@
 package edu.ucsd.ccdb.ontomorph2.core.spatial;
 
 /**
- * Interface that defines a coordinate system
+ * Interface that defines a coordinate system.
  * 
- * @author stephen
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
 public interface ICoordinateSystem {
@@ -19,26 +19,26 @@ public interface ICoordinateSystem {
 	public float getMaximumZCoordinate();
 
 	
-	/*
+	/**
 	 * Returns a length 3 float array that contains x, y, and z coordinates
 	 * for a unit vector that points in the +X direction for this coordinate 
 	 * system
 	 */
 	public float[] getXDirection();
 	
-	/*
+	/**
 	 * Returns a length 3 float array that contains x, y, and z coordinates
 	 * for a unit vector that points in the +Y direction for this coordinate system
 	 */
 	public float[] getYDirection();
 	
-	/*
+	/**
 	 * Returns a length 3 float array that contains x, y, and z coordinates
 	 * for a unit vector that points in the +Z direction for this coordinate system
 	 */
 	public float[] getZDirection();
 	
-	/*
+	/**
 	 * Returns a length 3 float array that contains x, y, and z coordinates
 	 * for the origin of this coordinate system, relative to the absolute 
 	 * world coordinates of the rendering system

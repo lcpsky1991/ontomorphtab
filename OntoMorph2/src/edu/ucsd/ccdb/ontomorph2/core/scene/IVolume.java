@@ -7,6 +7,12 @@ import com.jme.scene.Spatial;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 
+/**
+ * Defines a volume of space, identified by the boundaries of a box or a sphere.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public interface IVolume extends ISceneObject {
 
 	public static final int BOX_SHAPE = 0;

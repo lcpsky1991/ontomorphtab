@@ -21,14 +21,20 @@ import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.RenderState;
 import com.jme.util.geom.BufferUtils;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
+/**
+ * Implements ISegmentView.
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see ISegmentView
+ *
+ */
 public class SegmentViewImpl implements ISegmentView {
 
 	private ISegment seg = null;

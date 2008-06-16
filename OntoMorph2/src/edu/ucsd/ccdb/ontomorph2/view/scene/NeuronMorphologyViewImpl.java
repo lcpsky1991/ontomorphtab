@@ -21,14 +21,21 @@ import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.AreaUtils;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
 
+/**
+ * Visualizes a neuron morphology.  Implements INeuronMorphologyView
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see INeuronMorphology
+ * @see INeuronMorphologyView
+ *
+ */
 public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyView {
 
 	List<ISegmentView> segViews;

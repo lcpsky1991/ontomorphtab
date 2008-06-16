@@ -14,10 +14,15 @@ import com.sun.org.apache.bcel.internal.generic.D2L;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISlide;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
+/**
+ * Implements ISlideView
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see ISlideView
+ */
 public class SlideViewImpl extends TriMesh implements ISlideView{
 	
 	URL imageURL = null;

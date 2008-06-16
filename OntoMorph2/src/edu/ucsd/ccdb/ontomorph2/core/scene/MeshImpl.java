@@ -8,6 +8,12 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 
+/**
+ * Defines an implementation of IMesh.  Also is made aware of semantics objects.
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see IMesh
+ * @see ISemanticsAware
+ */
 public class MeshImpl extends SceneObjectImpl implements IMesh, ISemanticsAware{
 	
 	URL maxFile = null;
@@ -16,11 +22,12 @@ public class MeshImpl extends SceneObjectImpl implements IMesh, ISemanticsAware{
 	public MeshImpl() {
 	}
 	
-	public void loadMaxFile(URL maxFilePath) {
+	
+	public void setMaxMeshURL(URL maxFilePath) {
 		this.maxFile = maxFilePath;
 	}
 	
-	public void loadObjFile(URL objFilePath) {
+	public void setObjMeshURL(URL objFilePath) {
 		objFile = objFilePath;
 	}
 	

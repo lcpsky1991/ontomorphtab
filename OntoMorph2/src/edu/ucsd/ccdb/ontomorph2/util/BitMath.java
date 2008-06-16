@@ -1,5 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.util;
 
+/**
+ * Performs low level bit math operations to read some binary formats.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class BitMath {
 
 	public static final int sizeOf8BitUnsignedInt = 1;

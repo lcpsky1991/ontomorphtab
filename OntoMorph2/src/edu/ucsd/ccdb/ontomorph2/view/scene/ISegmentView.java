@@ -11,7 +11,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
  * The visual representation of a segment or segment group.  Currently this can either be
  * as a line segment, or as a cylinder.  
  * 
- * @author stephen
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
 public interface ISegmentView {

@@ -4,8 +4,12 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
-
+/**
+ * A coordinate system that defines the system used by the Allen Brain Atlas
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class AllenCoordinateSystem extends CoordinateSystem implements  IBrainAtlasCoordinateSystem{
 /*
 The meshes were extracted from a sagittally-oriented volume 
@@ -14,8 +18,6 @@ voxels.  The voxel ordering is 528 voxels rostral to caudal,
 320 voxels dorsal to ventral, and 456 voxels lateral left to 
 right.  Bregma is at 213, 41, 223.
  */
-	
-	
 	
 	public AllenCoordinateSystem() {
 		this.MAX_X = 528;

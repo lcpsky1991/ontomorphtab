@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.spatial;
+package edu.ucsd.ccdb.ontomorph2.core.scene;
 
 import java.awt.Color;
 
@@ -9,11 +9,17 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneObjectImpl;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
+/**
+ * An implementation of ICurve
+ *  
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see ICurve
+ */
 public class CurveImpl extends SceneObjectImpl implements ICurve{
 
 	BezierCurve theCurve = null;

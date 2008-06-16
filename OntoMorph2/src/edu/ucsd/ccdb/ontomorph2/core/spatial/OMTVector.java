@@ -1,10 +1,14 @@
-package edu.ucsd.ccdb.ontomorph2.util;
+package edu.ucsd.ccdb.ontomorph2.core.spatial;
 
 import com.jme.math.Vector3f;
 
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
 
+/**
+ * Wraps a 3D vector.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class OMTVector extends Vector3f {
 
 	public OMTVector(int i, int j, int k) {

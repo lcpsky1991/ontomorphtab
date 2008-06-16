@@ -23,17 +23,12 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.scene.shape.Box;
 
-import edu.ucsd.ccdb.ontomorph2.core.manager.SceneObjectManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.ICurve;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.ISurface;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.SurfaceImpl;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 public class SceneImpl extends Observable implements IScene {
 	
@@ -301,7 +296,7 @@ public class SceneImpl extends Observable implements IScene {
 		
 		IMesh mesh = new MeshImpl();
 		//mesh.loadMaxFile("etc/mito/mito_outer.3ds");
-		mesh.loadObjFile(mitoObjURL);
+		mesh.setObjMeshURL(mitoObjURL);
 		//mesh.setRelativePosition(new PositionVector(0.49f, -3.5f, 20.01f));
 		mesh.setRelativePosition(new PositionVector(0.49f, -3.3f, 20.01f));
 		mesh.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));

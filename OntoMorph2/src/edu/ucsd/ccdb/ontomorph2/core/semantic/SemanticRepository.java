@@ -21,9 +21,10 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 
 /**
- * Represents a singleton.
+ * Represents a database of semantic things.
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
  */
-
 public class SemanticRepository {
 	
 	//JenaOWLModel owlModel = null;

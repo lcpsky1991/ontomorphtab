@@ -6,7 +6,7 @@ package edu.ucsd.ccdb.ontomorph2.view.procedural;
  * Will probably do this by generating multiple special versions of 
  * scene objects using some geometry instancing tricks
  * 
- * @author stephen
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
 public abstract class ProceduralRenderer {

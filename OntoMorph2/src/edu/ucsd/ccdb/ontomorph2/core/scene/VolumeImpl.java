@@ -25,7 +25,11 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyViewImpl;
 import edu.ucsd.ccdb.ontomorph2.view.scene.ViewImpl;
 
 /**
- * @author stephen
+ * Implementation of IVolume.  Also aware of semantic tags.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see IVolume
+ * @see ISemanticsAware
  *
  */
 public class VolumeImpl extends SceneObjectImpl implements IVolume, ISemanticsAware {

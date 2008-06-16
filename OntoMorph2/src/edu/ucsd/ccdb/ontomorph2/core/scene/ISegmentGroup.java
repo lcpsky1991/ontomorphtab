@@ -6,6 +6,14 @@ import java.util.List;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 
+/**
+ * Defines a group of segments in a neuron morphology.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see ISegment
+ * @see INeuronMorphology
+ *
+ */
 public interface ISegmentGroup extends ISemanticsAware{
 
 	/**

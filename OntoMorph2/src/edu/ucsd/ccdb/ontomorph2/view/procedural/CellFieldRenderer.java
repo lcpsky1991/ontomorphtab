@@ -3,9 +3,10 @@ package edu.ucsd.ccdb.ontomorph2.view.procedural;
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 
 
-/** Renders a bunch of cells within a brain region
+/** 
+ * Renders a bunch of cells within a brain region
  * 
- * @author stephen
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
 public class CellFieldRenderer extends ProceduralRenderer {

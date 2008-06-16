@@ -4,6 +4,12 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.view.scene.ViewImpl;
 
+/**
+ * Main class for the application.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class OntoMorph2 {
 	
 	static SceneImpl _scene;

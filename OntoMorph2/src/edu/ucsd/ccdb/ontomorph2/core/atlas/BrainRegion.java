@@ -21,6 +21,12 @@ import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 
+/**
+ * Defines an anatomical region of the mouse brain.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class BrainRegion extends SceneObjectImpl implements ISemanticsAware{
 
 	private String name;

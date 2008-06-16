@@ -4,8 +4,12 @@ import com.jme.math.Quaternion;
 import com.jme.math.TransformMatrix;
 import com.jme.math.Vector3f;
 
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
-
+/**
+ * Defines a coordinate system with an origin, rotation, and scale.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public abstract class CoordinateSystem extends TransformMatrix implements ICoordinateSystem {
 
 	

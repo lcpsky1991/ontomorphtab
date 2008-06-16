@@ -44,9 +44,10 @@ import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 
 
 /**
- * Represents a singleton.
+ * Implements IVew
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see IView
  */
-
 public class ViewImpl extends BaseSimpleGame implements IView{
 
 	private static ViewImpl instance = null;
