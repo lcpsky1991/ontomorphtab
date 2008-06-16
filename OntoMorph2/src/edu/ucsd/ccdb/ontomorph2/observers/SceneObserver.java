@@ -11,10 +11,13 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.NeuronMorphologyImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SegmentGroupImpl;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.view.IView;
 import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
 import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
 
+//TODO: remove vector3f from here and INeuroMorph changed (bookmark: p)
+import com.jme.math.Vector3f;
 
 /**
  * This main observer is triggered when any scene object changes and updates
@@ -49,9 +52,21 @@ public class SceneObserver implements Observer{
 			for (INeuronMorphologyView struct3d : _view.getView3D().getCells()) { //for all IStructure3Ds that are known
 				NeuronMorphologyImpl morph = (NeuronMorphologyImpl)struct3d.getMorphology();
 				if (morph == o) { // find the one that matches this INeuronMorphology and update it
+					
+					//TODO: remove this debug code
+					//Moves the segment to see if this is how to update model
+					PositionVector p = (PositionVector)struct3d.getMorphology().getAbsolutePosition();
+					struct3d.getNode().setLocalTranslation(p);
+					System.out.println("Observer Pos: " + p.asVector3f());
+					//--end debug
+					
 					struct3d.updateSelected(morph.isSelected());
 					struct3d.updateSelectedSegments(morph.getSelectedSegments());
 					struct3d.updateSelectedSegmentGroups(morph.getSelectedSegmentGroups());
+					
+					
+				
+					
 				}
 				//UPDATE INFO STRING ON VIEW 2D
 				

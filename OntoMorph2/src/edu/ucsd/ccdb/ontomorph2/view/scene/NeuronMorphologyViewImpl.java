@@ -115,7 +115,8 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
 			this.detachAllChildren();
 			this.attachChild(scene);
 			
-			if (_position != null) {
+			if (_position != null) 
+			{
 				this.setLocalTranslation(_position.asVector3f());
 			}
 			if (_rotation != null) {

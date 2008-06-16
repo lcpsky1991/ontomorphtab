@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.util.List;
 import java.util.Observable;
 
+
+import com.jme.bounding.BoundingSphere;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -66,6 +68,7 @@ public class BrainRegion extends SceneObjectImpl implements ISemanticsAware{
 			AllenAtlasMeshLoader loader = new AllenAtlasMeshLoader();
 			loader.setColor(this.color);
 			this.mesh = loader.loadByAbbreviation(this.getAbbreviation());
+
 			if (this.getCoordinateSystem() != null) {
 				if (this.getAbsolutePosition() != null) {
 					this.mesh.setLocalTranslation(this.getAbsolutePosition());

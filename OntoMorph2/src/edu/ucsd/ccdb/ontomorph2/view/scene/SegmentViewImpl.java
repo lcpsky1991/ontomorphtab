@@ -26,6 +26,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.IPosition;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
 import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
@@ -62,6 +63,7 @@ public class SegmentViewImpl implements ISegmentView {
 		return (this.sg != null);
 	}
 
+	
 	public ISegment getCorrespondingSegment() {
 		return this.seg;
 	}
