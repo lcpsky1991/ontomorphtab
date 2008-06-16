@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.util;
+package edu.ucsd.ccdb.ontomorph2.misc;
 
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;

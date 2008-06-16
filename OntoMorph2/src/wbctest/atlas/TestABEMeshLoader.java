@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.util;
+package wbctest.atlas;
 /*
 	 * Copyright (c) 2003-2006 jMonkeyEngine
 	 * All rights reserved.
@@ -43,6 +43,7 @@ import com.jme.scene.state.LightState;
 import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
+import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 
 	/**
 	 * <code>TestAnisotropic</code>

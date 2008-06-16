@@ -26,7 +26,6 @@ import com.jme.system.JmeException;
 import com.jme.util.Timer;
 import com.jme.util.lwjgl.LWJGLTimer;
 
-import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
  
 /**
  * FengJME - A test class for integrating FengGUI and jME.

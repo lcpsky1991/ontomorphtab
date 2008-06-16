@@ -38,8 +38,8 @@ import com.jme.util.geom.Debugger;
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.IScene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
+import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
-import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 
 
 

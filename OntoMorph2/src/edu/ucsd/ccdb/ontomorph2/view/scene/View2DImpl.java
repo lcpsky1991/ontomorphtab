@@ -35,7 +35,7 @@ import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.manager.SceneObjectManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISelectable;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
+import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.MyNode;
 
 

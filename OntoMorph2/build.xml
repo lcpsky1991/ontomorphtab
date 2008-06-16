@@ -306,6 +306,8 @@
 	    <packageset dir="src" defaultexcludes="yes">
 	      <include name="edu/ucsd/ccdb/**"/>
 	      <exclude name="neuroml/**"/>
+	      <exclude name="wbctest/atlas/**"/>
+	      <exclude name="edu/ucsd/ccdb/ontomorph2/misc/**"/>
 	    </packageset>
 
 	    <doctitle><![CDATA[<h1>Whole Brain Catalog</h1>]]></doctitle>

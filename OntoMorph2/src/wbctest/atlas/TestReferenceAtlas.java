@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.util;
+package wbctest.atlas;
 /*
 	 * Copyright (c) 2003-2006 jMonkeyEngine
 	 * All rights reserved.

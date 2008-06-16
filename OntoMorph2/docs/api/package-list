@@ -7,7 +7,6 @@ edu.ucsd.ccdb.ontomorph2.core.manager
 edu.ucsd.ccdb.ontomorph2.core.scene
 edu.ucsd.ccdb.ontomorph2.core.semantic
 edu.ucsd.ccdb.ontomorph2.core.spatial
-edu.ucsd.ccdb.ontomorph2.misc
 edu.ucsd.ccdb.ontomorph2.observers
 edu.ucsd.ccdb.ontomorph2.util
 edu.ucsd.ccdb.ontomorph2.view.procedural
