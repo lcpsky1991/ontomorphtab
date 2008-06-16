@@ -20,9 +20,9 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
 import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyViewImpl;
-import edu.ucsd.ccdb.ontomorph2.view.scene.ViewImpl;
 
 /**
  * Implementation of IVolume.  Also aware of semantic tags.

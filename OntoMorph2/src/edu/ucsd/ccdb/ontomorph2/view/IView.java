@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.view.scene;
+package edu.ucsd.ccdb.ontomorph2.view;
 
 import com.jme.renderer.Renderer;
 

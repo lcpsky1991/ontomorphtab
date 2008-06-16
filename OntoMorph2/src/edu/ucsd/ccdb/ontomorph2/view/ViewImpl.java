@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.view.scene;
+package edu.ucsd.ccdb.ontomorph2.view;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -40,6 +40,9 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.IScene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
+import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.ISegmentView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyViewImpl;
 
 
 

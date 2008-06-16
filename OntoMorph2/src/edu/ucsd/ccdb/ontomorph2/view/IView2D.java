@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.view.scene;
+package edu.ucsd.ccdb.ontomorph2.view;
 
 /**
  * Defines all 2D "heads up display" menus, popups, and so forth for the application

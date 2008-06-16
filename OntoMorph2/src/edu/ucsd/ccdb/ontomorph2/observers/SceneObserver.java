@@ -11,9 +11,9 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.NeuronMorphologyImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SegmentGroupImpl;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.view.IView;
+import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
 import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.IView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.ViewImpl;
 
 
 /**

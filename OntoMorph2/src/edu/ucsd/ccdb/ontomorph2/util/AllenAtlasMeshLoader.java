@@ -30,7 +30,7 @@ import com.jme.scene.state.RenderState;
 import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
-import edu.ucsd.ccdb.ontomorph2.view.scene.ViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
 
 /**
  * A pure java implementation of a mesh reader that can read the format that 

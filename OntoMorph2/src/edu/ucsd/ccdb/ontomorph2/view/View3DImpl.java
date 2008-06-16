@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.view.scene;
+package edu.ucsd.ccdb.ontomorph2.view;
 
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +25,11 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.ISlide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISurface;
 import edu.ucsd.ccdb.ontomorph2.core.scene.IVolume;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SurfaceImpl;
+import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.MeshViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.scene.SlideViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.scene.VolumeViewImpl;
 
 /**
  * Implements IView3D

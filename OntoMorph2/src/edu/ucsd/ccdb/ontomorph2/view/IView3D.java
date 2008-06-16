@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.view.scene;
+package edu.ucsd.ccdb.ontomorph2.view;
 
 import java.util.List;
 import java.util.Set;
@@ -10,6 +10,8 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISlide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISurface;
 import edu.ucsd.ccdb.ontomorph2.core.scene.IVolume;
+import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.VolumeViewImpl;
 
 /**
  * Stands in for the Root Node of the 3D Scene Graph

@@ -2,7 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.app;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
-import edu.ucsd.ccdb.ontomorph2.view.scene.ViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
 
 /**
  * Main class for the application.

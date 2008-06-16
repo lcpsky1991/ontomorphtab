@@ -9,6 +9,7 @@ import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.WireframeState;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.IVolume;
+import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
 
 /**
  * Visualizes an IVolume

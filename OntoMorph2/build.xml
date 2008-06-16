@@ -301,7 +301,8 @@
 	           author="true"
 	           version="true"
 	           use="true"
-	           windowtitle="Whole Brain Catalog API">
+	           windowtitle="Whole Brain Catalog API"
+	  		   overview="src/overview.html">
 
 	    <packageset dir="src" defaultexcludes="yes">
 	      <include name="edu/ucsd/ccdb/**"/>
