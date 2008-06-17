@@ -182,6 +182,10 @@ public class ReferenceAtlas {
 		return br;
 	}
 	
+	/**
+	 * @see BrainRegion
+	 * @return a list of brain regions known to the system
+	 */
 	public List<BrainRegion> getBrainRegions() {
 		return brainRegions;
 	}
