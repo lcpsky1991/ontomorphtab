@@ -1,8 +1,5 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.FloatBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,28 +27,26 @@ import com.jme.scene.CameraNode;
 import com.jme.scene.Line;
 import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Sphere;
-import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 import com.jme.util.geom.Debugger;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
-import edu.ucsd.ccdb.ontomorph2.core.scene.IScene;
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
-import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
-import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.ISegmentView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
 
 
 /**
- * Implements IVew
+ * Defines the view of the entire application.  Is associated with the 3D parts 
+ * of the view and the 2D parts of view.
+ * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see IView
  */
-public class ViewImpl extends BaseSimpleGame implements IView{
+public class ViewImpl extends BaseSimpleGame{
 
 	private static ViewImpl instance = null;
 	private static final Logger logger = Logger.getLogger(ViewImpl.class.getName());
@@ -59,7 +54,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 	TriMesh square;
 	// a scale of my current texture values
 	float coordDelta;
-	private SceneImpl _scene = null;
+	private Scene _scene = null;
 
 	CameraNode camNode;			//thisobject needed for manipulating the camera in a simple way
 	AbsoluteMouse amouse; 	//the mouse object ref to entire screen
@@ -95,11 +90,11 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		view3D = new View3DImpl();
 	}
 	
-	public void setScene(SceneImpl scene){
+	public void setScene(Scene scene){
 		_scene = scene;
 	}
 	
-	public IScene getScene() {
+	public Scene getScene() {
 		return _scene;
 	}
 	
@@ -127,7 +122,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 		ABEMeshLoader meshLoader = new ABEMeshLoader();
 		URL DGURL = null;
 		try {
-			DGURL = new File(SceneImpl.allenMeshDir + "DG.msh").toURI().toURL();
+			DGURL = new File(Scene.allenMeshDir + "DG.msh").toURI().toURL();
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -324,8 +319,8 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 				if (prevPick != null) {
 					/* this should be done in a listener after firing an event here*/
 					
-					for (INeuronMorphologyView c : getView3D().getCells()) {
-						ISegmentView segView = ((NeuronMorphologyViewImpl)c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+					for (NeuronMorphologyView c : getView3D().getCells()) {
+						ISegmentView segView = ((NeuronMorphologyView)c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
 						if (segView != null) {
 							if (segView.correspondsToSegment()) {
 								c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
@@ -342,16 +337,16 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 				prevPick = pr.getPickData(0);	//take the closest pick and set
 				
 				/* this should be done in a listener after firing an event here*/
-				for (INeuronMorphologyView c : getView3D().getCells())
+				for (NeuronMorphologyView c : getView3D().getCells())
 				{ // loop over all IStructure3Ds (the view representation of
 					// the morphology)
 					/*
 					 * Try to get a segView (view representation of a segment or
 					 * segment group) that matches the target mesh from the pick
-					 * results within this INeuronMorphologyView
+					 * results within this NeuronMorphologyView
 					 */
 					
-					ISegmentView segView = ((NeuronMorphologyViewImpl) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+					ISegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
 					if (segView != null)
 					{ // if we found one
 						/*
@@ -359,7 +354,7 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 						 * of the morphology) to note that we have selected a
 						 * segment or a segment group. The SceneObserver will
 						 * then get updated and change the color on the
-						 * appropriate geometry in the INeuronMorphologyView
+						 * appropriate geometry in the NeuronMorphologyView
 						 */
 						if (segView.correspondsToSegment())
 						{
@@ -568,11 +563,11 @@ public class ViewImpl extends BaseSimpleGame implements IView{
         }
     }
 	
-	public IView3D getView3D() {
+	public View3DImpl getView3D() {
 		return view3D;
 	}
 
-	public IView2D getView2D() {
+	public View2DImpl getView2D() {
 		return View2DImpl.getInstance();
 	}
 

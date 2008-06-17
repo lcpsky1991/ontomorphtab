@@ -36,13 +36,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.jme.app.SimpleGame;
-	import com.jme.math.Vector3f;
-	import com.jme.scene.TriMesh;
-	import com.jme.scene.batch.TriangleBatch;
-import com.jme.scene.state.LightState;
-import com.jme.util.geom.BufferUtils;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 
 	/**
@@ -75,7 +70,7 @@ import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 		AllenAtlasMeshLoader meshLoader = new AllenAtlasMeshLoader();
 		URL DGURL = null;
 		try {
-			DGURL = new File(SceneImpl.allenMeshDir + "DG.msh").toURI().toURL();
+			DGURL = new File(Scene.allenMeshDir + "DG.msh").toURI().toURL();
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

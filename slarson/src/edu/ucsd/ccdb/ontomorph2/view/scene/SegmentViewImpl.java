@@ -14,19 +14,15 @@ import com.jme.scene.Geometry;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
-import com.jme.scene.VBOInfo;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.shape.Cylinder;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.RenderState;
 import com.jme.util.geom.BufferUtils;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
 import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
@@ -233,7 +229,7 @@ public class SegmentViewImpl implements ISegmentView {
 		}
 		OMTVector[] array = new OMTVector[l.size()];
 		array = l.toArray(array);
-		CurveImpl c = new CurveImpl("name", array);
+		Curve3D c = new Curve3D("name", array);
 		n.attachChild(c);
 		setCurrentGeometry(c);
 		return n;

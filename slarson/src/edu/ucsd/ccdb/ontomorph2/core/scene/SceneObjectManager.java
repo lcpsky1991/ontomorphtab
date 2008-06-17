@@ -19,11 +19,11 @@ public class SceneObjectManager {
 
 	
 
-	ArrayList<ISlide> slides = null;
+	ArrayList<Slide> slides = null;
 	Set<INeuronMorphology> cells = null;
-	Set<ICurve> curves = null;
-	Set<ISurface> surfaces = null;
-	Set<IMesh> meshes = null;
+	Set<Curve3D> curves = null;
+	Set<Surface> surfaces = null;
+	Set<DataMesh> meshes = null;
 	Set<IVolume> volumes = null;
 	/**
 	 * Holds singleton instance
@@ -31,16 +31,16 @@ public class SceneObjectManager {
 	private static SceneObjectManager instance;
 	
 	private SceneObjectManager() {
-		slides = new ArrayList<ISlide>();
+		slides = new ArrayList<Slide>();
 		cells = new HashSet<INeuronMorphology>();
-		curves = new HashSet<ICurve>();
-		surfaces = new HashSet<ISurface>();
-		meshes = new HashSet<IMesh>();
+		curves = new HashSet<Curve3D>();
+		surfaces = new HashSet<Surface>();
+		meshes = new HashSet<DataMesh>();
 		volumes = new HashSet<IVolume>();
 	}
 
 	public void addSlide(ISceneObject s) {
-		slides.add((ISlide) s);
+		slides.add((Slide) s);
 		
 	}
 
@@ -76,27 +76,27 @@ public class SceneObjectManager {
 		return cells;
 	}
 
-	public ArrayList<ISlide> getSlides() {
+	public ArrayList<Slide> getSlides() {
 		return slides;
 	}
 
 	public void addMesh(ISceneObject s) {
-		meshes.add((IMesh) s);
+		meshes.add((DataMesh) s);
 	}
 
-	public Set<IMesh> getMeshes() {
+	public Set<DataMesh> getMeshes() {
 		return meshes;
 	}
 
-	public Set<ICurve> getCurves() {
+	public Set<Curve3D> getCurves() {
 		return curves;
 	}
 
-	public Set<ISurface> getSurfaces() {
+	public Set<Surface> getSurfaces() {
 		return surfaces;
 	}
 
-	public void addCurve(CurveImpl curve1) {
+	public void addCurve(Curve3D curve1) {
 		curves.add(curve1);
 	}
 
@@ -111,7 +111,7 @@ public class SceneObjectManager {
 		return instance;
 	}
 
-	public void addSurface(ISurface surf2) {
+	public void addSurface(Surface surf2) {
 		surfaces.add(surf2);
 	}
 

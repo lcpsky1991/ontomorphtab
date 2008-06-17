@@ -16,13 +16,9 @@ import com.jme.scene.shape.Box;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
-import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
 /**
  * Implementation of IVolume.  Also aware of semantic tags.
@@ -63,9 +59,9 @@ public class VolumeImpl extends SceneObjectImpl implements IVolume, ISemanticsAw
 	public Set<ISemanticsAware> getContainedSemanticalObjects() {
 		Set<ISemanticsAware> l = new HashSet<ISemanticsAware>();
 		
-		for (INeuronMorphologyView n : ViewImpl.getInstance().getView3D().getCells()) {
+		for (NeuronMorphologyView n : ViewImpl.getInstance().getView3D().getCells()) {
 			
-			if (_expShape.getWorldBound().intersects(((NeuronMorphologyViewImpl)n).getWorldBound())) {
+			if (_expShape.getWorldBound().intersects(((NeuronMorphologyView)n).getWorldBound())) {
 				l.add((ISemanticsAware)n.getMorphology());
 			}
 		}

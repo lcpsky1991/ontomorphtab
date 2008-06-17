@@ -6,37 +6,31 @@ import java.util.Set;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
-import com.jme.scene.lod.AreaClodMesh;
-import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
-import edu.ucsd.ccdb.ontomorph2.core.scene.CurveImpl;
-import edu.ucsd.ccdb.ontomorph2.core.scene.ICurve;
-import edu.ucsd.ccdb.ontomorph2.core.scene.IMesh;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.ISlide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.ISurface;
 import edu.ucsd.ccdb.ontomorph2.core.scene.IVolume;
-import edu.ucsd.ccdb.ontomorph2.core.scene.SurfaceImpl;
-import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.core.scene.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Surface;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.MeshViewImpl;
-import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyViewImpl;
-import edu.ucsd.ccdb.ontomorph2.view.scene.SlideViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.VolumeViewImpl;
 
 /**
- * Implements IView3D
+ * Stands in for the Root Node of the 3D Scene Graph.
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see IView 3D
  */
-public class View3DImpl extends Node implements IView3D {
+public class View3DImpl extends Node{
 	
 	private Node slidesNode = null;
 	private Node cellsNode = null;
@@ -45,7 +39,7 @@ public class View3DImpl extends Node implements IView3D {
 	private Node meshesNode = null;
 	private Node volumesNode = null;
 	private Node atlasNode = null;
-	private Set<INeuronMorphologyView> cells = null;
+	private Set<NeuronMorphologyView> cells = null;
 	private Set<VolumeViewImpl> volumes = null;
 	
 	public View3DImpl() {
@@ -65,7 +59,7 @@ public class View3DImpl extends Node implements IView3D {
 		volumesNode.setLightCombineMode(LightState.OFF);
 		atlasNode.setLightCombineMode(LightState.COMBINE_CLOSEST);
 		
-		cells = new HashSet<INeuronMorphologyView>();
+		cells = new HashSet<NeuronMorphologyView>();
 		volumes = new HashSet<VolumeViewImpl>();
 		this.attachChild(slidesNode);
 		this.attachChild(cellsNode);
@@ -76,45 +70,45 @@ public class View3DImpl extends Node implements IView3D {
 		this.attachChild(atlasNode);
 	}
 	
-	public void setSlides(List<ISlide> slides) {
+	public void setSlides(List<Slide> slides) {
 		slidesNode.detachAllChildren();
-		for(ISlide slide : slides){
-			slidesNode.attachChild(new SlideViewImpl(slide.getImageURL(),slide));
+		for(Slide slide : slides){
+			slidesNode.attachChild(new SlideView(slide.getImageURL(),slide));
 		}
 	}
 	
 	public void setCells(Set<INeuronMorphology> cells) {
 		cellsNode.detachAllChildren();
 		for(INeuronMorphology cell : cells) {
-			INeuronMorphologyView cellView = new NeuronMorphologyViewImpl(cell);
+			NeuronMorphologyView cellView = new NeuronMorphologyView(cell);
 			Node n = cellView.getNode();
 			cellsNode.attachChild(n);
 			this.cells.add(cellView);
 		}
 	}
 
-	public void setCurves(Set<ICurve> curves) {
+	public void setCurves(Set<Curve3D> curves) {
 		curvesNode.detachAllChildren();
-		for(ICurve curve : curves) {
+		for(Curve3D curve : curves) {
 			curvesNode.attachChild(curve.asBezierCurve());
 		}
 		
 	}
 
-	public void setSurfaces(Set<ISurface> surfaces) {
+	public void setSurfaces(Set<Surface> surfaces) {
 		surfacesNode.detachAllChildren();
-		for(ISurface surf : surfaces) {
-			surfacesNode.attachChild((SurfaceImpl)surf);
+		for(Surface surf : surfaces) {
+			surfacesNode.attachChild((Surface)surf);
 		}
 	}
 
-	public Set<INeuronMorphologyView> getCells() {
+	public Set<NeuronMorphologyView> getCells() {
 		return this.cells;
 	}
 
-	public void setMeshes(Set<IMesh> meshes) {
+	public void setMeshes(Set<DataMesh> meshes) {
 		meshesNode.detachAllChildren();
-		for(IMesh mesh : meshes) {
+		for(DataMesh mesh : meshes) {
 			MeshViewImpl meshView = new MeshViewImpl(mesh);
 			meshesNode.attachChild(meshView.getNode());
 		}

@@ -1,5 +1,8 @@
 package edu.ucsd.ccdb.ontomorph2.misc;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingVolume;
 import com.jme.math.Matrix4f;
@@ -11,9 +14,6 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.system.DisplaySystem;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * MrCoder

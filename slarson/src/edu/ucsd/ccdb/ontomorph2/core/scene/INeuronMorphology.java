@@ -80,7 +80,7 @@ public interface INeuronMorphology extends ISceneObject{
 	 * along curve c
 	 *
 	 */
-	public void positionAlongCurve(ICurve c, float time);
+	public void positionAlongCurve(Curve3D c, float time);
 	
 	/**
 	 * Rotates the NeuronMorphology to aim its 'up' direction towards p
@@ -96,7 +96,7 @@ public interface INeuronMorphology extends ISceneObject{
 	 * Get the ICurve that this INeuronMorphology has been associated with
 	 * @return
 	 */
-	public ICurve getCurve();
+	public Curve3D getCurve();
 	
 	/**
 	 * Retrieves the "time" along the curve that this INeuronMorphology is positioned at

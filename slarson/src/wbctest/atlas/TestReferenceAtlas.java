@@ -31,19 +31,10 @@ package wbctest.atlas;
 	 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	 */
 
-	import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import com.jme.app.SimpleGame;
-	import com.jme.math.Vector3f;
-	import com.jme.scene.TriMesh;
-	import com.jme.scene.batch.TriangleBatch;
-import com.jme.util.geom.BufferUtils;
+	import com.jme.app.SimpleGame;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 
 	/**
 	 * <code>TestAnisotropic</code>

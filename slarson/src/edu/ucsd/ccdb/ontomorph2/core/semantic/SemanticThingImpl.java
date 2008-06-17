@@ -6,8 +6,6 @@ import java.util.Observable;
 
 import edu.stanford.smi.protege.model.Cls;
 import edu.stanford.smi.protege.model.Instance;
-import edu.stanford.smi.protege.model.KnowledgeBase;
-import edu.stanford.smi.protege.model.Slot;
 
 public class SemanticThingImpl extends Observable implements ISemanticThing {
 

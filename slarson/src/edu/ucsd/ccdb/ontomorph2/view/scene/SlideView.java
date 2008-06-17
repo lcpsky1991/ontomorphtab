@@ -9,27 +9,21 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 import com.jme.util.geom.BufferUtils;
-import com.sun.org.apache.bcel.internal.generic.D2L;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.ISlide;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Slide;
 import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
 
 /**
- * Implements ISlideView
+ * Defines a slide, which is a plane in space that has the image of a slice of brain on it.
+ * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see ISlideView
  */
-public class SlideViewImpl extends TriMesh implements ISlideView{
+public class SlideView extends TriMesh {
 	
 	URL imageURL = null;
-	ISlide _slide = null;
+	Slide _slide = null;
 	
-	public SlideViewImpl(URL imageURL, ISlide slide) {
+	public SlideView(URL imageURL, Slide slide) {
 		_slide = slide;
 		setImageURL(imageURL);
 		init();
