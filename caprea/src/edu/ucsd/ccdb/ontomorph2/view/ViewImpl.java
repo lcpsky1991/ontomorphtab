@@ -43,6 +43,9 @@ import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.ISegmentView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyViewImpl;
+import edu.ucsd.ccdb.ontomorph2.core.changes.*;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.*;
+
 
 
 
@@ -61,10 +64,11 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 	float coordDelta;
 	private SceneImpl _scene = null;
 
-	CameraNode camNode;			//thisobject needed for manipulating the camera in a simple way
-	AbsoluteMouse amouse; 	//the mouse object ref to entire screen
-	PickData prevPick;		//made global because it's a conveiniant way to deselect the previous selection since it's stored
-	
+	CameraNode camNode;							//thisobject needed for manipulating the camera in a simple way
+	AbsoluteMouse amouse; 						//the mouse object ref to entire screen
+	PickData prevPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
+	NeuronMorphologyViewImpl manipMorph=null;	//the most recent object to be manipulated as a morphology
+	PickData firstClick;
 	
 	float camRotationRate = FastMath.PI * 5 / 180;	//(FastMath.PI * X / 180) corresponds to X degrees per (FPS?) = Rate/UnitOfUpdate 
 	
@@ -287,9 +291,36 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 	
 	private void handleMouseInput()
 	{
+		int t = 0;
+		
 		//handle mouse input
 		//TODO: get more sophisticated way of dealing with mouse input (pickresults has handler)
-		if (MouseInput.get().isButtonDown(0)) 
+		if (MouseInput.get().isButtonDown(1)) //right
+		{
+			t = 1;
+			
+			
+			//if now previous mouse click
+			if (null == firstClick)
+			{
+				System.out.println("Mouse " + MouseInput.get().getXDelta() + " " + MouseInput.get().getYDelta());
+				
+			}
+			
+			if (prevPick != null && manipMorph != null)
+			{
+				//ISegmentView segView = manipMorph.getSegmentFromGeomBatch(prevPick.getTargetMesh());
+				{ // if we found one
+					int dx = MouseInput.get().getXDelta(); 
+					int dy = MouseInput.get().getYDelta();
+					manipMorph.getMorphology().setRelativePosition( new PositionVector( manipMorph.getMorphology().getRelativePosition().asVector3f().add(dx,dy,0) ));
+				};
+			}
+		}
+		
+		
+		//left mouse click
+		if (MouseInput.get().isButtonDown(0)) //left 
 		{
 			
 			//because dendrites can be densely packed need precision of triangles instead of bounding boxes
@@ -311,31 +342,39 @@ public class ViewImpl extends BaseSimpleGame implements IView{
             pr.clear();
             pr.setCheckDistance(true);  //this function is undocumented, orders the items in pickresults
             rootNode.findPick(mouseRay, pr);
-		
-			//createLine(mouseRay.origin, mouseRay.direction); //debugging
-			//createSphere(closePoint); //for debugging
-            
+		            
             //set up for deselection
 			if ( pr.getNumber() > 0)
 			{
-				//deselect the previous 
+				//********* DESELECT PREVIOUS ********************* 
 				//if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
-				
-				if (prevPick != null) {
-					/* this should be done in a listener after firing an event here*/
-					
-					for (INeuronMorphologyView c : getView3D().getCells()) {
-						ISegmentView segView = ((NeuronMorphologyViewImpl)c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
-						if (segView != null) {
-							if (segView.correspondsToSegment()) {
+				if ( prevPick != null )
+				{
+					/*
+					 * this should be done in a listener after firing an event
+					 * here
+					 */
+
+					for (INeuronMorphologyView c : getView3D().getCells())
+					{
+						ISegmentView segView = ((NeuronMorphologyViewImpl) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+						
+						if ( segView != null )
+						{
+							if ( segView.correspondsToSegment() )
+							{
 								c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
-							} else if (segView.correspondsToSegmentGroup()) {
-								c.getMorphology().unselectSegmentGroup(segView.getCorrespondingSegmentGroup());
+							}
+							else if ( segView.correspondsToSegmentGroup() )
+							{
+								c.getMorphology().unselectSegmentGroup(segView.getCorrespondingSegmentGroup());	
 							}
 						}
 					}
 				}
+				//============== END DESLECT ============================
 								
+				//************** SELECT **********************
 				//find the one that is closest
 				//the 0th element is closest to the origin of the ray with checkdistance
 				//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
@@ -361,6 +400,8 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 						 * then get updated and change the color on the
 						 * appropriate geometry in the INeuronMorphologyView
 						 */
+						manipMorph = (NeuronMorphologyViewImpl) c; //for manipulating picked items
+						
 						if (segView.correspondsToSegment())
 						{
 							c.getMorphology().selectSegment(segView.getCorrespondingSegment());
@@ -368,9 +409,13 @@ public class ViewImpl extends BaseSimpleGame implements IView{
 						else if (segView.correspondsToSegmentGroup())
 						{
 							c.getMorphology().selectSegmentGroup(segView.getCorrespondingSegmentGroup());
+							
+							//TODO: remove
+							//c.getMorphology().setPosition( new PositionImpl( c.getMorphology().getPosition().asVector3f().add(2f,0,0) ));
 						}
 					}
 				}
+				//===== END DESELCT =========================
 				
 				//prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
 				//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
