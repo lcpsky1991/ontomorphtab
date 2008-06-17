@@ -15,12 +15,12 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 
 /**
- * An implementation of ICurve
+ * Defines a Bezier curve in the framework.
+ * 
  *  
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see ICurve
  */
-public class CurveImpl extends SceneObjectImpl implements ICurve{
+public class Curve3D extends SceneObjectImpl{
 
 	BezierCurve theCurve = null;
 	BezierCurve absoluteCurve = null; // copy of the curve for coordinate systems
@@ -30,12 +30,12 @@ public class CurveImpl extends SceneObjectImpl implements ICurve{
 	CoordinateSystem sys = null;
 	OMTVector[] controlPoints = null;
 	
-	public CurveImpl(String arg0, OMTVector[] arg1) {
+	public Curve3D(String arg0, OMTVector[] arg1) {
 		theCurve = new BezierCurve(arg0, arg1);
 		controlPoints = arg1;
 	}
 
-	public CurveImpl(String string, OMTVector[] array, CoordinateSystem d) {
+	public Curve3D(String string, OMTVector[] array, CoordinateSystem d) {
 		this(string, array);
 		setCoordinateSystem(d);
 	}

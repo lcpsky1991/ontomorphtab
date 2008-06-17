@@ -5,19 +5,16 @@ import java.util.Observer;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.IScene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.scene.NeuronMorphologyImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SegmentGroupImpl;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.view.IView;
 import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
-import edu.ucsd.ccdb.ontomorph2.view.scene.INeuronMorphologyView;
-
-//TODO: remove vector3f from here and INeuroMorph changed (bookmark: p)
-import com.jme.math.Vector3f;
+import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
 /**
  * This main observer is triggered when any scene object changes and updates
@@ -28,15 +25,15 @@ import com.jme.math.Vector3f;
  */
 public class SceneObserver implements Observer{
 
-	IView _view;
+	ViewImpl _view;
 	/**
 	 * Holds singleton instance
 	 */
 	private static SceneObserver instance;
 
 	public void update(Observable o, Object arg) {
-		if (o instanceof IScene) {
-			IScene scene = (IScene)o;
+		if (o instanceof Scene) {
+			Scene scene = (Scene)o;
 			_view.getView3D().setVolumes(scene.getVolumes());
 			_view.getView3D().setSlides(scene.getSlides());
 			_view.getView3D().setCells(scene.getCells());
@@ -49,7 +46,7 @@ public class SceneObserver implements Observer{
 			_view.getView3D().setMeshes(scene.getMeshes());
 			
 		} else if (o instanceof INeuronMorphology) { //if an INeuronMorphology is changed
-			for (INeuronMorphologyView struct3d : _view.getView3D().getCells()) { //for all IStructure3Ds that are known
+			for (NeuronMorphologyView struct3d : _view.getView3D().getCells()) { //for all IStructure3Ds that are known
 				NeuronMorphologyImpl morph = (NeuronMorphologyImpl)struct3d.getMorphology();
 				if (morph == o) { // find the one that matches this INeuronMorphology and update it
 					
@@ -120,7 +117,7 @@ public class SceneObserver implements Observer{
 		return instance;
 	}
 
-	public void setView(IView view) {
+	public void setView(ViewImpl view) {
 		_view = view;
 	}
 

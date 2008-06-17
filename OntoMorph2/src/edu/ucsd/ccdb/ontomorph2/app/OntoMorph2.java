@@ -1,6 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.app;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
 
@@ -12,14 +12,14 @@ import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
  */
 public class OntoMorph2 {
 	
-	static SceneImpl _scene;
+	static Scene _scene;
 	
 	public static void main(String[] args) {
 		ViewImpl view = ViewImpl.getInstance();
 		
 		SceneObserver obs = SceneObserver.getInstance();
 		obs.setView(view);
-		_scene = new SceneImpl();
+		_scene = new Scene();
 	
 		_scene.addObserver(obs);
 		

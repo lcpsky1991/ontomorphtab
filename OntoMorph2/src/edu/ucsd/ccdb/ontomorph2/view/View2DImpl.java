@@ -1,19 +1,13 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.fenggui.ComboBox;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
 import org.fenggui.IContainer;
-import org.fenggui.ListItem;
 import org.fenggui.ScrollContainer;
 import org.fenggui.TextEditor;
 import org.fenggui.background.PlainBackground;
-import org.fenggui.border.Border;
 import org.fenggui.border.PlainBorder;
-import org.fenggui.composites.TextArea;
 import org.fenggui.composites.Window;
 import org.fenggui.event.IMenuItemPressedListener;
 import org.fenggui.event.ISelectionChangedListener;
@@ -29,10 +23,7 @@ import org.fenggui.tree.Tree;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 
-
-import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
-import edu.ucsd.ccdb.ontomorph2.core.scene.ISelectable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneObjectManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
@@ -40,12 +31,13 @@ import edu.ucsd.ccdb.ontomorph2.util.MyNode;
 
 
 /**
- * Implements IView2D
+ * Defines all 2D "heads up display" menus, popups, and so forth for the application.
+ * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @see IView2D
  *
  */
-public class View2DImpl extends Display implements IView2D, IMenuItemPressedListener {
+public class View2DImpl extends Display implements IMenuItemPressedListener {
 	
 	public static final String LOAD_SCENE = "Load Scene...";
 	public static final String SAVE_SCENE = "Save Scene...";

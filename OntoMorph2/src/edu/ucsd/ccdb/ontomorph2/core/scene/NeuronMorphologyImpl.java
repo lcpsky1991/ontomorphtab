@@ -7,16 +7,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Observable;
 import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-
-import com.jme.curve.CurveController;
-import com.jme.math.Vector3f;
 
 import neuroml.generated.Level2Cell;
 import neuroml.generated.NeuroMLLevel2;
@@ -25,6 +21,9 @@ import neuroml.generated.Segment;
 import neuroml.generated.Cell.Cables;
 import neuroml.generated.Cell.Segments;
 import neuroml.generated.NeuroMLLevel2.Cells;
+
+import com.jme.math.Vector3f;
+
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
@@ -46,7 +45,7 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 	List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
 	PositionVector lookAtPosition = null;
 	
-	ICurve _curve = null;
+	Curve3D _curve = null;
 	float _time = 0.0f;
 	private Vector3f _upVector;
 	
@@ -97,7 +96,7 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		this.setCoordinateSystem(c);
 	}
 	
-	public NeuronMorphologyImpl(URL morphLoc, ICurve curve, float time, String renderOption) {
+	public NeuronMorphologyImpl(URL morphLoc, Curve3D curve, float time, String renderOption) {
 		this(morphLoc);
 		_curve = curve;
 		_time = time;
@@ -105,14 +104,14 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		setRenderOption(renderOption);
 	}
 	
-	public NeuronMorphologyImpl(URL morphLoc, ICurve curve, float time, 
+	public NeuronMorphologyImpl(URL morphLoc, Curve3D curve, float time, 
 			String renderOption, CoordinateSystem c) {
 		this(morphLoc, curve, time, renderOption);
 		this.setCoordinateSystem(c);
 	}
 
 	
-	public ICurve getCurve() {
+	public Curve3D getCurve() {
 		return _curve;
 	}
 	
@@ -275,8 +274,8 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		semanticThings.add(SemanticRepository.getInstance().getSemanticClass(classURI));
 	}
 
-	public void positionAlongCurve(ICurve c, float time) {
-		setRelativePosition(new PositionVector(((CurveImpl)c).getPoint(time)));
+	public void positionAlongCurve(Curve3D c, float time) {
+		setRelativePosition(new PositionVector(((Curve3D)c).getPoint(time)));
 	}
 
 	public void lookAt(PositionVector p) {

@@ -2,26 +2,17 @@ package edu.ucsd.ccdb.ontomorph2.core.atlas;
 
 import java.awt.Color;
 import java.util.List;
-import java.util.Observable;
 
-
-import com.jme.bounding.BoundingSphere;
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
 import com.jme.scene.BatchMesh;
-import com.jme.scene.SceneElement;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.ISelectable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneObjectImpl;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
-import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 
 /**
  * Defines an anatomical region of the mouse brain.

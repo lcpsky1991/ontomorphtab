@@ -1,6 +1,5 @@
 package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,7 +13,6 @@ import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.model.SimpleInstance;
 import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protege.util.ApplicationProperties;
-import edu.stanford.smi.protegex.owl.model.impl.DefaultOWLIndividual;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.MyNode;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;

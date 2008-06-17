@@ -21,7 +21,6 @@ import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.AreaUtils;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.CurveImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
@@ -30,13 +29,13 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
 
 /**
- * Visualizes a neuron morphology.  Implements INeuronMorphologyView
+ * Visualizes a neuron morphology.  Describes the 3D structure 
+ * of a biological object in a format that can be easily visualized in a 3D viewer (X3D?)
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @see INeuronMorphology
- * @see INeuronMorphologyView
  *
  */
-public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyView {
+public class NeuronMorphologyView extends Node{
 
 	List<ISegmentView> segViews;
 	
@@ -55,7 +54,7 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
 	
 	CurveController _cc = null;
 	
-	public NeuronMorphologyViewImpl(INeuronMorphology morph) {
+	public NeuronMorphologyView(INeuronMorphology morph) {
 		segViews = new ArrayList<ISegmentView>();
 		currentMorph = morph;
 		this.setMorphMLNeuron(this.loadscene(morph), morph);
@@ -243,7 +242,7 @@ public class NeuronMorphologyViewImpl extends Node implements INeuronMorphologyV
 		 */
 		private int chooseCableResolution(Renderer r) {
 			if (this.getWorldBound() == null) {
-				logger.warning("NeuronMorphologyViewImpl found with no Bounds.");
+				logger.warning("NeuronMorphologyView found with no Bounds.");
 				return 0;
 			}
 
