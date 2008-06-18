@@ -53,26 +53,21 @@ public class SceneObserver implements Observer{
 				NeuronMorphologyImpl morph = (NeuronMorphologyImpl)struct3d.getMorphology();
 				if (morph == o) { // find the one that matches this INeuronMorphology and update it
 					
-					//TODO: remove this debug code
 					//Moves the segment to see if this is how to update model
 					PositionVector p = (PositionVector)struct3d.getMorphology().getAbsolutePosition();
 					struct3d.getNode().setLocalTranslation(p);
-					System.out.println("Observer Pos: " + p.asVector3f());
-					//--end debug
 					
 					struct3d.updateSelected(morph.isSelected());
 					struct3d.updateSelectedSegments(morph.getSelectedSegments());
 					struct3d.updateSelectedSegmentGroups(morph.getSelectedSegmentGroups());
-					
-					
-				
-					
 				}
 				//UPDATE INFO STRING ON VIEW 2D
 				
 				if (((INeuronMorphology)o).hasSelectedSegmentGroups()) {
 					for (ISegmentGroup isg : ((NeuronMorphologyImpl)o).getSelectedSegmentGroups()) {
 						SegmentGroupImpl sg = (SegmentGroupImpl)isg;
+						
+						//TODO: performance increase 
 						//this is getting called more times than it should
 						String infoString = sg.getTags().toString() + "\n";
 						for (ISemanticThing s: sg.getSemanticThings()) {
