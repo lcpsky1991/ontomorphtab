@@ -2,7 +2,6 @@ edu.ucsd.ccdb.ontomorph2.app
 edu.ucsd.ccdb.ontomorph2.core.atlas
 edu.ucsd.ccdb.ontomorph2.core.changes
 edu.ucsd.ccdb.ontomorph2.core.data
-edu.ucsd.ccdb.ontomorph2.core.data.reader
 edu.ucsd.ccdb.ontomorph2.core.scene
 edu.ucsd.ccdb.ontomorph2.core.semantic
 edu.ucsd.ccdb.ontomorph2.core.spatial

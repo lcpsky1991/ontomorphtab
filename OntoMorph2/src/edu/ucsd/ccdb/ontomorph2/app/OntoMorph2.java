@@ -1,5 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.app;
 
+import java.io.File;
+
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
@@ -15,6 +17,10 @@ public class OntoMorph2 {
 	static Scene _scene;
 	
 	public static void main(String[] args) {
+		String prop = System.getProperty("java.endorsed.dirs");
+		System.setProperty("java.endorsed.dirs", prop + File.pathSeparatorChar + "C:\\Documents and Settings\\stephen\\workspace2\\OntoMorph2-2\\lib\\endorsed");
+		prop = System.getProperty("java.endorsed.dirs");
+		System.out.println("java.endorsed.dirs=" + prop);
 		ViewImpl view = ViewImpl.getInstance();
 		
 		SceneObserver obs = SceneObserver.getInstance();

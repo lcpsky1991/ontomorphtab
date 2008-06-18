@@ -71,5 +71,10 @@ public class SemanticThingImpl extends Observable implements ISemanticThing {
 		setChanged();
 	}
 
+	public List<SemanticProperty> findPropertiesThatHold(ISemanticThing other) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

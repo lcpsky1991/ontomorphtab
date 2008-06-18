@@ -20,6 +20,8 @@ import neuroml.generated.NeuroMLLevel2.Cells;
 import com.jme.math.FastMath;
 import com.jme.scene.shape.Box;
 
+import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
@@ -99,6 +101,8 @@ public class Scene extends Observable{
 		//temporary hack o load a mockup
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
 
+		//CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(35);
+		
 		/*
 		addSceneObject(new Slide(hippo1URL, new PositionVector(-60,-100,22), 170, 0.87f, d));
 		addSceneObject(new Slide(hippo2URL, new PositionVector(-55,-30, 22), 62, 1.34f, d));
@@ -106,8 +110,14 @@ public class Scene extends Observable{
 		addSceneObject(new Slide(hippo3bURL, new PositionVector(-24,-9,21.5f), 15,1.31f, d));
 		addSceneObject(new Slide(hippo3cURL, new PositionVector(-5,-8.5f,21.5f), 15,1.33f, d));
 		*/
+		
 		addSceneObject(new Slide(hippo1URL, new PositionVector(-60,-100,22), 
 				new RotationVector(d.getRotationFromAbsolute()), 170, 0.87f));
+		
+		/*
+        addSceneObject(new Slide(hippoImage, new PositionVector(-60,-100,22), 
+				new RotationVector(d.getRotationFromAbsolute()), 170, 0.87f));
+		*/
 		addSceneObject(new Slide(hippo2URL, new PositionVector(-55,-30, 22), 
 				new RotationVector(d.getRotationFromAbsolute()), 62, 1.34f));
 		addSceneObject(new Slide(hippo3aURL, new PositionVector(-45,-13,21.5f), 
