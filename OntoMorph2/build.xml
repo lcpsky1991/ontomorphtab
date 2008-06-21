@@ -127,7 +127,14 @@
         <pathelement path="${lib}/ccdb-plugin/ext-lib/sjsxp.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/stax-ex.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/streambuffer.jar"/>
+		
+		<!-- Smart Atlas server connection Libraries -->
 
+        <pathelement path="${lib}/spatialatlas-client.jar"/>
+        <pathelement path="${lib}/axis-1_4/axis.jar"/>
+        <pathelement path="${lib}/axis-1_4/jaxrpc.jar"/>
+        <pathelement path="${lib}/axis-1_4/commons-discovery-0.2.jar"/>
+        <pathelement path="${lib}/axis-1_4/commons-logging-1.0.4.jar"/>
 
 	</path>  
 

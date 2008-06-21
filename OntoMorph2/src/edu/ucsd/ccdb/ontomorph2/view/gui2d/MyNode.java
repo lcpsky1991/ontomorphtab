@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.util;
+package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
 import java.util.ArrayList;
 

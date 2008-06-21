@@ -34,9 +34,9 @@ import com.jme.util.geom.Debugger;
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.ISegmentView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.SegmentView;
 
 
 
@@ -46,10 +46,10 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
-public class ViewImpl extends BaseSimpleGame{
+public class View extends BaseSimpleGame{
 
-	private static ViewImpl instance = null;
-	private static final Logger logger = Logger.getLogger(ViewImpl.class.getName());
+	private static View instance = null;
+	private static final Logger logger = Logger.getLogger(View.class.getName());
 	//The trimesh that i will change
 	TriMesh square;
 	// a scale of my current texture values
@@ -70,24 +70,24 @@ public class ViewImpl extends BaseSimpleGame{
 	//there are two kinds of input, the FPS input and also FENG
 	FengJMEInputHandler menuinput;	
 	
-	View3DImpl view3D = null;
+	View3D view3D = null;
 	
 	/**
 	 * Returns the singleton instance.
 	 @return	the singleton instance
 	 */
-	public static ViewImpl getInstance() {
+	public static View getInstance() {
 		if (instance == null) {
-			instance = new ViewImpl();
+			instance = new View();
 		}
 		return instance;
 	}
 	
-	protected ViewImpl() 
+	protected View() 
 	{
 		//this.setDialogBehaviour(SimpleGame.ALWAYS_SHOW_PROPS_DIALOG);	
 		this.setDialogBehaviour(FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG);
-		view3D = new View3DImpl();
+		view3D = new View3D();
 	}
 	
 	public void setScene(Scene scene){
@@ -184,7 +184,7 @@ public class ViewImpl extends BaseSimpleGame{
 		//Remove lighting for rootNode so that it will use our basic colors
 		//rootNode.setLightCombineMode(LightState.OFF);
 		
-		disp = View2DImpl.getInstance();
+		disp = View2D.getInstance();
 	}
 	
 	public void setCameraToSlideView() {
@@ -320,7 +320,7 @@ public class ViewImpl extends BaseSimpleGame{
 					/* this should be done in a listener after firing an event here*/
 					
 					for (NeuronMorphologyView c : getView3D().getCells()) {
-						ISegmentView segView = ((NeuronMorphologyView)c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+						SegmentView segView = ((NeuronMorphologyView)c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
 						if (segView != null) {
 							if (segView.correspondsToSegment()) {
 								c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
@@ -346,7 +346,7 @@ public class ViewImpl extends BaseSimpleGame{
 					 * results within this NeuronMorphologyView
 					 */
 					
-					ISegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+					SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
 					if (segView != null)
 					{ // if we found one
 						/*
@@ -563,12 +563,12 @@ public class ViewImpl extends BaseSimpleGame{
         }
     }
 	
-	public View3DImpl getView3D() {
+	public View3D getView3D() {
 		return view3D;
 	}
 
-	public View2DImpl getView2D() {
-		return View2DImpl.getInstance();
+	public View2D getView2D() {
+		return View2D.getInstance();
 	}
 
 	public Renderer getRenderer() {

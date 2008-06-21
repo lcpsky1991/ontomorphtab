@@ -7,7 +7,7 @@ import com.jme.scene.BatchMesh;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneObjectImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.SceneObject;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
@@ -20,8 +20,22 @@ import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class BrainRegion extends SceneObjectImpl implements ISemanticsAware{
+public class BrainRegion extends SceneObject{
 
+	/**
+	 * Solid and visible
+	 */
+	public static final int VISIBLE = 0;
+	/**
+	 * Not visible
+	 */
+	public static final int INVISIBLE = 1;
+	/**
+	 * transparent and visible
+	 */
+	public static final int TRANSPARENT = 2;
+
+	
 	private String name;
 	private String abbrev;
 	private String parentAbbrev;
@@ -30,6 +44,7 @@ public class BrainRegion extends SceneObjectImpl implements ISemanticsAware{
 	private BatchMesh mesh;
 	private AreaClodMesh aMesh;
 	private TriMesh tMesh;
+	private int visibility;
 	
 	public BrainRegion(String name, String abbrev, String parentAbbrev, Color c, String regionId, CoordinateSystem co){
 		this.name = name;
@@ -40,6 +55,19 @@ public class BrainRegion extends SceneObjectImpl implements ISemanticsAware{
 		
 		this.addObserver(SceneObserver.getInstance());
 		this.setCoordinateSystem(co);
+	}
+	
+	/**
+	 * Sets the visibility state of this brain region.
+	 * @param mode - BrainRegion.VISIBLE, BrainRegion.INVISIBLE, BrainRegion.TRANSPARENT
+	 */
+	public void setVisibility(int mode) {
+		visibility = mode;
+		changed();
+	}
+	
+	public int getVisibility() {
+		return visibility;
 	}
 	
 	public BrainRegion getParent() {
@@ -53,7 +81,8 @@ public class BrainRegion extends SceneObjectImpl implements ISemanticsAware{
 	public int getRegionId() {
 		return this.regionId;
 	}
-
+	
+	
 	public BatchMesh getMesh() {
 		if (mesh == null) {
 			AllenAtlasMeshLoader loader = new AllenAtlasMeshLoader();
@@ -124,24 +153,4 @@ public class BrainRegion extends SceneObjectImpl implements ISemanticsAware{
 		return this.name;
 	}
 
-	public List<ISemanticThing> getSemanticThings() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void addSemanticThing(ISemanticThing thing) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void removeSemanticThing(ISemanticThing thing) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public List<ISemanticThing> getAllSemanticThings() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

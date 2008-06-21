@@ -21,7 +21,7 @@ import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.AreaUtils;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
@@ -32,12 +32,12 @@ import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
  * Visualizes a neuron morphology.  Describes the 3D structure 
  * of a biological object in a format that can be easily visualized in a 3D viewer (X3D?)
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see INeuronMorphology
+ * @see NeuronMorphology
  *
  */
 public class NeuronMorphologyView extends Node{
 
-	List<ISegmentView> segViews;
+	List<SegmentView> segViews;
 	
     private static final Logger logger = Logger.getLogger(AreaClodMesh.class
             .getName());
@@ -50,12 +50,12 @@ public class NeuronMorphologyView extends Node{
 	
 	int cableResolution = 1;
 	
-	INeuronMorphology currentMorph = null;
+	NeuronMorphology currentMorph = null;
 	
 	CurveController _cc = null;
 	
-	public NeuronMorphologyView(INeuronMorphology morph) {
-		segViews = new ArrayList<ISegmentView>();
+	public NeuronMorphologyView(NeuronMorphology morph) {
+		segViews = new ArrayList<SegmentView>();
 		currentMorph = morph;
 		this.setMorphMLNeuron(this.loadscene(morph), morph);
 	}
@@ -68,10 +68,10 @@ public class NeuronMorphologyView extends Node{
 		return getSegmentFromGeomBatch(gb) != null;
 	}
 	
-	public ISegmentView getSegmentFromGeomBatch(GeomBatch gb) {
+	public SegmentView getSegmentFromGeomBatch(GeomBatch gb) {
 		Geometry g = gb.getParentGeom();
-		ISegmentView pick = null;
-		for (ISegmentView sv : this.segViews) {
+		SegmentView pick = null;
+		for (SegmentView sv : this.segViews) {
 			
 			if (sv.containsCurrentGeometry(g)) {
 				pick = sv;
@@ -80,7 +80,7 @@ public class NeuronMorphologyView extends Node{
 		return pick;
 	}
 	
-	public void setMorphMLNeuron(Node n, INeuronMorphology morph) {
+	public void setMorphMLNeuron(Node n, NeuronMorphology morph) {
 		this.detachAllChildren();
 		this.attachChild(n);
 		
@@ -147,17 +147,17 @@ public class NeuronMorphologyView extends Node{
 	 * @param numberOfSegsPerGroup - number of desired segments.  For full resolution, use Integer.MAX_VALUE
 	 * @return
 	 */
-	private List<ISegmentView> getSegments(INeuronMorphology morph, int numberOfSegsPerGroup) {
+	private List<SegmentView> getSegments(NeuronMorphology morph, int numberOfSegsPerGroup) {
 		assert (numberOfSegsPerGroup == 1 || numberOfSegsPerGroup == Integer.MAX_VALUE);
-		List<ISegmentView> segmentView = new ArrayList<ISegmentView>();
+		List<SegmentView> segmentView = new ArrayList<SegmentView>();
 //		if (numberOfSegsPerGroup == Integer.MAX_VALUE) {
 //			for (ISegment s : morph.getSegments()) {
-//				segmentView.add(new SegmentViewImpl(s));
+//				segmentView.add(new SegmentView(s));
 //			}
 //			
 //		} else {
 			for (ISegmentGroup sg: morph.getSegmentGroups()) {
-				segmentView.add(new SegmentViewImpl(sg));
+				segmentView.add(new SegmentView(sg));
 			}
 //		}
 		return segmentView;
@@ -165,7 +165,7 @@ public class NeuronMorphologyView extends Node{
 	
 
 	
-	public Node loadscene(INeuronMorphology morph) {
+	public Node loadscene(NeuronMorphology morph) {
 		Node sceneRoot = new Node();
 		 /* 
          * Check the LightState. If none has been passed, create a new one and
@@ -176,7 +176,7 @@ public class NeuronMorphologyView extends Node{
         lightState.setEnabled(true);	
         sceneRoot.setRenderState(lightState);
         
-        for (ISegmentView seg : this.getSegments(morph, cableResolution)) {
+        for (SegmentView seg : this.getSegments(morph, cableResolution)) {
         	
         	/*
         	 Sphere s1 = new Sphere("my sphere", 10, 10, 0.5f);
@@ -229,7 +229,7 @@ public class NeuronMorphologyView extends Node{
 		  updateModelBound();
 	  }
 	
-	  public INeuronMorphology getMorphology() {
+	  public NeuronMorphology getMorphology() {
 		  return currentMorph;
 	  }
 	  
@@ -271,7 +271,7 @@ public class NeuronMorphologyView extends Node{
 //	needs to be updated by a controller
 	public void updateSelectedSegments(Set<ISegment> segments) {
 		for (ISegment seg : segments) {
-			for (ISegmentView sv : this.segViews) {
+			for (SegmentView sv : this.segViews) {
 				if (seg.equals(sv.getCorrespondingSegment())) {
 					sv.highlight();
 				} else { // or set to the default color of the segment 
@@ -283,7 +283,7 @@ public class NeuronMorphologyView extends Node{
 
 	public void updateSelectedSegmentGroups(Set<ISegmentGroup> sgs) {
 		for (ISegmentGroup seg : sgs) {
-			for (ISegmentView sv : this.segViews) {
+			for (SegmentView sv : this.segViews) {
 				if (seg.equals(sv.getCorrespondingSegmentGroup())) {
 					sv.highlight();
 				} else {
@@ -296,11 +296,11 @@ public class NeuronMorphologyView extends Node{
 	
 	public void updateSelected(boolean selected) {
 		if (selected) {
-			for (ISegmentView sv : this.segViews) {
+			for (SegmentView sv : this.segViews) {
 				sv.highlight();
 			}
 		} else {
-			for (ISegmentView sv: this.segViews) {
+			for (SegmentView sv: this.segViews) {
 				sv.unhighlight();
 			}
 		}

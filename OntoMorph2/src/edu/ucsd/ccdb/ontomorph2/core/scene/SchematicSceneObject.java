@@ -9,6 +9,6 @@ package edu.ucsd.ccdb.ontomorph2.core.scene;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public abstract class SchematicSceneObject extends SceneObjectImpl {
+public abstract class SchematicSceneObject extends SceneObject {
 
 }

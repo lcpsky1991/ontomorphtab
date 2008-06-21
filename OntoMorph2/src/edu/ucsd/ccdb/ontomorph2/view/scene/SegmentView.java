@@ -20,77 +20,76 @@ import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.RenderState;
 import com.jme.util.geom.BufferUtils;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
-import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
- * Implements ISegmentView.
+ * The visual representation of a segment or segment group.  Currently this can either be
+ * as a line segment, or as a cylinder.  
+ * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see ISegmentView
  *
  */
-public class SegmentViewImpl implements ISegmentView {
+public class SegmentView extends SceneObjectView{
 
 	private ISegment seg = null;
 	private ISegmentGroup sg = null;
-	//list of lists of geometries.  
-	private boolean highlighted = false;
+	
 	private OMTDiscreteLodNode node = null;
 	
-	public SegmentViewImpl(ISegment seg) {
+	public SegmentView(ISegment seg) {
 		assert seg != null;
 		this.seg = seg;
 	}
 	
-	public SegmentViewImpl(ISegmentGroup sg) {
+	public SegmentView(ISegmentGroup sg) {
 		assert sg != null;
 		this.sg = sg;
 	}
 	
+	/**
+	 * If true, it means that this object represents a single segment
+	 */
 	public boolean correspondsToSegment() {
 		return (this.seg != null);
 	}
 
+	/**
+	 * If true, it means that this object represents multiple segments in a group.
+	 */
 	public boolean correspondsToSegmentGroup() {
 		return (this.sg != null);
 	}
 
-	
+	/**
+	 * Returns the single segment this object represents, if it
+	 * does only represent a single segment
+	 * 
+	 * @see #correspondsToSegment()
+	 */
 	public ISegment getCorrespondingSegment() {
 		return this.seg;
 	}
 
+	/** 
+	 * Returns the multiple segments this object represents, if it
+	 * represents multiple segments
+	 * 
+	 * @see #correspondsToSegmentGroup()
+	 */
 	public ISegmentGroup getCorrespondingSegmentGroup() {
 		return this.sg;
 	}
 	
-	private float getBaseRadius() {
-		float proximalRadius = 0;
-		if (correspondsToSegment()) {
-			proximalRadius = seg.getProximalRadius();
-		} else if (correspondsToSegmentGroup()){
-			ISegment firstSeg = sg.getSegments().get(0);
-			
-			proximalRadius = firstSeg.getProximalRadius();
-		}
-		return proximalRadius;
-	}
-	
-	private float getApexRadius() {
-		float distalRadius = 0;
-		if (correspondsToSegment()) {
-	    	distalRadius = seg.getDistalRadius();
-		} else if (correspondsToSegmentGroup()){
-			ISegment lastSeg = sg.getSegments().get(sg.getSegments().size() - 1);
-			distalRadius = lastSeg.getDistalRadius();
-		}
-		return distalRadius;
-	}
-
+	/**
+	 * Gets a vector corresponding to the bottom of this segment or the bottom
+	 * of the bottom most segment, if multiple segments are used.
+	 * @return
+	 */
 	public Vector3f getBase() {
 		Vector3f base = new Vector3f();
 		if (correspondsToSegment()) {
@@ -107,6 +106,11 @@ public class SegmentViewImpl implements ISegmentView {
 		return base;
 	}
 	
+	/**
+	 * Gets a vector corresponding to the top of this segment, or the top
+	 * of the top most segment, if multiple segments are used.
+	 * @return
+	 */
 	public Vector3f getApex() {
 		Vector3f apex = new Vector3f();
 		if (correspondsToSegment()) {
@@ -122,26 +126,13 @@ public class SegmentViewImpl implements ISegmentView {
 		}
 		return apex;
 	}
-	
-	// render this SegmentViewImpl as a Line
-	private Line getLine() {
-		
-		Vector3f base = getBase();
-    	Vector3f apex = getApex();
-		
-		float[] vertices = {apex.x, apex.y, apex.z, base.x, base.y, base.z};
-		
-		//Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, colorBuffer, null);
-		Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, null, null);
-		setCurrentGeometry(l);
-		return l;
-	}
+
 	
 	/**
 	 * @return True if this segment finds itself inside some IVolume
 	 */
 	public boolean insideVolume() {
-		for (VolumeViewImpl vol : ViewImpl.getInstance().getView3D().getVolumes()) {
+		for (VolumeView vol : View.getInstance().getView3D().getVolumes()) {
 			for (Geometry g : this.getCurrentGeometries()) {
 				if (vol.getVolume().containsObject(g)) {
 					return true;
@@ -150,18 +141,58 @@ public class SegmentViewImpl implements ISegmentView {
 		}
 		return false;
 	}
+
 	
-	private void setToDefaultColor(Geometry g) {
-		if (insideVolume()) {
-			g.setSolidColor(ColorRGBA.red);
-		} else if (correspondsToSegment()) {
-			g.setSolidColor(ColorUtil.convertColorToColorRGBA(getCorrespondingSegment().getColor()));
-		} else if (correspondsToSegmentGroup()) {
-			g.setSolidColor(ColorUtil.convertColorToColorRGBA(getCorrespondingSegmentGroup().getColor()));
+	
+
+	/**
+	 * Tests if the Geometry g is inside the current visualization of this ISegmentView
+	 * @param g
+	 * @return true if g is currently visible
+	 */
+	public boolean containsCurrentGeometry(Geometry g) {
+		for (Geometry ge: this.getCurrentGeometries()) {
+			if (ge == g) { 
+				return true;
+			}
 		}
+		return false;
 	}
+
+
+
+	/**
+	 * Return a node that contains the geometries to visualize this ISegmentView
+	 * 
+	 * @param renderOption - an option to determine how the ISegmentView should be rendered
+	 * @return
+	 */
+	public Node getViewNode(String renderOption) {
+		if (this.node == null) {
+			this.node = new OMTDiscreteLodNode(new DistanceSwitchModel(10));
+			
+			if (renderOption.equals(NeuronMorphology.RENDER_AS_LINES)) {
+				this.node.attachChild(this.getLine());
+			} else if (renderOption.equals(NeuronMorphology.RENDER_AS_CYLINDERS)) {
+				//node.attachChild(((SegmentView)seg).getClodMeshCylinder());
+				this.node.attachChild(this.getCylinder());
+			} else if (renderOption.equals(NeuronMorphology.RENDER_AS_LOD)) {
+				
+				this.node.addDiscreteLodNodeChild(this.getCylinder(), 0, 1000);
+				this.node.addDiscreteLodNodeChild(this.getLine(), 1000, 10000);
+				
+			} else if (renderOption.equals(NeuronMorphology.RENDER_AS_LOD_2)){
+				
+				this.node.addDiscreteLodNodeChild(this.getCylindersFromSegGroup(), 0, 800);
+				this.node.addDiscreteLodNodeChild(this.getLine(), 800, 10000);
+				
+			}
+		}
+		return this.node;
+	}
+
 	
-	//Render this SegmentViewImpl as a Cylinder
+	//Render this SegmentView as a Cylinder
 	private Cylinder getCylinder() {
 		Vector3f base = getBase();
     	Vector3f apex = getApex();
@@ -184,7 +215,7 @@ public class SegmentViewImpl implements ISegmentView {
 		//cyl.setColorBuffer(2, colorBuffer);
 		
 		
-		AlphaState as = ViewImpl.getInstance().getRenderer().createAlphaState();
+		AlphaState as = View.getInstance().getRenderer().createAlphaState();
 	      as.setBlendEnabled(true);
 	      as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
 	      as.setDstFunction(AlphaState.DB_ONE);
@@ -206,7 +237,7 @@ public class SegmentViewImpl implements ISegmentView {
 		return cyl;
 	}
 	
-	//render this SegmentViewImpl as a ClodMeshCylinder
+	//render this SegmentView as a ClodMeshCylinder
 	private AreaClodMesh getClodMeshCylinder() {
 		AreaClodMesh out =  getClodMeshFromGeometry(getCylinder());
 		setCurrentGeometry(out);
@@ -220,7 +251,7 @@ public class SegmentViewImpl implements ISegmentView {
 		ArrayList<Vector3f> l = new ArrayList<Vector3f>();
 		if (correspondsToSegmentGroup()) {
 			for (ISegment seg : this.getCorrespondingSegmentGroup().getSegments()) {
-				SegmentViewImpl s = new SegmentViewImpl(seg);
+				SegmentView s = new SegmentView(seg);
 				if (l.size() == 0) {
 					l.add(s.getBase());
 				} 
@@ -235,14 +266,14 @@ public class SegmentViewImpl implements ISegmentView {
 		return n;
 	}*/
 	
-	//Render this SegmentViewImpl as a series of cylinders corresponding to the underlying
+	//Render this SegmentView as a series of cylinders corresponding to the underlying
 	//individual segments of this segment group
 	private List<Geometry> getCylindersFromSegGroup() {
 		List<Geometry> l = new ArrayList<Geometry>();
 		
 		if (correspondsToSegmentGroup()) {
 			for (ISegment seg : this.getCorrespondingSegmentGroup().getSegments()) {
-				SegmentViewImpl sv = new SegmentViewImpl(seg);
+				SegmentView sv = new SegmentView(seg);
 				Cylinder c = sv.getCylinder();
 				l.add(c);
 			}
@@ -283,75 +314,71 @@ public class SegmentViewImpl implements ISegmentView {
 		g.setModelBound(new BoundingBox());
 		g.updateModelBound();
 		this.chooseColor(g);
-		//g.setVBOInfo(new VBOInfo(true));
 	}
+
 	
-	private void setCurrentGeometries(List<Geometry> l) {
-		for (Geometry g : l) {
-			setCurrentGeometry(g);
+	private float getBaseRadius() {
+		float proximalRadius = 0;
+		if (correspondsToSegment()) {
+			proximalRadius = seg.getProximalRadius();
+		} else if (correspondsToSegmentGroup()){
+			ISegment firstSeg = sg.getSegments().get(0);
+			
+			proximalRadius = firstSeg.getProximalRadius();
 		}
+		return proximalRadius;
 	}
 	
-	public void highlight() {
-		highlighted = true;
-		refreshColor();
+	private float getApexRadius() {
+		float distalRadius = 0;
+		if (correspondsToSegment()) {
+	    	distalRadius = seg.getDistalRadius();
+		} else if (correspondsToSegmentGroup()){
+			ISegment lastSeg = sg.getSegments().get(sg.getSegments().size() - 1);
+			distalRadius = lastSeg.getDistalRadius();
+		}
+		return distalRadius;
 	}
 	
+	// render this SegmentView as a Line
+	private Line getLine() {
+		
+		Vector3f base = getBase();
+    	Vector3f apex = getApex();
+		
+		float[] vertices = {apex.x, apex.y, apex.z, base.x, base.y, base.z};
+		
+		//Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, colorBuffer, null);
+		Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, null, null);
+		setCurrentGeometry(l);
+		return l;
+	}
+
 	private void chooseColor(Geometry g) {
-		if (highlighted) {
+		if (isHighlighted()) {
 			g.setSolidColor(ColorRGBA.yellow);
 		} else {
 			this.setToDefaultColor(g);	
 		}
 	}
 	
-	private void refreshColor() {
+	protected void refreshColor() {
 		for (Geometry g : this.node.getAllGeometries()) {
 			chooseColor(g);
 		}
 	}
-
-	public void unhighlight() {
-		highlighted = false;
-		refreshColor();
-	}
-
-	public boolean containsCurrentGeometry(Geometry g) {
-		for (Geometry ge: this.getCurrentGeometries()) {
-			if (ge == g) { 
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean isHighlighted() {
-		return this.highlighted;
-	}
-
 	
-	public Node getViewNode(String renderOption) {
-		if (this.node == null) {
-			this.node = new OMTDiscreteLodNode(new DistanceSwitchModel(10));
-			
-			if (renderOption.equals(INeuronMorphology.RENDER_AS_LINES)) {
-				this.node.attachChild(this.getLine());
-			} else if (renderOption.equals(INeuronMorphology.RENDER_AS_CYLINDERS)) {
-				//node.attachChild(((SegmentViewImpl)seg).getClodMeshCylinder());
-				this.node.attachChild(this.getCylinder());
-			} else if (renderOption.equals(INeuronMorphology.RENDER_AS_LOD)) {
-				
-				this.node.addDiscreteLodNodeChild(this.getCylinder(), 0, 1000);
-				this.node.addDiscreteLodNodeChild(this.getLine(), 1000, 10000);
-				
-			} else if (renderOption.equals(INeuronMorphology.RENDER_AS_LOD_2)){
-				
-				this.node.addDiscreteLodNodeChild(this.getCylindersFromSegGroup(), 0, 800);
-				this.node.addDiscreteLodNodeChild(this.getLine(), 800, 10000);
-				
-			}
+	private void setToDefaultColor(Geometry g) {
+		if (insideVolume()) {
+			g.setSolidColor(ColorRGBA.red);
+		} else if (correspondsToSegment()) {
+			g.setSolidColor(ColorUtil.convertColorToColorRGBA(getCorrespondingSegment().getColor()));
+		} else if (correspondsToSegmentGroup()) {
+			g.setSolidColor(ColorUtil.convertColorToColorRGBA(getCorrespondingSegmentGroup().getColor()));
 		}
-		return this.node;
 	}
+
+
+
 
 }

@@ -19,7 +19,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
-public class Slide extends SceneObjectImpl {
+public class Slide extends SceneObject {
 	
 	URL _imageURL = null;
 	float ratio = 1f;
@@ -54,8 +54,7 @@ public class Slide extends SceneObjectImpl {
 			{
 				CCDBFile f = (CCDBFile)file.get(i);
 				System.out.println(f.getCCDBCatagory());
-				if (f.getCCDBCatagory() == CCDBDataCatagory.IMAGE2D && 
-						f.getCCDBFileType() == CCDBFileType.IMAGE_JPEG) {
+				if (f.getCCDBFileType() == CCDBFileType.IMAGE_JPEG) {
 						imageURL = f.getURL();
 				} 
 			}

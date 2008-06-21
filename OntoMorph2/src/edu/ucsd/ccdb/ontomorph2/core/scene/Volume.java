@@ -16,27 +16,24 @@ import com.jme.scene.shape.Box;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
-import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
 /**
- * Implementation of IVolume.  Also aware of semantic tags.
+ * Defines a volume of space, identified by the boundaries of a box or a sphere.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see IVolume
- * @see ISemanticsAware
  *
  */
-public class VolumeImpl extends SceneObjectImpl implements IVolume, ISemanticsAware {
+public class Volume extends SceneObject{
 
+	public static final int BOX_SHAPE = 0;
+	public static final int SPHERE_SHAPE = 1;
+	
 	int _shape = 0;
 	Geometry _expShape = null;
-	List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
-	private boolean _visible = true;
-	
-	
-	public VolumeImpl(Geometry g) {
+		
+	public Volume(Geometry g) {
 		_expShape = g;
 		_expShape.setModelBound(new BoundingBox());
 		_expShape.updateModelBound();
@@ -44,22 +41,23 @@ public class VolumeImpl extends SceneObjectImpl implements IVolume, ISemanticsAw
 		//setRotation(new RotationImpl(_expShape.getLocalRotation()));
 	}
 	
-	public VolumeImpl() {
+	public Volume() {
 		
 	}
 	
-	public VolumeImpl(Box box, CoordinateSystem d) {
+	public Volume(Box box, CoordinateSystem d) {
 		this(box);
 		this.setCoordinateSystem(d);
 	}
 
-	/* (non-Javadoc)
-	 * @see src.edu.ucsd.ccdb.ontomorph2.core.scene.IVolume#getContainedSemanticalObjects()
+	/**
+	 * 
+	 * @return Any ISemanticsAware objects that are geometrically inside this IVolume
 	 */
 	public Set<ISemanticsAware> getContainedSemanticalObjects() {
 		Set<ISemanticsAware> l = new HashSet<ISemanticsAware>();
 		
-		for (NeuronMorphologyView n : ViewImpl.getInstance().getView3D().getCells()) {
+		for (NeuronMorphologyView n : View.getInstance().getView3D().getCells()) {
 			
 			if (_expShape.getWorldBound().intersects(((NeuronMorphologyView)n).getWorldBound())) {
 				l.add((ISemanticsAware)n.getMorphology());
@@ -72,45 +70,45 @@ public class VolumeImpl extends SceneObjectImpl implements IVolume, ISemanticsAw
 		return (_expShape.getWorldBound().intersects(s.getWorldBound()));
 	}
 
+	/**
+	 * Get the shape of this IVolume
+	 * @return A shape token defined in IVolume
+	 */
 	public int getShape() {
 		return _shape;
 	}
-
+	
+	
+	/**
+	 * Set the shape of this IVolume
+	 * @param shape - defined in IVolume
+	 */
 	public void setShape(int shape) {
 		_shape = shape;
 	}
 
-
+	/**
+	 * Explicitly set the shape of this volume
+	 * @param g - a geometrical shape for this volume
+	 */
 	public void setExplicitShape(Geometry g) {
 		_expShape = g;
 	}
 
-
+	/**
+	 * Get the explicit shape of this volume
+	 * @return - the explicit shape
+	 */
 	public Geometry getExplicitShape() {
 		return _expShape;
 	}
 
-
+	/**
+	 * Determine if this shape is represented explicitly or not
+	 * @return true if explicit, false if not
+	 */
 	public boolean isExplicit() {
 		return (_expShape != null);
-	}
-	
-	public List<ISemanticThing> getSemanticThings() {
-		return semanticThings;
-	}
-	
-	public List<ISemanticThing> getAllSemanticThings() {
-		return getSemanticThings();
-	}
-	
-	public void addSemanticThing(ISemanticThing thing) {
-		this.semanticThings.add(thing);
-		thing.addSemanticsAwareAssociation(this);
-	}
-	
-	public void removeSemanticThing(ISemanticThing thing) {
-		this.semanticThings.remove(thing);
-		thing.removeSemanticsAwareAssociation(this);
 	}
 
 }

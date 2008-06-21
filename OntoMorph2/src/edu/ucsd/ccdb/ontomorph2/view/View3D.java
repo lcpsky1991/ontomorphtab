@@ -15,22 +15,22 @@ import com.jme.system.DisplaySystem;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.scene.INeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.IVolume;
+import edu.ucsd.ccdb.ontomorph2.core.scene.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Surface;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Volume;
+import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.MeshViewImpl;
-import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.VolumeViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.scene.VolumeView;
 
 /**
  * Stands in for the Root Node of the 3D Scene Graph.
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
-public class View3DImpl extends Node{
+public class View3D extends Node{
 	
 	private Node slidesNode = null;
 	private Node cellsNode = null;
@@ -40,9 +40,10 @@ public class View3DImpl extends Node{
 	private Node volumesNode = null;
 	private Node atlasNode = null;
 	private Set<NeuronMorphologyView> cells = null;
-	private Set<VolumeViewImpl> volumes = null;
+	private Set<VolumeView> volumes = null;
+	private Set<BrainRegionView> brainRegions = null;
 	
-	public View3DImpl() {
+	public View3D() {
 		slidesNode = new Node();
 		cellsNode = new Node();
 		curvesNode = new Node();
@@ -60,7 +61,9 @@ public class View3DImpl extends Node{
 		atlasNode.setLightCombineMode(LightState.COMBINE_CLOSEST);
 		
 		cells = new HashSet<NeuronMorphologyView>();
-		volumes = new HashSet<VolumeViewImpl>();
+		volumes = new HashSet<VolumeView>();
+		brainRegions = new HashSet<BrainRegionView>();
+		
 		this.attachChild(slidesNode);
 		this.attachChild(cellsNode);
 		this.attachChild(curvesNode);
@@ -77,9 +80,9 @@ public class View3DImpl extends Node{
 		}
 	}
 	
-	public void setCells(Set<INeuronMorphology> cells) {
+	public void setCells(Set<NeuronMorphology> cells) {
 		cellsNode.detachAllChildren();
-		for(INeuronMorphology cell : cells) {
+		for(NeuronMorphology cell : cells) {
 			NeuronMorphologyView cellView = new NeuronMorphologyView(cell);
 			Node n = cellView.getNode();
 			cellsNode.attachChild(n);
@@ -114,59 +117,35 @@ public class View3DImpl extends Node{
 		}
 	}
 
-	public void setVolumes(Set<IVolume> volumes) {
+	public void setVolumes(Set<Volume> volumes) {
 		
 		volumesNode.detachAllChildren();
-		for (IVolume vol : volumes) {
-			VolumeViewImpl volView = new VolumeViewImpl(vol);
+		for (Volume vol : volumes) {
+			VolumeView volView = new VolumeView(vol);
 			this.volumes.add(volView);
 			volumesNode.attachChild(volView.getNode());
 		}
 	}
 	
-	public Set<VolumeViewImpl> getVolumes() {
+	public Set<VolumeView> getVolumes() {
 		return volumes;
 	}
 
-	public void displayBrainRegion(BrainRegion br) {
-		//atlasNode.attachChild(br.getMesh());
-		TriMesh mesh = br.getTriMesh();
-		mesh.setSolidColor(ColorRGBA.blue);
-		mesh.setModelBound(new BoundingBox());
-		mesh.updateModelBound();
-		VBOInfo nfo = new VBOInfo(true);
-		//nfo.setVBOIndexEnabled(true);
-		mesh.setVBOInfo(nfo);
-		mesh.setCullMode(SceneElement.CULL_DYNAMIC);
-
-		
-		LightState lightState = null;
-		lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
-        lightState.setEnabled(true);
-        
-        atlasNode.setRenderState(lightState);
-		
-		atlasNode.attachChild(mesh);
-		/*
-        AlphaState as = ViewImpl.getInstance().getRenderer().createAlphaState();
-	      as.setBlendEnabled(true);
-	      as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-	      as.setDstFunction(AlphaState.DB_ONE);
-	      as.setTestEnabled(true);
-	      as.setTestFunction(AlphaState.TF_GREATER);
-	      as.setEnabled(true);
-	    atlasNode.setRenderState(as);
-	    atlasNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-	    */
-	    atlasNode.updateRenderState();
-	    atlasNode.updateGeometricState(5f, true);
-	    
-	}
-
-	public void unDisplayBrainRegion(BrainRegion br) {
-		atlasNode.detachChild(br.getClodMesh());
-		br.destroyMesh();
-
+	/**
+	 * Draw the brain region, following the instructions on 
+	 * its visiblility and updating the view when necessary
+	 * @param br
+	 */
+	public void updateBrainRegion(BrainRegion br) {
+		for (BrainRegionView b : brainRegions) {
+			if (b.getBrainRegion().equals(br)) {
+				b.update();
+				return;
+			}
+		}
+		BrainRegionView bv = new BrainRegionView(br);
+		brainRegions.add(bv);
+		atlasNode.attachChild(bv);
 	}
 	
 }

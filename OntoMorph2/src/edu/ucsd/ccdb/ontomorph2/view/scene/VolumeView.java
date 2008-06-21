@@ -8,19 +8,19 @@ import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.WireframeState;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.IVolume;
-import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Volume;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
- * Visualizes an IVolume
+ * Visualizes an Volume
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see IVolume
+ * @see Volume
  */
-public class VolumeViewImpl {
+public class VolumeView {
 
-	IVolume _vol = null;
+	Volume _vol = null;
 	
-	public VolumeViewImpl(IVolume vol) {
+	public VolumeView(Volume vol) {
 		_vol = vol;
 	}
 
@@ -29,7 +29,7 @@ public class VolumeViewImpl {
 		if (_vol.isExplicit()) {
 			Geometry g = _vol.getExplicitShape();
 			/*
-			AlphaState as = ViewImpl.getInstance().getRenderer().createAlphaState();
+			AlphaState as = View.getInstance().getRenderer().createAlphaState();
 			as.setBlendEnabled(true);
 			as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
 			as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
@@ -38,7 +38,7 @@ public class VolumeViewImpl {
 			g.setRenderState(as);
 			*/
 			
-			WireframeState ws = ViewImpl.getInstance().getRenderer().createWireframeState();
+			WireframeState ws = View.getInstance().getRenderer().createWireframeState();
 	        ws.setEnabled(true);
 
 	        g.setRenderState(ws);
@@ -48,10 +48,10 @@ public class VolumeViewImpl {
 			}
 		} else {
 			Vector3f p = _vol.getAbsolutePosition().asVector3f();
-			if (_vol.getShape() == IVolume.BOX_SHAPE) {
+			if (_vol.getShape() == Volume.BOX_SHAPE) {
 				Box b = new Box("my box", p, 1, 1, 1);
 				n.attachChild(b);
-			} else if (_vol.getShape() == IVolume.SPHERE_SHAPE) {
+			} else if (_vol.getShape() == Volume.SPHERE_SHAPE) {
 				Sphere s = new Sphere("my sphere", p, 10, 10, 1);
 				n.attachChild(s);
 			}
@@ -60,7 +60,7 @@ public class VolumeViewImpl {
 	}
 
 	
-	public IVolume getVolume() {
+	public Volume getVolume() {
 		return _vol;
 	}
 }

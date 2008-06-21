@@ -23,9 +23,9 @@ public class SegmentGroupImpl implements ISegmentGroup, ISemanticsAware{
 	List<String> tags = new ArrayList<String>();
 	List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
 	Color color = null;
-	INeuronMorphology parentCell = null;
+	NeuronMorphology parentCell = null;
 	
-	public SegmentGroupImpl(INeuronMorphology parentCell, BigInteger id, List<ISegment> segments, List<String> tags) {
+	public SegmentGroupImpl(NeuronMorphology parentCell, BigInteger id, List<ISegment> segments, List<String> tags) {
 		this.id = id;
 		
 		this.segments.addAll(segments);
@@ -88,7 +88,7 @@ public class SegmentGroupImpl implements ISegmentGroup, ISemanticsAware{
 		getParentCell().unselectSegmentGroup(this);
 	}
 
-	public INeuronMorphology getParentCell() {
+	public NeuronMorphology getParentCell() {
 		return this.parentCell;
 	}
 

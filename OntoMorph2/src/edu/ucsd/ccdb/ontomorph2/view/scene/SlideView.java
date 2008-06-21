@@ -11,7 +11,7 @@ import com.jme.util.TextureManager;
 import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Slide;
-import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
  * Defines a slide, which is a plane in space that has the image of a slice of brain on it.
@@ -97,7 +97,7 @@ public class SlideView extends TriMesh {
 				BufferUtils.createIntBuffer(indexes));
 		*/
 		//get my texturestate
-		TextureState ts = ViewImpl.getInstance().getDisplaySystem().getRenderer().createTextureState();
+		TextureState ts = View.getInstance().getDisplaySystem().getRenderer().createTextureState();
 		//get my texture
 		Texture t= TextureManager.loadTexture(imageURL,
 				Texture.MM_LINEAR, Texture.FM_LINEAR);

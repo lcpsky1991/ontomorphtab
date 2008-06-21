@@ -17,8 +17,8 @@ import java.util.Stack;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.util.BitMath;
-import edu.ucsd.ccdb.ontomorph2.util.MyNode;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
 
 /**

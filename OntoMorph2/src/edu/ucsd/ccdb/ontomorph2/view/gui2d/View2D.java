@@ -1,11 +1,16 @@
-package edu.ucsd.ccdb.ontomorph2.view;
+package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
+import org.fenggui.Button;
 import org.fenggui.ComboBox;
+import org.fenggui.Container;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
 import org.fenggui.IContainer;
+import org.fenggui.Label;
+import org.fenggui.RadioButton;
 import org.fenggui.ScrollContainer;
 import org.fenggui.TextEditor;
+import org.fenggui.ToggableGroup;
 import org.fenggui.background.PlainBackground;
 import org.fenggui.border.PlainBorder;
 import org.fenggui.composites.Window;
@@ -13,6 +18,10 @@ import org.fenggui.event.IMenuItemPressedListener;
 import org.fenggui.event.ISelectionChangedListener;
 import org.fenggui.event.MenuItemPressedEvent;
 import org.fenggui.event.SelectionChangedEvent;
+import org.fenggui.layout.BorderLayout;
+import org.fenggui.layout.BorderLayoutData;
+import org.fenggui.layout.RowExLayoutData;
+import org.fenggui.layout.RowLayout;
 import org.fenggui.layout.StaticLayout;
 import org.fenggui.menu.Menu;
 import org.fenggui.menu.MenuBar;
@@ -22,12 +31,13 @@ import org.fenggui.tree.ITreeModel;
 import org.fenggui.tree.Tree;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
+import org.fenggui.util.Spacing;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SceneObjectManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
-import edu.ucsd.ccdb.ontomorph2.util.MyNode;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 
 
 /**
@@ -37,7 +47,7 @@ import edu.ucsd.ccdb.ontomorph2.util.MyNode;
  * @see IView2D
  *
  */
-public class View2DImpl extends Display implements IMenuItemPressedListener {
+public class View2D extends Display implements IMenuItemPressedListener {
 	
 	public static final String LOAD_SCENE = "Load Scene...";
 	public static final String SAVE_SCENE = "Save Scene...";
@@ -54,8 +64,10 @@ public class View2DImpl extends Display implements IMenuItemPressedListener {
 	/**
 	 * Holds singleton instance
 	 */
-	private static View2DImpl instance;
+	private static View2D instance;
 	private TextEditor infoText = null;
+	
+	private AtlasBrowser aBrowser = null;
 	
 	protected TextEditor getInfoText() {
 		if (infoText == null ) {
@@ -115,8 +127,8 @@ public class View2DImpl extends Display implements IMenuItemPressedListener {
  
 //		generate the menu
         MenuBar mB = new MenuBar();
-        mB.setSize(ViewImpl.getInstance().getDisplaySystem().getWidth(), 20);
-        mB.setPosition(new Point(0,ViewImpl.getInstance().getDisplaySystem().getHeight()-20));
+        mB.setSize(View.getInstance().getDisplaySystem().getWidth(), 20);
+        mB.setPosition(new Point(0,View.getInstance().getDisplaySystem().getHeight()-20));
         mB.setShrinkable(false);
 
         this.addWidget(mB);
@@ -127,7 +139,7 @@ public class View2DImpl extends Display implements IMenuItemPressedListener {
         MenuItem saveScene = new MenuItem(SAVE_SCENE);
         loadScene.addMenuItemPressedListener(this);
         saveScene.addMenuItemPressedListener(this);
-        fileMenu.addItem(loadScene);
+        //fileMenu.addItem(loadScene);
         fileMenu.addItem(saveScene);
 	
         Menu viewMenu = new Menu();
@@ -212,7 +224,7 @@ public class View2DImpl extends Display implements IMenuItemPressedListener {
 	/**
 	 * prevents instantiation
 	 */
-	private View2DImpl() {
+	private View2D() {
 		super(new org.fenggui.render.lwjgl.LWJGLBinding());
 		this.initGUI();
 	}
@@ -221,9 +233,9 @@ public class View2DImpl extends Display implements IMenuItemPressedListener {
 	 * Returns the singleton instance.
 	 @return	the singleton instance
 	 */
-	static public View2DImpl getInstance() {
+	static public View2D getInstance() {
 		if (instance == null) {
-			instance = new View2DImpl();
+			instance = new View2D();
 		}
 		return instance;
 	}
@@ -246,9 +258,9 @@ public class View2DImpl extends Display implements IMenuItemPressedListener {
 		} else if (DISPLAY_BASIC_ATLAS.equals(arg0.getItem().getText())) {
 			ReferenceAtlas.getInstance().displayBasicAtlas();
 		} else if (SLIDE_VIEW.equals(arg0.getItem().getText())) {
-			ViewImpl.getInstance().setCameraToSlideView();
+			View.getInstance().setCameraToSlideView();
 		} else if (ATLAS_SIDE_VIEW.equals(arg0.getItem().getText())) {
-			ViewImpl.getInstance().setCameraToAtlasSideView();
+			View.getInstance().setCameraToAtlasSideView();
 		}
 	}
 	
@@ -266,7 +278,7 @@ public class View2DImpl extends Display implements IMenuItemPressedListener {
 		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
 		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
 		
-		Tree<MyNode> tree = this.<MyNode>createTree(sc);
+		Tree<MyNode> tree = MyTreeModel.<MyNode>createTree(sc);
 		
 		window.setSize(200, 300);
 		window.setPosition(new Point(0,100));
@@ -290,39 +302,9 @@ public class View2DImpl extends Display implements IMenuItemPressedListener {
 	}
 	
 	protected void loadAtlasBrowser() {
-		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
-		
-		Window window = FengGUI.createWindow(this, true, false, false, true);
-		window.getAppearance().removeAll();
-		
-		window.setTitle("Brain Regions...");
-		
-		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
-		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
-		
-		Tree<MyNode> tree = this.<MyNode>createTree(sc);
-		
-		window.setSize(200, 300);
-		window.setPosition(new Point(0,100));
-		window.layout();
-		tree.setModel(new MyTreeModel(root));
-
-		tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
-			{
-				if (!selectionChangedEvent.isSelected()) {
-					MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
-					n.value.unselect();
-					return;
-				}
-				MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
-				if (n.value != null) {
-					n.value.select();
-				}
-				
-			}
-			
-		});
+		if (aBrowser == null) {
+			aBrowser = new AtlasBrowser(this);
+		}
 	}
 	
 	protected void loadFileChooser() {
@@ -381,7 +363,7 @@ public class View2DImpl extends Display implements IMenuItemPressedListener {
 		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
 		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
 		
-		Tree<MyNode> tree = this.<MyNode>createTree(sc);
+		Tree<MyNode> tree = MyTreeModel.<MyNode>createTree(sc);
 		
 		window.setSize(200, 300);
 		//StaticLayout.center(window, display);
@@ -409,56 +391,6 @@ public class View2DImpl extends Display implements IMenuItemPressedListener {
 		});
 	}
 	
-	/**
-	 * Create a Tree widget.
-	 * @param <T> type parameter
-	 * @param parent the parent container
-	 * @return new tree widget.
-	 */
-	private <T> Tree<T> createTree(IContainer parent)
-	{
-		Tree<T> result = new Tree<T>();
-		FengGUI.setUpAppearance(result);
-		result.getAppearance().removeAll();
-		result.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
-		result.getAppearance().setTextColor(Color.WHITE);
-		result.getAppearance().add(new PlainBorder(Color.WHITE_HALF_OPAQUE));
-		
-		parent.addWidget(result);
-		return result;
-	}
-
-	class MyTreeModel implements ITreeModel<MyNode>
-	{
-		MyNode root = null;
-		
-		public MyTreeModel(MyNode root) {
-			this.root = root;
-		}
-		public int getNumberOfChildren(MyNode node)
-		{
-			return node.children.size();
-		}
-
-		public Pixmap getPixmap(MyNode node)
-		{
-			return null;
-		}
-
-		public String getText(MyNode node)
-		{
-			return node.text;
-		}
-
-		public MyNode getRoot()
-		{
-			return root;
-		}
-
-		public MyNode getNode(MyNode parent, int index)
-		{
-			return parent.children.get(index);
-		}
-	}
+	
 
 }

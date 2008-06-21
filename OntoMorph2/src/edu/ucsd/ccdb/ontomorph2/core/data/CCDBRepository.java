@@ -13,7 +13,13 @@ import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.GetCCDBMicroscopyDataService;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
-
+/**
+ * Manages all activity that interacts with the CCDB database. 
+ * (http://ccdb.ucsd.edu)
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class CCDBRepository {
 
 	protected static CCDBRepository repo = null;
@@ -29,7 +35,7 @@ public class CCDBRepository {
 	}
 	
 	/**
-	 * 
+	 * Returns a wrapper around any data from the CCDB.
 	 * @param mpid - Microscopy Product ID - uniquely references any data in the CCDB
 	 * @return
 	 */
@@ -41,39 +47,9 @@ public class CCDBRepository {
 			
 			data =  ws.getGetCCDBMicroscopyDataPort().getCCDBMicroscopy(mpid);
 			
-			/*			
-			CCDBModelReader reader = new CCDBModelReader(data);
-			List file = reader.getFiles();
-
-			System.out.println(file.size());
-			
-			for(int i=0;i<file.size();i++)
-			{
-				CCDBFile f = (CCDBFile)file.get(i);
-				System.out.println(f.getPath()+"  "+f.getCCDBCatagory()+"  "+f.getCCDBFileType());
-				
-				InputStream in = f.getInputStream();
-				writeFile(in, new File("C:\\test"+i+"."+f.getFileExtension()));
-			}
-			*/
 		} catch (Exception e) {
 			throw new OMTException("Problem loading CCDB Data", e);
 		}
 		return data;
 	}
-
-	/*
-	private  void writeFile(InputStream inStream, File file) throws IOException {
-		final int bufferSize = 1000;
-		FileOutputStream fout = new FileOutputStream(file);
-		byte[] buffer = new byte[bufferSize];
-		int readCount = 0;
-		while ((readCount = inStream.read(buffer)) != -1) { 
-			if (readCount < bufferSize) {
-				fout.write(buffer, 0, readCount);
-			} else {
-				fout.write(buffer);
-			}
-		}
-	}*/
 }

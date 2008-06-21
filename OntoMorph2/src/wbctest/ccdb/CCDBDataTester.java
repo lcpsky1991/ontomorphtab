@@ -14,7 +14,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 public class CCDBDataTester {
 
 	public static void main(String[] args ){
-		CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(35);
+		CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(53);
 		URL imageURL = null;
 		CCDBModelReader reader;
 		try {
@@ -25,8 +25,7 @@ public class CCDBDataTester {
 			{
 				CCDBFile f = (CCDBFile)file.get(i);
 				System.out.println(f.getCCDBCatagory());
-				if (f.getCCDBCatagory() == CCDBDataCatagory.IMAGE2D && 
-						f.getCCDBFileType() == CCDBFileType.IMAGE_JPEG) {
+				if (f.getCCDBFileType() == CCDBFileType.IMAGE_JPEG) {
 						imageURL = f.getURL();
 				} 
 			}

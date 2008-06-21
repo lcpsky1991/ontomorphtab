@@ -85,12 +85,12 @@ public class Scene extends Observable{
 		}
 	}
 	
-	private void addSceneObject(ISceneObject s) {
+	private void addSceneObject(SceneObject s) {
 		if (s instanceof Slide) {
 			manager.addSlide(s);
-		} else if (s instanceof INeuronMorphology) {
+		} else if (s instanceof NeuronMorphology) {
 			manager.addCell(s);
-		} else if (s instanceof IVolume) {
+		} else if (s instanceof Volume) {
 			manager.addVolume(s);
 		} else if (s instanceof DataMesh) {
 			manager.addMesh(s);
@@ -101,7 +101,7 @@ public class Scene extends Observable{
 		//temporary hack o load a mockup
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
 
-		//CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(35);
+		CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(35);
 		
 		/*
 		addSceneObject(new Slide(hippo1URL, new PositionVector(-60,-100,22), 170, 0.87f, d));
@@ -110,14 +110,14 @@ public class Scene extends Observable{
 		addSceneObject(new Slide(hippo3bURL, new PositionVector(-24,-9,21.5f), 15,1.31f, d));
 		addSceneObject(new Slide(hippo3cURL, new PositionVector(-5,-8.5f,21.5f), 15,1.33f, d));
 		*/
-		
+		/*
 		addSceneObject(new Slide(hippo1URL, new PositionVector(-60,-100,22), 
 				new RotationVector(d.getRotationFromAbsolute()), 170, 0.87f));
+		*/
 		
-		/*
         addSceneObject(new Slide(hippoImage, new PositionVector(-60,-100,22), 
 				new RotationVector(d.getRotationFromAbsolute()), 170, 0.87f));
-		*/
+		
 		addSceneObject(new Slide(hippo2URL, new PositionVector(-55,-30, 22), 
 				new RotationVector(d.getRotationFromAbsolute()), 62, 1.34f));
 		addSceneObject(new Slide(hippo3aURL, new PositionVector(-45,-13,21.5f), 
@@ -132,28 +132,28 @@ public class Scene extends Observable{
 		//addSceneObject(new Slide("etc/img/hippo_slice3f.jpg", new PositionImpl(10,0,22), 10,1));
 		//addSceneObject(new Slide("etc/img/hippo_slice3g.jpg", new PositionImpl(-20,30,22), 10,1));
 		
-		IVolume v1 = new VolumeImpl(new Box("my box", new OMTVector(-21,-1,15), 20f, 10f, 20f), d);
+		Volume v1 = new Volume(new Box("my box", new OMTVector(-21,-1,15), 20f, 10f, 20f), d);
 		v1.setVisible(false);
 		addSceneObject(v1);
 		
 		
 		/*
-		INeuronMorphology cell1 = new CellImpl();
+		NeuronMorphology cell1 = new CellImpl();
 		URL cell1URL = Scene.class.getClassLoader().getResource("1220882a.morph.xml");
 		cell1.setMorphologyViaURL(cell1URL);
 		cell1.getMorphology().setPosition(new PositionImpl(6,-30,106));
 		cell1.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new OMTVector(0,1,0)));
 		cell1.getMorphology().setScale(0.15f);
-		cell1.getMorphology().setRenderOption(INeuronMorphology.RENDER_AS_CYLINDERS);
+		cell1.getMorphology().setRenderOption(NeuronMorphology.RENDER_AS_CYLINDERS);
 		cells.add(cell1);
 		
-		INeuronMorphology cell2 = new CellImpl();
+		NeuronMorphology cell2 = new CellImpl();
 		URL cell2URL = Scene.class.getClassLoader().getResource("1220882a.morph.xml");
 		cell2.setMorphologyViaURL(cell1URL);
 		cell2.getMorphology().setPosition(new PositionImpl(6,6,106));
 		//cell2.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new OMTVector(0,1,0)));
 		cell2.getMorphology().setScale(0.15f);
-		cell2.getMorphology().setRenderOption(INeuronMorphology.RENDER_AS_LINES);
+		cell2.getMorphology().setRenderOption(NeuronMorphology.RENDER_AS_LINES);
 
 		//get semantic thing for a pyramidal cell
 		//ISemanticThing pyramCell = SemanticRepository.getInstance().getSemanticThing("sao:sao830368389");
@@ -188,8 +188,8 @@ public class Scene extends Observable{
 		
 
 		
-		NeuronMorphologyImpl cell3 = new NeuronMorphologyImpl(cell3URL, c2, 0.03f, 
-				INeuronMorphology.RENDER_AS_LOD_2, d);
+		NeuronMorphology cell3 = new NeuronMorphology(cell3URL, c2, 0.03f, 
+				NeuronMorphology.RENDER_AS_LOD_2, d);
 		cell3.setRelativeScale(0.01f);
 		//semantic thing for hippocampal CA3 neuron
 		cell3.addSemanticClass(ISemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
@@ -198,15 +198,15 @@ public class Scene extends Observable{
 		
 		
 		
-		NeuronMorphologyImpl cell4 = new NeuronMorphologyImpl(cell4URL, c2, 0.2f, 
-				INeuronMorphology.RENDER_AS_LOD, d);
+		NeuronMorphology cell4 = new NeuronMorphology(cell4URL, c2, 0.2f, 
+				NeuronMorphology.RENDER_AS_LOD, d);
 		cell4.setRelativeScale(0.01f);
 		cell4.addSemanticClass(ISemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
 		addSceneObject(cell4);
 		
 		
-		NeuronMorphologyImpl cell5 = new NeuronMorphologyImpl(cell5URL, c2, 0.35f, 
-				INeuronMorphology.RENDER_AS_LOD, d);
+		NeuronMorphology cell5 = new NeuronMorphology(cell5URL, c2, 0.35f, 
+				NeuronMorphology.RENDER_AS_LOD, d);
 		cell5.setRelativeScale(0.01f);
 		cell5.addSemanticClass(ISemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
 		addSceneObject(cell5);
@@ -217,9 +217,9 @@ public class Scene extends Observable{
 		 *  Curve may need different model vectors for different NeuronMorphologies
 		 */
 
-		NeuronMorphologyImpl cell6 = new NeuronMorphologyImpl(cell6URL, c2, 0.8f, 
-				INeuronMorphology.RENDER_AS_LOD, d);
-		//NeuronMorphologyImpl cell6 = new NeuronMorphologyImpl(cell6URL, null, null, INeuronMorphology.RENDER_AS_LOD);
+		NeuronMorphology cell6 = new NeuronMorphology(cell6URL, c2, 0.8f, 
+				NeuronMorphology.RENDER_AS_LOD, d);
+		//NeuronMorphology cell6 = new NeuronMorphology(cell6URL, null, null, NeuronMorphology.RENDER_AS_LOD);
 		cell6.setRelativeScale(0.02f);
 		//cell6.setUpVector(new OMTVector(1,0,0));
 		cell6.setUpVector(new OMTVector(0,0,1));
@@ -228,8 +228,8 @@ public class Scene extends Observable{
 				
 		
 
-		NeuronMorphologyImpl cell7 = new NeuronMorphologyImpl(cell7URL, c2, 0.91f, 
-				INeuronMorphology.RENDER_AS_LOD, d);
+		NeuronMorphology cell7 = new NeuronMorphology(cell7URL, c2, 0.91f, 
+				NeuronMorphology.RENDER_AS_LOD, d);
 		cell7.setRelativeScale(0.02f);
 		//cell7.setUpVector(new OMTVector(1,0,0));
 		cell7.setUpVector(new OMTVector(0,0,1));
@@ -250,8 +250,8 @@ public class Scene extends Observable{
 
 		
 		for (int i = 1; i < 20; i++) {
-			NeuronMorphologyImpl cell11 = new NeuronMorphologyImpl(cell11URL, curve1, ((float)i)/20f-0.01f, 
-					INeuronMorphology.RENDER_AS_LOD, d);
+			NeuronMorphology cell11 = new NeuronMorphology(cell11URL, curve1, ((float)i)/20f-0.01f, 
+					NeuronMorphology.RENDER_AS_LOD, d);
 			cell11.setRelativeScale(0.01f);
 			cell11.addSemanticClass(ISemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS);
 			addSceneObject(cell11);
@@ -259,22 +259,22 @@ public class Scene extends Observable{
 		
 		
 		/*
-		NeuronMorphologyImpl cell12 = new NeuronMorphologyImpl(); 
+		NeuronMorphology cell12 = new NeuronMorphology(); 
 		URL cell12URL = Scene.class.getClassLoader().getResource("etc/morphml/hippocampus/pv08d.morph.xml");
 		cell12.setMorphologyViaURL(cell12URL);
 		cell12.getMorphology().setPosition(new PositionImpl(-25,0,20));
 		//cell3.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new OMTVector(0,1,0)));
 		cell12.getMorphology().setScale(0.01f);
-		cell12.getMorphology().setRenderOption(INeuronMorphology.RENDER_AS_LINES);
+		cell12.getMorphology().setRenderOption(NeuronMorphology.RENDER_AS_LINES);
 		addSceneObject(cell12);
 		
-		NeuronMorphologyImpl cell13 = new NeuronMorphologyImpl(); 
+		NeuronMorphology cell13 = new NeuronMorphology(); 
 		URL cell13URL = Scene.class.getClassLoader().getResource("etc/morphml/hippocampus/pv22b.morph.xml");
 		cell13.setMorphologyViaURL(cell13URL);
 		cell13.getMorphology().setPosition(new PositionImpl(25,0,20));
 		//cell3.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new OMTVector(0,1,0)));
 		cell13.getMorphology().setScale(0.01f);
-		cell13.getMorphology().setRenderOption(INeuronMorphology.RENDER_AS_LINES);
+		cell13.getMorphology().setRenderOption(NeuronMorphology.RENDER_AS_LINES);
 		addSceneObject(cell13);*/
 		
 		p1 = new OMTVector(-10,-5,20);
@@ -323,7 +323,7 @@ public class Scene extends Observable{
 	public void save() {
 		Instances ins = new Instances();
 		Cells thecells = new Cells();
-		for (INeuronMorphology c : manager.getCells()) {
+		for (NeuronMorphology c : manager.getCells()) {
 			CellInstance ci = new CellInstance();
 			Point loc = new Point();
 			loc.setX(c.getRelativePosition().getX());
@@ -333,7 +333,7 @@ public class Scene extends Observable{
 			//ci.setId(c.getMorphology().get)
 			ins.getInstance().add(ci);
 			
-			thecells.getCell().add(((NeuronMorphologyImpl)c).getMorphMLCell());
+			thecells.getCell().add(((NeuronMorphology)c).getMorphMLCell());
 		}
 		Population pop = new Population();
 		
@@ -351,7 +351,7 @@ public class Scene extends Observable{
 		return manager.getSlides();
 	}
 	
-	public Set<INeuronMorphology> getCells() {
+	public Set<NeuronMorphology> getCells() {
 		return manager.getCells();
 	}
 
@@ -372,7 +372,7 @@ public class Scene extends Observable{
 		return manager.getMeshes();
 	}
 
-	public Set<IVolume> getVolumes() {
+	public Set<Volume> getVolumes() {
 		return manager.getVolumes();
 	}
 

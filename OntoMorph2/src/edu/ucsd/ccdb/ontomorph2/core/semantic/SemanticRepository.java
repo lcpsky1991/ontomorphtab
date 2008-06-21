@@ -14,8 +14,8 @@ import edu.stanford.smi.protege.model.SimpleInstance;
 import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protege.util.ApplicationProperties;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
-import edu.ucsd.ccdb.ontomorph2.util.MyNode;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
 
 /**

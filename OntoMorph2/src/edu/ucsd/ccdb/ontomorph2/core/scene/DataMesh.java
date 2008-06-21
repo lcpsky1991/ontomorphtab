@@ -12,7 +12,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @see ISemanticsAware
  */
-public class DataMesh extends SceneObjectImpl implements ISemanticsAware{
+public class DataMesh extends SceneObject{
 	
 	URL maxFile = null;
 	URL objFile = null;
@@ -37,23 +37,5 @@ public class DataMesh extends SceneObjectImpl implements ISemanticsAware{
 		return objFile;
 	}
 	
-	public List<ISemanticThing> getSemanticThings() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<ISemanticThing> getAllSemanticThings() {
-		return getSemanticThings();
-	}
-	
-	public void addSemanticThing(ISemanticThing thing) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void removeSemanticThing(ISemanticThing thing) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

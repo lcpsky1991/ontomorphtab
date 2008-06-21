@@ -8,5 +8,6 @@ edu.ucsd.ccdb.ontomorph2.core.spatial
 edu.ucsd.ccdb.ontomorph2.observers
 edu.ucsd.ccdb.ontomorph2.util
 edu.ucsd.ccdb.ontomorph2.view
+edu.ucsd.ccdb.ontomorph2.view.gui2d
 edu.ucsd.ccdb.ontomorph2.view.procedural
 edu.ucsd.ccdb.ontomorph2.view.scene

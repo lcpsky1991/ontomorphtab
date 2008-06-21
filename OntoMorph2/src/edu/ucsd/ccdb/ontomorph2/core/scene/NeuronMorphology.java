@@ -33,7 +33,18 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
-public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorphology, ISemanticsAware  {
+/**
+ * Describes the morphology of the cell, independent of different ways of visualizing it.  
+ * Since it is a three-dimensional morphology, this will describe points in a local 3D space (MorphML?)
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ */
+public class NeuronMorphology extends SceneObject{
+	
+	public static final String RENDER_AS_LINES = "lines"; 
+	public static final String RENDER_AS_CYLINDERS = "cylinders";
+	public static final String RENDER_AS_LOD = "LOD";
+	public static final String RENDER_AS_LOD_2 = "LOD2";
 	
 	URL _morphLoc = null;
 	String _renderOption = RENDER_AS_LINES; //default render option
@@ -49,7 +60,7 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 	float _time = 0.0f;
 	private Vector3f _upVector;
 	
-	public NeuronMorphologyImpl(URL morphLoc) {
+	public NeuronMorphology(URL morphLoc) {
 		_morphLoc = morphLoc;
 		
 		JAXBContext context;
@@ -71,32 +82,32 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		this.addObserver(SceneObserver.getInstance());
 	}
 	
-	public NeuronMorphologyImpl(URL morphLoc, PositionVector position, RotationVector rotation) {
+	public NeuronMorphology(URL morphLoc, PositionVector position, RotationVector rotation) {
 		this(morphLoc);
 		setRelativePosition(position);
 		setRelativeRotation(rotation);
 	}
 	
-	public NeuronMorphologyImpl(URL morphLoc, PositionVector position, RotationVector rotation, 
+	public NeuronMorphology(URL morphLoc, PositionVector position, RotationVector rotation, 
 			CoordinateSystem c) {
 		this(morphLoc, position, rotation);
 		this.setCoordinateSystem(c);
 	}
 
 	
-	public NeuronMorphologyImpl(URL morphLoc, PositionVector position, 
+	public NeuronMorphology(URL morphLoc, PositionVector position, 
 			RotationVector rotation, String renderOption) {
 		this(morphLoc, position, rotation);
 		setRenderOption(renderOption);
 	}
 	
-	public NeuronMorphologyImpl(URL morphLoc, PositionVector position, 
+	public NeuronMorphology(URL morphLoc, PositionVector position, 
 			RotationVector rotation, String renderOption, CoordinateSystem c) {
 		this(morphLoc, position, rotation, renderOption);
 		this.setCoordinateSystem(c);
 	}
 	
-	public NeuronMorphologyImpl(URL morphLoc, Curve3D curve, float time, String renderOption) {
+	public NeuronMorphology(URL morphLoc, Curve3D curve, float time, String renderOption) {
 		this(morphLoc);
 		_curve = curve;
 		_time = time;
@@ -104,17 +115,24 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		setRenderOption(renderOption);
 	}
 	
-	public NeuronMorphologyImpl(URL morphLoc, Curve3D curve, float time, 
+	public NeuronMorphology(URL morphLoc, Curve3D curve, float time, 
 			String renderOption, CoordinateSystem c) {
 		this(morphLoc, curve, time, renderOption);
 		this.setCoordinateSystem(c);
 	}
 
-	
+	/**
+	 * Get the ICurve that this INeuronMorphology has been associated with
+	 * @return
+	 */
 	public Curve3D getCurve() {
 		return _curve;
 	}
 	
+	/**
+	 * Retrieves the "time" along the curve that this INeuronMorphology is positioned at
+	 * @return
+	 */
 	public float getTime() {
 		return _time;
 	}
@@ -123,6 +141,10 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		return theCell;
 	}
 	
+	/**
+	 * Get the URL for the MorphML file that corresponds to this INeuronMorphology
+	 * @return - the URL
+	 */
 	public URL getMorphMLURL() {
 		return _morphLoc;
 	}
@@ -132,10 +154,10 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 	}
 	
 	public void setRenderOption(String renderOption) {
-		if (INeuronMorphology.RENDER_AS_LINES.equals(renderOption) || 
-				INeuronMorphology.RENDER_AS_CYLINDERS.equals(renderOption) ||
-				INeuronMorphology.RENDER_AS_LOD.equals(renderOption) ||
-				INeuronMorphology.RENDER_AS_LOD_2.equals(renderOption)) {
+		if (RENDER_AS_LINES.equals(renderOption) || 
+				RENDER_AS_CYLINDERS.equals(renderOption) ||
+				RENDER_AS_LOD.equals(renderOption) ||
+				RENDER_AS_LOD_2.equals(renderOption)) {
 			_renderOption = renderOption;
 		}
 	}
@@ -169,6 +191,11 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		return segmentList;
 	}
 	
+
+	/**
+	 * 
+	 * @return the ISegmentGroups that are associated with this INeuronMorphology
+	 */
 	public Set<ISegmentGroup> getSegmentGroups() {
 		if (segmentGroupList == null) {
 			segmentGroupList = new HashSet<ISegmentGroup>();
@@ -216,16 +243,29 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		return segmentGroupList;
 	}
 	
+
+	/** 
+	 * Convenience method to select a segment within this INeuronMorphology
+	 * @param s - the segment to select
+	 */
 	public void selectSegment(ISegment s) {
 		selectedSegmentList.add(s);
 		changed();
 	}
 	
+	/** 
+	 * Convenience method to unselect a segment within this INeuronMorphology
+	 * @param s - the segmen to unselect
+	 */
 	public void unselectSegment(ISegment s) {
 		selectedSegmentList.remove(s);
 		changed();
 	}
 	
+	/**
+	 * 
+	 * @return all ISegment's that are currently selected
+	 */
 	public Set<ISegment> getSelectedSegments() {
 		return selectedSegmentList;
 	}
@@ -240,10 +280,18 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		changed();
 	}
 
+	/**
+	 * 
+	 * @return all ISegmentGroups that are currently selected
+	 */
 	public Set<ISegmentGroup> getSelectedSegmentGroups() {
 		return selectedSegmentGroupList;
 	}
 
+	/**
+	 * 
+	 * @return true if this INeuronMorphology has ISegmentGroups that are selected, false otherwise
+	 */
 	public boolean hasSelectedSegmentGroups() {
 		return getSelectedSegmentGroups().size() > 0;
 	}
@@ -274,10 +322,19 @@ public class NeuronMorphologyImpl extends SceneObjectImpl implements INeuronMorp
 		semanticThings.add(SemanticRepository.getInstance().getSemanticClass(classURI));
 	}
 
+	/**
+	 * Set the position of this NeuronMorphology at point time
+	 * along curve c
+	 *
+	 */
 	public void positionAlongCurve(Curve3D c, float time) {
 		setRelativePosition(new PositionVector(((Curve3D)c).getPoint(time)));
 	}
 
+	/**
+	 * Rotates the NeuronMorphology to aim its 'up' direction towards p
+	 * @param p
+	 */
 	public void lookAt(PositionVector p) {
 		lookAtPosition = p;
 	}
