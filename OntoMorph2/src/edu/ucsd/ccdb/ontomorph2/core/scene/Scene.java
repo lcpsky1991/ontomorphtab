@@ -5,6 +5,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
@@ -22,7 +23,9 @@ import com.jme.scene.shape.Box;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticClass;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
@@ -97,6 +100,36 @@ public class Scene extends Observable{
 		}
 	}
 	
+	/**
+	 * Loads data from the cellular knowledge base, which is a
+	 * metadata warehouse.  Once the metadata is sorted through,
+	 * the raw data is retrieved from the CCDB and other sources.
+	 *
+	 */
+	public void loadFromCKB() {
+		//load up SemanticRepository
+		List<SemanticInstance> instances = SemanticRepository.getInstance().getMicroscopyProductInstances();
+		for (SemanticInstance i : instances) {
+			//if species == mouse
+		      //if image 
+		          //make image instances into slides
+				  //store the SemanticInstance object in the slide
+		          //add slides to scene
+		      //if neuron reconstruction
+		          //make instance into neuron morphology
+		          //store the SemanticInstance object in the neuronMorphology
+			      //add neuron morphology to scene
+		    //}
+		}
+	}
+	
+	/**
+	 * Loads objects into the scene.  Currently this is done manually mostly from
+	 * files on the client.  This is being transitioned to the loadFromCKB method
+	 * where we are loading data from the cellular knowledge base
+	 * @see #loadFromCKB()
+	 *
+	 */
 	public void load() {
 		//temporary hack o load a mockup
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
@@ -192,7 +225,7 @@ public class Scene extends Observable{
 				NeuronMorphology.RENDER_AS_LOD_2, d);
 		cell3.setRelativeScale(0.01f);
 		//semantic thing for hippocampal CA3 neuron
-		cell3.addSemanticClass(ISemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
+		cell3.addSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
 		addSceneObject(cell3);
 
 		
@@ -201,14 +234,14 @@ public class Scene extends Observable{
 		NeuronMorphology cell4 = new NeuronMorphology(cell4URL, c2, 0.2f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell4.setRelativeScale(0.01f);
-		cell4.addSemanticClass(ISemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
+		cell4.addSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
 		addSceneObject(cell4);
 		
 		
 		NeuronMorphology cell5 = new NeuronMorphology(cell5URL, c2, 0.35f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell5.setRelativeScale(0.01f);
-		cell5.addSemanticClass(ISemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
+		cell5.addSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
 		addSceneObject(cell5);
 		
 
@@ -223,7 +256,7 @@ public class Scene extends Observable{
 		cell6.setRelativeScale(0.02f);
 		//cell6.setUpVector(new OMTVector(1,0,0));
 		cell6.setUpVector(new OMTVector(0,0,1));
-		cell6.addSemanticClass(ISemanticClass.CA1_PYRAMIDAL_CELL_CLASS);
+		cell6.addSemanticClass(SemanticClass.CA1_PYRAMIDAL_CELL_CLASS);
 		//addSceneObject(cell6);
 				
 		
@@ -233,7 +266,7 @@ public class Scene extends Observable{
 		cell7.setRelativeScale(0.02f);
 		//cell7.setUpVector(new OMTVector(1,0,0));
 		cell7.setUpVector(new OMTVector(0,0,1));
-		cell7.addSemanticClass(ISemanticClass.CA1_PYRAMIDAL_CELL_CLASS);
+		cell7.addSemanticClass(SemanticClass.CA1_PYRAMIDAL_CELL_CLASS);
 		//addSceneObject(cell7);
 		
 		/*
@@ -253,7 +286,7 @@ public class Scene extends Observable{
 			NeuronMorphology cell11 = new NeuronMorphology(cell11URL, curve1, ((float)i)/20f-0.01f, 
 					NeuronMorphology.RENDER_AS_LOD, d);
 			cell11.setRelativeScale(0.01f);
-			cell11.addSemanticClass(ISemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS);
+			cell11.addSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS);
 			addSceneObject(cell11);
 		}
 		

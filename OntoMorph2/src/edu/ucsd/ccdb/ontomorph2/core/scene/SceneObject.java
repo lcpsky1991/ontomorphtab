@@ -11,6 +11,7 @@ import com.jme.scene.Node;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
@@ -37,6 +38,12 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 
 	private Color c = null;
 	private Color highlightedColor = null;
+	
+	public SceneObject() {
+		//by default, all objects ought to be associated with an instance.
+		//the least specific instance that can be created is one of bfo:entity.
+		addSemanticThing(SemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
+	}
 	
 	/**
 	 * get the RotationVector that defines this INeuronMorphology's rotation.

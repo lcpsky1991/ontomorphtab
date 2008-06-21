@@ -43,7 +43,7 @@ public class SemanticRepository {
 		return owlModel;
 	}
 
-	public ISemanticClass getSemanticClass(String uri) {
+	public SemanticClass getSemanticClass(String uri) {
 		Cls cls = null;
 		if (owlModel != null) {
 			try {
@@ -56,14 +56,14 @@ public class SemanticRepository {
 				throw new OMTException("Problem finding URI in semantic repository" + uri, e);
 			}
 		}
-		SemanticClassImpl s = new SemanticClassImpl(cls, uri);
+		SemanticClass s = new SemanticClass(cls, uri);
 		s.addObserver(SceneObserver.getInstance());
 		return s;
 	}
 	
 	public MyNode getInstanceTree() {
 		MyNode root = new MyNode("Instances", null);
-		for (ISemanticInstance si : this.getCellInstances()) {
+		for (SemanticInstance si : this.getCellInstances()) {
 			root.children.add(new MyNode(si.getLabel(), si));
 		}
 		return root;
@@ -73,15 +73,20 @@ public class SemanticRepository {
 	 * Get the Instances in the database for all children of the root rootClass
 	 * 
 	 * @param rootClass - the class at the top of the hierarchy from which you want to retrieve instances
+	 * @param requireLabel - if set to true, requires that the instance have a label in order to be included in the return list
 	 * @return
 	 */
-	public List<ISemanticInstance> getInstancesFromRoot(Cls rootClass) {
-		List<ISemanticInstance> runningList = new ArrayList<ISemanticInstance>();
+	public List<SemanticInstance> getInstancesFromRoot(Cls rootClass, boolean requireLabel) {
+		List<SemanticInstance> runningList = new ArrayList<SemanticInstance>();
 		for (Iterator it = rootClass.getInstances().iterator(); it.hasNext(); ) {
 			Instance i = (Instance)it.next();
 			if (i instanceof SimpleInstance) {
-				SemanticInstanceImpl si = new SemanticInstanceImpl(i);
-				if (si.getLabel() != null) {
+				SemanticInstance si = new SemanticInstance(i);
+				if (requireLabel) {
+					if (si.getLabel() != null) {
+						runningList.add(si);
+					}
+				} else {
 					runningList.add(si);
 				}
 			}
@@ -92,10 +97,10 @@ public class SemanticRepository {
 
 	/**
 	 * Get all instances in the database under the root of Cell
-	 * @return a list of ISemanticInstances
+	 * @return a list of SemanticInstanceImpls
 	 */
-	public List<ISemanticInstance> getCellInstances() {
-		return getInstancesFromRoot(getSemanticClass("sao:sao1813327414").getCls());
+	public List<SemanticInstance> getCellInstances() {
+		return getInstancesFromRoot(getSemanticClass("sao:sao1813327414").getCls(), true);
 	}
 	
 	//initialize the semantic repository by connecting to the 
@@ -193,11 +198,19 @@ public class SemanticRepository {
 		return label;
 
 	}
+
+
+	public List<SemanticInstance> getMicroscopyProductInstances() {
+		return getInstancesFromRoot(getSemanticClass("ccdb:MICROSCOPYPRODUCT_OBJTAB").getCls(), false);
+	}
 	
-	public static void main(String[] args) {
-		SemanticRepository.getInstance();
-		//get semantic thing for a pyramidal cell
-		ISemanticThing pyramCell = SemanticRepository.getInstance().getSemanticClass("sao:sao830368389");
-		
+	/**
+	 * Creates a new OWL instance of the class specified in the parameter.
+	 * @param string
+	 * @return
+	 */
+	public ISemanticThing createNewInstanceOfClass(String string) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

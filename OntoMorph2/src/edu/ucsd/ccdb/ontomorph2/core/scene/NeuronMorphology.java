@@ -222,6 +222,7 @@ public class NeuronMorphology extends SceneObject{
 					} 
 					if ("axon_group".equals(s)) {
 						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("sao:sao1770195789"));
+						//should be adding all these segGroups to the Axon class and treating them as a separate unit.
 					}
 					if ("apical_dendrite".equals(s)) {
 						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("sao:sao273773228"));

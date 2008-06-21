@@ -28,10 +28,16 @@ public class SemanticThingImpl extends Observable implements ISemanticThing {
 		this.owlInstance = owlInstance;
 	}
 	
+	/**
+	 * Get the underlying protege representation of a semantic class
+	 */
 	public Cls getCls() {
 		return OWLClass;
 	}
 	
+	/**
+	 * Get the OWL label
+	 */
 	public String getLabel() {
 		return SemanticRepository.getInstance().getClassLabel(OWLClass, URI);
 	}

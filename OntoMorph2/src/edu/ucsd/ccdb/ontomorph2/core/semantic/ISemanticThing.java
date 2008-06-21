@@ -30,4 +30,5 @@ public interface ISemanticThing extends ISelectable{
 	 * @return
 	 */
 	public List<SemanticProperty> findPropertiesThatHold(ISemanticThing other);
+	
 }

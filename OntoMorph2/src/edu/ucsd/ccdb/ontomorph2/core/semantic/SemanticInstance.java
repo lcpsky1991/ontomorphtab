@@ -4,11 +4,18 @@ import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
 
-public class SemanticInstanceImpl extends SemanticThingImpl implements ISemanticInstance {
+
+/**
+ * Represents an OWL instance.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
+public class SemanticInstance extends SemanticThingImpl {
 
 	Instance _ins = null;
 	
-	public SemanticInstanceImpl(Instance i) {
+	public SemanticInstance(Instance i) {
 		this._ins = i;
 	}
 	
@@ -40,6 +47,16 @@ public class SemanticInstanceImpl extends SemanticThingImpl implements ISemantic
 			}*/
 		}
 		return label;
+	}
+
+	/**
+	 * Adds a relation between this ISemanticInstance and i, through SemanticProperty p.
+	 * @param p
+	 * @param i
+	 */
+	public void addRelationToInstance(SemanticProperty p, SemanticInstance i) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

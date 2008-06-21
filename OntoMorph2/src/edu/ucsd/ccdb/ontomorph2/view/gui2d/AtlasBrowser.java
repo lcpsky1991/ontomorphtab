@@ -21,6 +21,15 @@ import org.fenggui.util.Spacing;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
 
+/**
+ * 2D widget that allows interaction with the 3D representation of the atlas. 
+ * 
+ * Provides a tree interface to see the hierarchy of brain structures, and allows
+ * the user to turn different structures on, off, or transparent.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class AtlasBrowser {
 
 	
