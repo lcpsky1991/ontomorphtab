@@ -8,21 +8,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.ByteBuffer;
-import java.nio.channels.ByteChannel;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
-import com.jme.scene.batch.TriangleBatch;
-
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.util.BitMath;
-import edu.ucsd.ccdb.ontomorph2.util.MyNode;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
 
 /**
@@ -54,7 +50,7 @@ public class ReferenceAtlas {
 		 */
 		brainRegions = new ArrayList<BrainRegion>();
 		try {
-			FileReader fr = new FileReader(new File(SceneImpl.allenDir + "ontology.csv"));
+			FileReader fr = new FileReader(new File(Scene.allenDir + "ontology.csv"));
 			BufferedReader br = new BufferedReader(fr);
 			AllenCoordinateSystem sys = new AllenCoordinateSystem();
 			while (br.ready()) {
@@ -182,17 +178,7 @@ public class ReferenceAtlas {
 		return br;
 	}
 	
-	/**
-	 * @see BrainRegion
-	 * @return a list of brain regions known to the system
-	 */
 	public List<BrainRegion> getBrainRegions() {
-		if (true)
-		{
-			
-		}
-		
-		
 		return brainRegions;
 	}
 

@@ -12,7 +12,7 @@ import com.jmex.model.converters.FormatConverter;
 import com.jmex.model.converters.MaxToJme;
 import com.jmex.model.converters.ObjToJme;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.IMesh;
+import edu.ucsd.ccdb.ontomorph2.core.scene.DataMesh;
 
 /**
  * Visualizes a mesh.
@@ -25,8 +25,8 @@ public class MeshViewImpl {
 
 	//OMTDiscreteLodNode object = null;
 	Node object = null;
-	IMesh mesh = null;
-	public MeshViewImpl(IMesh mesh) {
+	DataMesh mesh = null;
+	public MeshViewImpl(DataMesh mesh) {
 		this.mesh = mesh;
 		if (mesh.getMaxMeshURL() != null) {
 			loadMaxFile(mesh.getMaxMeshURL());

@@ -1,8 +1,10 @@
 package edu.ucsd.ccdb.ontomorph2.app;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
+import java.io.File;
+
+import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
-import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
  * Main class for the application.
@@ -12,14 +14,15 @@ import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
  */
 public class OntoMorph2 {
 	
-	static SceneImpl _scene;
+	static Scene _scene;
 	
 	public static void main(String[] args) {
-		ViewImpl view = ViewImpl.getInstance();
+
+		View view = View.getInstance();
 		
 		SceneObserver obs = SceneObserver.getInstance();
 		obs.setView(view);
-		_scene = new SceneImpl();
+		_scene = new Scene();
 	
 		_scene.addObserver(obs);
 		
@@ -29,11 +32,11 @@ public class OntoMorph2 {
 		view.start();
 	}
 	
-	//gets called by ViewImpl during initialization
+	//gets called by View during initialization
 	public static void initialization() {
-		//scene can't be loaded before ViewImpl has been initializaed
+		//scene can't be loaded before View has been initializaed
 		_scene.load();
-		ViewImpl.getInstance().getView2D().addInfoText("This is an example of \nloading neuronal morphologies...");
+		View.getInstance().getView2D().addInfoText("This is an example of \nloading neuronal morphologies...");
 	}
 	
 	

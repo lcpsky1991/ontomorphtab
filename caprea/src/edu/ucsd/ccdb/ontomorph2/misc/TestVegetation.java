@@ -1,5 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.misc;
 
+import javax.swing.ImageIcon;
+
 import com.jme.app.SimplePassGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
@@ -21,9 +23,6 @@ import com.jme.util.TextureManager;
 import com.jmex.terrain.TerrainBlock;
 import com.jmex.terrain.util.ImageBasedHeightMap;
 import com.jmex.terrain.util.ProceduralTextureGenerator;
-
-import javax.swing.*;
-import java.util.logging.Level;
 
 /**
  * MrCoder

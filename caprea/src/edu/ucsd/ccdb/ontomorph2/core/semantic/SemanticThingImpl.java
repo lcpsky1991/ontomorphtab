@@ -6,8 +6,6 @@ import java.util.Observable;
 
 import edu.stanford.smi.protege.model.Cls;
 import edu.stanford.smi.protege.model.Instance;
-import edu.stanford.smi.protege.model.KnowledgeBase;
-import edu.stanford.smi.protege.model.Slot;
 
 public class SemanticThingImpl extends Observable implements ISemanticThing {
 
@@ -30,10 +28,16 @@ public class SemanticThingImpl extends Observable implements ISemanticThing {
 		this.owlInstance = owlInstance;
 	}
 	
+	/**
+	 * Get the underlying protege representation of a semantic class
+	 */
 	public Cls getCls() {
 		return OWLClass;
 	}
 	
+	/**
+	 * Get the OWL label
+	 */
 	public String getLabel() {
 		return SemanticRepository.getInstance().getClassLabel(OWLClass, URI);
 	}
@@ -71,6 +75,11 @@ public class SemanticThingImpl extends Observable implements ISemanticThing {
 	public void changed() {
 		notifyObservers();
 		setChanged();
+	}
+
+	public List<SemanticProperty> findPropertiesThatHold(ISemanticThing other) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

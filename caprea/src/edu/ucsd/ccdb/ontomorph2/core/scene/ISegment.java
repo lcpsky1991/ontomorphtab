@@ -48,6 +48,6 @@ public interface ISegment extends ISemanticsAware{
 	
 	public void setColor(Color c);
 	
-	public INeuronMorphology getParentCell();
+	public NeuronMorphology getParentCell();
 
 }

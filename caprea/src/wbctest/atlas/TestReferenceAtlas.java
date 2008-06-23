@@ -31,19 +31,10 @@ package wbctest.atlas;
 	 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	 */
 
-	import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import com.jme.app.SimpleGame;
-	import com.jme.math.Vector3f;
-	import com.jme.scene.TriMesh;
-	import com.jme.scene.batch.TriangleBatch;
-import com.jme.util.geom.BufferUtils;
+	import com.jme.app.SimpleGame;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 
 	/**
 	 * <code>TestAnisotropic</code>
@@ -73,13 +64,14 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 		for (BrainRegion r : atlas.getBrainRegions()) {
 			rootNode.attachChild(r.getMesh());
 		}
-		
+		*/
 		//String[] regions = {"OLF", "HPF", "STRd", "STRv", "LSX", "sAMY", "PAL", "TH", "HY", "MBsen", "MBmot", "MBsta", "P", "MY", "CB"};
-		String[] regions = {"MBmot"};
+		String[] regions = {"OLF"};
 		
 		for (String s : regions) {
 			rootNode.attachChild(atlas.getBrainRegion(s).getClodMesh());
-		}*/
+		}
+		/*
 		BrainRegion b1 = atlas.getBrainRegion(0,0,0);
 		if (b1 != null) { 
 			System.out.println(b1.getName());
@@ -99,7 +91,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
 		BrainRegion b2 = atlas.getBrainRegion(200,200,200);
 		if (b2 != null) {
 		System.out.println(b2.getName());
-		}
+		}*/
 		
 	  }
 	}

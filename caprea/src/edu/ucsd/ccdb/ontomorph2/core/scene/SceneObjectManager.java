@@ -6,7 +6,7 @@ import java.util.Set;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
-import edu.ucsd.ccdb.ontomorph2.util.MyNode;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
 
 /**
@@ -19,39 +19,39 @@ public class SceneObjectManager {
 
 	
 
-	ArrayList<ISlide> slides = null;
-	Set<INeuronMorphology> cells = null;
-	Set<ICurve> curves = null;
-	Set<ISurface> surfaces = null;
-	Set<IMesh> meshes = null;
-	Set<IVolume> volumes = null;
+	ArrayList<Slide> slides = null;
+	Set<NeuronMorphology> cells = null;
+	Set<Curve3D> curves = null;
+	Set<Surface> surfaces = null;
+	Set<DataMesh> meshes = null;
+	Set<Volume> volumes = null;
 	/**
 	 * Holds singleton instance
 	 */
 	private static SceneObjectManager instance;
 	
 	private SceneObjectManager() {
-		slides = new ArrayList<ISlide>();
-		cells = new HashSet<INeuronMorphology>();
-		curves = new HashSet<ICurve>();
-		surfaces = new HashSet<ISurface>();
-		meshes = new HashSet<IMesh>();
-		volumes = new HashSet<IVolume>();
+		slides = new ArrayList<Slide>();
+		cells = new HashSet<NeuronMorphology>();
+		curves = new HashSet<Curve3D>();
+		surfaces = new HashSet<Surface>();
+		meshes = new HashSet<DataMesh>();
+		volumes = new HashSet<Volume>();
 	}
 
-	public void addSlide(ISceneObject s) {
-		slides.add((ISlide) s);
+	public void addSlide(SceneObject s) {
+		slides.add((Slide) s);
 		
 	}
 
-	public void addCell(ISceneObject s) {
-		cells.add((INeuronMorphology) s);
+	public void addCell(SceneObject s) {
+		cells.add((NeuronMorphology) s);
 	}
 	
 	public MyNode getCellTree() {
 		MyNode root = new MyNode("Cells", null);
 		
-		for (INeuronMorphology n : getCells()) {
+		for (NeuronMorphology n : getCells()) {
 			MyNode node = new MyNode(n.getName(), n);
 			
 			for (ISemanticThing t : ((ISemanticsAware)n).getAllSemanticThings()) {	
@@ -64,39 +64,39 @@ public class SceneObjectManager {
 		return root;
 	}
 
-	public void addVolume(ISceneObject s) {
-		volumes.add((IVolume) s);
+	public void addVolume(SceneObject s) {
+		volumes.add((Volume) s);
 	}
 
-	public Set<IVolume> getVolumes() {
+	public Set<Volume> getVolumes() {
 		return volumes;
 	}
 
-	public Set<INeuronMorphology> getCells() {
+	public Set<NeuronMorphology> getCells() {
 		return cells;
 	}
 
-	public ArrayList<ISlide> getSlides() {
+	public ArrayList<Slide> getSlides() {
 		return slides;
 	}
 
-	public void addMesh(ISceneObject s) {
-		meshes.add((IMesh) s);
+	public void addMesh(SceneObject s) {
+		meshes.add((DataMesh) s);
 	}
 
-	public Set<IMesh> getMeshes() {
+	public Set<DataMesh> getMeshes() {
 		return meshes;
 	}
 
-	public Set<ICurve> getCurves() {
+	public Set<Curve3D> getCurves() {
 		return curves;
 	}
 
-	public Set<ISurface> getSurfaces() {
+	public Set<Surface> getSurfaces() {
 		return surfaces;
 	}
 
-	public void addCurve(CurveImpl curve1) {
+	public void addCurve(Curve3D curve1) {
 		curves.add(curve1);
 	}
 
@@ -111,7 +111,7 @@ public class SceneObjectManager {
 		return instance;
 	}
 
-	public void addSurface(ISurface surf2) {
+	public void addSurface(Surface surf2) {
 		surfaces.add(surf2);
 	}
 

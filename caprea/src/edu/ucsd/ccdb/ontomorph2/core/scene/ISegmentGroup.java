@@ -29,6 +29,6 @@ public interface ISegmentGroup extends ISemanticsAware{
 	public List<String> getTags();
 	public void setColor(Color color);
 	public Color getColor();
-	public INeuronMorphology getParentCell();
+	public NeuronMorphology getParentCell();
 
 }

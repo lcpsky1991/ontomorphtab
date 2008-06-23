@@ -17,20 +17,15 @@ import java.util.List;
 import com.jme.bounding.BoundingSphere;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 import com.jme.scene.BatchMesh;
-import com.jme.scene.Geometry;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.lod.AreaClodMesh;
-import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.RenderState;
 import com.jme.util.geom.BufferUtils;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneImpl;
-import edu.ucsd.ccdb.ontomorph2.view.ViewImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 
 /**
  * A pure java implementation of a mesh reader that can read the format that 
@@ -86,7 +81,7 @@ public class AllenAtlasMeshLoader {
 	
 	public BatchMesh loadByAbbreviation(String abbrev) {
 		try {
-			return load(new File(SceneImpl.allenMeshDir + abbrev + ".msh").toURI().toURL());
+			return load(new File(Scene.allenMeshDir + abbrev + ".msh").toURI().toURL());
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -96,7 +91,7 @@ public class AllenAtlasMeshLoader {
 	
 	public AreaClodMesh loadClodMeshByAbbreviation(String abbrev) { 
 		try {
-			return loadClodMesh(new File(SceneImpl.allenMeshDir + abbrev + ".msh").toURI().toURL());
+			return loadClodMesh(new File(Scene.allenMeshDir + abbrev + ".msh").toURI().toURL());
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -106,7 +101,7 @@ public class AllenAtlasMeshLoader {
 	
 	public TriMesh loadTriMeshByAbbreviation(String abbrev) { 
 		try {
-			return loadTriMesh(new File(SceneImpl.allenMeshDir + abbrev + ".msh").toURI().toURL());
+			return loadTriMesh(new File(Scene.allenMeshDir + abbrev + ".msh").toURI().toURL());
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
