@@ -1,6 +1,9 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
-import java.nio.FloatBuffer;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+//import java.nio.FloatBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +30,7 @@ import com.jme.scene.CameraNode;
 import com.jme.scene.Line;
 import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Sphere;
+import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 import com.jme.util.geom.Debugger;
@@ -34,19 +38,28 @@ import com.jme.util.geom.Debugger;
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
-import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
+import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SegmentView;
+import edu.ucsd.ccdb.ontomorph2.core.changes.*;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.*;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
 
+//===
 
+import com.jme.input.action.MouseLook; 	//drag handler
+import com.jme.renderer.Camera;			//drag handler
+import com.jme.input.*;					//drag handler
+import edu.ucsd.ccdb.ontomorph2.view.MouseClickAndDrag;
+
+//=========
 
 /**
- * Defines the view of the entire application.  Is associated with the 3D parts 
- * of the view and the 2D parts of view.
- * 
+ * Implements IVew
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @see IView
  */
-public class View extends BaseSimpleGame{
+public class View extends BaseSimpleGame {
 
 	private static View instance = null;
 	private static final Logger logger = Logger.getLogger(View.class.getName());
@@ -56,18 +69,17 @@ public class View extends BaseSimpleGame{
 	float coordDelta;
 	private Scene _scene = null;
 
-	CameraNode camNode;			//thisobject needed for manipulating the camera in a simple way
-	AbsoluteMouse amouse; 	//the mouse object ref to entire screen
-	PickData prevPick;		//made global because it's a conveiniant way to deselect the previous selection since it's stored
-	
+	CameraNode camNode;							//thisobject needed for manipulating the camera in a simple way
+	AbsoluteMouse amouse; 						//the mouse object ref to entire screen, used to hide and show the mouse?
+	PickData prevPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
+	NeuronMorphologyView manipMorph=null;	//the most recent object to be manipulated as a morphology
+	PickData firstClick;
 	
 	float camRotationRate = FastMath.PI * 5 / 180;	//(FastMath.PI * X / 180) corresponds to X degrees per (FPS?) = Rate/UnitOfUpdate 
-	
-	org.fenggui.Display disp; // FengGUI's display
-	
 	float invZoom = 1.0f; //zoom amount
 
 	//there are two kinds of input, the FPS input and also FENG
+	org.fenggui.Display disp; // FengGUI's display
 	FengJMEInputHandler menuinput;	
 	
 	View3D view3D = null;
@@ -97,11 +109,15 @@ public class View extends BaseSimpleGame{
 	public Scene getScene() {
 		return _scene;
 	}
+
 	
 	protected void simpleInitGame() {
 		//as a hack, calling the main application class to do initialization
 		//this is because model loading needs to have the view running in order to work
+		
 		OntoMorph2.initialization();
+		display.getRenderer().setBackgroundColor(ColorRGBA.black); //Set a black background.
+		display.setTitle("Whole Brain Catalog");
 		
 		rootNode.attachChild(view3D);
 		
@@ -118,46 +134,25 @@ public class View extends BaseSimpleGame{
 		rootNode.attachChild(s);
 		*/						
 		
-		/*
-		ABEMeshLoader meshLoader = new ABEMeshLoader();
-		URL DGURL = null;
-		try {
-			DGURL = new File(Scene.allenMeshDir + "DG.msh").toURI().toURL();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		rootNode.attachChild(meshLoader.load(DGURL));
-		*/
+					
 		
-				
-		///** Set a black background.*/
-		display.getRenderer().setBackgroundColor(ColorRGBA.black);
+		//mouse setup
+		//====================================
+		// DRAG SETUP
+		//====================================
+		
+		
+	     
 
-		display.setTitle("Whole Brain Catalog");
-		
-		
 		//====================================
 		// CAMERA SETUP
 		//====================================
 		
 		///** Set up how our camera sees. */
 		float aspect = (float) display.getWidth() / (float) display.getHeight();
-		//cam.setParallelProjection(true);
 		//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
 		cam.setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
 		cam.update();
-		//cam.setFrustumPerspective(45.0f, aspect, 1, 1000);
-		
-		
-		
-		//Vector3f left = new Vector3f(-1.0f, 0.0f, 0.0f);
-		//Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
-		//Vector3f dir = new Vector3f(0.0f, 0f, -1.0f);
-
-		///** Move our camera to a correct place and orientation. */
-		//pX, pY, pZ, orientation
-		//cam.setFrame(loc, left, up, dir); //commented out because now using a camNode
 		
 		///** Signal that we've changed our camera's location/frustum. */
 		cam.update();
@@ -174,10 +169,6 @@ public class View extends BaseSimpleGame{
 		//camNode.setLocalTranslation(loc);
 		System.out.println("Rotation: " + camNode.getLocalRotation() + "\nTranslation: " + camNode.getLocalTranslation());
 	
-		
-		//===================================================
-		
-		//the code for keybindings was previously here, it's been seperated for code readability
 		//Section for setting up the mouse and other input controls	
 		configureControls();
 		
@@ -223,20 +214,7 @@ public class View extends BaseSimpleGame{
 	//for debugging
 	private void createLine(Vector3f apex, Vector3f base)
 	{
-
-    	ColorRGBA defaultColor = ColorRGBA.red;
-    	
-    	float[] colorValues2 = {defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a, 
-          		defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a};
-    	FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colorValues2);
-    	
-    	
-    	float[] vertices = {apex.x, apex.y, apex.z, base.x, base.y, base.z};
-    		
-          
-    		Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, colorBuffer, null);
-    		l.updateModelBound();
-    		rootNode.attachChild(l);    	
+		//TODO: remove
 	}
     	
 	private void configureControls()
@@ -272,6 +250,7 @@ public class View extends BaseSimpleGame{
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_down", KeyInput.KEY_DOWN);
 		
 		KeyBindingManager.getKeyBindingManager().set("info", KeyInput.KEY_I);
+		KeyBindingManager.getKeyBindingManager().set("mem_report", KeyInput.KEY_M);
 		
 		KeyBindingManager.getKeyBindingManager().set("zoom_in", KeyInput.KEY_Z);
 		KeyBindingManager.getKeyBindingManager().set("zoom_out", KeyInput.KEY_X);
@@ -280,105 +259,196 @@ public class View extends BaseSimpleGame{
 		MouseInput.get().setCursorVisible(true);
 	}
 	
+	/**
+	 * Changes the rotation of a morphology based on changes from the mouse movement 
+	 * @param morph the item(s) to be rotated
+	 * @author caprea
+	 */
+	public void rotateMorph(NeuronMorphologyView morph)
+	{
+		
+	}
+	
+	/**
+	 * Changes the local translation of a morpholgy in the scene based on changes from the mouse movement
+	 * The dimensions of freedom allow the 2D movement of the mouse to map to the 3D movement intended
+	 * @param constraint Specifies what dimensions to allow movement based on mouse input. 
+	 * Will typically range from (0,0,0) to (1,1,1). Where (1,1,0) corresponds to 2D movement on the current X,Y plane
+	 */
+	//TODO: impliment the constraint
+	public void moveMorph(NeuronMorphologyView morph, OMTVector constraint)
+	{
+		//get changes in mouse movement
+		float dx = MouseInput.get().getXDelta(); 
+		float dy = MouseInput.get().getYDelta();
+		float dz = 0;
+		
+		//TODO: calculate the viewing angle and apply to constraint
+		
+		dx = dx * constraint.getX();
+		dy = dy * constraint.getY();
+		dz = dz * constraint.getZ();
+		
+		//apply the movement
+		morph.getMorphology().setRelativePosition( new PositionVector( manipMorph.getMorphology().getRelativePosition().asVector3f().add(dx,dy,dz) ));
+	}
+	
 	private void handleMouseInput()
 	{
 		//handle mouse input
 		//TODO: get more sophisticated way of dealing with mouse input (pickresults has handler)
-		if (MouseInput.get().isButtonDown(0)) 
+		try
 		{
-			
-			//because dendrites can be densely packed need precision of triangles instead of bounding boxes
-			PickResults pr = new TrianglePickResults(); 
-			
-			//Get the position that the mouse is pointing to
-            Vector2f mPos = new Vector2f();
-            mPos.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
-     
-            // Get the world location of that X,Y value
-            Vector3f farPoint = display.getWorldCoordinates(mPos, 1.0f);
-            Vector3f closePoint = display.getWorldCoordinates(mPos, 0.0f);
-            
-            // Create a ray starting from the camera, and going in the direction
-            // of the mouse's location
-            Ray mouseRay = new Ray(closePoint, farPoint.subtractLocal(closePoint).normalizeLocal());
-            
-            // Does the mouse's ray intersect the box's world bounds?
-            pr.clear();
-            pr.setCheckDistance(true);  //this function is undocumented, orders the items in pickresults
-            rootNode.findPick(mouseRay, pr);
-		
-			//createLine(mouseRay.origin, mouseRay.direction); //debugging
-			//createSphere(closePoint); //for debugging
-            
-            //set up for deselection
-			if ( pr.getNumber() > 0)
-			{
-				//deselect the previous 
-				//if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
+			//right click to drag
+			if (MouseInput.get().isButtonDown(1)) //right
+			{	
+				MouseInput.get().setCursorVisible(false); //hide mouse cursor
 				
-				if (prevPick != null) {
-					/* this should be done in a listener after firing an event here*/
+				if (prevPick != null && manipMorph != null)
+				{
+					//what action is being performed?
 					
-					for (NeuronMorphologyView c : getView3D().getCells()) {
-						SegmentView segView = ((NeuronMorphologyView)c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
-						if (segView != null) {
-							if (segView.correspondsToSegment()) {
-								c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
-							} else if (segView.correspondsToSegmentGroup()) {
-								c.getMorphology().unselectSegmentGroup(segView.getCorrespondingSegmentGroup());
+						moveMorph(manipMorph, new OMTVector(1,1,0));
+								
+				}
+			}
+			
+			else
+			{
+				MouseInput.get().setCursorVisible(true); //show mouse cursor
+			}
+			
+			
+			//left mouse click
+			if (MouseInput.get().isButtonDown(0)) //left 
+			{
+				
+				//because dendrites can be densely packed need precision of triangles instead of bounding boxes
+				PickResults pr = new TrianglePickResults(); 
+				
+				//Get the position that the mouse is pointing to
+				Vector2f mPos = new Vector2f();
+				mPos.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
+				
+				// Get the world location of that X,Y value
+				Vector3f farPoint = display.getWorldCoordinates(mPos, 1.0f);
+				Vector3f closePoint = display.getWorldCoordinates(mPos, 0.0f);
+				
+				// Create a ray starting from the camera, and going in the direction
+				// of the mouse's location
+				Ray mouseRay = new Ray(closePoint, farPoint.subtractLocal(closePoint).normalizeLocal());
+				
+				// Does the mouse's ray intersect the box's world bounds?
+				pr.clear();
+				pr.setCheckDistance(true);  //this function is undocumented, orders the items in pickresults
+				rootNode.findPick(mouseRay, pr);
+				
+				//set up for deselection
+				if ( pr.getNumber() > 0)
+				{
+					//********* DESELECT PREVIOUS ********************* 
+					//if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
+					if ( prevPick != null )
+					{
+						/*
+						 * this should be done in a listener after firing an event
+						 * here
+						 */
+						
+						for (NeuronMorphologyView c : getView3D().getCells())
+						{
+							SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+							
+							if ( segView != null )
+							{
+								if ( segView.correspondsToSegment() )
+								{
+									c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
+								}
+								else if ( segView.correspondsToSegmentGroup() )
+								{
+									c.getMorphology().unselectSegmentGroup(segView.getCorrespondingSegmentGroup());	
+								}
 							}
 						}
 					}
-				}
-								
-				//find the one that is closest
-				//the 0th element is closest to the origin of the ray with checkdistance
-				//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
-				prevPick = pr.getPickData(0);	//take the closest pick and set
-				
-				/* this should be done in a listener after firing an event here*/
-				for (NeuronMorphologyView c : getView3D().getCells())
-				{ // loop over all IStructure3Ds (the view representation of
-					// the morphology)
-					/*
-					 * Try to get a segView (view representation of a segment or
-					 * segment group) that matches the target mesh from the pick
-					 * results within this NeuronMorphologyView
-					 */
+					//============== END DESLECT ============================
 					
-					SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
-					if (segView != null)
-					{ // if we found one
+					//************** SELECT **********************
+					//find the one that is closest
+					//the 0th element is closest to the origin of the ray with checkdistance
+					//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
+					prevPick = pr.getPickData(0);	//take the closest pick and set
+					
+					/* this should be done in a listener after firing an event here*/
+					for (NeuronMorphologyView c : getView3D().getCells())
+					{ // loop over all IStructure3Ds (the view representation of
+						// the morphology)
 						/*
-						 * tell the INeuronMorphology (the model representation
-						 * of the morphology) to note that we have selected a
-						 * segment or a segment group. The SceneObserver will
-						 * then get updated and change the color on the
-						 * appropriate geometry in the NeuronMorphologyView
+						 * Try to get a segView (view representation of a segment or
+						 * segment group) that matches the target mesh from the pick
+						 * results within this INeuronMorphologyView
 						 */
-						if (segView.correspondsToSegment())
-						{
-							c.getMorphology().selectSegment(segView.getCorrespondingSegment());
-						}
-						else if (segView.correspondsToSegmentGroup())
-						{
-							c.getMorphology().selectSegmentGroup(segView.getCorrespondingSegmentGroup());
+						
+						SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+						if (segView != null)
+						{ // if we found one
+							/*
+							 * tell the INeuronMorphology (the model representation
+							 * of the morphology) to note that we have selected a
+							 * segment or a segment group. The SceneObserver will
+							 * then get updated and change the color on the
+							 * appropriate geometry in the INeuronMorphologyView
+							 */
+							manipMorph = (NeuronMorphologyView) c; //for manipulating picked items
+							
+							if (segView.correspondsToSegment())
+							{
+								c.getMorphology().selectSegment(segView.getCorrespondingSegment());
+							}
+							else if (segView.correspondsToSegmentGroup())
+							{
+								c.getMorphology().selectSegmentGroup(segView.getCorrespondingSegmentGroup());
+							}
 						}
 					}
-				}
-				
-				//prevPick.getTargetMesh().setSolidColor(ColorRGBA.yellow);
-				//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
-			} //end if of pr > 0
-		} //end if mouse button down
+					//===== END DESELCT =========================
+					
+					//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
+				} //end if of pr > 0
+			} //end if mouse button down
+		} //end try
+		catch (Exception e)
+		{
+			logger.log(Level.SEVERE, "Exception caught in View.handleMouseInput(): " + e.getMessage());
+		}
 	}
 	
+	
+	/**
+	 * Handles the execution of code based on activated keys
+	 *
+	 */
 	private void handleKeyInput() 
 	{
 		//key input handle
 		{
 			//exit the program cleanly on ESC
 			if (isAction("quit")) finish();
+			
+			
+			if (isAction("mem_report"))
+			{
+				 long totMem = Runtime.getRuntime().totalMemory();
+	             long freeMem = Runtime.getRuntime().freeMemory();
+	             long maxMem = Runtime.getRuntime().maxMemory();
+
+	             logger.info("|*|*|  Memory Stats  |*|*|");
+	             logger.info("Total memory: " + (totMem >> 10) + " kb");
+	             logger.info("Free memory: " + (freeMem >> 10) + " kb");
+	             logger.info("Max memory: " + (maxMem >> 10) + " kb");
+			}
+			
 			
 			if ( isAction("cam_forward") || isAction("cam_forward_ns") ) 
 			{
@@ -475,7 +545,10 @@ public class View extends BaseSimpleGame{
 	}
 
 	
-	//called every frame update
+	/**
+	 * Called every frame update
+	 *
+	 */
 	protected void simpleUpdate() 
 	{
 		//the coordsDown and coordsUp code used to go here. It's gone now.
@@ -483,7 +556,7 @@ public class View extends BaseSimpleGame{
 		handleKeyInput();
 	}
 	
-	/* 
+	/** 
 	 * isAction(String command)
 	 * 
 	 * Because JME works with the keybinding manager using 'commands'
@@ -496,7 +569,6 @@ public class View extends BaseSimpleGame{
 		{
 			return true;
 		}
-		
 		return false;
 	}
 
@@ -551,8 +623,6 @@ public class View extends BaseSimpleGame{
         }
     }
 
-
-
     @Override
     protected void doDebug(Renderer r) {
         super.doDebug(r);
@@ -574,5 +644,6 @@ public class View extends BaseSimpleGame{
 	public Renderer getRenderer() {
 		return display.getRenderer();
 	}
-	
 }
+
+

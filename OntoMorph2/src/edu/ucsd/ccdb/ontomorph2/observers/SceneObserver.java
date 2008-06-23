@@ -54,7 +54,7 @@ public class SceneObserver implements Observer{
 					//Moves the segment to see if this is how to update model
 					PositionVector p = (PositionVector)struct3d.getMorphology().getAbsolutePosition();
 					struct3d.getNode().setLocalTranslation(p);
-					System.out.println("Observer Pos: " + p.asVector3f());
+					//System.out.println("Observer Pos: " + p.asVector3f());
 					//--end debug
 					
 					struct3d.updateSelected(morph.isSelected());

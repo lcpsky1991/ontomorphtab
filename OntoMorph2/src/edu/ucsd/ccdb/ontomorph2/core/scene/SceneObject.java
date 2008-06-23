@@ -42,7 +42,7 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 	public SceneObject() {
 		//by default, all objects ought to be associated with an instance.
 		//the least specific instance that can be created is one of bfo:entity.
-		addSemanticThing(SemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
+		//addSemanticThing(SemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
 	}
 	
 	/**
