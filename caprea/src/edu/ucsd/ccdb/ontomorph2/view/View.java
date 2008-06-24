@@ -64,18 +64,27 @@ public class View extends BaseSimpleGame {
 
 	private static View instance = null;
 	private static final Logger logger = Logger.getLogger(View.class.getName());
-	
-	//The trimesh that i will change
+//	The trimesh that i will change
 	TriMesh square;
+	
 	// a scale of my current texture values
 	float coordDelta;
 	private Scene _scene = null;
 
+	
+	//=================================
+	// Global Interface-Objects
+	//=================================
 	CameraNode camNode;							//thisobject needed for manipulating the camera in a simple way
 	AbsoluteMouse amouse; 						//the mouse object ref to entire screen, used to hide and show the mouse?
 	PickData prevPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
+	
 	NeuronMorphologyView manipMorph=null;	//the most recent object to be manipulated as a morphology
 	PickData firstClick;
+	
+	FirstPersonHandler fpHandler = null;
+	MouseLook looker;	//not used
+	private boolean pointerEnabled = false;
 	
 	float camRotationRate = FastMath.PI * 5 / 180;	//(FastMath.PI * X / 180) corresponds to X degrees per (FPS?) = Rate/UnitOfUpdate 
 	float invZoom = 1.0f; //zoom amount
@@ -86,15 +95,18 @@ public class View extends BaseSimpleGame {
 	//==================================
 	public static final int METHOD_NONE = 0;
 	public static final int METHOD_MOVE = 1;
-	public static final int METHOD_ROTATEA = 2;
-	public static final int METHOD_ROTATEB = 3;
-	public static final int METHOD_MOVEB = 4;
+	public static final int METHOD_MOVE_C = 2;
+	public static final int METHOD_SCALE = 4;
+	public static final int METHOD_ROTATEX = 8;
+	public static final int METHOD_ROTATEY = 16;
+	public static final int METHOD_ROTATEZ = 32;
+	public static final int METHOD_LOOKAT = 64;
+	
+	
 	private static int manipulation = METHOD_NONE; //use accesor
 	
 	
-	//there are two kinds of input, the FPS input and also FENG
 	org.fenggui.Display disp; // FengGUI's display
-	FengJMEInputHandler menuinput;	
 	
 	View3D view3D = null;
 	
@@ -113,6 +125,7 @@ public class View extends BaseSimpleGame {
 	{
 		manipulation = m;
 		System.out.println("Manipulation method set to: " + m);
+		
 	}
 	
 	protected View() 
@@ -161,8 +174,6 @@ public class View extends BaseSimpleGame {
 		// DRAG SETUP
 		//====================================
 		
-		
-	     
 
 		//====================================
 		// CAMERA SETUP
@@ -196,6 +207,9 @@ public class View extends BaseSimpleGame {
 		//rootNode.setLightCombineMode(LightState.OFF);
 		
 		disp = View2D.getInstance();
+		
+		
+		
 	}
 	
 	public void setCameraToSlideView() {
@@ -240,11 +254,13 @@ public class View extends BaseSimpleGame {
 	private void configureControls()
 	{
 		
+		fpHandler = new FirstPersonHandler(cam, 50, camRotationRate); //(cam, moveSpeed, turnSpeed)
+		
 		//This is where we disable the FPShooter controls that are created by default by JME	
-		FirstPersonHandler fpHandler = new FirstPersonHandler(cam, 50, 5); //(cam, moveSpeed, turnSpeed)
         input = fpHandler;
         
         //Disable both of these because I want to track things with the camera
+        
         fpHandler.getKeyboardLookHandler().setEnabled( false );
         fpHandler.getMouseLookHandler().setEnabled( false);
 		
@@ -259,24 +275,27 @@ public class View extends BaseSimpleGame {
 		//assign 'R' to reload the view to inital state //reinit
 		KeyBindingManager.getKeyBindingManager().set("reset", KeyInput.KEY_R);
 		
-		//assignt he camera to up, down, left, right
+		//assignt he camera to up, down, left, right ;	ADD does not overright
 		KeyBindingManager.getKeyBindingManager().set("cam_forward", KeyInput.KEY_ADD);
-		KeyBindingManager.getKeyBindingManager().set("cam_forward_ns", KeyInput.KEY_EQUALS); //for shift not pressed;
+		KeyBindingManager.getKeyBindingManager().add("cam_forward", KeyInput.KEY_EQUALS); //for shift not pressed;
 		KeyBindingManager.getKeyBindingManager().set("cam_back", KeyInput.KEY_SUBTRACT);
-		KeyBindingManager.getKeyBindingManager().set("cam_back_ns", KeyInput.KEY_MINUS); //for no-shift control
+		KeyBindingManager.getKeyBindingManager().add("cam_back", KeyInput.KEY_MINUS); //for no-shift control
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_ccw", KeyInput.KEY_LEFT);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_cw", KeyInput.KEY_RIGHT);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_up", KeyInput.KEY_UP);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_down", KeyInput.KEY_DOWN);
 		
+		KeyBindingManager.getKeyBindingManager().set("toggleMouse", KeyInput.KEY_M);
+		
 		KeyBindingManager.getKeyBindingManager().set("info", KeyInput.KEY_I);
-		KeyBindingManager.getKeyBindingManager().set("mem_report", KeyInput.KEY_M);
+		KeyBindingManager.getKeyBindingManager().add("mem_report", KeyInput.KEY_I);
 		
 		KeyBindingManager.getKeyBindingManager().set("zoom_in", KeyInput.KEY_Z);
 		KeyBindingManager.getKeyBindingManager().set("zoom_out", KeyInput.KEY_X);
 		
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
+		
 	}
 	
 	/**
@@ -284,13 +303,22 @@ public class View extends BaseSimpleGame {
 	 * @param morph the item(s) to be rotated
 	 * @author caprea
 	 */
-	public void rotateMorph(NeuronMorphologyView morph)
+	public void rotateMorph(NeuronMorphologyView morph, OMTVector constraint)
 	{
+		
 		float dx = MouseInput.get().getXDelta(); 
 		float dy = MouseInput.get().getYDelta();
-		Quaternion Q = new Quaternion(0.2f, 0.2f, 0f, 0.2f);
 		
-		morph.getMorphology().setRelativeRotation( new RotationVector (morph.getMorphology().getRelativeRotation().add(Q) ));
+		float delta = dx;
+		
+		Quaternion more = new Quaternion();
+		Quaternion end = new Quaternion();
+		
+		more.fromAngleAxis(0.1f * delta, constraint); //rotate with horitonzal mouse movement
+		
+		end = morph.getMorphology().getRelativeRotation().mult(more);
+		
+		morph.getMorphology().setRelativeRotation( new RotationVector(end) );
 		
 	}
 	
@@ -332,6 +360,8 @@ public class View extends BaseSimpleGame {
 				if (prevPick != null && manipMorph != null)
 				{
 					//what action is being performed?
+					
+					//TODO: replace unity vectors with ones based on camera axis
 					switch ( manipulation )
 					{
 						case METHOD_NONE:
@@ -340,8 +370,17 @@ public class View extends BaseSimpleGame {
 						case METHOD_MOVE:
 							moveMorph(manipMorph, new OMTVector(1,1,0));
 							break;
-						case METHOD_ROTATEA:
-							rotateMorph(manipMorph);
+						case METHOD_ROTATEX:
+							rotateMorph(manipMorph, new OMTVector(1,0,0));
+							break;
+						case METHOD_ROTATEY:
+							rotateMorph(manipMorph, new OMTVector(0,1,0));
+							break;
+						case METHOD_ROTATEZ:
+							rotateMorph(manipMorph, new OMTVector(0,0,1));
+							break;
+						case METHOD_LOOKAT:
+							camNode.lookAt(manipMorph.getLocalTranslation(), new OMTVector(0,1,0)); //make the camera point a thte object in question
 							break;
 					}
 				}
@@ -413,6 +452,7 @@ public class View extends BaseSimpleGame {
 					//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
 					prevPick = pr.getPickData(0);	//take the closest pick and set
 					
+					
 					/* this should be done in a listener after firing an event here*/
 					for (NeuronMorphologyView c : getView3D().getCells())
 					{ // loop over all IStructure3Ds (the view representation of
@@ -482,7 +522,24 @@ public class View extends BaseSimpleGame {
 	             logger.info("Max memory: " + (maxMem >> 10) + " kb");
 			}
 			
-			
+			if ( isAction("toggleMouse"))
+			{
+				pointerEnabled = !pointerEnabled;
+				
+				if (pointerEnabled)
+				{
+					fpHandler.setEnabled(false);
+					MouseInput.get().setCursorVisible(true);
+				}
+				else
+				{
+					fpHandler.setEnabled(true);
+					MouseInput.get().setCursorVisible(false);
+				}
+				
+			}
+				
+				
 			if ( isAction("cam_forward") || isAction("cam_forward_ns") ) 
 			{
 				//find the vector of the direction pointing towards

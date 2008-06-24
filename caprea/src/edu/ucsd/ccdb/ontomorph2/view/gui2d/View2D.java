@@ -60,9 +60,11 @@ public class View2D extends Display implements IMenuItemPressedListener {
 	public static final String SLIDE_VIEW = "View Example Slide";
 	public static final String ATLAS_SIDE_VIEW = "View Atlas Side";
 	public static final String strMNU_MANIPULATE = "Manipulate Object";
-	public static final String strMNU_MANI_ROTATEA = "Rotate (XY - Axis)";
-	public static final String strMNU_MANI_ROTATEB = "Rotate (Z - Axis)";
+	public static final String strMNU_MANI_ROTATEA = "Rotate (X - Axis)";
+	public static final String strMNU_MANI_ROTATEB = "Rotate (Y - Axis)";
+	public static final String strMNU_MANI_ROTATEC = "Rotate (Z - Axis)";
 	public static final String strMNU_MANI_MOVE = "Move";
+	public static final String strMNU_MANI_LOOK = "Focus Camera";
 
 	
 	
@@ -142,109 +144,72 @@ public class View2D extends Display implements IMenuItemPressedListener {
 //      =[  FILE  ]=
         Menu mnuFile = new Menu();
         mB.registerSubMenu(mnuFile, "File");
-        MenuItem mnuFile_loadScene = new MenuItem(LOAD_SCENE);
-        MenuItem mnuFile_saveScene = new MenuItem(SAVE_SCENE);
-        mnuFile_loadScene.addMenuItemPressedListener(this);
-        mnuFile_saveScene.addMenuItemPressedListener(this);
-        //fileMenu.addItem(loadScene);
-        mnuFile.addItem(mnuFile_saveScene);
+        makeMenuItem(LOAD_SCENE, mnuFile);
+        makeMenuItem(SAVE_SCENE, mnuFile);
 	
         //=[  VIEW  ]=
         Menu mnuView = new Menu();
         mB.registerSubMenu(mnuView, "View");
-        MenuItem mnuView_slide = new MenuItem(SLIDE_VIEW);
-        MenuItem mnuView_atlasSide = new MenuItem(ATLAS_SIDE_VIEW);
-        mnuView_slide.addMenuItemPressedListener(this);
-        mnuView_atlasSide.addMenuItemPressedListener(this);
-        mnuView.addItem(mnuView_slide);
-        mnuView.addItem(mnuView_atlasSide);
+        makeMenuItem(SLIDE_VIEW, mnuView);
+        makeMenuItem(ATLAS_SIDE_VIEW, mnuView);
         
 //      =[  OBJ  ]=
         Menu mnuObjects = new Menu();
         mB.registerSubMenu(mnuObjects, "Objects");
-        MenuItem mnuObjects_cells = new MenuItem(CELLS);
-        MenuItem mnuObjects_volumes = new MenuItem(VOLUMES);
-        MenuItem mnuObjects_semantics = new MenuItem(SEMANTICS);
-        mnuObjects_cells.addMenuItemPressedListener(this);
-        mnuObjects_volumes.addMenuItemPressedListener(this);
-        mnuObjects_semantics.addMenuItemPressedListener(this);
-        mnuObjects.addItem(mnuObjects_cells);
-        //objMenu.addItem(volumes);
-        //objMenu.addItem(semantics);
-		
+        
+        makeMenuItem(CELLS, mnuObjects);
+        makeMenuItem(VOLUMES, mnuObjects);
+        makeMenuItem(SEMANTICS, mnuObjects);
+        
         
 //      =[  CKB  ]=
         Menu mnuCKB = new Menu();
         mB.registerSubMenu(mnuCKB, "Cellular KB");
-        MenuItem listInstances = new MenuItem(LIST_INSTANCES);
-        listInstances.addMenuItemPressedListener(this);
-        mnuCKB.addItem(listInstances);
+        makeMenuItem(LIST_INSTANCES, mnuCKB);
         
         //=[  ATLAS  ]=
         Menu mnuAtlas = new Menu();
         mB.registerSubMenu(mnuAtlas, "Reference Atlas");
-        MenuItem mnuAtlas_show = new MenuItem(SHOW_ATLAS);
-        MenuItem mnuAtlas_displayBasic = new MenuItem(DISPLAY_BASIC_ATLAS);
-        mnuAtlas_show.addMenuItemPressedListener(this);
-        mnuAtlas_displayBasic.addMenuItemPressedListener(this);
-        mnuAtlas.addItem(mnuAtlas_show);
-        mnuAtlas.addItem(mnuAtlas_displayBasic);
-        
-        
+        makeMenuItem(SHOW_ATLAS, mnuAtlas);
+        makeMenuItem(DISPLAY_BASIC_ATLAS, mnuAtlas);
         
         //=[ MANIPULATE  ]= 
         Menu mnuManip = new Menu();
         mB.registerSubMenu(mnuManip, strMNU_MANIPULATE);
-        MenuItem mnuManip_move = new MenuItem(strMNU_MANI_MOVE);
-        MenuItem mnuManip_rotate = new MenuItem(strMNU_MANI_ROTATEA);
-        mnuManip_move.addMenuItemPressedListener(this);
-        mnuManip_rotate.addMenuItemPressedListener(this);
-        mnuManip.addItem(mnuManip_move);
-        mnuManip.addItem(mnuManip_rotate);
+        makeMenuItem(strMNU_MANI_MOVE, mnuManip);
+        makeMenuItem(strMNU_MANI_ROTATEA, mnuManip);
+        makeMenuItem(strMNU_MANI_ROTATEB, mnuManip);
+        makeMenuItem(strMNU_MANI_ROTATEC, mnuManip);
+        makeMenuItem(strMNU_MANI_LOOK, mnuManip);
         
-        /*
-		//	 Create a dialog and set it to some location on the screen
-		Window frame = new Window();
-		this.addWidget(frame);
-		frame.setX(20);
-		frame.setY(350);
-		frame.setSize(200, 100);
-		frame.setShrinkable(false);
-		//frame.setExpandable(true);
-		frame.setTitle("Pick a color");
-		frame.getContentContainer().setLayoutManager(new StaticLayout());
- 
-		// Create a combobox with some random values in it
-		//   we'll change these values to something more useful later on.
-		ComboBox<String> list = new ComboBox<String>();
-		frame.addWidget(list);
-		list.setSize(150, list.getMinHeight());
-		list.setShrinkable(false);
-		list.setX(25);
-		list.setY(25);
-		list.addItem("White");
-		list.addItem("Green");
-		list.addItem("Blue");
-		list.addItem("Red");
- 
-		list.addSelectionChangedListener(new CBListener());
- 
-		//try to add TextArea here but get OpenGLException
-		TextEditor ta = new TextEditor(false);
-		this.addWidget(ta);
-		ta.setText("Hallo Text");
-		ta.setX(40);
-		ta.setY(50);
-		//ta.setSize(100, ta.getAppearance().getFont().get)
-		ta.setSizeToMinSize();
- 
- 		*/
         this.getInfoText();
 		// Update the display with the newly added components
 		this.layout();
 	}
  
-
+	/**
+	 * Conveiniance method that wraps the creation of menus
+	 * @author caprea
+	 * @param name
+	 * @param parent If null, will create a new parent menu
+	 */
+	private void makeMenuItem(String name, Menu mparent)
+	{
+		try
+		{
+			MenuItem mnuToAdd = new MenuItem(name);
+	        mnuToAdd.addMenuItemPressedListener(this);
+	        mparent.addItem(mnuToAdd);	
+		}
+		catch (Exception e)
+		{
+			System.out.println("Exception; Error creating submenu; " + e.getMessage());
+		}
+        
+	}
+	
+	
+	
 	/**
 	 * prevents instantiation
 	 */
@@ -315,8 +280,22 @@ public class View2D extends Display implements IMenuItemPressedListener {
 		}
 		else if ( strMNU_MANI_ROTATEA.equals(act) )
 		{
-			View.getInstance().setManipulation(View.METHOD_ROTATEA);
+			View.getInstance().setManipulation(View.METHOD_ROTATEX);
 		}
+		else if ( strMNU_MANI_ROTATEB.equals(act) )
+		{
+			View.getInstance().setManipulation(View.METHOD_ROTATEY);
+		}
+		else if ( strMNU_MANI_ROTATEC.equals(act) )
+		{
+			View.getInstance().setManipulation(View.METHOD_ROTATEZ);
+		}
+		else if ( strMNU_MANI_LOOK.equals(act) )
+		{
+			View.getInstance().setManipulation(View.METHOD_LOOKAT);
+		}
+		
+		
 	}
 	
 	
