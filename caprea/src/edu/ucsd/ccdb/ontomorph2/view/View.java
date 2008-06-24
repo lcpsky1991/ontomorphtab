@@ -57,12 +57,14 @@ import edu.ucsd.ccdb.ontomorph2.view.MouseClickAndDrag;
 /**
  * Implements IVew
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see IView
+ * @author caprea
+ * @see IView (deprecated)
  */
 public class View extends BaseSimpleGame {
 
 	private static View instance = null;
 	private static final Logger logger = Logger.getLogger(View.class.getName());
+	
 	//The trimesh that i will change
 	TriMesh square;
 	// a scale of my current texture values
@@ -78,6 +80,18 @@ public class View extends BaseSimpleGame {
 	float camRotationRate = FastMath.PI * 5 / 180;	//(FastMath.PI * X / 180) corresponds to X degrees per (FPS?) = Rate/UnitOfUpdate 
 	float invZoom = 1.0f; //zoom amount
 
+	//==================================
+	// DECLARES
+	// - used for manipulating the objects, setting the mode says what you're doing with dragging
+	//==================================
+	public static final int METHOD_NONE = 0;
+	public static final int METHOD_MOVE = 1;
+	public static final int METHOD_ROTATEA = 2;
+	public static final int METHOD_ROTATEB = 3;
+	public static final int METHOD_MOVEB = 4;
+	private static int manipulation = METHOD_NONE; //use accesor
+	
+	
 	//there are two kinds of input, the FPS input and also FENG
 	org.fenggui.Display disp; // FengGUI's display
 	FengJMEInputHandler menuinput;	
@@ -93,6 +107,12 @@ public class View extends BaseSimpleGame {
 			instance = new View();
 		}
 		return instance;
+	}
+	
+	public void setManipulation(int m)
+	{
+		manipulation = m;
+		System.out.println("Manipulation method set to: " + m);
 	}
 	
 	protected View() 
@@ -266,6 +286,11 @@ public class View extends BaseSimpleGame {
 	 */
 	public void rotateMorph(NeuronMorphologyView morph)
 	{
+		float dx = MouseInput.get().getXDelta(); 
+		float dy = MouseInput.get().getYDelta();
+		Quaternion Q = new Quaternion(0.2f, 0.2f, 0f, 0.2f);
+		
+		morph.getMorphology().setRelativeRotation( new RotationVector (morph.getMorphology().getRelativeRotation().add(Q) ));
 		
 	}
 	
@@ -290,7 +315,7 @@ public class View extends BaseSimpleGame {
 		dz = dz * constraint.getZ();
 		
 		//apply the movement
-		morph.getMorphology().setRelativePosition( new PositionVector( manipMorph.getMorphology().getRelativePosition().asVector3f().add(dx,dy,dz) ));
+		morph.getMorphology().setRelativePosition( new PositionVector( morph.getMorphology().getRelativePosition().asVector3f().add(dx,dy,dz) ));
 	}
 	
 	private void handleMouseInput()
@@ -307,12 +332,20 @@ public class View extends BaseSimpleGame {
 				if (prevPick != null && manipMorph != null)
 				{
 					//what action is being performed?
-					
-						moveMorph(manipMorph, new OMTVector(1,1,0));
-								
+					switch ( manipulation )
+					{
+						case METHOD_NONE:
+							//do nothing
+							break;
+						case METHOD_MOVE:
+							moveMorph(manipMorph, new OMTVector(1,1,0));
+							break;
+						case METHOD_ROTATEA:
+							rotateMorph(manipMorph);
+							break;
+					}
 				}
 			}
-			
 			else
 			{
 				MouseInput.get().setCursorVisible(true); //show mouse cursor

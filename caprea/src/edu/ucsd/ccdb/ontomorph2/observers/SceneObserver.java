@@ -12,6 +12,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.SegmentGroupImpl;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
@@ -21,7 +22,7 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
  * the view accordingly.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- *
+ * @author caprea
  */
 public class SceneObserver implements Observer{
 
@@ -50,20 +51,17 @@ public class SceneObserver implements Observer{
 				NeuronMorphology morph = (NeuronMorphology)struct3d.getMorphology();
 				if (morph == o) { // find the one that matches this NeuronMorphology and update it
 					
-					//TODO: remove this debug code
 					//Moves the segment to see if this is how to update model
 					PositionVector p = (PositionVector)struct3d.getMorphology().getAbsolutePosition();
 					struct3d.getNode().setLocalTranslation(p);
-					//System.out.println("Observer Pos: " + p.asVector3f());
-					//--end debug
+					
+					RotationVector r = (RotationVector)struct3d.getMorphology().getAbsoluteRotation();
+					struct3d.getNode().setLocalRotation(r);
 					
 					struct3d.updateSelected(morph.isSelected());
 					struct3d.updateSelectedSegments(morph.getSelectedSegments());
 					struct3d.updateSelectedSegmentGroups(morph.getSelectedSegmentGroups());
-					
-					
-				
-					
+	
 				}
 				//UPDATE INFO STRING ON VIEW 2D
 				
