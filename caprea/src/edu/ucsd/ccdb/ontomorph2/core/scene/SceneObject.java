@@ -183,6 +183,7 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 	}
 	
 	public boolean isSelected() {
+		//return SceneObjectManager.getInstance().isSelected(this);
 		return this.selected;
 	}
 

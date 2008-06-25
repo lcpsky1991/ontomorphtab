@@ -11,6 +11,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.SegmentGroupImpl;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
@@ -58,9 +59,16 @@ public class SceneObserver implements Observer{
 					RotationVector r = (RotationVector)struct3d.getMorphology().getAbsoluteRotation();
 					struct3d.getNode().setLocalRotation(r);
 					
+					OMTVector s = struct3d.getMorphology().getAbsoluteScale();
+					struct3d.getNode().setLocalScale(s);
+				
 					struct3d.updateSelected(morph.isSelected());
 					struct3d.updateSelectedSegments(morph.getSelectedSegments());
 					struct3d.updateSelectedSegmentGroups(morph.getSelectedSegmentGroups());
+					
+					struct3d.updateModelBound();
+					struct3d.updateWorldBound();
+					struct3d.updateRenderState();
 	
 				}
 				//UPDATE INFO STRING ON VIEW 2D

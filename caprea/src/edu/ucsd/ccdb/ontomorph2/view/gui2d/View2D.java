@@ -44,6 +44,7 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  * Defines all 2D "heads up display" menus, popups, and so forth for the application.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @author caprea
  * @see IView2D
  *
  */
@@ -65,6 +66,7 @@ public class View2D extends Display implements IMenuItemPressedListener {
 	public static final String strMNU_MANI_ROTATEC = "Rotate (Z - Axis)";
 	public static final String strMNU_MANI_MOVE = "Move";
 	public static final String strMNU_MANI_LOOK = "Focus Camera";
+	public static final String strMNU_MANI_SCALE = "Re-Scale";
 
 	
 	
@@ -133,7 +135,7 @@ public class View2D extends Display implements IMenuItemPressedListener {
  
 		input = new FengJMEInputHandler(this);
  
-//		generate the menu
+		//generate the menu
         MenuBar mB = new MenuBar();
         mB.setSize(View.getInstance().getDisplaySystem().getWidth(), 20);
         mB.setPosition(new Point(0,View.getInstance().getDisplaySystem().getHeight()-20));
@@ -141,7 +143,7 @@ public class View2D extends Display implements IMenuItemPressedListener {
 
         this.addWidget(mB);
         
-//      =[  FILE  ]=
+        //=[  FILE  ]=
         Menu mnuFile = new Menu();
         mB.registerSubMenu(mnuFile, "File");
         makeMenuItem(LOAD_SCENE, mnuFile);
@@ -153,7 +155,7 @@ public class View2D extends Display implements IMenuItemPressedListener {
         makeMenuItem(SLIDE_VIEW, mnuView);
         makeMenuItem(ATLAS_SIDE_VIEW, mnuView);
         
-//      =[  OBJ  ]=
+        //=[  OBJ  ]=
         Menu mnuObjects = new Menu();
         mB.registerSubMenu(mnuObjects, "Objects");
         
@@ -161,8 +163,7 @@ public class View2D extends Display implements IMenuItemPressedListener {
         makeMenuItem(VOLUMES, mnuObjects);
         makeMenuItem(SEMANTICS, mnuObjects);
         
-        
-//      =[  CKB  ]=
+        //=[  CKB  ]=
         Menu mnuCKB = new Menu();
         mB.registerSubMenu(mnuCKB, "Cellular KB");
         makeMenuItem(LIST_INSTANCES, mnuCKB);
@@ -177,6 +178,7 @@ public class View2D extends Display implements IMenuItemPressedListener {
         Menu mnuManip = new Menu();
         mB.registerSubMenu(mnuManip, strMNU_MANIPULATE);
         makeMenuItem(strMNU_MANI_MOVE, mnuManip);
+        makeMenuItem(strMNU_MANI_SCALE, mnuManip);
         makeMenuItem(strMNU_MANI_ROTATEA, mnuManip);
         makeMenuItem(strMNU_MANI_ROTATEB, mnuManip);
         makeMenuItem(strMNU_MANI_ROTATEC, mnuManip);
@@ -197,9 +199,20 @@ public class View2D extends Display implements IMenuItemPressedListener {
 	{
 		try
 		{
-			MenuItem mnuToAdd = new MenuItem(name);
-	        mnuToAdd.addMenuItemPressedListener(this);
-	        mparent.addItem(mnuToAdd);	
+			if (name.equals(""))
+			{
+				name = "____________";
+			}
+			if (null == mparent )
+			{
+				return; //exit gracefully if parent is empty
+			}
+			else if ( mparent instanceof Menu)
+			{
+				MenuItem mnuToAdd = new MenuItem(name);
+		        mnuToAdd.addMenuItemPressedListener(this);
+		        mparent.addItem(mnuToAdd);	
+			}
 		}
 		catch (Exception e)
 		{
@@ -207,8 +220,6 @@ public class View2D extends Display implements IMenuItemPressedListener {
 		}
         
 	}
-	
-	
 	
 	/**
 	 * prevents instantiation
@@ -294,8 +305,10 @@ public class View2D extends Display implements IMenuItemPressedListener {
 		{
 			View.getInstance().setManipulation(View.METHOD_LOOKAT);
 		}
-		
-		
+		else if ( strMNU_MANI_SCALE.equals(act) )
+		{
+			View.getInstance().setManipulation(View.METHOD_SCALE);
+		}
 	}
 	
 	

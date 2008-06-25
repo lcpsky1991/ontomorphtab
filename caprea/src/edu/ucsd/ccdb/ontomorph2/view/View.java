@@ -79,7 +79,7 @@ public class View extends BaseSimpleGame {
 	AbsoluteMouse amouse; 						//the mouse object ref to entire screen, used to hide and show the mouse?
 	PickData prevPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
 	
-	NeuronMorphologyView manipMorph=null;	//the most recent object to be manipulated as a morphology
+	NeuronMorphologyView manipMorph=null;	//the most recent object to be selected/manipulated as a morphology
 	PickData firstClick;
 	
 	FirstPersonHandler fpHandler = null;
@@ -101,8 +101,7 @@ public class View extends BaseSimpleGame {
 	public static final int METHOD_ROTATEY = 16;
 	public static final int METHOD_ROTATEZ = 32;
 	public static final int METHOD_LOOKAT = 64;
-	
-	
+
 	private static int manipulation = METHOD_NONE; //use accesor
 	
 	
@@ -204,12 +203,9 @@ public class View extends BaseSimpleGame {
 		configureControls();
 		
 		//Remove lighting for rootNode so that it will use our basic colors
-		//rootNode.setLightCombineMode(LightState.OFF);
+		rootNode.setLightCombineMode(LightState.OFF);
 		
 		disp = View2D.getInstance();
-		
-		
-		
 	}
 	
 	public void setCameraToSlideView() {
@@ -299,8 +295,36 @@ public class View extends BaseSimpleGame {
 	}
 	
 	/**
+	 * Scales the morophology in the dimensions of constraint
+	 * @param morph the item(s) to be rotated
+	 * @param constraint the dimensions that the morphology will be scaled in
+	 */
+	
+	public void scaleMorph(NeuronMorphologyView morph, OMTVector constraint)
+	{
+		float dx = MouseInput.get().getXDelta(); 
+		float dy = MouseInput.get().getYDelta();
+		
+		float delta = 0.01f * dx;
+		
+		OMTVector current = morph.getMorphology().getRelativeScale();
+		
+		OMTVector nscale = new OMTVector(current.add(delta,delta,delta));
+		
+		
+		//do NOT scale if the new scale will 'flip' the object
+		if ( !(nscale.getX() < 0 || nscale.getY() < 0 || nscale.getZ() < 0 ) )
+		{
+			morph.getMorphology().setRelativeScale(nscale);	
+		}
+	}
+	
+	
+	
+	/**
 	 * Changes the rotation of a morphology based on changes from the mouse movement 
 	 * @param morph the item(s) to be rotated
+	 * @param constraint the axis (or axes) on which to rotate the object. For example, if constraint is (1,0,0) the object will rotates about it's own X axis (not the world's X axis)
 	 * @author caprea
 	 */
 	public void rotateMorph(NeuronMorphologyView morph, OMTVector constraint)
@@ -342,8 +366,11 @@ public class View extends BaseSimpleGame {
 		dy = dy * constraint.getY();
 		dz = dz * constraint.getZ();
 		
+		//get the position, add the change, store the new position
+		PositionVector np = new PositionVector( morph.getMorphology().getRelativePosition().asVector3f().add(dx,dy,dz) );
+		
 		//apply the movement
-		morph.getMorphology().setRelativePosition( new PositionVector( morph.getMorphology().getRelativePosition().asVector3f().add(dx,dy,dz) ));
+		morph.getMorphology().setRelativePosition( np );
 	}
 	
 	private void handleMouseInput()
@@ -381,6 +408,9 @@ public class View extends BaseSimpleGame {
 							break;
 						case METHOD_LOOKAT:
 							camNode.lookAt(manipMorph.getLocalTranslation(), new OMTVector(0,1,0)); //make the camera point a thte object in question
+							break;
+						case METHOD_SCALE:
+							scaleMorph(manipMorph, new OMTVector(1,1,1));
 							break;
 					}
 				}
