@@ -44,6 +44,7 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  * Defines all 2D "heads up display" menus, popups, and so forth for the application.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @author caprea
  * @see IView2D
  *
  */
@@ -59,7 +60,16 @@ public class View2D extends Display implements IMenuItemPressedListener {
 	public static final String DISPLAY_BASIC_ATLAS = "Display Basic Atlas";
 	public static final String SLIDE_VIEW = "View Example Slide";
 	public static final String ATLAS_SIDE_VIEW = "View Atlas Side";
+	public static final String strMNU_MANIPULATE = "Manipulate Object";
+	public static final String strMNU_MANI_ROTATEA = "Rotate (X - Axis)";
+	public static final String strMNU_MANI_ROTATEB = "Rotate (Y - Axis)";
+	public static final String strMNU_MANI_ROTATEC = "Rotate (Z - Axis)";
+	public static final String strMNU_MANI_MOVE = "Move";
+	public static final String strMNU_MANI_LOOK = "Focus Camera";
+	public static final String strMNU_MANI_SCALE = "Re-Scale";
 
+	
+	
 	FengJMEInputHandler input;
 	/**
 	 * Holds singleton instance
@@ -125,7 +135,7 @@ public class View2D extends Display implements IMenuItemPressedListener {
  
 		input = new FengJMEInputHandler(this);
  
-//		generate the menu
+		//generate the menu
         MenuBar mB = new MenuBar();
         mB.setSize(View.getInstance().getDisplaySystem().getWidth(), 20);
         mB.setPosition(new Point(0,View.getInstance().getDisplaySystem().getHeight()-20));
@@ -133,94 +143,84 @@ public class View2D extends Display implements IMenuItemPressedListener {
 
         this.addWidget(mB);
         
-        Menu fileMenu = new Menu();
-        mB.registerSubMenu(fileMenu, "File");
-        MenuItem loadScene = new MenuItem(LOAD_SCENE);
-        MenuItem saveScene = new MenuItem(SAVE_SCENE);
-        loadScene.addMenuItemPressedListener(this);
-        saveScene.addMenuItemPressedListener(this);
-        //fileMenu.addItem(loadScene);
-        fileMenu.addItem(saveScene);
+        //=[  FILE  ]=
+        Menu mnuFile = new Menu();
+        mB.registerSubMenu(mnuFile, "File");
+        makeMenuItem(LOAD_SCENE, mnuFile);
+        makeMenuItem(SAVE_SCENE, mnuFile);
 	
-        Menu viewMenu = new Menu();
-        mB.registerSubMenu(viewMenu, "View");
-        MenuItem slideView = new MenuItem(SLIDE_VIEW);
-        MenuItem atlasSideView = new MenuItem(ATLAS_SIDE_VIEW);
-        slideView.addMenuItemPressedListener(this);
-        atlasSideView.addMenuItemPressedListener(this);
-        viewMenu.addItem(slideView);
-        viewMenu.addItem(atlasSideView);
+        //=[  VIEW  ]=
+        Menu mnuView = new Menu();
+        mB.registerSubMenu(mnuView, "View");
+        makeMenuItem(SLIDE_VIEW, mnuView);
+        makeMenuItem(ATLAS_SIDE_VIEW, mnuView);
         
-        Menu objMenu = new Menu();
-        mB.registerSubMenu(objMenu, "Objects");
-        MenuItem cells = new MenuItem(CELLS);
-        MenuItem volumes = new MenuItem(VOLUMES);
-        MenuItem semantics = new MenuItem(SEMANTICS);
-        cells.addMenuItemPressedListener(this);
-        volumes.addMenuItemPressedListener(this);
-        semantics.addMenuItemPressedListener(this);
-        objMenu.addItem(cells);
-        //objMenu.addItem(volumes);
-        //objMenu.addItem(semantics);
-		
-        Menu ckbMenu = new Menu();
-        mB.registerSubMenu(ckbMenu, "Cellular KB");
-        MenuItem listInstances = new MenuItem(LIST_INSTANCES);
-        listInstances.addMenuItemPressedListener(this);
-        ckbMenu.addItem(listInstances);
+        //=[  OBJ  ]=
+        Menu mnuObjects = new Menu();
+        mB.registerSubMenu(mnuObjects, "Objects");
         
-        Menu atlasMenu = new Menu();
-        mB.registerSubMenu(atlasMenu, "Reference Atlas");
-        MenuItem showAtlas = new MenuItem(SHOW_ATLAS);
-        MenuItem displayBasicAtlas = new MenuItem(DISPLAY_BASIC_ATLAS);
-        showAtlas.addMenuItemPressedListener(this);
-        displayBasicAtlas.addMenuItemPressedListener(this);
-        atlasMenu.addItem(showAtlas);
-        atlasMenu.addItem(displayBasicAtlas);
+        makeMenuItem(CELLS, mnuObjects);
+        makeMenuItem(VOLUMES, mnuObjects);
+        makeMenuItem(SEMANTICS, mnuObjects);
         
-        /*
-		//	 Create a dialog and set it to some location on the screen
-		Window frame = new Window();
-		this.addWidget(frame);
-		frame.setX(20);
-		frame.setY(350);
-		frame.setSize(200, 100);
-		frame.setShrinkable(false);
-		//frame.setExpandable(true);
-		frame.setTitle("Pick a color");
-		frame.getContentContainer().setLayoutManager(new StaticLayout());
- 
-		// Create a combobox with some random values in it
-		//   we'll change these values to something more useful later on.
-		ComboBox<String> list = new ComboBox<String>();
-		frame.addWidget(list);
-		list.setSize(150, list.getMinHeight());
-		list.setShrinkable(false);
-		list.setX(25);
-		list.setY(25);
-		list.addItem("White");
-		list.addItem("Green");
-		list.addItem("Blue");
-		list.addItem("Red");
- 
-		list.addSelectionChangedListener(new CBListener());
- 
-		//try to add TextArea here but get OpenGLException
-		TextEditor ta = new TextEditor(false);
-		this.addWidget(ta);
-		ta.setText("Hallo Text");
-		ta.setX(40);
-		ta.setY(50);
-		//ta.setSize(100, ta.getAppearance().getFont().get)
-		ta.setSizeToMinSize();
- 
- 		*/
+        //=[  CKB  ]=
+        Menu mnuCKB = new Menu();
+        mB.registerSubMenu(mnuCKB, "Cellular KB");
+        makeMenuItem(LIST_INSTANCES, mnuCKB);
+        
+        //=[  ATLAS  ]=
+        Menu mnuAtlas = new Menu();
+        mB.registerSubMenu(mnuAtlas, "Reference Atlas");
+        makeMenuItem(SHOW_ATLAS, mnuAtlas);
+        makeMenuItem(DISPLAY_BASIC_ATLAS, mnuAtlas);
+        
+        //=[ MANIPULATE  ]= 
+        Menu mnuManip = new Menu();
+        mB.registerSubMenu(mnuManip, strMNU_MANIPULATE);
+        makeMenuItem(strMNU_MANI_MOVE, mnuManip);
+        makeMenuItem(strMNU_MANI_SCALE, mnuManip);
+        makeMenuItem(strMNU_MANI_ROTATEA, mnuManip);
+        makeMenuItem(strMNU_MANI_ROTATEB, mnuManip);
+        makeMenuItem(strMNU_MANI_ROTATEC, mnuManip);
+        makeMenuItem(strMNU_MANI_LOOK, mnuManip);
+        
         this.getInfoText();
 		// Update the display with the newly added components
 		this.layout();
 	}
  
-
+	/**
+	 * Conveiniance method that wraps the creation of menus
+	 * @author caprea
+	 * @param name
+	 * @param parent If null, will create a new parent menu
+	 */
+	private void makeMenuItem(String name, Menu mparent)
+	{
+		try
+		{
+			if (name.equals(""))
+			{
+				name = "____________";
+			}
+			if (null == mparent )
+			{
+				return; //exit gracefully if parent is empty
+			}
+			else if ( mparent instanceof Menu)
+			{
+				MenuItem mnuToAdd = new MenuItem(name);
+		        mnuToAdd.addMenuItemPressedListener(this);
+		        mparent.addItem(mnuToAdd);	
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println("Exception; Error creating submenu; " + e.getMessage());
+		}
+        
+	}
+	
 	/**
 	 * prevents instantiation
 	 */
@@ -240,31 +240,77 @@ public class View2D extends Display implements IMenuItemPressedListener {
 		return instance;
 	}
 
-	public void menuItemPressed(MenuItemPressedEvent arg0) {
-		if (LOAD_SCENE.equals(arg0.getItem().getText())) {
+	public void menuItemPressed(MenuItemPressedEvent arg0)
+	{
+		//FIXME: replace this string business with references to objects
+		String act = arg0.getItem().getText(); //action to perform
+		
+		if ( LOAD_SCENE.equals(act) )
+		{
 			loadFileChooser();
-		} else if (SAVE_SCENE.equals(arg0.getItem().getText())) {
+		}
+		else if ( SAVE_SCENE.equals(act) )
+		{
 			System.out.println("Feature Not Implemented Yet");
-		} else if (CELLS.equals(arg0.getItem().getText())) {
+		}
+		else if ( CELLS.equals(act) )
+		{
 			loadCellChooser();
-		} else if (VOLUMES.equals(arg0.getItem().getText())) {
-			
-		} else if (SEMANTICS.equals(arg0.getItem().getText())) {
-			
-		} else if (LIST_INSTANCES.equals(arg0.getItem().getText())) {
+		}
+		else if ( VOLUMES.equals(act) )
+		{
+
+		}
+		else if ( SEMANTICS.equals(act) )
+		{
+
+		}
+		else if ( LIST_INSTANCES.equals(act) )
+		{
 			loadInstanceBrowser();
-		} else if (SHOW_ATLAS.equals(arg0.getItem().getText())) {
+		}
+		else if ( SHOW_ATLAS.equals(act) )
+		{
 			loadAtlasBrowser();
-		} else if (DISPLAY_BASIC_ATLAS.equals(arg0.getItem().getText())) {
+		}
+		else if ( DISPLAY_BASIC_ATLAS.equals(act) )
+		{
 			ReferenceAtlas.getInstance().displayBasicAtlas();
-		} else if (SLIDE_VIEW.equals(arg0.getItem().getText())) {
+		}
+		else if ( SLIDE_VIEW.equals(act) )
+		{
 			View.getInstance().setCameraToSlideView();
-		} else if (ATLAS_SIDE_VIEW.equals(arg0.getItem().getText())) {
+		}
+		else if ( ATLAS_SIDE_VIEW.equals(act) )
+		{
 			View.getInstance().setCameraToAtlasSideView();
+		}
+		else if ( strMNU_MANI_MOVE.equals(act) )
+		{
+			View.getInstance().setManipulation(View.METHOD_MOVE);
+		}
+		else if ( strMNU_MANI_ROTATEA.equals(act) )
+		{
+			View.getInstance().setManipulation(View.METHOD_ROTATEX);
+		}
+		else if ( strMNU_MANI_ROTATEB.equals(act) )
+		{
+			View.getInstance().setManipulation(View.METHOD_ROTATEY);
+		}
+		else if ( strMNU_MANI_ROTATEC.equals(act) )
+		{
+			View.getInstance().setManipulation(View.METHOD_ROTATEZ);
+		}
+		else if ( strMNU_MANI_LOOK.equals(act) )
+		{
+			View.getInstance().setManipulation(View.METHOD_LOOKAT);
+		}
+		else if ( strMNU_MANI_SCALE.equals(act) )
+		{
+			View.getInstance().setManipulation(View.METHOD_SCALE);
 		}
 	}
 	
-
 	
 	
 	protected void loadCellChooser() {
