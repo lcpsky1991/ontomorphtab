@@ -44,7 +44,7 @@ public class BrainRegion extends SceneObject{
 	private BatchMesh mesh;
 	private AreaClodMesh aMesh;
 	private TriMesh tMesh;
-	private int visibility;
+	private int visibility = TRANSPARENT;
 	
 	public BrainRegion(String name, String abbrev, String parentAbbrev, Color c, String regionId, CoordinateSystem co){
 		this.name = name;
@@ -62,10 +62,16 @@ public class BrainRegion extends SceneObject{
 	 * @param mode - BrainRegion.VISIBLE, BrainRegion.INVISIBLE, BrainRegion.TRANSPARENT
 	 */
 	public void setVisibility(int mode) {
-		visibility = mode;
-		changed();
+		if (visibility != mode) {
+			visibility = mode;
+			changed();
+		}
 	}
 	
+	/**
+	 * Returns the visibility state of this brain region.
+	 * @returns - BrainRegion.VISIBLE, BrainRegion.INVISIBLE, BrainRegion.TRANSPARENT
+	 */
 	public int getVisibility() {
 		return visibility;
 	}

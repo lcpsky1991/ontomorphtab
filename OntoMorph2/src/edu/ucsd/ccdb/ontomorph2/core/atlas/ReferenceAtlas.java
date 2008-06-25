@@ -106,59 +106,34 @@ public class ReferenceAtlas {
 			throw new OMTException("Invalid value entered for getting a brain region!", null);
 		}
 		BrainRegion br = null;
-		/*
-		 The meshes were extracted from a sagittally-oriented volume 
-		 with 25 micron voxel spacing and dimensions 528 x 320 x 456 
-		 voxels.  The voxel ordering is 528 voxels rostral to caudal, 
-		 320 voxels dorsal to ventral, and 456 voxels lateral left to 
-		 right.  Bregma is at 213, 41, 223.
-		 
-		 There are 2 volumes with the above dimensions you can use if 
-		 you need the volumetric atlas.  Data\Annotation25 contains 
-		 8-bit unsigned int voxels whose values correspond to column 
-		 7 (Structure ID 1) in the ontology.csv file.  The second 
-		 volume contains the Nissl sections of the atlas 
-		 reconstructed in 3d also as 8-bit unsigned ints.  On 
-		 Windows, its location is at [User profile folder (e.g., 
-		 C:\Document and Settings \ userid)]\Application Data\Allen 
-		 Institute\Brain Explorer\Atlas\Atlas25.  On the Mac, its in 
-		 ~/Library/Application Support/Brain Explorer/Atlas/Atlas25.
+		
+		FileInputStream file = this.getVoxelAtlasStream();
+		
+		//calculate offset
+		/**
+		 * Consider a 3X3X3 cube:
+		 * 
+		 * 0 1 2   9 10 11  18 19 20
+		 * 3 4 5  12 13 14  21 22 23
+		 * 6 7 8  15 16 17  24 25 26
+		 * 
+		 * Where the 0 1 2 layer is above 9 10 11 is above 18 19 20
+		 * 
+		 * the 0 1 2 direction is analogous to the rostralCaudal direction
+		 * the 0 3 6 direction is analogous to the dorsalVentral direction
+		 * the 0 9 18 direction is analgous to the lateralMedial direction
+		 * 
+		 * so, 6 is at the 0, 2, 0 position.  To calculate that: 0*1 + 2*3 + 0*9
+		 * so, 12 is at the 0, 1, 1 position.  To calculate that: 0 + 1*3 + 1*9
+		 * 
+		 * Therefore the formula is 1*x_coord + Y_MAX*y_coord + Y_MAX*Z_MAX+z_coord; 
 		 */
-		File fi;
+		int offset = rostralCaudal+320*dorsalVentral+456*320*lateralMedial;
+		//read byte array for unsigned int at offset
+		byte[] brainRegionIdByteArray = new byte[BitMath.sizeOf8BitUnsignedInt];
+		//FileChannel c = (FileChannel)file.getChannel();
+		
 		try {
-			fi = new File("etc/allen/Annotation25");
-			
-			
-			if (fi == null || !fi.canRead()) {
-				throw new OMTException("Can't open Annotation25! " + fi.toString(), null);
-			}
-			
-			FileInputStream file = new FileInputStream(fi);
-			
-			//calculate offset
-			/**
-			 * Consider a 3X3X3 cube:
-			 * 
-			 * 0 1 2   9 10 11  18 19 20
-			 * 3 4 5  12 13 14  21 22 23
-			 * 6 7 8  15 16 17  24 25 26
-			 * 
-			 * Where the 0 1 2 layer is above 9 10 11 is above 18 19 20
-			 * 
-			 * the 0 1 2 direction is analogous to the rostralCaudal direction
-			 * the 0 3 6 direction is analogous to the dorsalVentral direction
-			 * the 0 9 18 direction is analgous to the lateralMedial direction
-			 * 
-			 * so, 6 is at the 0, 2, 0 position.  To calculate that: 0*1 + 2*3 + 0*9
-			 * so, 12 is at the 0, 1, 1 position.  To calculate that: 0 + 1*3 + 1*9
-			 * 
-			 * Therefore the formula is 1*x_coord + Y_MAX*y_coord + Y_MAX*Z_MAX+z_coord; 
-			 */
-			int offset = rostralCaudal+320*dorsalVentral+456*320*lateralMedial;
-			//read byte array for unsigned int at offset
-			byte[] brainRegionIdByteArray = new byte[BitMath.sizeOf8BitUnsignedInt];
-			FileChannel c = (FileChannel)file.getChannel();
-			
 			//c.read(byteBuffer, offset);
 			file.read(brainRegionIdByteArray);
 			//convert byte array to java int
@@ -169,13 +144,48 @@ public class ReferenceAtlas {
 					return b;
 				}
 			}
-
+			
 			file.close();
 		} catch (Exception e) {
 			throw new OMTException("Error returning brain region!", e);
 		}
 		
 		return br;
+	}
+	
+	/**
+	 The meshes were extracted from a sagittally-oriented volume 
+	 with 25 micron voxel spacing and dimensions 528 x 320 x 456 
+	 voxels.  The voxel ordering is 528 voxels rostral to caudal, 
+	 320 voxels dorsal to ventral, and 456 voxels lateral left to 
+	 right.  Bregma is at 213, 41, 223.
+	 
+	 There are 2 volumes with the above dimensions you can use if 
+	 you need the volumetric atlas.  Data\Annotation25 contains 
+	 8-bit unsigned int voxels whose values correspond to column 
+	 7 (Structure ID 1) in the ontology.csv file.  The second 
+	 volume contains the Nissl sections of the atlas 
+	 reconstructed in 3d also as 8-bit unsigned ints.  On 
+	 Windows, its location is at [User profile folder (e.g., 
+	 C:\Document and Settings \ userid)]\Application Data\Allen 
+	 Institute\Brain Explorer\Atlas\Atlas25.  On the Mac, its in 
+	 ~/Library/Application Support/Brain Explorer/Atlas/Atlas25.
+	 */
+	public FileInputStream getVoxelAtlasStream() {
+		FileInputStream file = null;
+		try {
+			File fi = new File("etc/allen/Annotation25");
+			
+			
+			if (fi == null || !fi.canRead()) {
+				throw new OMTException("Can't open Annotation25! " + fi.toString(), null);
+			}
+			
+			file = new FileInputStream(fi);
+		} catch (Exception e) {
+			throw new OMTException("Cannot access voxel atlas stream", e);
+		}
+		return file;
 	}
 	
 	public List<BrainRegion> getBrainRegions() {

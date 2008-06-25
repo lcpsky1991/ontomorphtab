@@ -214,10 +214,16 @@ public class View extends BaseSimpleGame {
 		camNode.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y));
 	}
 	
-	public void setCameraToAtlasSideView() {
+	public void setCameraToAtlasLateralView() {
 		Vector3f loc = new Vector3f(300f, -118f, 300f);
 		camNode.setLocalTranslation(loc);
 		camNode.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y));
+	}
+	
+	public void setCameraToAtlasMedialView() {
+		Vector3f loc = new Vector3f(300f, -118f, -700f);
+		camNode.setLocalTranslation(loc);
+		camNode.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*0, Vector3f.UNIT_Y));
 	}
 	
 	

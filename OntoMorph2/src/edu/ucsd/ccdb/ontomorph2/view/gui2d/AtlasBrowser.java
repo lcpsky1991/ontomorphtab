@@ -19,6 +19,7 @@ import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 import org.fenggui.util.Spacing;
 
+import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
 
 /**
@@ -30,8 +31,15 @@ import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class AtlasBrowser {
+public class AtlasBrowser implements ISelectionChangedListener{
 
+	BrainRegion currentSelection = null;
+	RadioButton<String> visButton = null;
+	RadioButton<String> transpButton = null;
+	RadioButton<String> invisButton = null;
+	public static final String VISIBLE = "vis.";
+	public static final String TRANSPARENT = "transp.";
+	public static final String INVISIBLE = "invis.";
 	
 	public AtlasBrowser(Display d) {
 		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
@@ -64,44 +72,66 @@ public class AtlasBrowser {
         
         final ToggableGroup<String> group = new ToggableGroup<String>();
         
-        RadioButton<String> threeLegs = FengGUI.createRadioButton(radioButtons, "vis.", group);
-        threeLegs.setValue("visible");
+        visButton = FengGUI.createRadioButton(radioButtons, VISIBLE, group);
+        visButton.setValue(VISIBLE);
         
-        RadioButton<String> fourLegs = FengGUI.createRadioButton(radioButtons, "transp.", group);
-        fourLegs.setValue("transparent");
+        transpButton = FengGUI.createRadioButton(radioButtons, TRANSPARENT, group);
+        transpButton.setValue(TRANSPARENT);
         
-        RadioButton<String> oneLeg = FengGUI.createRadioButton(radioButtons, "invis.", group);
-        oneLeg.setValue("invisible");
+        RadioButton<String> invisButton = FengGUI.createRadioButton(radioButtons, INVISIBLE, group);
+        invisButton.setValue(INVISIBLE);
         
-        group.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			public void selectionChanged(SelectionChangedEvent arg0) {
-				
-				//based on which button is pressed, change the state of the 
-				//currently selected brain region
-			}
-        	
-        });
+        group.addSelectionChangedListener(this);
        		
 		window.setPosition(new Point(0,100));
 		window.layout();
 		tree.setModel(new MyTreeModel(root));
 
-		tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
-			{
-				if (!selectionChangedEvent.isSelected()) {
-					MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
-					n.value.unselect();
-					return;
+		tree.getToggableWidgetGroup().addSelectionChangedListener(this);
+	}
+
+	public void selectionChanged(SelectionChangedEvent e) {
+		Object v = e.getToggableWidget().getValue();
+		
+		if (e.isSelected()) {
+			if (v instanceof String) { //handle radio buttons
+				String value = (String)v;
+				//set the visibility on the currently selected brain region model
+				if (AtlasBrowser.VISIBLE.equals(value)) {
+					this.currentSelection.setVisibility(BrainRegion.VISIBLE);
+				} else if (AtlasBrowser.TRANSPARENT.equals(value)) {
+					this.currentSelection.setVisibility(BrainRegion.TRANSPARENT);
+				} else if (AtlasBrowser.INVISIBLE.equals(value)) {
+					this.currentSelection.setVisibility(BrainRegion.INVISIBLE);
 				}
-				MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
-				if (n.value != null) {
-					n.value.select();
+			} else if (v instanceof MyNode) { //handle tree widget
+				MyNode n = (MyNode)v;
+				BrainRegion br = (BrainRegion)n.value;
+				if (br != null) {
+					//select the model to let it know to change state
+					br.select();
+					this.currentSelection = br;
+					
+					//update state of radio buttons based on visibility 
+					//of brain region model
+					switch (br.getVisibility()) {
+					case BrainRegion.VISIBLE:
+						visButton.setSelected(true);
+						break;
+					case BrainRegion.TRANSPARENT:
+						transpButton.setSelected(true);
+						break;
+					case BrainRegion.INVISIBLE:
+						invisButton.setSelected(true);
+					}
 				}
-				
 			}
-			
-		});
+		} else {
+			if (v instanceof MyNode) { //handle tree widget
+				MyNode n = (MyNode)e.getToggableWidget().getValue();
+				n.value.unselect();
+			}
+		}
+		
 	}
 }

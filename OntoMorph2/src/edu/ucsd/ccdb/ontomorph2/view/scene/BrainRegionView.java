@@ -19,23 +19,43 @@ public class BrainRegionView extends SceneObjectView{
 	BrainRegion br = null;
 	LightState lightState = null;
 	TriMesh mesh = null;
+	Node parentNode = null;
 	
-	public BrainRegionView(BrainRegion br) {
+	public BrainRegionView(BrainRegion br, Node parentNode) {
 		this.br = br;
+		this.parentNode = parentNode;
 		
-		lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
-        lightState.setEnabled(true);
-        this.setRenderState(lightState);
-        
-        mesh = br.getTriMesh();
+		TriMesh mesh = br.getTriMesh();
 		mesh.setSolidColor(ColorRGBA.blue);
 		mesh.setModelBound(new BoundingBox());
 		mesh.updateModelBound();
 		VBOInfo nfo = new VBOInfo(true);
 		mesh.setVBOInfo(nfo);
 		mesh.setCullMode(SceneElement.CULL_DYNAMIC);
+
+		
+		LightState lightState = null;
+		lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
+        lightState.setEnabled(true);
+        
+        
+		
+		this.parentNode.attachChild(mesh);
 		
 		this.update();
+		/*
+        AlphaState as = ViewImpl.getInstance().getRenderer().createAlphaState();
+	      as.setBlendEnabled(true);
+	      as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+	      as.setDstFunction(AlphaState.DB_ONE);
+	      as.setTestEnabled(true);
+	      as.setTestFunction(AlphaState.TF_GREATER);
+	      as.setEnabled(true);
+	    atlasNode.setRenderState(as);
+	    atlasNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+	    */
+		
+		
 	}
 	
 	public BrainRegion getBrainRegion() {
@@ -43,7 +63,6 @@ public class BrainRegionView extends SceneObjectView{
 	}
 	
 	public void update() {
-		AlphaState as = null;
 		switch(br.getVisibility()) {
 		case BrainRegion.VISIBLE:
 			makeVisible();
@@ -53,10 +72,14 @@ public class BrainRegionView extends SceneObjectView{
 		case BrainRegion.INVISIBLE:
 			//make invisible
 			this.detachChild(this.mesh);
+
+			this.updateModelBound();
+		    this.updateRenderState();
+		    this.updateGeometricState(5f, true);
+			
 			break;
 		case BrainRegion.TRANSPARENT:
 			makeVisible();
-			
 			makeTransparent();
 			break;
 		}
@@ -67,8 +90,9 @@ public class BrainRegionView extends SceneObjectView{
 			this.unhighlight();
 		}
 
-	    this.updateRenderState();
-	    this.updateGeometricState(5f, true);
+		this.parentNode.updateModelBound();
+	    this.parentNode.updateRenderState();
+	    this.parentNode.updateGeometricState(5f, true);
 	}
 	
 	private void makeVisible() {
@@ -84,12 +108,13 @@ public class BrainRegionView extends SceneObjectView{
 	      as.setTestEnabled(true);
 	      as.setTestFunction(AlphaState.TF_GREATER);
 	      as.setEnabled(true);
-	    this.setRenderState(as);
-	    this.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+	    this.parentNode.setRenderState(as);
+	    this.parentNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 	}
 	
 	private void makeSolid() {
-		this.setRenderState(lightState);
+		this.parentNode.setRenderState(lightState);
+		this.parentNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
 	}
 
 	@Override
