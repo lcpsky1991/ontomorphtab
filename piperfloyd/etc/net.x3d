@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive.." version="2.0">
+<Scene>
+<Background skyColor="0.6 0.7 0.9"/>
+<Viewpoint description="Down z axis, 500 microns away" position="0 0 500"/>
+<Viewpoint description="Down z axis, 200 microns away" position="0 0 200"/>
+<Viewpoint description="Down z axis, 2mm away" position="0 0 2000"/>
+<Transform rotation="0 0 1 -1.570795">
+<Shape>
+<Appearance>
+<Material diffuseColor="0 1 0"/>
+</Appearance>
+<Cylinder height="200" radius="0.5"/>
+</Shape>
+<Transform translation="0 105 0">
+<Shape>
+<Appearance>
+<Material diffuseColor="0 1 0"/>
+</Appearance>
+<Cone height="10" bottomRadius="1"/>
+</Shape>
+</Transform>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material diffuseColor="1 1 0"/>
+</Appearance>
+<Cylinder height="200" radius="0.5"/>
+</Shape>
+<Transform translation="0 105 0">
+<Shape>
+<Appearance>
+<Material diffuseColor="1 1 0"/>
+</Appearance>
+<Cone height="10" bottomRadius="1"/>
+</Shape>
+</Transform>
+</Transform>
+<Transform rotation="1 0 0 1.570795">
+<Shape>
+<Appearance>
+<Material diffuseColor="1 0 0"/>
+</Appearance>
+<Cylinder height="200" radius="0.5"/>
+</Shape>
+<Transform translation="0 105 0">
+<Shape>
+<Appearance>
+<Material diffuseColor="1 0 0"/>
+</Appearance>
+<Cone height="10" bottomRadius="1"/>
+</Shape>
+</Transform>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="0.0  0.0  0.0, 20.0  0.0  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="20.0  0.0  0.0, 66.05305  19.470924  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="66.05305  19.470924  0.0, 112.106094  38.94185  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="112.106094  38.94185  0.0, 158.15915  58.412773  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="158.15915  58.412773  0.0, 204.2122  77.8837  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="20.0  0.0  0.0, 66.05305  -19.470924  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="66.05305  -19.470924  0.0, 112.106094  -38.94185  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="112.106094  -38.94185  0.0, 158.15915  -58.412773  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="158.15915  -58.412773  0.0, 204.2122  -77.8837  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="0.0  0.0  0.0, -46.05305  -19.470924  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="-46.05305  -19.470924  0.0, -92.1061  -38.94185  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="-92.1061  -38.94185  0.0, -138.15915  -58.412773  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="-138.15915  -58.412773  0.0, -184.21219  -77.8837  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="0.0  0.0  0.0, -46.053047  19.470926  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="-46.053047  19.470926  0.0, -92.106094  38.941853  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="-92.106094  38.941853  0.0, -138.15915  58.41278  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+<Transform>
+<Shape>
+<Appearance>
+<Material/>
+</Appearance>
+<LineSet vertexCount="2">
+<Coordinate point="-138.15915  58.41278  0.0, -184.2122  77.88371  0.0"/>
+<Color color="0 0 0, 0 0 0"/>
+</LineSet>
+</Shape>
+</Transform>
+</Scene>
+</X3D>
+
