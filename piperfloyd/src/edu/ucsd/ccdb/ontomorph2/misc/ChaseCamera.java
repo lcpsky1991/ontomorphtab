@@ -11,6 +11,7 @@ import com.jme.system.DisplaySystem;
 
 /**
  * the chasecamera stays always behind its target.
+ * Dummy ChaseCamera Module
  */
 @SuppressWarnings("serial")
 public class ChaseCamera extends InputHandler {
