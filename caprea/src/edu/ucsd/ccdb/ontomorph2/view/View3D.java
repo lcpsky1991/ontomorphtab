@@ -137,15 +137,16 @@ public class View3D extends Node{
 	 * @param br
 	 */
 	public void updateBrainRegion(BrainRegion br) {
+		
+		
 		for (BrainRegionView b : brainRegions) {
 			if (b.getBrainRegion().equals(br)) {
 				b.update();
 				return;
 			}
 		}
-		BrainRegionView bv = new BrainRegionView(br);
+		BrainRegionView bv = new BrainRegionView(br, atlasNode);
 		brainRegions.add(bv);
-		atlasNode.attachChild(bv);
 	}
 	
 }

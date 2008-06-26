@@ -68,9 +68,11 @@ public class Slide extends SceneObject {
 			throw new OMTException("Unable to load CCDB data!", e);
 		}
 		_imageURL = imageURL;
-		setRelativePosition(pos);
-		setRelativeRotation(rot);
 		setRelativeScale(scale);
+		setRelativeRotation(rot);
+		setRelativePosition(pos);
+		
+		
 		this.ratio = ratio;
 	}
 

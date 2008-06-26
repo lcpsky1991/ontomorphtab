@@ -51,6 +51,7 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 	 * associated with it.  By default, the coordinate system is the absolute world
 	 * coordinate system.
 	 * @return - the RotationVector
+	 * @see CoordinateSystem
 	 */
 	public RotationVector getRelativeRotation() {
 		_rotation.set(theSpatial.getLocalRotation());
@@ -62,7 +63,8 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 	 * This is relative to the coordinate system that this ISceneObject has
 	 * associated with it.  By default, the coordinate system is the absolute world
 	 * coordinate system. 
-	 * @return
+	 * @return - the PositionVector
+	 * @see CoordinateSystem
 	 */
 	public PositionVector getRelativePosition() {
 		_position.set(theSpatial.getLocalTranslation());
@@ -75,6 +77,7 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 	 * associated with it.  By default, the coordinate system is the absolute world
 	 * coordinate system.
 	 * @param pos - desired position
+	 * @see CoordinateSystem
 	 */
 	public void setRelativePosition(PositionVector pos) {
 		if (pos != null) {
@@ -89,6 +92,7 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 	 * associated with it.  By default, the coordinate system is the absolute world
 	 * coordinate system.
 	 * @param rot - desiredRotation
+	 * @see CoordinateSystem
 	 */
 	public void setRelativeRotation(RotationVector rot) {
 		if (rot != null) {
@@ -98,21 +102,28 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 	}
 
 	/**
-	 * set the scale for this INeuronMorphology
+	 * Set the scale for this INeuronMorphology using a 3D vector
 	 * @param v - scale
+	 * @see CoordinateSystem
 	 */
 	public void setRelativeScale(OMTVector v) {
 		theSpatial.setLocalScale(v);
 		changed();
 	}
 	
+	/**
+	 * Set the scale for this INeuronMorphology using a float
+	 * @param v - scale
+	 * @see CoordinateSystem
+	 */
 	public void setRelativeScale(float f) {
 		theSpatial.setLocalScale(f);
 	}
 	
 
-	/* (non-Javadoc)
-	 * @see src.edu.ucsd.ccdb.ontomorph2.core.scene.ISceneObject#getScale()
+	/**
+	 * 
+	 * @see CoordinateSystem
 	 */
 	public OMTVector getRelativeScale() {
 		return new OMTVector(theSpatial.getLocalScale());
@@ -122,6 +133,7 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 	 * get the RotationVector that defines this INeuronMorphology's rotation.
 	 * This is always in the absolute world coordinate system.
 	 * @return - the RotationVector
+	 * @see CoordinateSystem
 	 */
 	public RotationVector getAbsoluteRotation() {
 		if (this.getCoordinateSystem() == null) {
@@ -137,7 +149,7 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 	/**
 	 * get the PositionVector that defines this INeuronMorphology's position
 	 * This is always in the absolute world coordinate system.
-	 * @return
+	 * @see CoordinateSystem
 	 */
 	public PositionVector getAbsolutePosition() {
 		
@@ -169,10 +181,23 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 		notifyObservers();
 	}
 	
+	/**
+	 * Sets the CoordinateSystem by which the relative position, rotation, and scale of this
+	 * scene object will be defined.
+	 * 
+	 * @param sys
+	 * @see CoordinateSystem
+	 */
 	public void setCoordinateSystem(CoordinateSystem sys) {
 		this.sys = sys;
 	}
 	
+	/**
+	 * Gets the CoordinateSystem by which the relative position, rotation, and scale
+	 * of this scene object will be defined.
+	 * @return
+	 * @see CoordinateSystem
+	 */
 	public CoordinateSystem getCoordinateSystem() {
 		return this.sys;
 	}

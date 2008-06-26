@@ -19,6 +19,7 @@ import neuroml.generated.Populations;
 import neuroml.generated.NeuroMLLevel2.Cells;
 
 import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.scene.shape.Box;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
@@ -135,19 +136,7 @@ public class Scene extends Observable{
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
 
 		CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(35);
-		
-		/*
-		addSceneObject(new Slide(hippo1URL, new PositionVector(-60,-100,22), 170, 0.87f, d));
-		addSceneObject(new Slide(hippo2URL, new PositionVector(-55,-30, 22), 62, 1.34f, d));
-		addSceneObject(new Slide(hippo3aURL, new PositionVector(-45,-13,21.5f), 15, 1.33f, d));
-		addSceneObject(new Slide(hippo3bURL, new PositionVector(-24,-9,21.5f), 15,1.31f, d));
-		addSceneObject(new Slide(hippo3cURL, new PositionVector(-5,-8.5f,21.5f), 15,1.33f, d));
-		*/
-		/*
-		addSceneObject(new Slide(hippo1URL, new PositionVector(-60,-100,22), 
-				new RotationVector(d.getRotationFromAbsolute()), 170, 0.87f));
-		*/
-		
+				
         addSceneObject(new Slide(hippoImage, new PositionVector(-60,-100,22), 
 				new RotationVector(d.getRotationFromAbsolute()), 170, 0.87f));
 		
@@ -160,14 +149,16 @@ public class Scene extends Observable{
 		addSceneObject(new Slide(hippo3cURL, new PositionVector(-5,-8.5f,21.5f), 
 				new RotationVector(d.getRotationFromAbsolute()), 15,1.33f));
 
-		//addSceneObject(new Slide("etc/img/hippo_slice3d.jpg", new PositionImpl(-10,-10,22), 10,1));
-		//addSceneObject(new Slide("etc/img/hippo_slice3e.jpg", new PositionImpl(-50,-10,22), 10,1));
-		//addSceneObject(new Slide("etc/img/hippo_slice3f.jpg", new PositionImpl(10,0,22), 10,1));
-		//addSceneObject(new Slide("etc/img/hippo_slice3g.jpg", new PositionImpl(-20,30,22), 10,1));
+
+		CcdbMicroscopyData cerebImage = CCDBRepository.getInstance().getCCDBData(53);
+				
+		RotationVector rot = new RotationVector(
+						new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-20,OMTVector.UNIT_Z));
+		addSceneObject(new Slide(cerebImage, new PositionVector(610,110,100), rot, 110, 1.11f));
 		
 		Volume v1 = new Volume(new Box("my box", new OMTVector(-21,-1,15), 20f, 10f, 20f), d);
-		v1.setVisible(false);
-		addSceneObject(v1);
+		//v1.setVisible(false);
+		//addSceneObject(v1);
 		
 		
 		/*
