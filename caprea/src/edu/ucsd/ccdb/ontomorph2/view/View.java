@@ -76,7 +76,7 @@ public class View extends BaseSimpleGame {
 	
 	// a scale of my current texture values
 	float coordDelta;
-	private Scene delete_scene = null;
+	//private Scene _scene = null;			//ca: why is view storing the model of the scene?
 
 	
 	//=================================
@@ -142,13 +142,17 @@ public class View extends BaseSimpleGame {
 		view3D = new View3D();
 	}
 	
+	
+	//ca: commented out because view should not be holding a model of the scene
+	/*
 	public void setScene(Scene scene){
-		delete_scene = scene;
+		_scene = scene;
 	}
 	
 	public Scene getScene() {
-		return delete_scene;
+		return _scene;
 	}
+	*/
 
 	
 	protected void simpleInitGame() {
