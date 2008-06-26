@@ -143,8 +143,11 @@ public class View extends BaseSimpleGame {
 	}
 	
 	
-	//ca: commented out because view should not be holding a model of the scene
-	/*
+	/**
+	 * 
+	 *
+	 *ca: commented out because view should not be holding a model of the scene
+	 *
 	public void setScene(Scene scene){
 		_scene = scene;
 	}
@@ -549,7 +552,7 @@ public class View extends BaseSimpleGame {
 							 */
 							
 							selectedSceneObjects.add(c);	//add to multiselection
-							System.out.println(selectedSceneObjects.toString());
+							System.out.println("Selected " + selectedSceneObjects.size() + " objects");
 							
 							if (segView.correspondsToSegment())
 							{

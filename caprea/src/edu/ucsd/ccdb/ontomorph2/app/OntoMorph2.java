@@ -28,7 +28,7 @@ public class OntoMorph2 {
 		
 		//since the view takes over the thread after it is started
 		//need to have the view do the initial loading of the scene.
-		view.setScene(_scene);	
+		//view.setScene(_scene);	//view should not be maintaining a model
 		view.start();
 	}
 	
