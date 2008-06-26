@@ -6,6 +6,13 @@ import java.net.URL;
 //import java.nio.FloatBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.*; //for collections
+
+import javax.swing.event.ListSelectionEvent;
+
+import org.lwjgl.input.Keyboard;
+
+import antlr.collections.List;
 
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
@@ -69,7 +76,7 @@ public class View extends BaseSimpleGame {
 	
 	// a scale of my current texture values
 	float coordDelta;
-	private Scene _scene = null;
+	private Scene delete_scene = null;
 
 	
 	//=================================
@@ -79,12 +86,13 @@ public class View extends BaseSimpleGame {
 	AbsoluteMouse amouse; 						//the mouse object ref to entire screen, used to hide and show the mouse?
 	PickData prevPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
 	
-	NeuronMorphologyView manipMorph=null;	//the most recent object to be selected/manipulated as a morphology
-	PickData firstClick;
+	//NeuronMorphologyView manipMorph=null;	//the most recent object to be selected/manipulated as a morphology
 	
 	FirstPersonHandler fpHandler = null;
-	MouseLook looker;	//not used
+	
 	private boolean pointerEnabled = false;
+	
+	private ArrayList<NeuronMorphologyView> selectedSceneObjects = null; 
 	
 	float camRotationRate = FastMath.PI * 5 / 180;	//(FastMath.PI * X / 180) corresponds to X degrees per (FPS?) = Rate/UnitOfUpdate 
 	float invZoom = 1.0f; //zoom amount
@@ -135,11 +143,11 @@ public class View extends BaseSimpleGame {
 	}
 	
 	public void setScene(Scene scene){
-		_scene = scene;
+		delete_scene = scene;
 	}
 	
 	public Scene getScene() {
-		return _scene;
+		return delete_scene;
 	}
 
 	
@@ -166,12 +174,6 @@ public class View extends BaseSimpleGame {
 		rootNode.attachChild(s);
 		*/						
 		
-		//mouse setup
-		//====================================
-		// DRAG SETUP
-		//====================================
-		
-
 		//====================================
 		// CAMERA SETUP
 		//====================================
@@ -194,16 +196,24 @@ public class View extends BaseSimpleGame {
 		
 		rootNode.attachChild(camNode);
 		
-		//camNode.setLocalTranslation(loc);
-		System.out.println("Rotation: " + camNode.getLocalRotation() + "\nTranslation: " + camNode.getLocalTranslation());
-	
-		//Section for setting up the mouse and other input controls	
-		configureControls();
-		
 		//Remove lighting for rootNode so that it will use our basic colors
 		rootNode.setLightCombineMode(LightState.OFF);
 		
 		disp = View2D.getInstance();
+		
+		//mouse setup
+		//====================================
+		// DRAG SETUP
+		//====================================
+		
+
+		//====================================
+		// MOUSE SETUP
+		//====================================
+		selectedSceneObjects = new ArrayList<NeuronMorphologyView>(); //collection of selected items
+		
+		//Section for setting up the mouse and other input controls	
+		configureControls();
 	}
 	
 	public void setCameraToSlideView() {
@@ -262,7 +272,7 @@ public class View extends BaseSimpleGame {
         //Disable both of these because I want to track things with the camera
         
         fpHandler.getKeyboardLookHandler().setEnabled( false );
-        fpHandler.getMouseLookHandler().setEnabled( false);
+        fpHandler.getMouseLookHandler().setEnabled(false);
 		
         input.clearActions();	//removes all input actions not specifically programmed
         
@@ -275,7 +285,7 @@ public class View extends BaseSimpleGame {
 		//assign 'R' to reload the view to inital state //reinit
 		KeyBindingManager.getKeyBindingManager().set("reset", KeyInput.KEY_R);
 		
-		//assignt he camera to up, down, left, right ;	ADD does not overright
+		//assignt he camera to up, down, left, right ;	SET overwrites, ADD does not overwrite
 		KeyBindingManager.getKeyBindingManager().set("cam_forward", KeyInput.KEY_ADD);
 		KeyBindingManager.getKeyBindingManager().add("cam_forward", KeyInput.KEY_EQUALS); //for shift not pressed;
 		KeyBindingManager.getKeyBindingManager().set("cam_back", KeyInput.KEY_SUBTRACT);
@@ -388,36 +398,43 @@ public class View extends BaseSimpleGame {
 			{	
 				MouseInput.get().setCursorVisible(false); //hide mouse cursor
 				
-				if (prevPick != null && manipMorph != null)
+				if (!selectedSceneObjects.isEmpty())
 				{
-					//what action is being performed?
+					NeuronMorphologyView manipMorph = null;
 					
-					//TODO: replace unity vectors with ones based on camera axis
-					switch ( manipulation )
+					//loop through all selected objects and perform action on all of them
+					Iterator i = selectedSceneObjects.iterator();
+					while ( i.hasNext() )
 					{
-						case METHOD_NONE:
-							//do nothing
-							break;
-						case METHOD_MOVE:
-							moveMorph(manipMorph, new OMTVector(1,1,0));
-							break;
-						case METHOD_ROTATEX:
-							rotateMorph(manipMorph, new OMTVector(1,0,0));
-							break;
-						case METHOD_ROTATEY:
-							rotateMorph(manipMorph, new OMTVector(0,1,0));
-							break;
-						case METHOD_ROTATEZ:
-							rotateMorph(manipMorph, new OMTVector(0,0,1));
-							break;
-						case METHOD_LOOKAT:
-							camNode.lookAt(manipMorph.getLocalTranslation(), new OMTVector(0,1,0)); //make the camera point a thte object in question
-							break;
-						case METHOD_SCALE:
-							scaleMorph(manipMorph, new OMTVector(1,1,1));
-							break;
-					}
-				}
+						manipMorph = (NeuronMorphologyView)i.next();
+//						what action is being performed?
+						//TODO: replace unity vectors with ones based on camera axis
+						switch ( manipulation )
+						{
+							case METHOD_NONE:
+								//do nothing
+								break;
+							case METHOD_MOVE:
+								moveMorph(manipMorph, new OMTVector(1,1,0));
+								break;
+							case METHOD_ROTATEX:
+								rotateMorph(manipMorph, new OMTVector(1,0,0));
+								break;
+							case METHOD_ROTATEY:
+								rotateMorph(manipMorph, new OMTVector(0,1,0));
+								break;
+							case METHOD_ROTATEZ:
+								rotateMorph(manipMorph, new OMTVector(0,0,1));
+								break;
+							case METHOD_LOOKAT:
+								camNode.lookAt(manipMorph.getLocalTranslation(), new OMTVector(0,1,0)); //make the camera point a thte object in question
+								break;
+							case METHOD_SCALE:
+								scaleMorph(manipMorph, new OMTVector(1,1,1));
+								break;
+						}
+					} //end slect case
+				} //end collection empty
 			}
 			else
 			{
@@ -428,9 +445,11 @@ public class View extends BaseSimpleGame {
 			//left mouse click
 			if (MouseInput.get().isButtonDown(0)) //left 
 			{
+				//CTRL is traditionally the modifier for multiselection
+				boolean multiselect = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
 				
 				//because dendrites can be densely packed need precision of triangles instead of bounding boxes
-				PickResults pr = new TrianglePickResults(); 
+				PickResults presults = new TrianglePickResults(); 
 				
 				//Get the position that the mouse is pointing to
 				Vector2f mPos = new Vector2f();
@@ -445,46 +464,63 @@ public class View extends BaseSimpleGame {
 				Ray mouseRay = new Ray(closePoint, farPoint.subtractLocal(closePoint).normalizeLocal());
 				
 				// Does the mouse's ray intersect the box's world bounds?
-				pr.clear();
-				pr.setCheckDistance(true);  //this function is undocumented, orders the items in pickresults
-				rootNode.findPick(mouseRay, pr);
+				presults.clear();
+				presults.setCheckDistance(true);  //this function is undocumented, orders the items in pickresults based on distance
+				rootNode.findPick(mouseRay, presults);
+				
+				
 				
 				//set up for deselection
-				if ( pr.getNumber() > 0)
+				if ( presults.getNumber() > 0)
 				{
-					//********* DESELECT PREVIOUS ********************* 
-					//if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
-					if ( prevPick != null )
+					//**********************************************
+					//********* DESELECT PREVIOUS ******************
+					//**********************************************
+					if ( !multiselect )
 					{
-						/*
-						 * this should be done in a listener after firing an event
-						 * here
-						 */
 						
-						for (NeuronMorphologyView c : getView3D().getCells())
+						//if nothing is selected then set up the List
+						if ( null == selectedSceneObjects )
 						{
-							SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
-							
-							if ( segView != null )
-							{
-								if ( segView.correspondsToSegment() )
-								{
-									c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
-								}
-								else if ( segView.correspondsToSegmentGroup() )
-								{
-									c.getMorphology().unselectSegmentGroup(segView.getCorrespondingSegmentGroup());	
-								}
-							}
+							selectedSceneObjects = new ArrayList<NeuronMorphologyView>();
 						}
-					}
+						
+						selectedSceneObjects.clear();
+						
+						if ( prevPick != null )
+						{
+							/*
+							 * this should be done in a listener after firing an event
+							 * here
+							 */
+							
+							for (NeuronMorphologyView c : getView3D().getCells())
+							{
+								SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+								
+								if ( segView != null )
+								{
+									if ( segView.correspondsToSegment() )
+									{
+										c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
+									}
+									else if ( segView.correspondsToSegmentGroup() )
+									{
+										c.getMorphology().unselectSegmentGroup(segView.getCorrespondingSegmentGroup());	
+									}
+								}
+							} //end forloop
+						} //end multi
+					} //end pr > 0
 					//============== END DESLECT ============================
 					
+					//********************************
 					//************** SELECT **********************
+					//********************************
 					//find the one that is closest
 					//the 0th element is closest to the origin of the ray with checkdistance
 					//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
-					prevPick = pr.getPickData(0);	//take the closest pick and set
+					prevPick = presults.getPickData(0);	//take the closest pick and set
 					
 					
 					/* this should be done in a listener after firing an event here*/
@@ -507,7 +543,9 @@ public class View extends BaseSimpleGame {
 							 * then get updated and change the color on the
 							 * appropriate geometry in the INeuronMorphologyView
 							 */
-							manipMorph = (NeuronMorphologyView) c; //for manipulating picked items
+							
+							selectedSceneObjects.add(c);	//add to multiselection
+							System.out.println(selectedSceneObjects.toString());
 							
 							if (segView.correspondsToSegment())
 							{
@@ -570,7 +608,6 @@ public class View extends BaseSimpleGame {
 					fpHandler.setEnabled(true);
 					MouseInput.get().setCursorVisible(false);
 				}
-				
 			}
 				
 				
@@ -716,8 +753,6 @@ public class View extends BaseSimpleGame {
         
         /** Call simpleRender() in any derived classes. */
         simpleRender();
-        
-
         
         /** Draw the fps node to show the fancy information at the bottom. */
         r.draw(fpsNode);
