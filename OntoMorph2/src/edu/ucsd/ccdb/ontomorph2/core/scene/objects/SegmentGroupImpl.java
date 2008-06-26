@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene;
+package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
 
 import java.awt.Color;
 import java.math.BigInteger;

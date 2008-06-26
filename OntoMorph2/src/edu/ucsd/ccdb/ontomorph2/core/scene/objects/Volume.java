@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.ucsd.ccdb.ontomorph2.core.scene;
+package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
 
 import java.util.ArrayList;
 import java.util.HashSet;

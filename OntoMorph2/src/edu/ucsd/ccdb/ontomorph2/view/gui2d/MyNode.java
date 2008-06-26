@@ -2,7 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
 import java.util.ArrayList;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.ISelectable;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.ISelectable;
 
 
 /**

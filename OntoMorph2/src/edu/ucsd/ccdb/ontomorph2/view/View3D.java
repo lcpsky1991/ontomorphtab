@@ -14,12 +14,12 @@ import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
-import edu.ucsd.ccdb.ontomorph2.core.scene.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.scene.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.scene.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.Surface;
-import edu.ucsd.ccdb.ontomorph2.core.scene.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Surface;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Volume;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.MeshViewImpl;

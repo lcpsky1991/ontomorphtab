@@ -1,6 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.view.procedural;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneObject;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.SceneObject;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;
 
 /**

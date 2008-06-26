@@ -4,7 +4,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneObject;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.SceneObject;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 
 public abstract class SceneObjectView extends Node {

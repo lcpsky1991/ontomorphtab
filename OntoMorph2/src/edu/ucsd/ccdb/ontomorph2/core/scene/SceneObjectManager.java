@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.SceneObject;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Surface;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Volume;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;

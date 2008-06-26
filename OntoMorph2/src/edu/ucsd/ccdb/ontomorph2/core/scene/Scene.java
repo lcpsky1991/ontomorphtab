@@ -24,6 +24,13 @@ import com.jme.scene.shape.Box;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.SceneObject;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Surface;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Volume;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;

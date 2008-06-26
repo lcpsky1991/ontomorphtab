@@ -20,9 +20,9 @@ import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.RenderState;
 import com.jme.util.geom.BufferUtils;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.ISegment;
-import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.ISegment;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.ISegmentGroup;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
 import edu.ucsd.ccdb.ontomorph2.view.View;

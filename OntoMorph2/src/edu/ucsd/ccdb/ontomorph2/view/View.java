@@ -55,10 +55,11 @@ import edu.ucsd.ccdb.ontomorph2.view.MouseClickAndDrag;
 //=========
 
 /**
- * Implements IVew
+ * Defines the <a href="http://openccdb.org/wiki/index.php/Brain_Catalog_Architecture">view 
+ * of the system in a model-view-controller architecture</a>. 
+ * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @author caprea
- * @see IView (deprecated)
  */
 public class View extends BaseSimpleGame {
 
@@ -134,10 +135,20 @@ public class View extends BaseSimpleGame {
 		view3D = new View3D();
 	}
 	
+	/**
+	 * Set the Scene object associated with this view
+	 * @param scene
+	 * @see Scene
+	 */
 	public void setScene(Scene scene){
 		_scene = scene;
 	}
 	
+	/**
+	 * Get the Scene object associated with this view.
+	 * @return The currently visible scene
+	 * @see Scene
+	 */
 	public Scene getScene() {
 		return _scene;
 	}
@@ -152,27 +163,6 @@ public class View extends BaseSimpleGame {
 		display.setTitle("Whole Brain Catalog");
 		
 		rootNode.attachChild(view3D);
-		
-		
-		/*
-		//This sphere is for debugging purposes, need to see something to indicate cam space/rotation
-		Sphere s=new Sphere("DEBUG SPHERE",10,10,3f);
-		// Do bounds for the sphere, use a BoundingBox
-		s.setModelBound(new BoundingBox());
-		s.updateModelBound();
-		s.setRandomColors();
-		s.setLocalTranslation(20,0,0);
-		
-		rootNode.attachChild(s);
-		*/						
-		
-					
-		
-		//mouse setup
-		//====================================
-		// DRAG SETUP
-		//====================================
-		
 
 		//====================================
 		// CAMERA SETUP
@@ -208,18 +198,31 @@ public class View extends BaseSimpleGame {
 		disp = View2D.getInstance();
 	}
 	
+	/**
+	 * Set the camera to point towards the initial demo slide of the system. 
+	 * (towards the hippocampus)
+	 *
+	 */
 	public void setCameraToSlideView() {
 		Vector3f loc = new Vector3f(-300f, -118f, -180f);
 		camNode.setLocalTranslation(loc);
 		camNode.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y));
 	}
 	
+	/**
+	 * Set the camera to point towards the lateral side of the atlas.
+	 * Uses a position in space where the lateral side is easily visible.
+	 */
 	public void setCameraToAtlasLateralView() {
 		Vector3f loc = new Vector3f(300f, -118f, 300f);
 		camNode.setLocalTranslation(loc);
 		camNode.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y));
 	}
 	
+	/**
+	 * Set the camera to point towards the medial side of the atlas.
+	 * Uses a position in space where the medial side is easily visible.
+	 */
 	public void setCameraToAtlasMedialView() {
 		Vector3f loc = new Vector3f(300f, -118f, -700f);
 		camNode.setLocalTranslation(loc);
@@ -305,7 +308,6 @@ public class View extends BaseSimpleGame {
 	 * @param morph the item(s) to be rotated
 	 * @param constraint the dimensions that the morphology will be scaled in
 	 */
-	
 	public void scaleMorph(NeuronMorphologyView morph, OMTVector constraint)
 	{
 		float dx = MouseInput.get().getXDelta(); 
@@ -666,6 +668,10 @@ public class View extends BaseSimpleGame {
 		}//end key input
 	}
 	
+	/**
+	 * Convenience method for getting the underlying display system
+	 * @see DisplaySystem
+	 */
 	public DisplaySystem getDisplaySystem(){
 		return display;
 	}

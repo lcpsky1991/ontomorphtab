@@ -7,7 +7,7 @@ import com.jme.scene.BatchMesh;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneObject;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.SceneObject;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;

@@ -4,11 +4,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
-import edu.ucsd.ccdb.ontomorph2.core.scene.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.ISegmentGroup;
-import edu.ucsd.ccdb.ontomorph2.core.scene.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
-import edu.ucsd.ccdb.ontomorph2.core.scene.SegmentGroupImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.ISegmentGroup;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.objects.SegmentGroupImpl;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
