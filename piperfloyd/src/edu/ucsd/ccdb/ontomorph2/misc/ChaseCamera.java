@@ -15,7 +15,8 @@ import com.jme.system.DisplaySystem;
  */
 @SuppressWarnings("serial")
 public class ChaseCamera extends InputHandler {
-    /**
+
+	/**
      * the target.
      */
     private Spatial target = null;

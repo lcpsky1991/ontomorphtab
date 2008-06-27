@@ -1,9 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 import java.io.File;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 //import java.nio.FloatBuffer;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +14,7 @@ import com.jme.app.BaseSimpleGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.input.AbsoluteMouse;
+import com.jme.input.ChaseCamera;
 import com.jme.input.FirstPersonHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
@@ -48,6 +51,7 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
 //===
 
 import com.jme.input.action.MouseLook; 	//drag handler
+import com.jme.input.thirdperson.ThirdPersonMouseLook;
 import com.jme.renderer.Camera;			//drag handler
 import com.jme.input.*;					//drag handler
 import edu.ucsd.ccdb.ontomorph2.view.MouseClickAndDrag;
@@ -180,10 +184,22 @@ public class View extends BaseSimpleGame {
 		///** Assign the camera to this renderer.*/
 		display.getRenderer().setCamera(cam);
 		
+		/** Possible Slightly Camera Zoom In
+		 */
+		/*Vector3f targetOffset = new Vector3f();
+        targetOffset.y = ((BoundingBox) camNode.getWorldBound()).yExtent * 1.5f;
+		HashMap<String, Serializable> props = new HashMap();
+	    props.put(ThirdPersonMouseLook.PROP_MAXROLLOUT, "1200");
+	    props.put(ThirdPersonMouseLook.PROP_MINROLLOUT, "3");
+		props.put(ChaseCamera.PROP_TARGETOFFSET, targetOffset);
+	    props.put(ThirdPersonMouseLook.PROP_MAXASCENT, ""+45 * FastMath.DEG_TO_RAD);
+	    props.put(ChaseCamera.PROP_INITIALSPHERECOORDS, new Vector3f(500, 0, 30 * FastMath.DEG_TO_RAD));
+	    props.put(ChaseCamera.PROP_TARGETOFFSET, targetOffset);*/
+		
 		//camnode is for easy manipulation of the camera
 		camNode = new CameraNode("camera node", cam);
-		setCameraToSlideView();
-		
+		setCameraToSlideView();	
+			
 		rootNode.attachChild(camNode);
 		
 		//camNode.setLocalTranslation(loc);
