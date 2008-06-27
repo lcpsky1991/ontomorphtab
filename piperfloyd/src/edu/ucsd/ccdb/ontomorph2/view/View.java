@@ -16,6 +16,7 @@ import com.jme.image.Texture;
 import com.jme.input.AbsoluteMouse;
 import com.jme.input.ChaseCamera;
 import com.jme.input.FirstPersonHandler;
+import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
@@ -56,6 +57,8 @@ import com.jme.renderer.Camera;			//drag handler
 import com.jme.input.*;					//drag handler
 import edu.ucsd.ccdb.ontomorph2.view.MouseClickAndDrag;
 
+import com.jmex.awt.input.AWTMouseInput;
+
 //=========
 
 /**
@@ -75,7 +78,7 @@ public class View extends BaseSimpleGame {
 	// a scale of my current texture values
 	float coordDelta;
 	private Scene _scene = null;
-
+	private ChaseCamera chaser;
 	
 	//=================================
 	// Global Interface-Objects
@@ -183,19 +186,7 @@ public class View extends BaseSimpleGame {
 
 		///** Assign the camera to this renderer.*/
 		display.getRenderer().setCamera(cam);
-		
-		/** Possible Slightly Camera Zoom In
-		 */
-		/*Vector3f targetOffset = new Vector3f();
-        targetOffset.y = ((BoundingBox) camNode.getWorldBound()).yExtent * 1.5f;
-		HashMap<String, Serializable> props = new HashMap();
-	    props.put(ThirdPersonMouseLook.PROP_MAXROLLOUT, "1200");
-	    props.put(ThirdPersonMouseLook.PROP_MINROLLOUT, "3");
-		props.put(ChaseCamera.PROP_TARGETOFFSET, targetOffset);
-	    props.put(ThirdPersonMouseLook.PROP_MAXASCENT, ""+45 * FastMath.DEG_TO_RAD);
-	    props.put(ChaseCamera.PROP_INITIALSPHERECOORDS, new Vector3f(500, 0, 30 * FastMath.DEG_TO_RAD));
-	    props.put(ChaseCamera.PROP_TARGETOFFSET, targetOffset);*/
-		
+		        
 		//camnode is for easy manipulation of the camera
 		camNode = new CameraNode("camera node", cam);
 		setCameraToSlideView();	
@@ -278,18 +269,20 @@ public class View extends BaseSimpleGame {
 		fpHandler = new FirstPersonHandler(cam, 50, camRotationRate); //(cam, moveSpeed, turnSpeed)
 		
 		//This is where we disable the FPShooter controls that are created by default by JME	
-        input = fpHandler;
+        //input = fpHandler;
         
         //Disable both of these because I want to track things with the camera
         
         fpHandler.getKeyboardLookHandler().setEnabled( false );
-        fpHandler.getMouseLookHandler().setEnabled( false);
+        fpHandler.getMouseLookHandler().setEnabled( true);
 		
-        input.clearActions();	//removes all input actions not specifically programmed
+        ((AWTMouseInput) MouseInput.get()).setEnabled(true);
+        //input.clearActions();	//removes all input actions not specifically programmed
         
                 
 		//TODO: wouldn't it be nice to move the camera based on mouse position?
         
+        System.out.println(MouseInput.get().getWheelRotation());
 		//Bind the Escape key to kill our test app
 		KeyBindingManager.getKeyBindingManager().set("quit", KeyInput.KEY_ESCAPE);
 		
@@ -762,6 +755,7 @@ public class View extends BaseSimpleGame {
     protected final void update(float interpolation) {
         super.update(interpolation);
 
+        //chaser.update(interpolation);
         if ( !pause ) {
             /** Call simpleUpdate in any derived classes of SimpleGame. */
             simpleUpdate();
@@ -792,6 +786,23 @@ public class View extends BaseSimpleGame {
 	public Renderer getRenderer() {
 		return display.getRenderer();
 	}
+	
+	/*
+	private void buildChaseCamera() {
+        Vector3f targetOffset = new Vector3f();
+        //targetOffset.y = ((BoundingBox) player.getWorldBound()).yExtent * 1.5f;
+        HashMap<String, Serializable> props = new HashMap();
+        props.put(ThirdPersonMouseLook.PROP_MAXROLLOUT, "1200");
+        props.put(ThirdPersonMouseLook.PROP_MINROLLOUT, "3");
+        //props.put(ChaseCamera.PROP_TARGETOFFSET);
+        props.put(ThirdPersonMouseLook.PROP_MAXASCENT, ""+45 * FastMath.DEG_TO_RAD);
+        props.put(ChaseCamera.PROP_INITIALSPHERECOORDS, new Vector3f(500, 0, 30 * FastMath.DEG_TO_RAD));
+        props.put(ChaseCamera.PROP_TARGETOFFSET, targetOffset);
+        chaser = new ChaseCamera(cam, player, props);
+        chaser.setMaxDistance(26);
+        chaser.setMinDistance(1);
+    }*/
+ 
 }
 
 
