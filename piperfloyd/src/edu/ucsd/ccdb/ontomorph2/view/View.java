@@ -51,6 +51,8 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
 
 //===
 
+import com.jme.input.action.InputAction;
+import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.MouseLook; 	//drag handler
 import com.jme.input.thirdperson.ThirdPersonMouseLook;
 import com.jme.renderer.Camera;			//drag handler
@@ -58,6 +60,7 @@ import com.jme.input.*;					//drag handler
 import edu.ucsd.ccdb.ontomorph2.view.MouseClickAndDrag;
 
 import com.jmex.awt.input.AWTMouseInput;
+import java.awt.event.MouseWheelListener;
 
 //=========
 
@@ -78,7 +81,6 @@ public class View extends BaseSimpleGame {
 	// a scale of my current texture values
 	float coordDelta;
 	private Scene _scene = null;
-	private ChaseCamera chaser;
 	
 	//=================================
 	// Global Interface-Objects
@@ -265,20 +267,17 @@ public class View extends BaseSimpleGame {
     	
 	private void configureControls()
 	{
-		
 		fpHandler = new FirstPersonHandler(cam, 50, camRotationRate); //(cam, moveSpeed, turnSpeed)
-		
 		//This is where we disable the FPShooter controls that are created by default by JME	
-        //input = fpHandler;
+        input = fpHandler;
         
-        //Disable both of these because I want to track things with the camera
-        
+        //Disable both of these because I want to track things with the camera       
         fpHandler.getKeyboardLookHandler().setEnabled( false );
-        fpHandler.getMouseLookHandler().setEnabled( true);
+        fpHandler.getMouseLookHandler().setEnabled( false);
 		
-        ((AWTMouseInput) MouseInput.get()).setEnabled(true);
-        //input.clearActions();	//removes all input actions not specifically programmed
-        
+        input.clearActions();	//removes all input actions not specifically programmed
+        //adds mousewheel Action Event
+        input.addAction( mousewheel, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_NONE, 2, true );
                 
 		//TODO: wouldn't it be nice to move the camera based on mouse position?
         
@@ -309,7 +308,6 @@ public class View extends BaseSimpleGame {
 		
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
-		
 	}
 	
 	/**
@@ -393,6 +391,8 @@ public class View extends BaseSimpleGame {
 	private void handleMouseInput()
 	{
 		//handle mouse input
+		// TODO: Implement inertia, acceleration, locked movement, and 	keyboard input
+
 		//TODO: get more sophisticated way of dealing with mouse input (pickresults has handler)
 		try
 		{
@@ -542,6 +542,7 @@ public class View extends BaseSimpleGame {
 		{
 			logger.log(Level.SEVERE, "Exception caught in View.handleMouseInput(): " + e.getMessage());
 		}
+		
 	}
 	
 	
@@ -787,6 +788,14 @@ public class View extends BaseSimpleGame {
 		return display.getRenderer();
 	}
 	
+	//roll mouse wheel
+	final InputAction mousewheel = new InputAction() 
+	{
+	        public void performAction( InputActionEvent evt ) 
+	        {
+	        }
+
+	 };	
 	/*
 	private void buildChaseCamera() {
         Vector3f targetOffset = new Vector3f();
