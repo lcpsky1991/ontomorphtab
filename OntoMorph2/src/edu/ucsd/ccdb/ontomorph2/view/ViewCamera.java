@@ -11,6 +11,7 @@ import com.jme.renderer.Camera;
  * Wraps the camera functionality.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @author caprea
  *
  */
 public class ViewCamera extends com.jme.scene.CameraNode {
@@ -94,7 +95,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 
 	/**
 	 * Move the camera one unit forward
-	 *
+	 * @author caprea
 	 */
 	public void moveForward() {
 		//find the vector of the direction pointing towards
@@ -104,7 +105,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 
 	/**
 	 * Move the camera one unit backward
-	 *
+	 * @author caprea
 	 */
 	public void moveBackward() {
 //		find the vector of the direction pointing towards
@@ -114,6 +115,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 
 	/**
 	 * Turn the camera one unit clockwise
+	 * @author caprea
 	 */
 	public void turnClockwise() {
 //		key right
@@ -125,7 +127,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 
 	/**
 	 * Turn the camera one unit counter clockwise
-	 *
+	 * @author caprea
 	 */
 	public void turnCounterClockwise() {
 //		left key
@@ -137,7 +139,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 
 	/**
 	 * Turn the camera one unit downwards
-	 *
+	 * @author caprea
 	 */
 	public void turnDown() {
 //		down
@@ -149,7 +151,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 
 	/**
 	 * Turn the camera one unit upwards
-	 *
+	 * @author caprea
 	 */
 	public void turnUp() {
 //		up
@@ -161,7 +163,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 
 	/**
 	 * Reset the position and rotation of the camera to a default.
-	 *
+	 * @author caprea
 	 */
 	public void reset() {
 		

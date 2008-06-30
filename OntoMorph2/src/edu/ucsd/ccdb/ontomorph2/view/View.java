@@ -695,7 +695,7 @@ public class View extends BaseSimpleGame {
 	}
 	
 	/**
-	 * Get the current instance of the View Camera for this view
+	 * Get the current instance of the ViewCamera for this view
 	 * @return
 	 */
 	public ViewCamera getCamera() {
