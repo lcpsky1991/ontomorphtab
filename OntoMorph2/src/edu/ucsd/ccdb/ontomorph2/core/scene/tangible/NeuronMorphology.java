@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
+package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.awt.Color;
 import java.io.File;
@@ -39,7 +39,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
-public class NeuronMorphology extends SceneObject{
+public class NeuronMorphology extends Tangible{
 	
 	public static final String RENDER_AS_LINES = "lines"; 
 	public static final String RENDER_AS_CYLINDERS = "cylinders";

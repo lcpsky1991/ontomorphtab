@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
+package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 /**
  * A general interface for any object that can be selected by a user.

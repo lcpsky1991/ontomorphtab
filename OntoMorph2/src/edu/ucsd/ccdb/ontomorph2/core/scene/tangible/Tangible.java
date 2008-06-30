@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
+package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
  * @see ICoordinateSystem
  *
  */
-public abstract class SceneObject extends Observable implements ISelectable, ISemanticsAware{
+public abstract class Tangible extends Observable implements ISelectable, ISemanticsAware{
 
 	private PositionVector _position = new PositionVector();
 	private RotationVector _rotation = new RotationVector();
@@ -39,7 +39,7 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 	private Color c = null;
 	private Color highlightedColor = null;
 	
-	public SceneObject() {
+	public Tangible() {
 		//by default, all objects ought to be associated with an instance.
 		//the least specific instance that can be created is one of bfo:entity.
 		//addSemanticThing(SemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
@@ -208,7 +208,7 @@ public abstract class SceneObject extends Observable implements ISelectable, ISe
 	}
 	
 	public boolean isSelected() {
-		//return SceneObjectManager.getInstance().isSelected(this);
+		//return TangibleManager.getInstance().isSelected(this);
 		return this.selected;
 	}
 

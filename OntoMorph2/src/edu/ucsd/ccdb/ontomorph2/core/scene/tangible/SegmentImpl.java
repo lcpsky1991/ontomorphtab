@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
+package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.awt.Color;
 import java.math.BigInteger;
@@ -15,7 +15,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
  * @see ISemanticsAware
  *
  */
-public class SegmentImpl extends SceneObject implements ISegment, ISemanticsAware {
+public class SegmentImpl extends Tangible implements ISegment, ISemanticsAware {
 
 	BigInteger _id;
 	float[] _proxPoint;

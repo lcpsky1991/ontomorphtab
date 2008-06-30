@@ -24,13 +24,13 @@ import com.jme.scene.shape.Box;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.SceneObject;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Surface;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
@@ -47,7 +47,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
  */
 public class Scene extends Observable{
 	
-	SceneObjectManager manager = null;
+	TangibleManager manager = null;
 	
 	public static final String baseDir = "." + File.separatorChar + "etc" + File.separatorChar;
 	public static final String imgDir = baseDir + "img" + File.separatorChar;
@@ -74,7 +74,7 @@ public class Scene extends Observable{
 	URL hippo3cURL = null;
 	
 	public Scene() {
-		manager = SceneObjectManager.getInstance();
+		manager = TangibleManager.getInstance();
 				
 		try {
 			cell3URL = new File(morphMLDir + "cell1zr.morph.xml").toURI().toURL();
@@ -96,7 +96,7 @@ public class Scene extends Observable{
 		}
 	}
 	
-	private void addSceneObject(SceneObject s) {
+	private void addSceneObject(Tangible s) {
 		if (s instanceof Slide) {
 			manager.addSlide(s);
 		} else if (s instanceof NeuronMorphology) {

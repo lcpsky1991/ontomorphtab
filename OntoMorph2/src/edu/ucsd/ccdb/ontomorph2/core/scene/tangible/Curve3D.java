@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
+package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.awt.Color;
 
@@ -20,7 +20,7 @@ import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
  *  
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
-public class Curve3D extends SceneObject{
+public class Curve3D extends Tangible{
 
 	BezierCurve theCurve = null;
 	BezierCurve absoluteCurve = null; // copy of the curve for coordinate systems

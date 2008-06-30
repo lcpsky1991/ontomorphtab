@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
+package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 
 /**
@@ -9,6 +9,6 @@ package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public abstract class SchematicSceneObject extends SceneObject {
+public abstract class SchematicTangible extends Tangible {
 
 }

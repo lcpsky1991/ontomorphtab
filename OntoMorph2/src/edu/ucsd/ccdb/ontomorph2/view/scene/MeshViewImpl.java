@@ -12,7 +12,7 @@ import com.jmex.model.converters.FormatConverter;
 import com.jmex.model.converters.MaxToJme;
 import com.jmex.model.converters.ObjToJme;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
 
 /**
  * Visualizes a mesh.

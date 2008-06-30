@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
+package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 
@@ -10,7 +10,7 @@ import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class Axon extends SceneObject {
+public class Axon extends Tangible {
 	CatmullRomCurve c = null;
 	
 	public Axon() {

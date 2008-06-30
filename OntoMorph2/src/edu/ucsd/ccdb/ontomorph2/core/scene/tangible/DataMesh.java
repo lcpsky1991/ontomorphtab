@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
+package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.net.URL;
 import java.util.List;
@@ -12,7 +12,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @see ISemanticsAware
  */
-public class DataMesh extends SceneObject{
+public class DataMesh extends Tangible{
 	
 	URL maxFile = null;
 	URL objFile = null;

@@ -8,7 +8,7 @@ import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.WireframeState;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**

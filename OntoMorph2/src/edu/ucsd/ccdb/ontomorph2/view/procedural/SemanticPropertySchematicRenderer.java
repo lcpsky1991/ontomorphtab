@@ -1,6 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.view.procedural;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.SceneObject;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;
 
 /**
@@ -16,13 +16,13 @@ public abstract class SemanticPropertySchematicRenderer {
 		
 	}
 	
-	public void setDomainObject(SceneObject domainObject) {
+	public void setDomainObject(Tangible domainObject) {
 		//can do checking here with the property to make sure that 
 		//the semantic thing associated with the scene object
 		//is acceptable in the domain of this object
 	}
 	
-	public void setRangeObject(SceneObject rangeObject) {
+	public void setRangeObject(Tangible rangeObject) {
 		//can do checking here with the property to make sure that
 		//the semantic thing associated with the scene object is 
 		//acceptable in the range of this object

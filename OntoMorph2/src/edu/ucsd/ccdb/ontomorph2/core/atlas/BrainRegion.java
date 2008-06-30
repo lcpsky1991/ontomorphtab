@@ -7,7 +7,7 @@ import com.jme.scene.BatchMesh;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.SceneObject;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
@@ -20,7 +20,7 @@ import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class BrainRegion extends SceneObject{
+public class BrainRegion extends Tangible{
 
 	/**
 	 * Solid and visible

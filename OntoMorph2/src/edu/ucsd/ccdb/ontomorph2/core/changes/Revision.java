@@ -1,6 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.core.changes;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.SceneObject;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 
 /**
  * Defines a revision, which is a unit of change that a user has made within the framework.
@@ -22,7 +22,7 @@ public class Revision {
 		
 	}
 	
-	public void setSceneObject(SceneObject i) {
+	public void setSceneObject(Tangible i) {
 		
 	}
 	public void setCommentary() {

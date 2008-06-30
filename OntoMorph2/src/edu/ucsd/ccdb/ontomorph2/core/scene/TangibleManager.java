@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.SceneObject;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Surface;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
@@ -22,7 +22,7 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class SceneObjectManager {
+public class TangibleManager {
 
 	
 
@@ -35,9 +35,9 @@ public class SceneObjectManager {
 	/**
 	 * Holds singleton instance
 	 */
-	private static SceneObjectManager instance;
+	private static TangibleManager instance;
 	
-	private SceneObjectManager() {
+	private TangibleManager() {
 		slides = new ArrayList<Slide>();
 		cells = new HashSet<NeuronMorphology>();
 		curves = new HashSet<Curve3D>();
@@ -46,12 +46,12 @@ public class SceneObjectManager {
 		volumes = new HashSet<Volume>();
 	}
 
-	public void addSlide(SceneObject s) {
+	public void addSlide(Tangible s) {
 		slides.add((Slide) s);
 		
 	}
 
-	public void addCell(SceneObject s) {
+	public void addCell(Tangible s) {
 		cells.add((NeuronMorphology) s);
 	}
 	
@@ -71,7 +71,7 @@ public class SceneObjectManager {
 		return root;
 	}
 
-	public void addVolume(SceneObject s) {
+	public void addVolume(Tangible s) {
 		volumes.add((Volume) s);
 	}
 
@@ -87,7 +87,7 @@ public class SceneObjectManager {
 		return slides;
 	}
 
-	public void addMesh(SceneObject s) {
+	public void addMesh(Tangible s) {
 		meshes.add((DataMesh) s);
 	}
 
@@ -111,9 +111,9 @@ public class SceneObjectManager {
 	 * Returns the singleton instance.
 	 @return	the singleton instance
 	 */
-	static public SceneObjectManager getInstance() {
+	static public TangibleManager getInstance() {
 		if (instance == null) {
-			instance = new SceneObjectManager();
+			instance = new TangibleManager();
 		}
 		return instance;
 	}

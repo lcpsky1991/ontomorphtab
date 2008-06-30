@@ -21,9 +21,9 @@ import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.AreaUtils;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.ISegment;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.ISegmentGroup;
-import edu.ucsd.ccdb.ontomorph2.core.scene.objects.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegment;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegmentGroup;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
+package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class Volume extends SceneObject{
+public class Volume extends Tangible{
 
 	public static final int BOX_SHAPE = 0;
 	public static final int SPHERE_SHAPE = 1;

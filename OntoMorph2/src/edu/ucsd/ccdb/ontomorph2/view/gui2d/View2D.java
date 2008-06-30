@@ -34,7 +34,7 @@ import org.fenggui.util.Point;
 import org.fenggui.util.Spacing;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
-import edu.ucsd.ccdb.ontomorph2.core.scene.SceneObjectManager;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.view.View;
@@ -316,7 +316,7 @@ public class View2D extends Display implements IMenuItemPressedListener {
 	
 	
 	protected void loadCellChooser() {
-		MyNode root = SceneObjectManager.getInstance().getCellTree();
+		MyNode root = TangibleManager.getInstance().getCellTree();
 		
 		Window window = FengGUI.createWindow(this, true, false, false, true);
 		window.getAppearance().removeAll();

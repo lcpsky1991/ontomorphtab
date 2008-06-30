@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.objects;
+package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.net.URL;
 import java.util.List;
@@ -19,7 +19,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
-public class Slide extends SceneObject {
+public class Slide extends Tangible {
 	
 	URL _imageURL = null;
 	float ratio = 1f;
