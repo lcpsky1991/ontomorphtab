@@ -14,33 +14,46 @@ import com.jme.system.DisplaySystem;
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
-public class BrainRegionView extends SceneObjectView{
+/**
+ * Manages the visual rendering of a BrainRegion.
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
+public class BrainRegionView extends TangibleView{
 
 	BrainRegion br = null;
 	LightState lightState = null;
 	TriMesh mesh = null;
 	Node parentNode = null;
+	int defaultRenderQueueMode = 0;
 	
+	/**
+	 * Create a new BrainRegionView based on a BrainRegion model that will be associated with
+	 * it and the parentNode that it ought to be contained in
+	 * @param br
+	 * @param parentNode
+	 */
 	public BrainRegionView(BrainRegion br, Node parentNode) {
 		this.br = br;
 		this.parentNode = parentNode;
 		
-		TriMesh mesh = br.getTriMesh();
-		mesh.setSolidColor(ColorRGBA.blue);
+		this.mesh = br.getTriMesh();
+		//mesh.setSolidColor(ColorRGBA.blue);
 		mesh.setModelBound(new BoundingBox());
 		mesh.updateModelBound();
 		VBOInfo nfo = new VBOInfo(true);
 		mesh.setVBOInfo(nfo);
 		mesh.setCullMode(SceneElement.CULL_DYNAMIC);
-
 		
-		LightState lightState = null;
-		lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
-        lightState.setEnabled(true);
+		this.lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
+        this.lightState.setEnabled(true);
         
+        this.defaultRenderQueueMode = this.getRenderQueueMode();
         
-		
-		this.parentNode.attachChild(mesh);
+        this.setModelBound(new BoundingBox());
+        this.updateModelBound();
+           
+		this.parentNode.attachChild(this);
 		
 		this.update();
 		/*
@@ -62,6 +75,10 @@ public class BrainRegionView extends SceneObjectView{
 		return this.br;
 	}
 	
+	/**
+	 * Refresh this view based on the current state of the associated BrainRegion model.
+	 *
+	 */
 	public void update() {
 		switch(br.getVisibility()) {
 		case BrainRegion.VISIBLE:
@@ -72,10 +89,6 @@ public class BrainRegionView extends SceneObjectView{
 		case BrainRegion.INVISIBLE:
 			//make invisible
 			this.detachChild(this.mesh);
-
-			this.updateModelBound();
-		    this.updateRenderState();
-		    this.updateGeometricState(5f, true);
 			
 			break;
 		case BrainRegion.TRANSPARENT:
@@ -90,13 +103,21 @@ public class BrainRegionView extends SceneObjectView{
 			this.unhighlight();
 		}
 
+		this.mesh.updateModelBound();
+		this.mesh.updateRenderState();
+		this.mesh.updateGeometricState(5f, true);
+		
+		this.updateModelBound();
+	    this.updateRenderState();
+	    this.updateGeometricState(5f, true);
+	    
 		this.parentNode.updateModelBound();
 	    this.parentNode.updateRenderState();
 	    this.parentNode.updateGeometricState(5f, true);
 	}
 	
 	private void makeVisible() {
-		this.detachAllChildren();
+		this.detachChild(this.mesh);
 		this.attachChild(this.mesh);
 	}
 	
@@ -108,13 +129,13 @@ public class BrainRegionView extends SceneObjectView{
 	      as.setTestEnabled(true);
 	      as.setTestFunction(AlphaState.TF_GREATER);
 	      as.setEnabled(true);
-	    this.parentNode.setRenderState(as);
-	    this.parentNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+	    this.setRenderState(as);
+	    this.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 	}
 	
 	private void makeSolid() {
-		this.parentNode.setRenderState(lightState);
-		this.parentNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
+		this.setRenderState(lightState);
+		this.setRenderQueueMode(this.defaultRenderQueueMode);
 	}
 
 	@Override

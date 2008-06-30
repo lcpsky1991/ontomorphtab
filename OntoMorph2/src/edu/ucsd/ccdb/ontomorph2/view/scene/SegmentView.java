@@ -34,7 +34,7 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class SegmentView extends SceneObjectView{
+public class SegmentView extends TangibleView{
 
 	private ISegment seg = null;
 	private ISegmentGroup sg = null;

@@ -7,7 +7,12 @@ import com.jme.scene.Node;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 
-public abstract class SceneObjectView extends Node {
+/**
+ * A base class for the view classes that display scene objects.
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
+public abstract class TangibleView extends Node {
 	private boolean highlighted = false;
 	private Tangible model = null;
 	

@@ -62,11 +62,13 @@ public class AtlasBrowser implements ISelectionChangedListener{
 		radioButtons.setLayoutData(BorderLayoutData.NORTH);
 		radioButtons.setLayoutManager(new RowLayout(true));
         radioButtons.getAppearance().setPadding(new Spacing(10, 10));
-        Button btn = FengGUI.createButton(radioButtons, "Apply");
         
+        /*
+        Button btn = FengGUI.createButton(radioButtons, "Apply");
         btn.updateMinSize();
         btn.setSizeToMinSize();
         btn.setExpandable(false);
+        */
         
         FengGUI.createLabel(radioButtons, "");
         
@@ -129,7 +131,8 @@ public class AtlasBrowser implements ISelectionChangedListener{
 		} else {
 			if (v instanceof MyNode) { //handle tree widget
 				MyNode n = (MyNode)e.getToggableWidget().getValue();
-				n.value.unselect();
+				if (n.value != null)
+					n.value.unselect();
 			}
 		}
 		
