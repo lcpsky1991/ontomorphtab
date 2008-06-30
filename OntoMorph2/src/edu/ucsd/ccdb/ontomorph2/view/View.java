@@ -76,7 +76,7 @@ public class View extends BaseSimpleGame {
 	//=================================
 	// Global Interface-Objects
 	//=================================
-	CameraNode camNode;							//thisobject needed for manipulating the camera in a simple way
+	ViewCamera camNode;							//thisobject needed for manipulating the camera in a simple way
 	AbsoluteMouse amouse; 						//the mouse object ref to entire screen, used to hide and show the mouse?
 	PickData prevPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
 	
@@ -87,8 +87,6 @@ public class View extends BaseSimpleGame {
 	MouseLook looker;	//not used
 	private boolean pointerEnabled = false;
 	
-	float camRotationRate = FastMath.PI * 5 / 180;	//(FastMath.PI * X / 180) corresponds to X degrees per (FPS?) = Rate/UnitOfUpdate 
-	float invZoom = 1.0f; //zoom amount
 
 	//==================================
 	// DECLARES
@@ -164,31 +162,11 @@ public class View extends BaseSimpleGame {
 		
 		rootNode.attachChild(view3D);
 
-		//====================================
-		// CAMERA SETUP
-		//====================================
-		
-		///** Set up how our camera sees. */
-		float aspect = (float) display.getWidth() / (float) display.getHeight();
-		//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
-		cam.setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
-		cam.update();
-		
-		///** Signal that we've changed our camera's location/frustum. */
-		cam.update();
-
-		///** Assign the camera to this renderer.*/
-		display.getRenderer().setCamera(cam);
-		
-		//camnode is for easy manipulation of the camera
-		camNode = new CameraNode("camera node", cam);
-		setCameraToSlideView();
+		this.camNode = new ViewCamera();
+		this.cam = camNode.getCamera();
 		
 		rootNode.attachChild(camNode);
 		
-		//camNode.setLocalTranslation(loc);
-		System.out.println("Rotation: " + camNode.getLocalRotation() + "\nTranslation: " + camNode.getLocalTranslation());
-	
 		//Section for setting up the mouse and other input controls	
 		configureControls();
 		
@@ -198,36 +176,6 @@ public class View extends BaseSimpleGame {
 		disp = View2D.getInstance();
 	}
 	
-	/**
-	 * Set the camera to point towards the initial demo slide of the system. 
-	 * (towards the hippocampus)
-	 *
-	 */
-	public void setCameraToSlideView() {
-		Vector3f loc = new Vector3f(-300f, -118f, -180f);
-		camNode.setLocalTranslation(loc);
-		camNode.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y));
-	}
-	
-	/**
-	 * Set the camera to point towards the lateral side of the atlas.
-	 * Uses a position in space where the lateral side is easily visible.
-	 */
-	public void setCameraToAtlasLateralView() {
-		Vector3f loc = new Vector3f(300f, -118f, 300f);
-		camNode.setLocalTranslation(loc);
-		camNode.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y));
-	}
-	
-	/**
-	 * Set the camera to point towards the medial side of the atlas.
-	 * Uses a position in space where the medial side is easily visible.
-	 */
-	public void setCameraToAtlasMedialView() {
-		Vector3f loc = new Vector3f(300f, -118f, -700f);
-		camNode.setLocalTranslation(loc);
-		camNode.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*0, Vector3f.UNIT_Y));
-	}
 	
 	
 	//this ismostly for debugging
@@ -259,7 +207,7 @@ public class View extends BaseSimpleGame {
 	private void configureControls()
 	{
 		
-		fpHandler = new FirstPersonHandler(cam, 50, camRotationRate); //(cam, moveSpeed, turnSpeed)
+		fpHandler = new FirstPersonHandler(cam, 50, camNode.getRotationRate()); //(cam, moveSpeed, turnSpeed)
 		
 		//This is where we disable the FPShooter controls that are created by default by JME	
         input = fpHandler;
@@ -280,7 +228,7 @@ public class View extends BaseSimpleGame {
 		//assign 'R' to reload the view to inital state //reinit
 		KeyBindingManager.getKeyBindingManager().set("reset", KeyInput.KEY_R);
 		
-		//assignt he camera to up, down, left, right ;	ADD does not overright
+		//assignt he camera to up, down, left, right ;	ADD does not overwrite
 		KeyBindingManager.getKeyBindingManager().set("cam_forward", KeyInput.KEY_ADD);
 		KeyBindingManager.getKeyBindingManager().add("cam_forward", KeyInput.KEY_EQUALS); //for shift not pressed;
 		KeyBindingManager.getKeyBindingManager().set("cam_back", KeyInput.KEY_SUBTRACT);
@@ -580,50 +528,33 @@ public class View extends BaseSimpleGame {
 				
 			if ( isAction("cam_forward") || isAction("cam_forward_ns") ) 
 			{
-				//find the vector of the direction pointing towards
-				Vector3f dir = camNode.getCamera().getDirection().normalize();
-				camNode.setLocalTranslation( camNode.getLocalTranslation().add(dir));
+				camNode.moveForward();
 			}
 			
 			if ( isAction("cam_back") || isAction("cam_back_ns"))
 			{
-				//find the vector of the direction pointing towards
-				Vector3f dir = camNode.getCamera().getDirection().normalize().negate();
-				camNode.setLocalTranslation( camNode.getLocalTranslation().add(dir));
+				camNode.moveBackward();
 			}
 
 			if ( isAction("cam_turn_cw"))	
 			{
-				//key right
-				Quaternion roll = new Quaternion();
-				roll.fromAngleAxis( -camRotationRate*invZoom, Vector3f.UNIT_Y ); //rotates Rate degrees
-				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
-				camNode.setLocalRotation(roll);
+				camNode.turnClockwise();
 			}
 			
 			
 			if ( isAction("cam_turn_ccw"))	
-			{ //left key
-				Quaternion roll = new Quaternion();
-				roll.fromAngleAxis( camRotationRate*invZoom, Vector3f.UNIT_Y ); //rotates Rate degrees
-				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
-				camNode.setLocalRotation(roll);
+			{ 
+				camNode.turnCounterClockwise();
 			}
 			
 			if ( isAction("cam_turn_down"))	
-			{ //down
-				Quaternion roll = new Quaternion();
-				roll.fromAngleAxis( camRotationRate*invZoom, Vector3f.UNIT_X );//rotates Rate degrees
-				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
-				camNode.setLocalRotation(roll);
+			{ 
+				camNode.turnDown();
 			}
 			
 			if ( isAction("cam_turn_up"))	
-			{ //up
-				Quaternion roll = new Quaternion();
-				roll.fromAngleAxis( -camRotationRate*invZoom, Vector3f.UNIT_X ); //rotates Rate degrees
-				roll = camNode.getLocalRotation().multLocal(roll); // (q, save)
-				camNode.setLocalRotation(roll);
+			{ 
+				camNode.turnUp();
 			}
 			
 			if ( isAction("info"))
@@ -640,29 +571,15 @@ public class View extends BaseSimpleGame {
 			if ( isAction("reset"))
 			{
 				logger.log(Level.INFO, "\nResetting");
-				Quaternion q = new Quaternion();
-				q.fromAxes(Vector3f.UNIT_X, Vector3f.UNIT_Y,Vector3f.UNIT_Z);
-				invZoom = 1.0f;
-				cam.setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
-				cam.update();
-				camNode.setLocalRotation(q);
-				
+				camNode.reset();			
 			}
 			
 			if ( isAction("zoom_in")) {
-				invZoom -= 0.01f;
-				//float aspect = (float) display.getWidth() / (float) display.getHeight();
-				cam.setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
-				//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
-				cam.update();
+				camNode.zoomIn();
 			}
 			
 			if ( isAction("zoom_out")) {
-				invZoom += 0.01f;
-				//float aspect = (float) display.getWidth() / (float) display.getHeight();
-				cam.setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
-				//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
-				cam.update();
+				camNode.zoomOut();
 			}
 			
 		}//end key input
@@ -775,6 +692,14 @@ public class View extends BaseSimpleGame {
 
 	public Renderer getRenderer() {
 		return display.getRenderer();
+	}
+	
+	/**
+	 * Get the current instance of the View Camera for this view
+	 * @return
+	 */
+	public ViewCamera getCamera() {
+		return this.camNode;
 	}
 }
 

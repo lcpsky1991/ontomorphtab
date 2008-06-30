@@ -61,6 +61,7 @@ public class View2D extends Display implements IMenuItemPressedListener {
 	public static final String SLIDE_VIEW = "View Example Slide";
 	public static final String ATLAS_LATERAL_VIEW = "View Atlas Lateral Side";
 	public static final String ATLAS_MEDIAL_VIEW = "View Atlas Medial Side";
+	public static final String ATLAS_MEDIAL_VIEW_SMOOTH = "Smoothly Zoom To Atlas Medial Side";
 	public static final String strMNU_MANIPULATE = "Manipulate Object";
 	public static final String strMNU_MANI_ROTATEA = "Rotate (X - Axis)";
 	public static final String strMNU_MANI_ROTATEB = "Rotate (Y - Axis)";
@@ -156,6 +157,7 @@ public class View2D extends Display implements IMenuItemPressedListener {
         makeMenuItem(SLIDE_VIEW, mnuView);
         makeMenuItem(ATLAS_LATERAL_VIEW, mnuView);
         makeMenuItem(ATLAS_MEDIAL_VIEW, mnuView);
+        makeMenuItem(ATLAS_MEDIAL_VIEW_SMOOTH, mnuView);
         
         //=[  OBJ  ]=
         Menu mnuObjects = new Menu();
@@ -281,11 +283,19 @@ public class View2D extends Display implements IMenuItemPressedListener {
 		}
 		else if ( SLIDE_VIEW.equals(act) )
 		{
-			View.getInstance().setCameraToSlideView();
-		} else if (ATLAS_LATERAL_VIEW.equals(arg0.getItem().getText())) {
-			View.getInstance().setCameraToAtlasLateralView();
-		} else if (ATLAS_MEDIAL_VIEW.equals(arg0.getItem().getText())) {
-			View.getInstance().setCameraToAtlasMedialView();
+			View.getInstance().getCamera().setToSlideView();
+		} 
+		else if (ATLAS_LATERAL_VIEW.equals(arg0.getItem().getText())) 
+		{
+			View.getInstance().getCamera().setToAtlasLateralView();
+		} 
+		else if (ATLAS_MEDIAL_VIEW.equals(arg0.getItem().getText())) 
+		{
+			View.getInstance().getCamera().setToAtlasMedialView();
+		}
+		else if (ATLAS_MEDIAL_VIEW_SMOOTH.equals(arg0.getItem().getText())) 
+		{
+			View.getInstance().getCamera().smoothlyZoomToAtlasMedialView();
 		}
 		else if ( strMNU_MANI_MOVE.equals(act) )
 		{
