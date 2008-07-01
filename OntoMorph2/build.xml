@@ -115,7 +115,10 @@
         <pathelement path="${lib}/ccdb-plugin/ext-lib/BrainCatalogCCDB_datamodel.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/FastInfoset.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/http.jar"/>
-        <pathelement path="${lib}/ccdb-plugin/ext-lib/JAXB2_20061211.jar"/>
+		<pathelement path="${lib}/ccdb-plugin/ext-lib/JAXB2_20061211.jar"/>
+		<pathelement path="${lib}/ccdb-plugin/ext-lib/jaxb-xjc.jar"/>
+		<pathelement path="${lib}/ccdb-plugin/ext-lib/jaxb-impl.jar"/>
+		<pathelement path="${lib}/ccdb-plugin/ext-lib/jaxb-api.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/jaxws-api.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/jaxws-rt.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/jaxws-tools.jar"/>
@@ -338,6 +341,28 @@
       </fail>
    </target>
 	
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+		<classpath refid="project.classpath"/>
+	</taskdef>
+	
+	<target name="generateNeuroMLClasses-1.7-modified" >
+		<!-- http://java.sun.com/webservices/docs/1.6/jaxb/ant.html -->
+		<xjc destdir="src/" package="neuroml.generated" removeOldOutput="yes">
+			  <schema  dir="etc/neuroml-schemas/1.7-modified/Level1" includes="NeuroML_Level1*.xsd"/>
+			  <schema  dir="etc/neuroml-schemas/1.7-modified/Level2" includes="NeuroML_Level2*.xsd"/>
+		</xjc>
+	</target>
+	
+	<!-- This target does not yet work right -->
+	<target name="generateNeuroMLClasses-1.7.1-modified" >
+			<!-- http://java.sun.com/webservices/docs/1.6/jaxb/ant.html -->
+			<xjc destdir="src/" package="test.neuroml.generated" removeOldOutput="yes">
+				  <schema  dir="etc/neuroml-schemas/1.7.1-modified/Level1" includes="NeuroML_Level1*.xsd"/>
+				  <schema  dir="etc/neuroml-schemas/1.7.1-modified/Level1" includes="MorphML*.xsd"/>
+				  <schema  dir="etc/neuroml-schemas/1.7.1-modified/Level2" includes="NeuroML_Level2*.xsd"/>
+				  <binding dir="etc/neuroml-schemas/1.7.1-modified/" includes="neuroml-bindings.xjb"/>
+			</xjc>
+	</target>
     <!-- Run targets -->
 
 	
@@ -349,6 +374,8 @@
             <classpath refid="project.classpath"/>
         </java>
     </target>
+	
+	
 
 	<!--
 	   <target name="run.server" depends="install">

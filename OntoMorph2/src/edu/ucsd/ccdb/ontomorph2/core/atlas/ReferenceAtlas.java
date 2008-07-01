@@ -22,7 +22,8 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
 
 /**
- * Contains a list of brain regions of the mouse brain and methods to manage and extract information about them.
+ * Contains a list of brain regions of the mouse brain and methods to manage and extract 
+ * information about them.
  */
 
 public class ReferenceAtlas {
@@ -92,15 +93,29 @@ public class ReferenceAtlas {
 	}
 	
 	/**
-	 * Retrieve a brain region by its x,y,z voxel coordinates in the 
-	 * Allen atlas
+	 * Retrieve a brain region by its rostral/caudal, dorsal/ventral, lateral medial voxel coordinates in the 
+	 * Allen atlas. 
 	 * 
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return
+	 * @param rostralCaudal 
+	 * @param dorsalVentral
+	 * @param lateralMedial
+	 * @return - a BrainRegion that the coordinate is contained within
 	 */
-	public BrainRegion getBrainRegion(int rostralCaudal, int dorsalVentral, int lateralMedial) {
+	public BrainRegion getBrainRegionByMillimeter(int rostralCaudal, int dorsalVentral, int lateralMedial) {
+		return getBrainRegionByVoxel(rostralCaudal*4, dorsalVentral*4, lateralMedial*4);
+	}
+	
+	/**
+	 * Retrieve a brain region by its rostral/caudal, dorsal/ventral, lateral medial voxel coordinates in the 
+	 * Allen atlas.  This atlas has one voxel for every 25 microns, so multiply the number of milimeters
+	 * by 4 to get the right pixel index
+	 * 
+	 * @param rostralCaudal
+	 * @param dorsalVentral
+	 * @param lateralMedial
+	 * @return - a BrainRegion that the coordinate is contained within
+	 */
+	public BrainRegion getBrainRegionByVoxel(int rostralCaudal, int dorsalVentral, int lateralMedial) {
 		if (rostralCaudal > 528 || rostralCaudal < 0 || dorsalVentral > 320 || dorsalVentral < 0 
 				|| lateralMedial > 456 || lateralMedial < 0) {
 			throw new OMTException("Invalid value entered for getting a brain region!", null);
@@ -128,16 +143,20 @@ public class ReferenceAtlas {
 		 * 
 		 * Therefore the formula is 1*x_coord + Y_MAX*y_coord + Y_MAX*Z_MAX+z_coord; 
 		 */
-		int offset = rostralCaudal+320*dorsalVentral+456*320*lateralMedial;
-		//read byte array for unsigned int at offset
+		int offset = rostralCaudal+528*dorsalVentral+528*320*lateralMedial;
+		
 		byte[] brainRegionIdByteArray = new byte[BitMath.sizeOf8BitUnsignedInt];
-		//FileChannel c = (FileChannel)file.getChannel();
 		
 		try {
-			//c.read(byteBuffer, offset);
+			
+			file.skip(offset-1);
 			file.read(brainRegionIdByteArray);
+			file.close();
 			//convert byte array to java int
 			int brainRegionId = BitMath.convertByteArrayToInt(brainRegionIdByteArray);
+			if (brainRegionId == 0) {
+				return null;
+			}
 			//return BrainRegion corresponding to int
 			for (BrainRegion b : getBrainRegions()) {
 				if (b.getRegionId() == brainRegionId) {
@@ -145,7 +164,7 @@ public class ReferenceAtlas {
 				}
 			}
 			
-			file.close();
+			
 		} catch (Exception e) {
 			throw new OMTException("Error returning brain region!", e);
 		}

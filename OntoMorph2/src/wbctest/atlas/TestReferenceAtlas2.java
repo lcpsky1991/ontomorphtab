@@ -18,65 +18,43 @@ public class TestReferenceAtlas2 extends TestCase {
 	public void testGetBrainRegionIntIntInt() {
 		ReferenceAtlas atlas = ReferenceAtlas.getInstance();
 		
-		BrainRegion b1 = atlas.getBrainRegion(0,0,0);
-		if (b1 != null) { 
-			System.out.println(b1.getName());
-		}
-		BrainRegion b5 = atlas.getBrainRegion(22,44,66);
-		if (b5 != null) {
-			System.out.println(b5.getName());
-		}
-		BrainRegion b4 = atlas.getBrainRegion(50,100,200);
-		if (b4 != null) {
-			System.out.println(b4.getName());
-		}
-		BrainRegion b3 = atlas.getBrainRegion(100,100,100);
-		if (b3 != null) {
-			System.out.println(b3.getName());
-		}
-		BrainRegion b2 = atlas.getBrainRegion(200,200,200);
-		if (b2 != null) {
-			System.out.println(b2.getName());
+		//int rostralCaudal (132), int dorsalVentral (80), int lateralMedial (114)
+		int[][] x = {{(int)(82.25*4),(int)(37.75*4), (int)(36.5*4)},
+				{(int)(82.25*4),(int)(37.75*4), (int)(30.5*4)},
+				{(int)(125.25*4),(int)(40.75*4), (int)(47.5*4)},
+				{(int)(125.25*4),(int)(65.75*4), (int)(47.5*4)},
+				{(int)(125.25*4),(int)(75.75*4), (int)(47.5*4)},
+				{(int)(30.25*4),(int)(15.75*4), (int)(36.5*4)},
+				{(int)(95.25*4),(int)(47.75*4), (int)(47.5*4)},
+				{(int)(89.25*4),(int)(47.75*4), (int)(47.5*4)},
+				{213,41,223},
+				{(int)(105.25*4),(int)(47.75*4), (int)(47.5*4)}};
+		
+		for (int i = 0; i< x.length; i++) {
+			BrainRegion b = atlas.getBrainRegionByVoxel(x[i][0], x[i][1], x[i][2]);
+			if (b != null) { 
+				System.out.println(b.getName());
+			} else {
+				System.out.println("[no region]");
+			}
 		}
 	}
 	
 	/**
-	 * This test is intended to determine what portions of the Voxel Atlas actually
-	 * has brain region data.  Apparently the first several hundred thousand
-	 * bytes only has 0.
-	 *
+	 * Tests to make sure that the right data can be pulled out of the voxel atlas
+	 * offset 29,962,170 should return a value of 28
 	 */
 	public void testGetVoxelAtlasStream() {
 		ReferenceAtlas atlas = ReferenceAtlas.getInstance();
 		FileInputStream s = atlas.getVoxelAtlasStream();
 		try {
-			byte[] brainRegionIdByteArray = new byte[40000000];
 			
-			System.out.println(s.available());
+			int offset = 29962170;
+			
+			byte[] brainRegionIdByteArray = new byte[1];
+			s.skip(offset);
 			s.read(brainRegionIdByteArray);
-			System.out.println(s.available());
-			brainRegionIdByteArray = new byte[1];
-			System.out.println(brainRegionIdByteArray);
-			byte[] finalBytes = new byte[5];
-			int j = 0;
-			while(s.available() > 0) {
-				s.read(brainRegionIdByteArray);
-				if (brainRegionIdByteArray[0] > 0) {
-					if (Arrays.binarySearch(finalBytes, brainRegionIdByteArray[0]) == -1) {
-						if (j < finalBytes.length) {
-							finalBytes[j++] = brainRegionIdByteArray[0];
-						} else {
-							break;
-						}
-					}
-				}
-			}
-			for (int i = 0; i < finalBytes.length; i++){
-				System.out.print(finalBytes[i] + " ");
-			}
-				//convert byte array to java int
-				//int brainRegionId = BitMath.convertByteArrayToInt(brainRegionIdByteArray);
-				//System.out.println(brainRegionId);
+			assertEquals(BitMath.convertByteArrayToInt(brainRegionIdByteArray), 28);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

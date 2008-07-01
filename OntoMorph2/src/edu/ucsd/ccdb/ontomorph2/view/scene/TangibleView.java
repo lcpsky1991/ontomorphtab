@@ -9,6 +9,9 @@ import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 
 /**
  * A base class for the view classes that display scene objects.
+ * 
+ * Need to implement right-click bringing up a context menu for each TangibleView
+ * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */

@@ -31,6 +31,10 @@ import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
 /**
  * Visualizes a neuron morphology.  Describes the 3D structure 
  * of a biological object in a format that can be easily visualized in a 3D viewer (X3D?)
+ * 
+ * Need to implement selection handlers.  One click should select a segment, while a double-click
+ * should select the whole cell
+ * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @see NeuronMorphology
  *

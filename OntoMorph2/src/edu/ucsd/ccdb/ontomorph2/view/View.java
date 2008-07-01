@@ -339,140 +339,28 @@ public class View extends BaseSimpleGame {
 			if (MouseInput.get().isButtonDown(1)) //right
 			{	
 				MouseInput.get().setCursorVisible(false); //hide mouse cursor
-				
-				if (prevPick != null && manipMorph != null)
-				{
-					//what action is being performed?
-					
-					//TODO: replace unity vectors with ones based on camera axis
-					switch ( manipulation )
-					{
-						case METHOD_NONE:
-							//do nothing
-							break;
-						case METHOD_MOVE:
-							moveMorph(manipMorph, new OMTVector(1,1,0));
-							break;
-						case METHOD_ROTATEX:
-							rotateMorph(manipMorph, new OMTVector(1,0,0));
-							break;
-						case METHOD_ROTATEY:
-							rotateMorph(manipMorph, new OMTVector(0,1,0));
-							break;
-						case METHOD_ROTATEZ:
-							rotateMorph(manipMorph, new OMTVector(0,0,1));
-							break;
-						case METHOD_LOOKAT:
-							camNode.lookAt(manipMorph.getLocalTranslation(), new OMTVector(0,1,0)); //make the camera point a thte object in question
-							break;
-						case METHOD_SCALE:
-							scaleMorph(manipMorph, new OMTVector(1,1,1));
-							break;
-					}
-				}
+				manipulateCurrentSelection();
 			}
 			else
 			{
 				MouseInput.get().setCursorVisible(true); //show mouse cursor
 			}
 			
-			
 			//left mouse click
 			if (MouseInput.get().isButtonDown(0)) //left 
 			{
+				//get stuff we are trying to pick/select
+				PickResults pr = getPickResults();
 				
-				//because dendrites can be densely packed need precision of triangles instead of bounding boxes
-				PickResults pr = new TrianglePickResults(); 
-				
-				//Get the position that the mouse is pointing to
-				Vector2f mPos = new Vector2f();
-				mPos.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
-				
-				// Get the world location of that X,Y value
-				Vector3f farPoint = display.getWorldCoordinates(mPos, 1.0f);
-				Vector3f closePoint = display.getWorldCoordinates(mPos, 0.0f);
-				
-				// Create a ray starting from the camera, and going in the direction
-				// of the mouse's location
-				Ray mouseRay = new Ray(closePoint, farPoint.subtractLocal(closePoint).normalizeLocal());
-				
-				// Does the mouse's ray intersect the box's world bounds?
-				pr.clear();
-				pr.setCheckDistance(true);  //this function is undocumented, orders the items in pickresults
-				rootNode.findPick(mouseRay, pr);
-				
-				//set up for deselection
 				if ( pr.getNumber() > 0)
 				{
-					//********* DESELECT PREVIOUS ********************* 
-					//if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
-					if ( prevPick != null )
-					{
-						/*
-						 * this should be done in a listener after firing an event
-						 * here
-						 */
-						
-						for (NeuronMorphologyView c : getView3D().getCells())
-						{
-							SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
-							
-							if ( segView != null )
-							{
-								if ( segView.correspondsToSegment() )
-								{
-									c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
-								}
-								else if ( segView.correspondsToSegmentGroup() )
-								{
-									c.getMorphology().unselectSegmentGroup(segView.getCorrespondingSegmentGroup());	
-								}
-							}
-						}
-					}
-					//============== END DESLECT ============================
-					
-					//************** SELECT **********************
-					//find the one that is closest
-					//the 0th element is closest to the origin of the ray with checkdistance
-					//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
+					doDeselection();
+				
+					//set up next deselection
 					prevPick = pr.getPickData(0);	//take the closest pick and set
-					
-					
-					/* this should be done in a listener after firing an event here*/
-					for (NeuronMorphologyView c : getView3D().getCells())
-					{ // loop over all IStructure3Ds (the view representation of
-						// the morphology)
-						/*
-						 * Try to get a segView (view representation of a segment or
-						 * segment group) that matches the target mesh from the pick
-						 * results within this INeuronMorphologyView
-						 */
-						
-						SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
-						if (segView != null)
-						{ // if we found one
-							/*
-							 * tell the INeuronMorphology (the model representation
-							 * of the morphology) to note that we have selected a
-							 * segment or a segment group. The SceneObserver will
-							 * then get updated and change the color on the
-							 * appropriate geometry in the INeuronMorphologyView
-							 */
-							manipMorph = (NeuronMorphologyView) c; //for manipulating picked items
-							
-							if (segView.correspondsToSegment())
-							{
-								c.getMorphology().selectSegment(segView.getCorrespondingSegment());
-							}
-							else if (segView.correspondsToSegmentGroup())
-							{
-								c.getMorphology().selectSegmentGroup(segView.getCorrespondingSegmentGroup());
-							}
-						}
-					}
-					//===== END DESELCT =========================
-					
+										
+					doSelection();
+				
 					//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
 				} //end if of pr > 0
 			} //end if mouse button down
@@ -483,6 +371,150 @@ public class View extends BaseSimpleGame {
 		}
 	}
 	
+	/**
+	 * Apply manipulations to the tangible that is currently selected
+	 * Called during mouse handling
+	 */
+	private void manipulateCurrentSelection() {
+		
+		if (prevPick != null && manipMorph != null)
+		{
+			//what action is being performed?
+			
+			//TODO: replace unity vectors with ones based on camera axis
+			switch ( manipulation )
+			{
+				case METHOD_NONE:
+					//do nothing
+					break;
+				case METHOD_MOVE:
+					moveMorph(manipMorph, new OMTVector(1,1,0));
+					break;
+				case METHOD_ROTATEX:
+					rotateMorph(manipMorph, new OMTVector(1,0,0));
+					break;
+				case METHOD_ROTATEY:
+					rotateMorph(manipMorph, new OMTVector(0,1,0));
+					break;
+				case METHOD_ROTATEZ:
+					rotateMorph(manipMorph, new OMTVector(0,0,1));
+					break;
+				case METHOD_LOOKAT:
+					camNode.lookAt(manipMorph.getLocalTranslation(), new OMTVector(0,1,0)); //make the camera point a thte object in question
+					break;
+				case METHOD_SCALE:
+					scaleMorph(manipMorph, new OMTVector(1,1,1));
+					break;
+			}
+		}
+	}
+	
+	/**
+	 * Give the PickResults object for the object the mouse is trying to select on the screen
+	 * Called during mouse handling
+	 */
+	private PickResults getPickResults() {
+//		because dendrites can be densely packed need precision of triangles instead of bounding boxes
+		PickResults pr = new TrianglePickResults(); 
+		
+		//Get the position that the mouse is pointing to
+		Vector2f mPos = new Vector2f();
+		mPos.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
+		
+		// Get the world location of that X,Y value
+		Vector3f farPoint = display.getWorldCoordinates(mPos, 1.0f);
+		Vector3f closePoint = display.getWorldCoordinates(mPos, 0.0f);
+		
+		// Create a ray starting from the camera, and going in the direction
+		// of the mouse's location
+		Ray mouseRay = new Ray(closePoint, farPoint.subtractLocal(closePoint).normalizeLocal());
+		
+		// Does the mouse's ray intersect the box's world bounds?
+		pr.clear();
+		pr.setCheckDistance(true);  //this function is undocumented, orders the items in pickresults
+		rootNode.findPick(mouseRay, pr);
+		return pr;
+	}
+	
+	/**
+	 * Deselect the previously selected object
+	 * Called during mouse handling
+	 */
+	private void doDeselection() {
+			//********* DESELECT PREVIOUS ********************* 
+			//if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
+			if ( prevPick != null )
+			{
+				/*
+				 * this should be done in a listener after firing an event
+				 * here
+				 */
+				
+				for (NeuronMorphologyView c : getView3D().getCells())
+				{
+					SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+					
+					if ( segView != null )
+					{
+						if ( segView.correspondsToSegment() )
+						{
+							c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
+						}
+						else if ( segView.correspondsToSegmentGroup() )
+						{
+							c.getMorphology().unselectSegmentGroup(segView.getCorrespondingSegmentGroup());	
+						}
+					}
+				}
+			}
+//			============== END DESLECT ============================
+			
+			
+	}
+	
+	/**
+	 * Select the currently chosen object
+	 * Called during mouse handling
+	 */
+	private void doSelection() {
+//		************** SELECT **********************
+		//find the one that is closest
+		//the 0th element is closest to the origin of the ray with checkdistance
+		//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
+		
+		/* this should be done in a listener after firing an event here*/
+		for (NeuronMorphologyView c : getView3D().getCells())
+		{ // loop over all NeuronMorphologyViews (the view representation of
+			// the morphology)
+			/*
+			 * Try to get a segView (view representation of a segment or
+			 * segment group) that matches the target mesh from the pick
+			 * results within this NeuronMorphologyView
+			 */
+			
+			SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+			if (segView != null)
+			{ // if we found one
+				/*
+				 * tell the NeuronMorphology (the model representation
+				 * of the morphology) to note that we have selected a
+				 * segment or a segment group. The SceneObserver will
+				 * then get updated and change the color on the
+				 * appropriate geometry in the NeuronMorphologyView
+				 */
+				manipMorph = (NeuronMorphologyView) c; //for manipulating picked items
+				
+				if (segView.correspondsToSegment())
+				{
+					c.getMorphology().selectSegment(segView.getCorrespondingSegment());
+				}
+				else if (segView.correspondsToSegmentGroup())
+				{
+					c.getMorphology().selectSegmentGroup(segView.getCorrespondingSegmentGroup());
+				}
+			}
+		}
+	}
 	
 	/**
 	 * Handles the execution of code based on activated keys

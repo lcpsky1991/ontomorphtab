@@ -56,7 +56,14 @@ public class BitMath {
 		
 		int out = 0;
 		if (buf.length == sizeOf8BitUnsignedInt) {
-			out = (int)buf[0];
+			
+			long anUnsignedInt = 0;
+			
+			firstByte = (0x000000FF & ((int)buf[0]));;
+			
+			anUnsignedInt = ((long) (firstByte )) & 0xFFFFFFFL;
+			
+			out = (int)anUnsignedInt;
 		} else if (buf.length == sizeOfUnsignedInt) {
 			long anUnsignedInt = 0;
 			

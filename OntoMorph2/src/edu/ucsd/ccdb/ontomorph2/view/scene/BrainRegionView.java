@@ -55,20 +55,7 @@ public class BrainRegionView extends TangibleView{
            
 		this.parentNode.attachChild(this);
 		
-		this.update();
-		/*
-        AlphaState as = ViewImpl.getInstance().getRenderer().createAlphaState();
-	      as.setBlendEnabled(true);
-	      as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-	      as.setDstFunction(AlphaState.DB_ONE);
-	      as.setTestEnabled(true);
-	      as.setTestFunction(AlphaState.TF_GREATER);
-	      as.setEnabled(true);
-	    atlasNode.setRenderState(as);
-	    atlasNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-	    */
-		
-		
+		this.update();		
 	}
 	
 	public BrainRegion getBrainRegion() {
