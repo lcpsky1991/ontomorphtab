@@ -256,11 +256,9 @@ public class View extends BaseSimpleGame {
 	 * @param morph the item(s) to be rotated
 	 * @param constraint the dimensions that the morphology will be scaled in
 	 */
-	public void scaleMorph(NeuronMorphologyView morph, OMTVector constraint)
+	public void scaleMorph(NeuronMorphologyView morph,float dx, float dy, OMTVector constraint)
 	{
-		float dx = MouseInput.get().getXDelta(); 
-		float dy = MouseInput.get().getYDelta();
-		
+	
 		float delta = 0.01f * dx;
 		
 		OMTVector current = morph.getMorphology().getRelativeScale();
@@ -283,12 +281,8 @@ public class View extends BaseSimpleGame {
 	 * @param constraint the axis (or axes) on which to rotate the object. For example, if constraint is (1,0,0) the object will rotates about it's own X axis (not the world's X axis)
 	 * @author caprea
 	 */
-	public void rotateMorph(NeuronMorphologyView morph, OMTVector constraint)
+	public void rotateMorph(NeuronMorphologyView morph, float dx, float dy, OMTVector constraint)
 	{
-		
-		float dx = MouseInput.get().getXDelta(); 
-		float dy = MouseInput.get().getYDelta();
-		
 		float delta = dx;
 		
 		Quaternion more = new Quaternion();
@@ -309,18 +303,16 @@ public class View extends BaseSimpleGame {
 	 * Will typically range from (0,0,0) to (1,1,1). Where (1,1,0) corresponds to 2D movement on the current X,Y plane
 	 */
 	//TODO: impliment the constraint
-	public void moveMorph(NeuronMorphologyView morph, OMTVector constraint)
+	public void moveMorph(NeuronMorphologyView morph, float dx, float dy, OMTVector constraint)
 	{
 		//get changes in mouse movement
-		float dx = MouseInput.get().getXDelta(); 
-		float dy = MouseInput.get().getYDelta();
-		float dz = 0;
+		
 		
 		//TODO: calculate the viewing angle and apply to constraint
 		
 		dx = dx * constraint.getX();
 		dy = dy * constraint.getY();
-		dz = dz * constraint.getZ();
+		float dz = dy * constraint.getZ();
 		
 		//get the position, add the change, store the new position
 		PositionVector np = new PositionVector( morph.getMorphology().getRelativePosition().asVector3f().add(dx,dy,dz) );
@@ -350,14 +342,14 @@ public class View extends BaseSimpleGame {
 			if (MouseInput.get().isButtonDown(0)) //left 
 			{
 				//get stuff we are trying to pick/select
-				PickResults pr = getPickResults();
+				PickResults results = getPickResults();
 				
-				if ( pr.getNumber() > 0)
+				if ( results.getNumber() > 0)
 				{
 					doDeselection();
 				
 					//set up next deselection
-					prevPick = pr.getPickData(0);	//take the closest pick and set
+					prevPick = results.getPickData(0);	//take the closest pick and set
 										
 					doSelection();
 				
@@ -375,11 +367,13 @@ public class View extends BaseSimpleGame {
 	 * Apply manipulations to the tangible that is currently selected
 	 * Called during mouse handling
 	 */
-	private void manipulateCurrentSelection() {
-		
+	private void manipulateCurrentSelection() 
+	{
 		if (prevPick != null && manipMorph != null)
 		{
 			//what action is being performed?
+			float mx = MouseInput.get().getXDelta();
+			float my = MouseInput.get().getYDelta();
 			
 			//TODO: replace unity vectors with ones based on camera axis
 			switch ( manipulation )
@@ -388,22 +382,22 @@ public class View extends BaseSimpleGame {
 					//do nothing
 					break;
 				case METHOD_MOVE:
-					moveMorph(manipMorph, new OMTVector(1,1,0));
+					moveMorph(manipMorph, mx, my, new OMTVector(1,1,0));
 					break;
 				case METHOD_ROTATEX:
-					rotateMorph(manipMorph, new OMTVector(1,0,0));
+					rotateMorph(manipMorph, mx, my, new OMTVector(1,0,0));
 					break;
 				case METHOD_ROTATEY:
-					rotateMorph(manipMorph, new OMTVector(0,1,0));
+					rotateMorph(manipMorph, mx, my,new OMTVector(0,1,0));
 					break;
 				case METHOD_ROTATEZ:
-					rotateMorph(manipMorph, new OMTVector(0,0,1));
+					rotateMorph(manipMorph, mx, my,new OMTVector(0,0,1));
 					break;
 				case METHOD_LOOKAT:
 					camNode.lookAt(manipMorph.getLocalTranslation(), new OMTVector(0,1,0)); //make the camera point a thte object in question
 					break;
 				case METHOD_SCALE:
-					scaleMorph(manipMorph, new OMTVector(1,1,1));
+					scaleMorph(manipMorph, mx, my, new OMTVector(1,1,1));
 					break;
 			}
 		}
@@ -456,6 +450,7 @@ public class View extends BaseSimpleGame {
 					
 					if ( segView != null )
 					{
+						
 						if ( segView.correspondsToSegment() )
 						{
 							c.getMorphology().unselectSegment(segView.getCorrespondingSegment());

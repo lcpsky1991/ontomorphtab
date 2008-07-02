@@ -9,6 +9,7 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
@@ -202,18 +203,20 @@ public abstract class Tangible extends Observable implements ISelectable, ISeman
 		return this.sys;
 	}
 	
-	public void select() {
-		this.selected = true;		
+	public void select() 
+	{
+		TangibleManager.getInstance().select(this);
 		changed();
 	}
 	
-	public boolean isSelected() {
-		//return TangibleManager.getInstance().isSelected(this);
-		return this.selected;
+	public boolean isSelected() 
+	{
+		return TangibleManager.getInstance().isSelected(this);
 	}
 
-	public void unselect() {
-		this.selected = false;
+	public void unselect() 
+	{
+		TangibleManager.getInstance().unselect(this);
 		changed();
 	}
 	

@@ -1,5 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,6 +27,7 @@ public class TangibleManager {
 
 	
 
+	private ArrayList<Tangible> selected = null; 
 	ArrayList<Slide> slides = null;
 	Set<NeuronMorphology> cells = null;
 	Set<Curve3D> curves = null;
@@ -37,7 +39,9 @@ public class TangibleManager {
 	 */
 	private static TangibleManager instance;
 	
-	private TangibleManager() {
+	private TangibleManager() 
+	{
+		selected = new ArrayList<Tangible>();
 		slides = new ArrayList<Slide>();
 		cells = new HashSet<NeuronMorphology>();
 		curves = new HashSet<Curve3D>();
@@ -46,9 +50,9 @@ public class TangibleManager {
 		volumes = new HashSet<Volume>();
 	}
 
-	public void addSlide(Tangible s) {
-		slides.add((Slide) s);
-		
+	public void addSlide(Tangible s)
+	{
+		slides.add((Slide) s);	
 	}
 
 	public void addCell(Tangible s) {
@@ -122,4 +126,33 @@ public class TangibleManager {
 		surfaces.add(surf2);
 	}
 
+	/**
+	 * Adds the parameter to the list of 'things' that have been selected
+	 * the order of the list corresponds to the order they were clicked in.
+	 * 0 - oldest item selected
+	 */
+	public void select(Tangible thing)
+	{
+		//TODO: does the things changed need to be fired?
+	}
+	
+	public void unselect(Tangible thing)
+	{
+		
+	}
+	
+	public void unselectAll()
+	{
+		selected.clear();
+	}
+	
+	public void setHighlightColor(Color c)
+	{
+		
+	}
+	
+	public boolean isSelected(Tangible thing)
+	{
+		return false;
+	}
 }
