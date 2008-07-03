@@ -3,6 +3,7 @@ package edu.ucsd.ccdb.ontomorph2.view;
 import com.jme.input.action.*;
 import com.jme.input.Mouse;
 import com.jme.input.RelativeMouse;
+import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.input.*;
@@ -30,6 +31,9 @@ public class MouseClickAndDrag extends MouseInputAction {
     //the axis to lock.
     private Vector3f lockAxis;
     
+    //current mouse position
+    private Vector2f position;
+    
     //the event to distribute to the looking actions.
     private InputActionEvent event;
 
@@ -44,8 +48,10 @@ public class MouseClickAndDrag extends MouseInputAction {
      * @param speed
      *            the speed at which to alter the camera.
      */
-    public MouseClickAndDrag(Mouse mouse, Camera camera, float speed) {
-        this.mouse = (RelativeMouse) mouse;
+    public MouseClickAndDrag(Vector2f position, Camera camera, float speed) {
+    	
+    	System.out.println("Inside constructor");
+        this.position = position;
         this.speed = speed;
 
         lookDown = new KeyLookDownAction(camera, speed);
@@ -108,23 +114,27 @@ public class MouseClickAndDrag extends MouseInputAction {
     public void performAction(InputActionEvent evt) {
     //      MouseInput i = MouseInput.get();
           float time;
-          if(mouseInput.isButtonDown(0))
+          if(mouseInput.isButtonDown(0)){
+        	  	
+        	  	  System.out.println("Mouse is Button Down");
                   time = evt.getTime() * speed;
+          }        
           else
                   time = 0;
           
-        if (mouse.getLocalTranslation().x > 0) {
-            event.setTime(time * mouse.getLocalTranslation().x);
+        if (position.x > 0) {
+        	System.out.println("position x");
+            event.setTime(time * position.x);
             rotateRight.performAction(event);
-        } else if (mouse.getLocalTranslation().x < 0) {
-            event.setTime(time * mouse.getLocalTranslation().x * -1);
+        } else if (position.x < 0) {
+            event.setTime(time * position.x * -1);
             rotateLeft.performAction(event);
         }
-        if (mouse.getLocalTranslation().y > 0) {
-            event.setTime(time * mouse.getLocalTranslation().y);
+        if (position.y > 0) {
+            event.setTime(time * position.y);
             lookUp.performAction(event);
-        } else if (mouse.getLocalTranslation().y < 0) {
-            event.setTime(time * mouse.getLocalTranslation().y * -1);
+        } else if (position.y < 0) {
+            event.setTime(time * position.y * -1);
             lookDown.performAction(event);
         }
 

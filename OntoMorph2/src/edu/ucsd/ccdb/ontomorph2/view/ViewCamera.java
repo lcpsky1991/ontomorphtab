@@ -2,11 +2,24 @@ package edu.ucsd.ccdb.ontomorph2.view;
 
 import java.util.logging.Level;
 
+import com.jme.app.SimpleGame;
+import com.jme.curve.BezierCurve;
+import com.jme.curve.Curve;
+import com.jme.curve.CurveController;
+import com.jme.input.action.MouseLook;
+import com.jme.input.*;
 import com.jme.math.FastMath;
+import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
+import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
+import com.jme.scene.CameraNode;
+import com.jme.scene.Controller;
+import com.jme.scene.Node;
+import com.jme.app.BaseSimpleGame;
 
+import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 /**
  * Wraps the camera functionality.
  * 
@@ -19,6 +32,9 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	float camRotationRate = FastMath.PI * 5 / 180;	//(FastMath.PI * X / 180) corresponds to X degrees per (FPS?) = Rate/UnitOfUpdate 
 	float invZoom = 1.0f; //zoom amount
 
+	Camera cam;
+	CameraNode camNode;
+	Node rootNode = new Node("root Node");
 	
 	public ViewCamera() {
 		init();	
@@ -37,7 +53,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		// CAMERA SETUP
 		//====================================
 		
-		Camera cam = View.getInstance().getRenderer().getCamera();
+		cam = View.getInstance().getRenderer().getCamera();
 		///** Set up how our camera sees. */
 		float aspect = (float) View.getInstance().getDisplaySystem().getWidth() / (float) View.getInstance().getDisplaySystem().getHeight();
 		//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
@@ -204,6 +220,94 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * rotation and zoom level specified by the parameters.
 	 */
 	public void continuousZoomTo(Vector3f position, Quaternion rotation, float zoom) {
+		
+		
+		/**CatmullRomCurve approach**/
+		
+		/*Vector3f up = new Vector3f(0, 1, 0);
+		
+		//create control Points
+	    Vector3f[] locations = new Vector3f[2];
+	    locations[0] = this.getCamera().getDirection();
+	    locations[1] = position;
+	    
+	    Vector3f[] directions = new Vector3f[2];
+	    directions[0] = position;
+	    directions[1] = this.getCamera().getDirection();
+	    	
+	    Vector3f[] ups = new Vector3f[2];
+	    ups[0] = new Vector3f(0,1,0);
+	    ups[1] = new Vector3f(0,1,0);
+	    
+	    Vector3f[] lefts = new Vector3f[2];
+	    lefts[0] = new Vector3f(1,0,0);
+	    lefts[1] = new Vector3f(1,0,0);
+	    
+	    camNode = new CameraNode("camera node", cam);
+	    
+	    //set up four set of catmullromcurves to create path
+	    Curve curve = new CatmullRomCurve("Curve", locations);
+	    curve.setSteps(locations.length);
+	    Curve curve2 = new CatmullRomCurve("Curve2", directions);
+	    curve2.setSteps(directions.length);
+	    Curve curve3 = new CatmullRomCurve("Curve3", ups);
+	    curve3.setSteps(ups.length);
+	    Curve curve4 = new CatmullRomCurve("Curve4", lefts);
+	    curve4.setSteps(lefts.length);
+	    
+	    //calls constructor using the curves and the rotation quad
+	    CameraAnimationController cameraAnimationController = new CameraAnimationController(curve, curve2, curve3, curve4, camNode, rotation);
+	    cameraAnimationController.setActive(true);
+	    System.out.println(cameraAnimationController +  "     camcontroller");
+	    camNode.addController(cameraAnimationController);
+	    cameraAnimationController.setSpeed(0.01f);
+	    camNode.updateGeometricState(0.0f, true);
+	    this.getCamera().update();
+	    /*
+	    camNode = new CameraNode("camera node", cam);
+        CurveOnceController cc = new CurveOnceController(curve, camNode);
+        cc.setActive(false);
+        camNode.addController(cc);
+        cc.setRepeatType(Controller.RT_CLAMP);
+        cc.setUpVector(up);
+        cc.setSpeed(zoom);
+        cc.setDisableAfterClamp(true);
+        cc.setAutoRotation(true);
+
+        rootNode.attachChild(curve);*/      
+        //System.out.println(curve + "curce"); */
+	    
+	    
+	    
+		/**BezierCurve approach -- not working, but right path**/
+		/*
+		BezierCurve bc;
+		//get camera current position
+		Vector3f currentPosition = this.getCamera().getDirection();
+		
+		//create the path the camera will take
+		Vector3f[] cameraPoints = new Vector3f[]{
+				cameraPoints[0] = currentPosition;
+				cameraPoints[1] = position;
+		};
+		
+		System.out.println("position " + position + "current " + currentPosition);
+		
+		//create a path for the camera
+		bc = new BezierCurve("camera path", cameraPoints);
+		
+		//create Camera Node to manipulate camera
+		camNode = new CameraNode("camera node", cam);
+		
+		//create controller to move cameraNode along the desire path
+		CurveController c = new CurveController(bc, camNode);
+		camNode.addController(c);
+		rootNode.attachChild(camNode);
+		
+		System.out.println("Current direction of the camera" + currentPosition);
+		this.getCamera().onFrameChange();
+		simpleUpdate(position,rotation);
+		this.getCamera().update();*/
 		System.out.println("Smoothly zooming to: " + position.toString() + ", rotating to: " 
 				+ rotation.toString() + ", changing zoom to: " + zoom);
 	}
@@ -211,12 +315,26 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	/**
 	 * Smoothly reposition, rotate, and zoom the camera to the atlas
 	 * medial view.
-	 *
 	 */
 	public void smoothlyZoomToAtlasMedialView() {
 		Vector3f loc = new Vector3f(300f, -118f, -700f);
 		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*0, Vector3f.UNIT_Y);
 		continuousZoomTo(loc, rotation, invZoom);
 	}
-
+	
+	
+	/**Function that will take care of Mouse clicking and Dragging**/
+	/*
+	public void MouseClickDragCamera(Vector2f position, Camera cam, float speed){
+		 System.out.println("click and drag Camera");
+		 
+		 System.out.println("position" + position + " cam" + cam + "speed" + speed);
+		 InputHandler inputHandler = new InputHandler();
+	        
+		 MouseClickAndDrag mouseLook = new MouseClickAndDrag(position, cam, speed);
+		 mouseLook.setLockAxis(new Vector3f(cam.getUp().x, cam.getUp().y,cam.getUp().z));
+		 inputHandler.addAction(mouseLook);
+		 
+		 this.getCamera().update();
+	}*/
 }

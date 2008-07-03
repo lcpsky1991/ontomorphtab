@@ -15,7 +15,9 @@ import com.jme.input.AbsoluteMouse;
 import com.jme.input.FirstPersonHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
+import com.jme.input.Mouse;
 import com.jme.input.MouseInput;
+import com.jme.input.MouseInputListener;
 import com.jme.intersection.PickData;
 import com.jme.intersection.PickResults;
 import com.jme.intersection.TrianglePickResults;
@@ -47,11 +49,13 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
 
 //===
 
+import com.jme.input.action.InputAction;
+import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.MouseLook; 	//drag handler
 import com.jme.renderer.Camera;			//drag handler
 import com.jme.input.*;					//drag handler
 import edu.ucsd.ccdb.ontomorph2.view.MouseClickAndDrag;
-
+import org.fenggui.event.mouse.MouseButton;
 //=========
 
 /**
@@ -248,7 +252,8 @@ public class View extends BaseSimpleGame {
 		
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
-		
+        input.addAction( mousewheel, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_NONE, 2, true );
+        
 	}
 	
 	/**
@@ -323,6 +328,18 @@ public class View extends BaseSimpleGame {
 	
 	private void handleMouseInput()
 	{
+		
+		/** MouseClickANDdrag approach - Not functional**/
+		/*
+		if(MouseInput.get().isButtonDown(0)){
+			//Get the position that the mouse is pointing to
+			Vector2f position = new Vector2f();
+			position.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
+			
+			System.out.println("left click initialize");
+			camNode.MouseClickDragCamera(position,this.cam,.01f);
+		}*/
+		
 		//handle mouse input
 		//TODO: get more sophisticated way of dealing with mouse input (pickresults has handler)
 		try
@@ -611,6 +628,24 @@ public class View extends BaseSimpleGame {
 			
 		}//end key input
 	}
+	
+	/**
+	 * Listener to take care of mousewheel events
+	 */
+	final InputAction mousewheel = new InputAction() 
+	{
+	        public void performAction( InputActionEvent evt ) 
+	        {	
+	        		if(MouseInput.get().getWheelDelta()>0)
+	        			camNode.zoomIn();
+	        		else if(MouseInput.get().getWheelDelta()<0)
+	        			camNode.zoomOut();
+	        		else if(MouseInput.get().isButtonDown(2) == true){
+	        			camNode.moveForward();
+
+	        	}
+	        }	        
+	 };	
 	
 	/**
 	 * Convenience method for getting the underlying display system
