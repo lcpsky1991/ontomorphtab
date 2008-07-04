@@ -27,7 +27,7 @@ public class TangibleManager {
 
 	
 
-	private ArrayList<Tangible> selected = null; 
+	private ArrayList<Tangible> selectedThings = null; 
 	ArrayList<Slide> slides = null;
 	Set<NeuronMorphology> cells = null;
 	Set<Curve3D> curves = null;
@@ -41,7 +41,7 @@ public class TangibleManager {
 	
 	private TangibleManager() 
 	{
-		selected = new ArrayList<Tangible>();
+		selectedThings = new ArrayList<Tangible>();
 		slides = new ArrayList<Slide>();
 		cells = new HashSet<NeuronMorphology>();
 		curves = new HashSet<Curve3D>();
@@ -133,17 +133,21 @@ public class TangibleManager {
 	 */
 	public void select(Tangible thing)
 	{
-		//TODO: does the things changed need to be fired?
+		selectedThings.add(thing);
 	}
 	
+	/**
+	 * Removes this tangible from the list of things that have been selected.
+	 * @param thing
+	 */
 	public void unselect(Tangible thing)
 	{
-		
+		selectedThings.remove(thing);
 	}
 	
 	public void unselectAll()
 	{
-		selected.clear();
+		selectedThings.clear();
 	}
 	
 	public void setHighlightColor(Color c)
@@ -153,6 +157,6 @@ public class TangibleManager {
 	
 	public boolean isSelected(Tangible thing)
 	{
-		return false;
+		return selectedThings.contains(thing);
 	}
 }
