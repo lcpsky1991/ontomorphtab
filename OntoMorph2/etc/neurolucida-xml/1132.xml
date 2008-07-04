@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<neurolucida-data version="3.0" filename="Z:\Berlanga\Coral\1132.xml">
+<neurolucida-data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="neurolucida-xml2.xsd"
+ version="3.0"
+ filename="Z:\Berlanga\Coral\1132.xml">
 <comment>V3 text file written for MicroBrightField products.</comment>
 <contour name="CellBody">
   <name>CellBody</name>

@@ -363,6 +363,16 @@
 				  <binding dir="etc/neuroml-schemas/1.7.1-modified/" includes="neuroml-bindings.xjb"/>
 			</xjc>
 	</target>
+	
+	<target name="generateNeurolucidaClasses" >
+			<!-- http://java.sun.com/webservices/docs/1.6/jaxb/ant.html -->
+			<xjc destdir="src/" package="neurolucida.generated" removeOldOutput="yes">
+				  <schema  dir="etc/neurolucida-xml" includes="neurolucida-xml.xsd"/>
+				  <binding dir="etc/neurolucida-xml" includes="neurolucida-bindings.xjb"/>
+			</xjc>
+	</target>
+	
+	
     <!-- Run targets -->
 
 	

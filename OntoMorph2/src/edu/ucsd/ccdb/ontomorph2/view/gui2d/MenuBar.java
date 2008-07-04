@@ -76,13 +76,13 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         mB.registerSubMenu(mnuObjects, "Objects");
         
         makeMenuItem(CELLS, mnuObjects);
-        makeMenuItem(VOLUMES, mnuObjects);
-        makeMenuItem(SEMANTICS, mnuObjects);
+        //makeMenuItem(VOLUMES, mnuObjects);
+        //makeMenuItem(SEMANTICS, mnuObjects);
         
         //=[  CKB  ]=
-        Menu mnuCKB = new Menu();
-        mB.registerSubMenu(mnuCKB, "Cellular KB");
-        makeMenuItem(LIST_INSTANCES, mnuCKB);
+        //Menu mnuCKB = new Menu();
+        //mB.registerSubMenu(mnuCKB, "Cellular KB");
+        //makeMenuItem(LIST_INSTANCES, mnuCKB);
         
         //=[  ATLAS  ]=
         Menu mnuAtlas = new Menu();

@@ -26,6 +26,7 @@ import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
@@ -219,27 +220,27 @@ public class Scene extends Observable{
 		
 
 		
-		NeuronMorphology cell3 = new NeuronMorphology(cell3URL, c2, 0.03f, 
+		NeuronMorphology cell3 = new MorphMLNeuronMorphology(cell3URL, c2, 0.03f, 
 				NeuronMorphology.RENDER_AS_LOD_2, d);
 		cell3.setRelativeScale(0.01f);
 		//semantic thing for hippocampal CA3 neuron
-		cell3.addSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
+		cell3.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
 		addSceneObject(cell3);
 
 		
 		
 		
-		NeuronMorphology cell4 = new NeuronMorphology(cell4URL, c2, 0.2f, 
+		NeuronMorphology cell4 = new MorphMLNeuronMorphology(cell4URL, c2, 0.2f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell4.setRelativeScale(0.01f);
-		cell4.addSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
+		cell4.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
 		addSceneObject(cell4);
 		
 		
-		NeuronMorphology cell5 = new NeuronMorphology(cell5URL, c2, 0.35f, 
+		NeuronMorphology cell5 = new MorphMLNeuronMorphology(cell5URL, c2, 0.35f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell5.setRelativeScale(0.01f);
-		cell5.addSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
+		cell5.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
 		addSceneObject(cell5);
 		
 
@@ -248,23 +249,23 @@ public class Scene extends Observable{
 		 *  Curve may need different model vectors for different NeuronMorphologies
 		 */
 
-		NeuronMorphology cell6 = new NeuronMorphology(cell6URL, c2, 0.8f, 
+		NeuronMorphology cell6 = new MorphMLNeuronMorphology(cell6URL, c2, 0.8f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		//NeuronMorphology cell6 = new NeuronMorphology(cell6URL, null, null, NeuronMorphology.RENDER_AS_LOD);
 		cell6.setRelativeScale(0.02f);
 		//cell6.setUpVector(new OMTVector(1,0,0));
 		cell6.setUpVector(new OMTVector(0,0,1));
-		cell6.addSemanticClass(SemanticClass.CA1_PYRAMIDAL_CELL_CLASS);
+		cell6.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA1_PYRAMIDAL_CELL_CLASS));
 		//addSceneObject(cell6);
 				
 		
 
-		NeuronMorphology cell7 = new NeuronMorphology(cell7URL, c2, 0.91f, 
+		NeuronMorphology cell7 = new MorphMLNeuronMorphology(cell7URL, c2, 0.91f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell7.setRelativeScale(0.02f);
 		//cell7.setUpVector(new OMTVector(1,0,0));
 		cell7.setUpVector(new OMTVector(0,0,1));
-		cell7.addSemanticClass(SemanticClass.CA1_PYRAMIDAL_CELL_CLASS);
+		cell7.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA1_PYRAMIDAL_CELL_CLASS));
 		//addSceneObject(cell7);
 		
 		/*
@@ -281,10 +282,10 @@ public class Scene extends Observable{
 
 		
 		for (int i = 1; i < 20; i++) {
-			NeuronMorphology cell11 = new NeuronMorphology(cell11URL, curve1, ((float)i)/20f-0.01f, 
+			NeuronMorphology cell11 = new MorphMLNeuronMorphology(cell11URL, curve1, ((float)i)/20f-0.01f, 
 					NeuronMorphology.RENDER_AS_LOD, d);
 			cell11.setRelativeScale(0.01f);
-			cell11.addSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS);
+			cell11.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
 			addSceneObject(cell11);
 		}
 		
@@ -364,7 +365,7 @@ public class Scene extends Observable{
 			//ci.setId(c.getMorphology().get)
 			ins.getInstance().add(ci);
 			
-			thecells.getCell().add(((NeuronMorphology)c).getMorphMLCell());
+			//thecells.getCell().add(((NeuronMorphology)c).getMorphMLCell());
 		}
 		Population pop = new Population();
 		
