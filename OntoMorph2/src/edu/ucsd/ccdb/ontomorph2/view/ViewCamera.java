@@ -7,8 +7,9 @@ import com.jme.curve.BezierCurve;
 import com.jme.curve.Curve;
 import com.jme.curve.CurveController;
 import com.jme.input.action.MouseLook;
-import com.jme.input.*;
+import com.jme.input.RelativeMouse;
 import com.jme.math.FastMath;
+import com.jme.input.*;
 import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector2f;
@@ -36,6 +37,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	CameraNode camNode;
 	Node rootNode = new Node("root Node");
 	
+	InputHandler input = new InputHandler();
 	public ViewCamera() {
 		init();	
 	}
@@ -324,17 +326,20 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	
 	
 	/**Function that will take care of Mouse clicking and Dragging**/
-	/*
-	public void MouseClickDragCamera(Vector2f position, Camera cam, float speed){
-		 System.out.println("click and drag Camera");
-		 
-		 System.out.println("position" + position + " cam" + cam + "speed" + speed);
+	
+	public void MouseClickDragCamera(RelativeMouse mouse, Camera cam, float speed){
+		 /*System.out.println("click and drag Camera");
+		 RelativeMouse mouse = new RelativeMouse("Mouse Input");
+	     mouse.registerWithInputHandler( input );
+	     */   
+		 //System.out.println("position: " + position + " cam: " + cam + " speed: " + speed);
 		 InputHandler inputHandler = new InputHandler();
-	        
-		 MouseClickAndDrag mouseLook = new MouseClickAndDrag(position, cam, speed);
+	     
+		 //System.out.println("mouse " + mouse);
+		 MouseClickAndDrag mouseLook = new MouseClickAndDrag(mouse, cam, speed);
 		 mouseLook.setLockAxis(new Vector3f(cam.getUp().x, cam.getUp().y,cam.getUp().z));
 		 inputHandler.addAction(mouseLook);
 		 
 		 this.getCamera().update();
-	}*/
+	}
 }

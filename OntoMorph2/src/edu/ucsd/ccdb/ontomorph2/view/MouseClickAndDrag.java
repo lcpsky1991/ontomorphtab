@@ -1,12 +1,15 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 import com.jme.input.action.*;
+import com.jme.input.FirstPersonHandler;
+import com.jme.input.InputHandler;
 import com.jme.input.Mouse;
 import com.jme.input.RelativeMouse;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.input.*;
+import org.fenggui.event.mouse.MouseButton;
 
 /**
  * <code>MouseClickAndDrag</code> defines a mouse action that detects click and drag movement from
@@ -37,6 +40,8 @@ public class MouseClickAndDrag extends MouseInputAction {
     //the event to distribute to the looking actions.
     private InputActionEvent event;
 
+    ViewCamera camNode; 
+    
     /**
      * Constructor creates a new <code>MouseClickAndDrag</code> object. It takes the
      * mouse, camera and speed of the looking.
@@ -48,10 +53,10 @@ public class MouseClickAndDrag extends MouseInputAction {
      * @param speed
      *            the speed at which to alter the camera.
      */
-    public MouseClickAndDrag(Vector2f position, Camera camera, float speed) {
+    public MouseClickAndDrag(Mouse mouse, Camera camera, float speed) {
     	
-    	System.out.println("Inside constructor");
-        this.position = position;
+    	//InputHandler input = new FirstPersonHandler(camera, 50, camNode.getRotationRate());
+        this.mouse = (RelativeMouse) mouse;
         this.speed = speed;
 
         lookDown = new KeyLookDownAction(camera, speed);
@@ -59,9 +64,18 @@ public class MouseClickAndDrag extends MouseInputAction {
         rotateLeft = new KeyRotateLeftAction(camera, speed);
         rotateRight = new KeyRotateRightAction(camera, speed);
 
-        event = new InputActionEvent();
+        InputHandler input = new InputHandler();
+        mouse.registerWithInputHandler(input);
         
+        event = new InputActionEvent();
+        //event.fireMouseClickEvent(1,2, MouseInput.get(),3);
+        System.out.println("event " + event.getTriggerDevice() );
         mouseInput = MouseInput.get();
+        if(mouseInput.isButtonDown(0))
+        	System.out.println("mouse inputfsdfsddf "+ mouseInput);
+       //input.addAction( dragg, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_NONE, 2, true );
+
+    	System.out.println("Inside constructor" + position + " camera: " + camera + " speed " + speed);
     }
 
     /**
@@ -74,6 +88,8 @@ public class MouseClickAndDrag extends MouseInputAction {
      *            the axis that should be locked down to prevent rolling.
      */
     public void setLockAxis(Vector3f lockAxis) {
+    	
+    	System.out.println("set lock Axis");
         this.lockAxis = lockAxis;
         rotateLeft.setLockAxis(lockAxis);
         rotateRight.setLockAxis(lockAxis);
@@ -110,35 +126,36 @@ public class MouseClickAndDrag extends MouseInputAction {
      * applicable.
      * 
      * @see com.jme.input.action.MouseInputAction#performAction(InputActionEvent)
-     */
-    public void performAction(InputActionEvent evt) {
-    //      MouseInput i = MouseInput.get();
-          float time;
-          if(mouseInput.isButtonDown(0)){
-        	  	
-        	  	  System.out.println("Mouse is Button Down");
-                  time = evt.getTime() * speed;
-          }        
-          else
-                  time = 0;
-          
-        if (position.x > 0) {
-        	System.out.println("position x");
-            event.setTime(time * position.x);
-            rotateRight.performAction(event);
-        } else if (position.x < 0) {
-            event.setTime(time * position.x * -1);
-            rotateLeft.performAction(event);
-        }
-        if (position.y > 0) {
-            event.setTime(time * position.y);
-            lookUp.performAction(event);
-        } else if (position.y < 0) {
-            event.setTime(time * position.y * -1);
-            lookDown.performAction(event);
-        }
-
-    }
+     */    	
+	public void performAction(InputActionEvent evt) {
+         //MouseInput i = MouseInput.get();
+    	
+		System.out.println("si viene para aca");
+		float time;
+		if(mouseInput.isButtonDown(0)){
+       	  	
+				System.out.println("Mouse is Button Down");
+				time = evt.getTime() * speed;
+		}        
+		else
+			time = 0;
+         
+		if (position.x > 0) {
+			System.out.println("position x");
+			event.setTime(time * mouse.getLocalTranslation().x);
+			rotateRight.performAction(event);
+		} else if (position.x < 0) {
+			event.setTime(time * mouse.getLocalTranslation().x * -1);
+			rotateLeft.performAction(event);
+		}
+		if (position.y > 0) {
+			event.setTime(time * mouse.getLocalTranslation().y);
+			lookUp.performAction(event);
+		} else if (position.y < 0) {
+			event.setTime(time * mouse.getLocalTranslation().y * -1);
+			lookDown.performAction(event);
+		}
+	}
 }
 // IMPLIMENT WITH THIS CODE
 /*

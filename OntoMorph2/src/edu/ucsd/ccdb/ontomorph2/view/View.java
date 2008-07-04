@@ -80,8 +80,8 @@ public class View extends BaseSimpleGame {
 	//=================================
 	// Global Interface-Objects
 	//=================================
-	ViewCamera camNode;							//thisobject needed for manipulating the camera in a simple way
-	AbsoluteMouse amouse; 						//the mouse object ref to entire screen, used to hide and show the mouse?
+	public ViewCamera camNode;							//thisobject needed for manipulating the camera in a simple way
+	RelativeMouse amouse; 						//the mouse object ref to entire screen, used to hide and show the mouse?
 	PickData prevPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
 	
 	NeuronMorphologyView manipMorph=null;	//the most recent object to be selected/manipulated as a morphology
@@ -178,6 +178,7 @@ public class View extends BaseSimpleGame {
 		rootNode.setLightCombineMode(LightState.OFF);
 		
 		disp = View2D.getInstance();
+		
 	}
 	
 	
@@ -250,10 +251,14 @@ public class View extends BaseSimpleGame {
 		KeyBindingManager.getKeyBindingManager().set("zoom_in", KeyInput.KEY_Z);
 		KeyBindingManager.getKeyBindingManager().set("zoom_out", KeyInput.KEY_X);
 		
+		KeyBindingManager.getKeyBindingManager().set("drag", KeyInput.KEY_A);
+		KeyBindingManager.getKeyBindingManager().set("drag", KeyInput.KEY_A);
+		
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
         input.addAction( mousewheel, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_NONE, 2, true );
-        
+        amouse = new RelativeMouse("Mouse Input");
+	    amouse.registerWithInputHandler( input );
 	}
 	
 	/**
@@ -328,17 +333,6 @@ public class View extends BaseSimpleGame {
 	
 	private void handleMouseInput()
 	{
-		
-		/** MouseClickANDdrag approach - Not functional**/
-		/*
-		if(MouseInput.get().isButtonDown(0)){
-			//Get the position that the mouse is pointing to
-			Vector2f position = new Vector2f();
-			position.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
-			
-			System.out.println("left click initialize");
-			camNode.MouseClickDragCamera(position,this.cam,.01f);
-		}*/
 		
 		//handle mouse input
 		//TODO: get more sophisticated way of dealing with mouse input (pickresults has handler)
@@ -626,6 +620,18 @@ public class View extends BaseSimpleGame {
 				camNode.zoomOut();
 			}
 			
+			
+			/*if( isAction("drag")) {
+				MouseClickANDdrag approach - Not functional
+				if(MouseInput.get().isButtonDown(0)){
+					Get the position that the mouse is pointing to
+					Vector2f position = new Vector2f();
+					position.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
+					
+					System.out.println("left click initialize");
+					camNode.MouseClickDragCamera(amouse,this.cam,.01f);
+				}
+			}*/
 		}//end key input
 	}
 	
