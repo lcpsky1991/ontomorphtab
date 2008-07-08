@@ -7,11 +7,14 @@ import com.jme.curve.BezierCurve;
 import com.jme.curve.Curve;
 import com.jme.curve.CurveController;
 import com.jme.input.action.MouseLook;
+import com.jme.input.MouseInput;
 import com.jme.input.RelativeMouse;
 import com.jme.math.FastMath;
 import com.jme.input.*;
+import com.jme.intersection.PickResults;
 import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
+import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
@@ -325,13 +328,12 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	}
 	
 	
-	/**Function that will take care of Mouse clicking and Dragging**/
-	
+	/**Functioa that will take care of Mouse clicking and Dragging**/
 	public void MouseClickDragCamera(RelativeMouse mouse, Camera cam, float speed){
-		 /*System.out.println("click and drag Camera");
-		 RelativeMouse mouse = new RelativeMouse("Mouse Input");
-	     mouse.registerWithInputHandler( input );
-	     */   
+		 //System.out.println("click and drag Camera");
+		 //RelativeMouse mouse = new RelativeMouse("Mouse Input");
+	     //mouse.registerWithInputHandler( input );
+  		 //PickResults pr;   
 		 //System.out.println("position: " + position + " cam: " + cam + " speed: " + speed);
 		 InputHandler inputHandler = new InputHandler();
 	     
@@ -341,5 +343,20 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		 inputHandler.addAction(mouseLook);
 		 
 		 this.getCamera().update();
+		/*if(MouseInput.get().isButtonDown(0)){
+            //Vector2f screenPos = new Vector2f();
+            //screenPos.set(mouse.getHotSpotPosition().x, mouse.getHotSpotPosition().y);
+            System.out.println("position" + screenPos);
+            System.out.println(worldCoords);
+            // create a ray starting from the camera, and going in the direction
+            // of the mouses location
+            Ray mouseRay = new Ray(
+                    worldCoords,
+                    worldCoords2.subtractLocal(worldCoords).normalizeLocal()
+            );
+            // Does the mouses ray intersect the boxs world bounds?
+            //pr.clear();
+            rootNode.findPick(mouseRay,pr);*/
+		
 	}
 }

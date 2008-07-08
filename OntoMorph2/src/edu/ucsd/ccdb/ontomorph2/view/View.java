@@ -178,7 +178,6 @@ public class View extends BaseSimpleGame {
 		rootNode.setLightCombineMode(LightState.OFF);
 		
 		disp = View2D.getInstance();
-		
 	}
 	
 	
@@ -224,7 +223,9 @@ public class View extends BaseSimpleGame {
 		
         input.clearActions();	//removes all input actions not specifically programmed
         
-                
+        amouse = new RelativeMouse("The Mouse");
+        amouse.registerWithInputHandler(input);					// Assign the mouse to an input handler
+        rootNode.attachChild(amouse);	        
 		//TODO: wouldn't it be nice to move the camera based on mouse position?
         
 		//Bind the Escape key to kill our test app
@@ -257,8 +258,8 @@ public class View extends BaseSimpleGame {
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
         input.addAction( mousewheel, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_NONE, 2, true );
-        amouse = new RelativeMouse("Mouse Input");
-	    amouse.registerWithInputHandler( input );
+        //amouse = new RelativeMouse("Mouse Input");
+	    //amouse.registerWithInputHandler( input );
 	}
 	
 	/**
@@ -621,17 +622,15 @@ public class View extends BaseSimpleGame {
 			}
 			
 			
-			/*if( isAction("drag")) {
-				MouseClickANDdrag approach - Not functional
-				if(MouseInput.get().isButtonDown(0)){
-					Get the position that the mouse is pointing to
+			if( isAction("drag")) {
+				//MouseClickANDdrag approach - Not functional
+					//Get the position that the mouse is pointing to
 					Vector2f position = new Vector2f();
 					position.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
 					
 					System.out.println("left click initialize");
-					camNode.MouseClickDragCamera(amouse,this.cam,.01f);
-				}
-			}*/
+					camNode.MouseClickDragCamera(amouse,cam,.01f);
+			}
 		}//end key input
 	}
 	
