@@ -38,7 +38,7 @@ using namespace std;
 //main object
 tiffLoader *tLoader = new tiffLoader();
 	
-
+	
 void test()
 {
 	cout << "Im Width is " << tLoader->getImageW() << endl;
@@ -55,10 +55,10 @@ JNIEXPORT void JNICALL Java_jtiffLoader_init (JNIEnv *env, jobject obj, jstring 
 	 * This is the WRONG way (this is for C):
 	 * 			const char *nativeString = (*env)->GetStringUTFChars(env, javaString, 0);
 	 * This is the RIGHT way for C++:
+	 * 			const char *natstr = env->GetStringUTFChars(javaString, NULL);
 	 * 	
-	 * 
-	 * 
 	 */
+	 
     char * cstr = (char *) env->GetStringUTFChars(file, NULL);
     if (cstr == NULL) 
 	{
@@ -213,6 +213,9 @@ JNIEXPORT jintArray JNICALL Java_jtiffLoader_getRGBA (JNIEnv *env, jobject obj, 
 
 	cout << "extracted size is " << c_w << ":" << c_h << endl;
 
+
+	//TODO: set local H and W so that getW and getH reflect last extract
+	
 	return  j_rgba;
 }
 
@@ -232,11 +235,14 @@ OLD CODE
 	//fclose(fptr);
 */
 
-
+/**
+ * getPixelformat unsusported function
+ */
 JNIEXPORT jint JNICALL Java_jtiffLoader_getPixelFormat (JNIEnv *env, jobject)
 {
 	return 666;
 }
+
 JNIEXPORT jint JNICALL Java_jtiffLoader_getCompressionScheme (JNIEnv *env, jobject)
 {
 	return tLoader->getCompressionScheme();
