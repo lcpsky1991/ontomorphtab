@@ -98,12 +98,13 @@ public class AtlasBrowser implements ISelectionChangedListener{
 		if (e.isSelected()) {
 			if (v instanceof String) { //handle radio buttons
 				String value = (String)v;
-				//set the visibility on the currently selected brain region model
-				if (AtlasBrowser.VISIBLE.equals(value)) {
+				//set the visibility on the currently selected brain region model, testing 
+				//for the case when no region is selected
+				if (AtlasBrowser.VISIBLE.equals(value) && (this.currentSelection != null)) {
 					this.currentSelection.setVisibility(BrainRegion.VISIBLE);
-				} else if (AtlasBrowser.TRANSPARENT.equals(value)) {
+				} else if (AtlasBrowser.TRANSPARENT.equals(value) && (this.currentSelection != null)) {
 					this.currentSelection.setVisibility(BrainRegion.TRANSPARENT);
-				} else if (AtlasBrowser.INVISIBLE.equals(value)) {
+				} else if (AtlasBrowser.INVISIBLE.equals(value) && (this.currentSelection != null)) {
 					this.currentSelection.setVisibility(BrainRegion.INVISIBLE);
 				}
 			} else if (v instanceof MyNode) { //handle tree widget

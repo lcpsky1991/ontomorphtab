@@ -9,6 +9,7 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
@@ -109,9 +110,16 @@ public class BrainRegionView extends TangibleView{
 	}
 	
 	private void makeTransparent() {
+		
+		ZBufferState zb = View.getInstance().getRenderer().createZBufferState();
+		zb.setWritable(false);
+		zb.setEnabled(true);
+		zb.setFunction(ZBufferState.CF_LEQUAL);
+		this.setRenderState(zb);
+		
 		AlphaState as = View.getInstance().getRenderer().createAlphaState();
 	      as.setBlendEnabled(true);
-	      as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+	      as.setSrcFunction(AlphaState.SB_SRC_ALPHA);      
 	      as.setDstFunction(AlphaState.DB_ONE);
 	      as.setTestEnabled(true);
 	      as.setTestFunction(AlphaState.TF_GREATER);
@@ -121,7 +129,22 @@ public class BrainRegionView extends TangibleView{
 	}
 	
 	private void makeSolid() {
-		this.setRenderState(lightState);
+		ZBufferState zb = View.getInstance().getRenderer().createZBufferState();
+		zb.setWritable(true);
+		zb.setFunction(ZBufferState.CF_LEQUAL);
+		zb.setEnabled(true);
+		this.setRenderState(zb);
+		
+		
+		AlphaState as = View.getInstance().getRenderer().createAlphaState();
+	      as.setBlendEnabled(false);
+	      as.setTestEnabled(false);
+	      as.setEnabled(false);
+	    this.setRenderState(as);
+
+		
+		//this.setRenderState(lightState);
+	    
 		this.setRenderQueueMode(this.defaultRenderQueueMode);
 	}
 
