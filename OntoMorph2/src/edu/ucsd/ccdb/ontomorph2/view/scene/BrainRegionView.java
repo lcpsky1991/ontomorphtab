@@ -77,7 +77,7 @@ public class BrainRegionView extends TangibleView{
 		case BrainRegion.INVISIBLE:
 			//make invisible
 			this.detachChild(this.mesh);
-			
+		
 			break;
 		case BrainRegion.TRANSPARENT:
 			makeVisible();
@@ -85,11 +85,13 @@ public class BrainRegionView extends TangibleView{
 			break;
 		}
 		
+	
 		if (br.isSelected()) {
 			this.highlight();
 		} else {
 			this.unhighlight();
 		}
+		
 
 		this.mesh.updateModelBound();
 		this.mesh.updateRenderState();
@@ -110,13 +112,13 @@ public class BrainRegionView extends TangibleView{
 	}
 	
 	private void makeTransparent() {
-		
+		//disable writing to zbuffer
 		ZBufferState zb = View.getInstance().getRenderer().createZBufferState();
 		zb.setWritable(false);
 		zb.setEnabled(true);
-		zb.setFunction(ZBufferState.CF_LEQUAL);
 		this.setRenderState(zb);
 		
+		//enable alpha blending
 		AlphaState as = View.getInstance().getRenderer().createAlphaState();
 	      as.setBlendEnabled(true);
 	      as.setSrcFunction(AlphaState.SB_SRC_ALPHA);      
@@ -129,22 +131,20 @@ public class BrainRegionView extends TangibleView{
 	}
 	
 	private void makeSolid() {
+		//enable writing to zbuffer
 		ZBufferState zb = View.getInstance().getRenderer().createZBufferState();
 		zb.setWritable(true);
 		zb.setFunction(ZBufferState.CF_LEQUAL);
 		zb.setEnabled(true);
 		this.setRenderState(zb);
 		
-		
+		//create new alpha state with blending disabled
 		AlphaState as = View.getInstance().getRenderer().createAlphaState();
 	      as.setBlendEnabled(false);
 	      as.setTestEnabled(false);
 	      as.setEnabled(false);
 	    this.setRenderState(as);
-
-		
-		//this.setRenderState(lightState);
-	    
+		//this.setRenderState(lightState);  	    
 		this.setRenderQueueMode(this.defaultRenderQueueMode);
 	}
 
