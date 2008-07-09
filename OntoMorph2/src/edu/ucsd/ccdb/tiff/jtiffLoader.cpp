@@ -200,6 +200,14 @@ JNIEXPORT jintArray JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getRGBA (JNIEnv 
 		//set the value of c_rgb to be: val @ i, element x
 		*c_rgba = (int) ((char *) c_oBuf)[i];		//char * because char are typically 8bits
 	}
+	
+
+	cout << "\n Last 10 from C\n";
+	for (int i=len - 10; i < len; i++)
+	{
+		cout <<  (int) ((char *) c_oBuf)[i] << " ";
+	}
+	cout << endl;
 
 	FILE *fptr = fopen("out.raw", "w");
 	fwrite(c_oBuf, len, 1, fptr);

@@ -18,7 +18,7 @@ public class jviewer {
 				System.out.println("The image height through java is: " + m.getImageH() );
 				System.out.println("The tile through java is: " + m.getTileW() );
 				System.out.println("The tile through java is: " + m.getTileH() );
-				vals = m.getRGBA(0.1f,0.1f,0.2f,0.2f,245,240);
+				vals = m.getRGBA(0.1f,0.1f,0.9f,0.9f,800,600);
 				System.out.println("image len: " + vals.length );
 				
 				
