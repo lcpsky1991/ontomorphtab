@@ -37,18 +37,15 @@ using namespace std;
 
 //main object
 tiffLoader *tLoader = new tiffLoader();
-	
-	
-void test()
-{
-	cout << "Im Width is " << tLoader->getImageW() << endl;
-	cout << "Im Height is " << tLoader->getImageH() << endl;	
-}
+int glastW = 0;		//stores the Width from the last time extract image was called
+int glastH = 0;		//stores the Height from the last time extract image was called
+
+
+
 
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_init (JNIEnv *env, jobject obj, jstring file)
 {
-	cout << "Initializing... ";	//no endl because putting filename next
 	int x=0;
 	int y=0;
 	float dpi=0;
@@ -71,7 +68,8 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_init (JNIEnv *env, jo
 	}
 	//End Convert
 	
-	cout << " finished " << cstr << endl;
+	//finished loading
+	//cout << " finished " << cstr << endl;	
 	
 	if (tLoader->init(cstr, x, y, dpi) != TL_OK)
 	{
@@ -83,11 +81,14 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_init (JNIEnv *env, jo
 	(env)->ReleaseStringUTFChars(file, cstr);
 }
 
-
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_hello (JNIEnv *env, jobject)
+JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getH (JNIEnv *env, jobject)
 {
-	cout << "Hello, this is jtiffLoader 0.1" << endl;
-	test();
+	return glastH;	
+}
+
+JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getW (JNIEnv *env, jobject)
+{
+	return glastW;	
 }
 
 JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getImageW (JNIEnv *env, jobject)
@@ -128,8 +129,6 @@ JNIEXPORT jintArray JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getRGBA (JNIEnv 
 	unsigned c_h = h; //1200
 	int r = 0;		//return value
 
-
-	
 	c_blx = blx;
 	c_bly = bly;
 	c_urx = urx;
@@ -145,18 +144,20 @@ JNIEXPORT jintArray JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getRGBA (JNIEnv 
 		c_bSize = JTL_MIN_BUFFER;
 	}
 	
-	
 	//check the parameters, are they legal?
 	if ( !(c_blx >= 0 && c_blx <= 1 && c_bly >= 0 && c_bly <= 1 && c_urx >= 0 && c_urx < 1 && c_ury >= 0 && c_ury <= 1) )
 	{
 		return NULL;
 	}
 	
-
 	c_oBuf = malloc(c_bSize);	//allocate memory for the buffer
-	memset(c_oBuf, 0, c_bSize);
+	//memset(c_oBuf, 0, c_bSize);	//debugging
 	
 	r = tLoader->extractRGBAImage( c_blx,  c_bly, c_urx, c_ury, c_oBuf, c_bSize, c_w, c_h);
+	
+	//keep the H and W locally so that Java can ask about it (parameter references are not passed back)
+	glastW = c_w;
+	glastH = c_h;
 	
 	//do error checking on the return value
 	if ( r < 0 ) 
@@ -188,64 +189,25 @@ JNIEXPORT jintArray JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getRGBA (JNIEnv 
 		return NULL;
 	}
 
-	//create the array
-	int *c_rgba;
 	unsigned len = c_w * c_h * 4;
 	
-	//fill the array
-	c_rgba = (int *) malloc(len);
-
-	for (int i=0; i < len; i++)
-	{
-		//set the value of c_rgb to be: val @ i, element x
-		*c_rgba = (int) ((char *) c_oBuf)[i];		//char * because char are typically 8bits
-	}
-	
-
-	cout << "\n Last 10 from C\n";
-	for (int i=len - 10; i < len; i++)
-	{
-		cout <<  (int) ((char *) c_oBuf)[i] << " ";
-	}
-	cout << endl;
-
+	/*
+	//for debugging
 	FILE *fptr = fopen("out.raw", "w");
 	fwrite(c_oBuf, len, 1, fptr);
 	fclose(fptr);
-
+	*/
 	
  	// create the new Java array
  	jintArray j_rgba = env->NewIntArray(len);
  	
 	// copy the native info into the java array
 	//we do not need to copy the WHOLE buffer, only W * H * 4 (R G B A)
-
-	env->SetIntArrayRegion(j_rgba, 0, len, c_rgba);	//problematic
-	
-
-	cout << "extracted size is " << c_w << ":" << c_h << endl;
-
-
-	//TODO: set local H and W so that getW and getH reflect last extract
+	env->SetIntArrayRegion(j_rgba, 0, c_w*c_h , (int *)c_oBuf);	//problematic
 	
 	return  j_rgba;
 }
 
-
-/*
-OLD CODE
-	//print the buffer
-	//for (int i=0; i < c_bSize; i++)
-	//{
-	//( i += 4
-	//	cout << (int) ((char *) c_oBuf + i)[0] << ":" << (int)((char *) c_oBuf + i)[1] <<  ":" << (int)((char *) c_oBuf +i)[2] << ":" << (int)((char *) c_oBuf + i)[3] << endl;
-	//	cout << (int) ((char *) c_oBuf + (4*i))[0] << ":" << (int)((char *) c_oBuf + (4*i))[1] <<  ":" 
-	//		<< (int)((char *) c_oBuf + (4*i))[2] << ":" << (int)((char *) c_oBuf + (4*i))[3] << endl;
-	//}
-	//FILE *fptr = fopen("test.raw", "w");
-	//fwrite(c_oBuf, c_w * c_h * 4, 1, fptr);
-	//fclose(fptr);
-*/
 
 /**
  * getPixelformat unsusported function

@@ -16,7 +16,6 @@ package edu.ucsd.ccdb.tiff;
  */
 
 
-
 public class jtiffLoader 
 {
 	/**
@@ -36,24 +35,24 @@ public class jtiffLoader
 	{
 		try
 		{
-			System.out.println("Java Library path is: " + System.getProperty("java.library.path")); //most browsers do not support this, except Opera
 			System.loadLibrary("jtiffLoader");
 		}
 		catch (Exception e)
 		{
 			System.out.println("Problem loading the jtiffLoader library. Searched in:");
-			
+			System.out.println("Java Library path is: " + System.getProperty("java.library.path")); //most browsers do not support this, except Opera	
 		}
 	}
 
-	public native void hello();		//dummy function
-	public native int getImageW();	//does not change
-	public native int getImageH();	//does not change
-	public native int getTileW();	//does not change
-	public native int getTileH();	//does not change
+	
+	public native int getImageW();	//returns the size of the max resolution image
+	public native int getImageH();	//returns the size of the max resolution image
+	public native int getH();		//returns the Height of the image that was last called by getRGBA()
+	public native int getW();		//returns the Width of the image that was last called by getRGBA()
+	public native int getTileW();	//returns the size of the tiles that make up the image
+	public native int getTileH();	//returns the size of the tiles that make up the image
 	public native void init(String filename);
 	public native int getCompressionSceme();
-	public native int getPixelFormat();
 	public native int getBytesPerPixel();
 	public native int[] getRGBA(double bottomLeft_x, double bottomLeft_y, double upperRight_x, double upperRight_y, int aprox_W, int aprox_H);
 

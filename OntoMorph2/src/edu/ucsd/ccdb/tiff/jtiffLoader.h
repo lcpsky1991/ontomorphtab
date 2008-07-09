@@ -10,14 +10,14 @@ extern "C"
 {
 #endif
 
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_hello (JNIEnv *env, jobject);
 JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getImageW (JNIEnv *env, jobject);
 JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getImageH (JNIEnv *env, jobject);
+JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getH (JNIEnv *env, jobject);
+JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getW (JNIEnv *env, jobject);
 JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getTileW (JNIEnv *env, jobject);
 JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getTileH (JNIEnv *env, jobject);
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_init (JNIEnv *env, jobject, jstring);
 JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getCompressionSceme (JNIEnv *env, jobject);
-JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getPixelFormat (JNIEnv *env, jobject);
 JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getBytesPerPixel (JNIEnv *env, jobject);
 JNIEXPORT jintArray JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getRGBA (JNIEnv *env, jobject, jdouble, jdouble, jdouble, jdouble, jint, jint);
 
