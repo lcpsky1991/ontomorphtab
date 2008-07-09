@@ -13,6 +13,9 @@ import org.fenggui.menu.MenuItem;
  * object-specific manipulations will be dynamically added to the context menu
  * based on object type. 
  * 
+ * <a href="http://openccdb.org/wiki/index.php/Brain_Catalog_Interface#Context_Menu" More information</a>
+ * about the design of this class is available on the website.
+ * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */

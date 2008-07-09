@@ -37,7 +37,7 @@ public abstract class NeuronMorphology extends Tangible{
 	public static final String RENDER_AS_LOD_2 = "LOD2";
 
 	
-	URL _morphLoc = null;
+	
 	String _renderOption = RENDER_AS_LINES; //default render option
 	ArrayList<ISegment> segmentList = null;
 	Set<ISegment> selectedSegmentList = new HashSet<ISegment>();
@@ -67,17 +67,6 @@ public abstract class NeuronMorphology extends Tangible{
 		return _time;
 	}
 
-	public Level2Cell getMorphMLCell() {
-		return theCell;
-	}
-	
-	/**
-	 * Get the URL for the MorphML file that corresponds to this INeuronMorphology
-	 * @return - the URL
-	 */
-	public URL getMorphMLURL() {
-		return _morphLoc;
-	}
 	
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getRenderOption()
@@ -212,10 +201,7 @@ public abstract class NeuronMorphology extends Tangible{
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getName()
 	 */
-	public String getName() {
-		int len = _morphLoc.getFile().length();
-		return _morphLoc.getFile().substring(len-14, len);
-	}
+	public abstract String getName();
 
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#setUpVector(com.jme.math.Vector3f)

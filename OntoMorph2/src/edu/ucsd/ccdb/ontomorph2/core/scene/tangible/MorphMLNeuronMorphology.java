@@ -41,6 +41,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
  */
 public class MorphMLNeuronMorphology extends NeuronMorphology{
 	
+	URL _morphLoc = null;
 	Level2Cell theCell;
 	
 	public MorphMLNeuronMorphology(URL morphLoc) {
@@ -198,6 +199,14 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 			}
 		}
 		return segmentGroupList;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getName()
+	 */
+	public String getName() {
+		int len = _morphLoc.getFile().length();
+		return _morphLoc.getFile().substring(len-14, len);
 	}
 
 }

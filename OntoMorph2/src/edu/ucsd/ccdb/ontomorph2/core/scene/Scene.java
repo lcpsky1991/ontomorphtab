@@ -347,7 +347,7 @@ public class Scene extends Observable{
 		mesh.setRelativeScale(0.0002f);
 		mesh.setCoordinateSystem(d);
 	
-		//addSceneObject(mesh);
+		addSceneObject(mesh);
 		
 		changed();
 	}

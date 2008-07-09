@@ -11,6 +11,7 @@ import com.jme.util.TextureManager;
 import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
@@ -99,6 +100,7 @@ public class SlideView extends TriMesh {
 		//get my texturestate
 		TextureState ts = View.getInstance().getDisplaySystem().getRenderer().createTextureState();
 		//get my texture
+		
 		Texture t= TextureManager.loadTexture(imageURL,
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
 		//set a wrap for my texture so it repeats

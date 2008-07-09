@@ -16,6 +16,9 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  * Implements the main menu bar at the top of the application.  Also processes the events when
  * the menu items are selected and makes the corresponding calls.
  * 
+ * <a href="http://openccdb.org/wiki/index.php/Brain_Catalog_Interface#Menu_Bar">More information</a>
+ *  about the design of this class is available on the website.
+ * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
@@ -41,6 +44,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String strMNU_MANI_MOVE = "Move";
 	public static final String strMNU_MANI_LOOK = "Focus Camera";
 	public static final String strMNU_MANI_SCALE = "Re-Scale";
+	public static final String BASIC_SEARCH = "Basic Search...";
 	
 	
 	public MenuBar() {
@@ -62,6 +66,11 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         mB.registerSubMenu(mnuFile, "File");
         makeMenuItem(LOAD_SCENE, mnuFile);
         makeMenuItem(SAVE_SCENE, mnuFile);
+        
+        //=[ SEARCH ]=
+        Menu mnuSearch = new Menu();
+        mB.registerSubMenu(mnuSearch, "Search");
+        makeMenuItem(BASIC_SEARCH, mnuSearch);
 	
         //=[  VIEW  ]=
         Menu mnuView = new Menu();
@@ -209,6 +218,9 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		else if ( strMNU_MANI_SCALE.equals(act) )
 		{
 			View.getInstance().setManipulation(View.METHOD_SCALE);
+		}
+		else if (BASIC_SEARCH.equals(act)) {
+			View2D.getInstance().loadBasicSearchBox();
 		}
 	}
 }

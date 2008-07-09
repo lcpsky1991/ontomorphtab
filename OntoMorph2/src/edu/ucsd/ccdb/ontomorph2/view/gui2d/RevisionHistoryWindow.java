@@ -7,6 +7,6 @@ package edu.ucsd.ccdb.ontomorph2.view.gui2d;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class RevisionHistoryWidget {
+public class RevisionHistoryWindow {
 
 }

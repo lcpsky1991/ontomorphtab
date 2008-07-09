@@ -38,6 +38,7 @@ public class View2D extends Display  {
 	private TextEditor infoText = null;
 	
 	private AtlasBrowser aBrowser = null;
+	private BasicSearchWidget basicSearch = null;
 	
 	protected TextEditor getInfoText() {
 		if (infoText == null ) {
@@ -249,6 +250,12 @@ public class View2D extends Display  {
 			}
 			
 		});
+	}
+
+	public void loadBasicSearchBox() {
+		if (basicSearch == null) {
+			basicSearch = new BasicSearchWidget(this);
+		}
 	}
 	
 	
