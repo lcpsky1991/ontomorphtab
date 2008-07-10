@@ -51,6 +51,7 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
 
 import com.jme.input.action.InputAction;
 import com.jme.input.action.InputActionEvent;
+import com.jme.input.action.MouseInputAction;
 import com.jme.input.action.MouseLook; 	//drag handler
 import com.jme.renderer.Camera;			//drag handler
 import com.jme.input.*;					//drag handler
@@ -76,6 +77,7 @@ public class View extends BaseSimpleGame {
 	float coordDelta;
 	private Scene _scene = null;
 
+	private int debugNum=0;		//for debugging
 	
 	//=================================
 	// Global Interface-Objects
@@ -85,14 +87,15 @@ public class View extends BaseSimpleGame {
 	PickData prevPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
 	
 	NeuronMorphologyView manipMorph=null;	//the most recent object to be selected/manipulated as a morphology
-	PickData firstClick;
-	
+		
 	FirstPersonHandler fpHandler = null;
 	MouseLook looker;	//not used
 	private boolean pointerEnabled = false;
 	
 	float keyPressActionRate = 1.0f; //the rate of rotation by a single key press
+	org.fenggui.Display disp; // FengGUI's display
 	
+	View3D view3D = null;
 	//==================================
 	// DECLARES
 	// - used for manipulating the objects, setting the mode says what you're doing with dragging
@@ -109,9 +112,7 @@ public class View extends BaseSimpleGame {
 	private static int manipulation = METHOD_NONE; //use accesor
 	
 	
-	org.fenggui.Display disp; // FengGUI's display
-	
-	View3D view3D = null;
+
 	
 	/**
 	 * Returns the singleton instance.
@@ -227,7 +228,6 @@ public class View extends BaseSimpleGame {
         amouse = new RelativeMouse("The Mouse");
         amouse.registerWithInputHandler(input);					// Assign the mouse to an input handler
         rootNode.attachChild(amouse);	        
-		//TODO: wouldn't it be nice to move the camera based on mouse position?
         
 		//Bind the Escape key to kill our test app
 		KeyBindingManager.getKeyBindingManager().set("quit", KeyInput.KEY_ESCAPE);
@@ -250,17 +250,15 @@ public class View extends BaseSimpleGame {
 		KeyBindingManager.getKeyBindingManager().set("info", KeyInput.KEY_I);
 		KeyBindingManager.getKeyBindingManager().add("mem_report", KeyInput.KEY_I);
 		
-		KeyBindingManager.getKeyBindingManager().set("zoom_in", KeyInput.KEY_Z);
-		KeyBindingManager.getKeyBindingManager().set("zoom_out", KeyInput.KEY_X);
-		
-		KeyBindingManager.getKeyBindingManager().set("drag", KeyInput.KEY_A);
-		KeyBindingManager.getKeyBindingManager().set("drag", KeyInput.KEY_A);
+		//KeyBindingManager.getKeyBindingManager().set("zoom_in", KeyInput.KEY_Z);
+		//KeyBindingManager.getKeyBindingManager().set("zoom_out", KeyInput.KEY_X);
 		
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
-        input.addAction( mousewheel, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_NONE, 2, true );
-        //amouse = new RelativeMouse("Mouse Input");
-	    //amouse.registerWithInputHandler( input );
+		
+		//(InputActionInterface action, java.lang.String deviceName, int button, int axis, boolean allowRepeats) 
+        input.addAction( mouseAction, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, false );
+
 	}
 	
 	/**
@@ -340,57 +338,96 @@ public class View extends BaseSimpleGame {
 		//TODO: get more sophisticated way of dealing with mouse input (pickresults has handler)
 		try
 		{
-			//right click to drag
-			if (MouseInput.get().isButtonDown(1)) //right
-			{	
-				MouseInput.get().setCursorVisible(false); //hide mouse cursor
-				manipulateCurrentSelection();
-			}
-			else
+			boolean mouseLook = false;
+			int numMouseBut = MouseInput.get().getButtonCount();
+			
+        	
+        	//====================================
+        	//	WHEEL
+        	//====================================
+			
+			float dx=MouseInput.get().getWheelDelta() / (keyPressActionRate * 10); //scale it by some factor so it's less jumpy
+			if (dx != 0)	
 			{
-				MouseInput.get().setCursorVisible(true); //show mouse cursor
+				//zoom camera if Z press
+				if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
+				{
+					camNode.zoomIn(dx);
+				}
+				//move camera if Z NOT pressed
+				else
+				{
+					camNode.moveForward(dx);
+				}
+				
+				
 			}
-
-			//middle click manipulates camera
-			if (MouseInput.get().isButtonDown(2)) //right
-			{	
-				//MouseInput.get().setCursorVisible(false); //hide mouse cursor
+			
+			//====================================
+			//	MIDDLE MOUSE
+			//====================================
+			//mouse look trumps all other actions
+        	
+        	//middle click manipulates camera OR leftANDright mouse button
+			//mouselook is true if there is a middle mouse button and it's pressed down
+			if ( numMouseBut >= 2 ) if (MouseInput.get().isButtonDown(2)) mouseLook = true;
+			 
+			//mouselook is also true if left mouse and right mouse are pressed
+			if ( MouseInput.get().isButtonDown(0) && MouseInput.get().isButtonDown(1) ) mouseLook = true;
+			
+			if (mouseLook)
+			{
 				//find mouse change
 				float mx = MouseInput.get().getXDelta() / 100.0f;
 				float my = MouseInput.get().getYDelta() / 100.0f;
 
-				camNode.turnClockwise(mx);
-				camNode.turnUp(my);
+				camNode.turnCounterClockwise(mx);
+				camNode.turnDown(my);
 			}
 			else
 			{
-				MouseInput.get().setCursorVisible(true); //show mouse cursor
-			}
-			
-			//left mouse click
-			if (MouseInput.get().isButtonDown(0)) //left 
-			{
-				//get stuff we are trying to pick/select
-				PickResults results = getPickResults();
-				
-				if ( results.getNumber() > 0)
+				//====================================
+				//	RIGHT CLICK
+				//====================================
+				if (MouseInput.get().isButtonDown(1)) //right
+				{	
+					MouseInput.get().setCursorVisible(false); //hide mouse cursor
+					manipulateCurrentSelection();
+				}
+				else
 				{
-					doDeselection();
+					MouseInput.get().setCursorVisible(true); //show mouse cursor
+				}
 				
-					//set up next deselection
-					prevPick = results.getPickData(0);	//take the closest pick and set
+				//====================================
+				//	LEFT CLICK
+				//====================================
+				if (MouseInput.get().isButtonDown(0)) //left 
+				{
+					//get stuff we are trying to pick/select
+					PickResults results = getPickResults();
+					
+					if ( results.getNumber() > 0)
+					{
+						doDeselection();
+					
+						//set up next deselection
+						prevPick = results.getPickData(0);	//take the closest pick and set
 										
-					doSelection();
-				
-					//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
-				} //end if of pr > 0
-			} //end if mouse button down
+						doSelection();
+						//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
+					} //end if of pr > 0
+				} //end if mouse button down
+			} //end one-button mouse handling
 		} //end try
 		catch (Exception e)
 		{
 			logger.log(Level.SEVERE, "Exception caught in View.handleMouseInput(): " + e.getMessage());
 		}
 	}
+	
+	
+	
 	
 	/**
 	 * Apply manipulations to the tangible that is currently selected
@@ -630,11 +667,11 @@ public class View extends BaseSimpleGame {
 			}
 			
 			if ( isAction("zoom_in")) {
-				camNode.zoomIn();
+				camNode.zoomIn(keyPressActionRate);
 			}
 			
 			if ( isAction("zoom_out")) {
-				camNode.zoomOut();
+				camNode.zoomOut(keyPressActionRate);
 			}
 			
 			
@@ -651,15 +688,14 @@ public class View extends BaseSimpleGame {
 	}
 	
 	/**
-	 * Listener to take care of mousewheel events
+	 * Listener to take care of events
 	 */
-	final InputAction mousewheel = new InputAction() 
+	MouseInputAction mouseAction = new MouseInputAction() 
 	{
-		//TODO: move mousehandler code to this section
 	        public void performAction( InputActionEvent evt ) 
-	        {	
-	        	float dx=MouseInput.get().getWheelDelta() / 10; //scale it by some factor so it's less jumpy
-	        	if(dx != 0)	camNode.moveForward(dx);
+	        {
+	        	//by putting mouse handler here, the calls are not every frame and do not 'repeat'	        	
+	        	handleMouseInput();
 	        }	        
 	 };	
 	
@@ -679,8 +715,9 @@ public class View extends BaseSimpleGame {
 	protected void simpleUpdate() 
 	{
 		//the coordsDown and coordsUp code used to go here. It's gone now.
-		handleMouseInput();
-		handleKeyInput();
+		//handle mouse input has been moved to listener so there is no 'repeatables'
+		//this is more efficient as well, saves processing time
+		handleKeyInput();	//should be mvoed to some other handler
 	}
 	
 	/** 

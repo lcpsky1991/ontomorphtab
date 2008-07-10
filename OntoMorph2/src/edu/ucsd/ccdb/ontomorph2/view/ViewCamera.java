@@ -200,8 +200,8 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * Zoom the camera in without changing its position
 	 *
 	 */
-	public void zoomIn() {
-		invZoom -= 0.01f;
+	public void zoomIn(float amount) {
+		invZoom -= 0.01f * amount;
 		//float aspect = (float) display.getWidth() / (float) display.getHeight();
 		this.getCamera().setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
 		//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
@@ -212,8 +212,8 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * Zoom the camera out without changing its position
 	 *
 	 */
-	public void zoomOut() {
-		invZoom += 0.01f;
+	public void zoomOut(float amount) {
+		invZoom += 0.01f * amount;
 		//float aspect = (float) display.getWidth() / (float) display.getHeight();
 		this.getCamera().setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
 		//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
