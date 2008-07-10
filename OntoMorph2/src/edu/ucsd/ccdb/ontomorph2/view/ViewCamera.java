@@ -118,9 +118,9 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * Move the camera one unit forward
 	 * @author caprea
 	 */
-	public void moveForward() {
+	public void moveForward(float amount) {
 		//find the vector of the direction pointing towards
-		Vector3f dir = this.getCamera().getDirection().normalize();
+		Vector3f dir = this.getCamera().getDirection().normalize().mult(amount);
 		this.setLocalTranslation( this.getLocalTranslation().add(dir));
 	}
 
@@ -128,9 +128,9 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * Move the camera one unit backward
 	 * @author caprea
 	 */
-	public void moveBackward() {
+	public void moveBackward(float amount) {
 //		find the vector of the direction pointing towards
-		Vector3f dir = this.getCamera().getDirection().normalize().negate();
+		Vector3f dir = this.getCamera().getDirection().normalize().mult(amount).negate();
 		this.setLocalTranslation( this.getLocalTranslation().add(dir));
 	}
 
@@ -138,10 +138,10 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * Turn the camera one unit clockwise
 	 * @author caprea
 	 */
-	public void turnClockwise() {
+	public void turnClockwise(float amount) {
 //		key right
 		Quaternion roll = new Quaternion();
-		roll.fromAngleAxis( -camRotationRate*invZoom, Vector3f.UNIT_Y ); //rotates Rate degrees
+		roll.fromAngleAxis( -1*amount, Vector3f.UNIT_Y ); //rotates Rate degrees
 		roll = this.getLocalRotation().multLocal(roll); // (q, save)
 		this.setLocalRotation(roll);
 	}
@@ -150,10 +150,10 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * Turn the camera one unit counter clockwise
 	 * @author caprea
 	 */
-	public void turnCounterClockwise() {
+	public void turnCounterClockwise(float amount) {
 //		left key
 		Quaternion roll = new Quaternion();
-		roll.fromAngleAxis( camRotationRate*invZoom, Vector3f.UNIT_Y ); //rotates Rate degrees
+		roll.fromAngleAxis( 1*amount, Vector3f.UNIT_Y ); //rotates Rate degrees
 		roll = this.getLocalRotation().multLocal(roll); // (q, save)
 		this.setLocalRotation(roll);
 	}
@@ -162,10 +162,10 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * Turn the camera one unit downwards
 	 * @author caprea
 	 */
-	public void turnDown() {
+	public void turnDown(float amount) {
 //		down
 		Quaternion roll = new Quaternion();
-		roll.fromAngleAxis( camRotationRate*invZoom, Vector3f.UNIT_X );//rotates Rate degrees
+		roll.fromAngleAxis( 1*amount, Vector3f.UNIT_X );//rotates Rate degrees
 		roll = this.getLocalRotation().multLocal(roll); // (q, save)
 		this.setLocalRotation(roll);
 	}
@@ -174,10 +174,10 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * Turn the camera one unit upwards
 	 * @author caprea
 	 */
-	public void turnUp() {
+	public void turnUp(float amount) {
 //		up
 		Quaternion roll = new Quaternion();
-		roll.fromAngleAxis( -camRotationRate*invZoom, Vector3f.UNIT_X ); //rotates Rate degrees
+		roll.fromAngleAxis( -1*amount, Vector3f.UNIT_X ); //rotates Rate degrees
 		roll = this.getLocalRotation().multLocal(roll); // (q, save)
 		this.setLocalRotation(roll);
 	}

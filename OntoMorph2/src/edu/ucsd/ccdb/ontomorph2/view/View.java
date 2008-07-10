@@ -91,7 +91,8 @@ public class View extends BaseSimpleGame {
 	MouseLook looker;	//not used
 	private boolean pointerEnabled = false;
 	
-
+	float keyPressActionRate = 1.0f; //the rate of rotation by a single key press
+	
 	//==================================
 	// DECLARES
 	// - used for manipulating the objects, setting the mode says what you're doing with dragging
@@ -349,6 +350,22 @@ public class View extends BaseSimpleGame {
 			{
 				MouseInput.get().setCursorVisible(true); //show mouse cursor
 			}
+
+			//middle click manipulates camera
+			if (MouseInput.get().isButtonDown(2)) //right
+			{	
+				//MouseInput.get().setCursorVisible(false); //hide mouse cursor
+				//find mouse change
+				float mx = MouseInput.get().getXDelta() / 100.0f;
+				float my = MouseInput.get().getYDelta() / 100.0f;
+
+				camNode.turnClockwise(mx);
+				camNode.turnUp(my);
+			}
+			else
+			{
+				MouseInput.get().setCursorVisible(true); //show mouse cursor
+			}
 			
 			//left mouse click
 			if (MouseInput.get().isButtonDown(0)) //left 
@@ -567,33 +584,32 @@ public class View extends BaseSimpleGame {
 				
 			if ( isAction("cam_forward") || isAction("cam_forward_ns") ) 
 			{
-				camNode.moveForward();
+				camNode.moveForward(keyPressActionRate);
 			}
 			
 			if ( isAction("cam_back") || isAction("cam_back_ns"))
 			{
-				camNode.moveBackward();
+				camNode.moveBackward(keyPressActionRate);
 			}
 
 			if ( isAction("cam_turn_cw"))	
 			{
-				camNode.turnClockwise();
+				camNode.turnClockwise(keyPressActionRate);
 			}
-			
 			
 			if ( isAction("cam_turn_ccw"))	
 			{ 
-				camNode.turnCounterClockwise();
+				camNode.turnCounterClockwise(keyPressActionRate);
 			}
 			
 			if ( isAction("cam_turn_down"))	
 			{ 
-				camNode.turnDown();
+				camNode.turnDown(keyPressActionRate);
 			}
 			
 			if ( isAction("cam_turn_up"))	
 			{ 
-				camNode.turnUp();
+				camNode.turnUp(keyPressActionRate);
 			}
 			
 			if ( isAction("info"))
@@ -639,16 +655,11 @@ public class View extends BaseSimpleGame {
 	 */
 	final InputAction mousewheel = new InputAction() 
 	{
+		//TODO: move mousehandler code to this section
 	        public void performAction( InputActionEvent evt ) 
 	        {	
-	        		if(MouseInput.get().getWheelDelta()>0)
-	        			camNode.zoomIn();
-	        		else if(MouseInput.get().getWheelDelta()<0)
-	        			camNode.zoomOut();
-	        		else if(MouseInput.get().isButtonDown(2) == true){
-	        			camNode.moveForward();
-
-	        	}
+	        	float dx=MouseInput.get().getWheelDelta() / 10; //scale it by some factor so it's less jumpy
+	        	if(dx != 0)	camNode.moveForward(dx);
 	        }	        
 	 };	
 	
