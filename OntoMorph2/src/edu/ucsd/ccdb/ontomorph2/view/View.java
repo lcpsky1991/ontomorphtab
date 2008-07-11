@@ -674,16 +674,6 @@ public class View extends BaseSimpleGame {
 				camNode.zoomOut(keyPressActionRate);
 			}
 			
-			
-			if( isAction("drag")) {
-				//MouseClickANDdrag approach - Not functional
-					//Get the position that the mouse is pointing to
-					Vector2f position = new Vector2f();
-					position.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
-					
-					System.out.println("left click initialize");
-					camNode.MouseClickDragCamera(amouse,cam,.01f);
-			}
 		}//end key input
 	}
 	
