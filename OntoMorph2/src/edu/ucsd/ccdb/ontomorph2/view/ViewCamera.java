@@ -372,6 +372,27 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		//System.out.println("waittttttttttttttttttttttttttttt");
 		//System.out.println("direction " + cam.getLocation());
 	}
+
+	/**
+	 * Smoothly reposition, rotate, and zoom the camera to the atlas
+	 * slide view.
+	 */
+	public void smoothlyZoomToSlideView() {
+		Vector3f loc = new Vector3f(-300f, -118f, -180f);
+		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y);
+		continuousZoomTo(loc, rotation, invZoom);
+	}
+
+	/**
+	 * Smoothly reposition, rotate, and zoom the camera to the atlas
+	 * lateral view.
+	 */
+	public void smoothlyZoomToAtlasLateralView() {
+		Vector3f loc = new Vector3f(300f, -118f, 300f);
+		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y);
+		continuousZoomTo(loc, rotation, invZoom);
+	}
+	
 	
 	/*public void update(){
 			this.setLocalTranslation(pos);

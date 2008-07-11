@@ -36,6 +36,8 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String SLIDE_VIEW = "View Example Slide";
 	public static final String ATLAS_LATERAL_VIEW = "View Atlas Lateral Side";
 	public static final String ATLAS_MEDIAL_VIEW = "View Atlas Medial Side";
+	public static final String SLIDE_VIEW_SMOOTH = "Smoothly Zoom to View Example Slide";
+	public static final String ATLAS_LATERAL_VIEW_SMOOTH = "Smoothly Zoom To Atlas Lateral Side";
 	public static final String ATLAS_MEDIAL_VIEW_SMOOTH = "Smoothly Zoom To Atlas Medial Side";
 	public static final String strMNU_MANIPULATE = "Manipulate Object";
 	public static final String strMNU_MANI_ROTATEA = "Rotate (X - Axis)";
@@ -78,6 +80,8 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         makeMenuItem(SLIDE_VIEW, mnuView);
         makeMenuItem(ATLAS_LATERAL_VIEW, mnuView);
         makeMenuItem(ATLAS_MEDIAL_VIEW, mnuView);
+        makeMenuItem(SLIDE_VIEW_SMOOTH, mnuView);
+        makeMenuItem(ATLAS_LATERAL_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_MEDIAL_VIEW_SMOOTH, mnuView);
         
         //=[  OBJ  ]=
@@ -190,6 +194,14 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		else if (ATLAS_MEDIAL_VIEW.equals(arg0.getItem().getText())) 
 		{
 			View.getInstance().getCamera().setToAtlasMedialView();
+		}
+		else if (SLIDE_VIEW_SMOOTH.equals(arg0.getItem().getText())) 
+		{
+			View.getInstance().getCamera().smoothlyZoomToSlideView();
+		}
+		else if (ATLAS_LATERAL_VIEW_SMOOTH.equals(arg0.getItem().getText())) 
+		{
+			View.getInstance().getCamera().smoothlyZoomToAtlasLateralView();
 		}
 		else if (ATLAS_MEDIAL_VIEW_SMOOTH.equals(arg0.getItem().getText())) 
 		{
