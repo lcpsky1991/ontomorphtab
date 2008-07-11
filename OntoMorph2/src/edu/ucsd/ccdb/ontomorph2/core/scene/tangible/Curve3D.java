@@ -29,6 +29,8 @@ public class Curve3D extends Tangible{
 	private Vector3f _modelBinormal = null;
 	CoordinateSystem sys = null;
 	OMTVector[] controlPoints = null;
+	boolean seeAnchorPoints = false;
+		
 	
 	public Curve3D(String arg0, OMTVector[] arg1) {
 		theCurve = new BezierCurve(arg0, arg1);
@@ -53,7 +55,8 @@ public class Curve3D extends Tangible{
 	 * Set the color of the curve.
 	 */
 	public void setColor(Color color) {
-		theCurve.setSolidColor(ColorUtil.convertColorToColorRGBA(color));
+		this.color = ColorUtil.convertColorToColorRGBA(color);
+		theCurve.setSolidColor(this.color);
 	}
 	
 	/**
@@ -99,19 +102,25 @@ public class Curve3D extends Tangible{
 		return time+delta;
 	}
 
+	/**
+	 * Give a copy of this Bezier Curve as a JME Curve class
+	 * @return a copy of this Curve3D
+	 * @see Curve
+	 */
 	public Curve asBezierCurve() {
-		Curve copy = null;
-		
-		copy = (Curve)new BezierCurve(theCurve.getName(), controlPoints);
-		copy.setSolidColor(ColorUtil.convertColorToColorRGBA(Color.GREEN));
+		Curve copy = copyBezierCurve(this.controlPoints);
+		return copy;
+	}
+	
+	private BezierCurve copyBezierCurve(OMTVector[] controlPoints) {
+		BezierCurve copy = new BezierCurve(theCurve.getName(), controlPoints);
+		copy.setSolidColor(this.color);
 		
 		//apply coordinate system to this curve.
 		if (this.getCoordinateSystem() != null) {
 			this.getCoordinateSystem().applyToSpatial(copy);
-			return copy;
 		}
-
-		return theCurve;
+		return copy;
 	}
 	
 	/**
@@ -173,9 +182,48 @@ public class Curve3D extends Tangible{
 		return rotation;
 	}
 
-
+	/**
+	 * Gives a 3D PositionVector that corresponds to the time parameter
+	 * @param time - 0 to 1 representation of the length of the Curve from beginning to end
+	 * @return a PositionVector on this Curve3D at time.
+	 */
 	public PositionVector getPoint(float time) {
 		return new PositionVector(theCurve.getPoint(time));
 	}
 
+	/**
+	 * Sets the visibility of the anchor points, which govern the shape of the curve.
+	 * 
+	 * @param visible - if true, make points visible, if false, make invisible
+	 */
+	public void setAnchorPointsVisibility(boolean visible) {
+		this.seeAnchorPoints = visible;
+		setChanged();
+	}
+	
+	/**
+	 * Gets the visibility state of the anchor points, which govern the shape of the curve
+	 * @return true if visible, false if invisible
+	 */
+	public boolean getAnchorPointsVisibility() {
+		return this.seeAnchorPoints;
+	}
+	
+	/**
+	 * Gives the control points that define this curve
+	 * @return an array of OMTVectors with all the control points in order.
+	 */
+	public OMTVector[] getControlPoints() {
+		return this.controlPoints;
+	}
+	
+	/**
+	 * Sets the control points for this curve
+	 * 
+	 * @param points
+	 */
+	public void setControlPoints(OMTVector[] points) {
+		this.theCurve = copyBezierCurve(points);
+	}
+	
 }

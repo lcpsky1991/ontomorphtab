@@ -8,7 +8,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 
 /**
- * A base class for the view classes that display scene objects.
+ * A base class for the view classes that display Tangibles.
  * 
  * Need to implement right-click bringing up a context menu for each TangibleView
  * 
@@ -54,5 +54,7 @@ public abstract class TangibleView extends Node {
 	}
 
 	protected abstract void refreshColor();
+	
+	public abstract void update();
 	
 }

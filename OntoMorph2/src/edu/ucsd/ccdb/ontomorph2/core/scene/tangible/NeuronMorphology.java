@@ -117,7 +117,6 @@ public abstract class NeuronMorphology extends Tangible{
 		selectedSegmentList.remove(s);
 		changed();
 	}
-	
 
 	/**
 	 * 

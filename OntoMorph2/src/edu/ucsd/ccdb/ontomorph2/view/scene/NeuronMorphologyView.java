@@ -39,7 +39,7 @@ import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
  * @see NeuronMorphology
  *
  */
-public class NeuronMorphologyView extends Node{
+public class NeuronMorphologyView extends TangibleView{
 
 	List<SegmentView> segViews;
 	
@@ -72,6 +72,12 @@ public class NeuronMorphologyView extends Node{
 		return getSegmentFromGeomBatch(gb) != null;
 	}
 	
+	/**
+	 * Return any SegmentView that is represented by this GeomBatch
+	 * 
+	 * @param gb
+	 * @return a SegmentView, if this is what gb represents.  return null if it does not.
+	 */
 	public SegmentView getSegmentFromGeomBatch(GeomBatch gb) {
 		Geometry g = gb.getParentGeom();
 		SegmentView pick = null;
@@ -218,16 +224,16 @@ public class NeuronMorphologyView extends Node{
 		  int target = chooseCableResolution(r);
 		  if (target == 0) {
 			  if (cableResolution == Integer.MAX_VALUE) {
-				  reload();
+				  update();
 			  }
 		  } else if (target == Integer.MAX_VALUE){
 			 if (cableResolution == 1) {
-				 reload();
+				 update();
 			 }
 		  }
 	  }
 	  
-	  public void reload() {
+	  public void update() {
 		  this.detachAllChildren();
 		  this.attachChild(loadscene(currentMorph));
 		  updateModelBound();
@@ -308,6 +314,12 @@ public class NeuronMorphologyView extends Node{
 				sv.unhighlight();
 			}
 		}
+	}
+
+	@Override
+	protected void refreshColor() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

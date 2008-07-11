@@ -21,6 +21,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.MeshViewImpl;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
@@ -93,7 +94,7 @@ public class View3D extends Node{
 	public void setCurves(Set<Curve3D> curves) {
 		curvesNode.detachAllChildren();
 		for(Curve3D curve : curves) {
-			curvesNode.attachChild(curve.asBezierCurve());
+			curvesNode.attachChild(new CurveView(curve));
 		}
 		
 	}

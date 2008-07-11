@@ -43,6 +43,7 @@ import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SegmentView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 import edu.ucsd.ccdb.ontomorph2.core.changes.*;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.*;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
@@ -86,7 +87,7 @@ public class View extends BaseSimpleGame {
 	RelativeMouse amouse; 						//the mouse object ref to entire screen, used to hide and show the mouse?
 	PickData prevPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
 	
-	NeuronMorphologyView manipMorph=null;	//the most recent object to be selected/manipulated as a morphology
+	TangibleView manipTangView=null;	//the most recent TangibleView to be selected/manipulated
 		
 	FirstPersonHandler fpHandler = null;
 	MouseLook looker;	//not used
@@ -261,75 +262,6 @@ public class View extends BaseSimpleGame {
 
 	}
 	
-	/**
-	 * Scales the morophology in the dimensions of constraint
-	 * @param morph the item(s) to be rotated
-	 * @param constraint the dimensions that the morphology will be scaled in
-	 */
-	public void scaleMorph(NeuronMorphologyView morph,float dx, float dy, OMTVector constraint)
-	{
-	
-		float delta = 0.01f * dx;
-		
-		OMTVector current = morph.getMorphology().getRelativeScale();
-		
-		OMTVector nscale = new OMTVector(current.add(delta,delta,delta));
-		
-		
-		//do NOT scale if the new scale will 'flip' the object
-		if ( !(nscale.getX() < 0 || nscale.getY() < 0 || nscale.getZ() < 0 ) )
-		{
-			morph.getMorphology().setRelativeScale(nscale);	
-		}
-	}
-	
-	
-	
-	/**
-	 * Changes the rotation of a morphology based on changes from the mouse movement 
-	 * @param morph the item(s) to be rotated
-	 * @param constraint the axis (or axes) on which to rotate the object. For example, if constraint is (1,0,0) the object will rotates about it's own X axis (not the world's X axis)
-	 * @author caprea
-	 */
-	public void rotateMorph(NeuronMorphologyView morph, float dx, float dy, OMTVector constraint)
-	{
-		float delta = dx;
-		
-		Quaternion more = new Quaternion();
-		Quaternion end = new Quaternion();
-		
-		more.fromAngleAxis(0.1f * delta, constraint); //rotate with horitonzal mouse movement
-		
-		end = morph.getMorphology().getRelativeRotation().mult(more);
-		
-		morph.getMorphology().setRelativeRotation( new RotationVector(end) );
-		
-	}
-	
-	/**
-	 * Changes the local translation of a morpholgy in the scene based on changes from the mouse movement
-	 * The dimensions of freedom allow the 2D movement of the mouse to map to the 3D movement intended
-	 * @param constraint Specifies what dimensions to allow movement based on mouse input. 
-	 * Will typically range from (0,0,0) to (1,1,1). Where (1,1,0) corresponds to 2D movement on the current X,Y plane
-	 */
-	//TODO: impliment the constraint
-	public void moveMorph(NeuronMorphologyView morph, float dx, float dy, OMTVector constraint)
-	{
-		//get changes in mouse movement
-		
-		
-		//TODO: calculate the viewing angle and apply to constraint
-		
-		dx = dx * constraint.getX();
-		dy = dy * constraint.getY();
-		float dz = dy * constraint.getZ();
-		
-		//get the position, add the change, store the new position
-		PositionVector np = new PositionVector( morph.getMorphology().getRelativePosition().asVector3f().add(dx,dy,dz) );
-		
-		//apply the movement
-		morph.getMorphology().setRelativePosition( np );
-	}
 	
 	private void handleMouseInput()
 	{
@@ -435,7 +367,7 @@ public class View extends BaseSimpleGame {
 	 */
 	private void manipulateCurrentSelection() 
 	{
-		if (prevPick != null && manipMorph != null)
+		if (prevPick != null && manipTangView != null)
 		{
 			//what action is being performed?
 			float mx = MouseInput.get().getXDelta();
@@ -448,22 +380,22 @@ public class View extends BaseSimpleGame {
 					//do nothing
 					break;
 				case METHOD_MOVE:
-					moveMorph(manipMorph, mx, my, new OMTVector(1,1,0));
+					manipTangView.getModel().move(mx, my, new OMTVector(1,1,0));
 					break;
 				case METHOD_ROTATEX:
-					rotateMorph(manipMorph, mx, my, new OMTVector(1,0,0));
+					manipTangView.getModel().rotate(mx, my, new OMTVector(1,0,0));
 					break;
 				case METHOD_ROTATEY:
-					rotateMorph(manipMorph, mx, my,new OMTVector(0,1,0));
+					manipTangView.getModel().rotate(mx, my,new OMTVector(0,1,0));
 					break;
 				case METHOD_ROTATEZ:
-					rotateMorph(manipMorph, mx, my,new OMTVector(0,0,1));
+					manipTangView.getModel().rotate(mx, my,new OMTVector(0,0,1));
 					break;
 				case METHOD_LOOKAT:
-					camNode.lookAt(manipMorph.getLocalTranslation(), new OMTVector(0,1,0)); //make the camera point a thte object in question
+					camNode.lookAt(manipTangView.getLocalTranslation(), new OMTVector(0,1,0)); //make the camera point a thte object in question
 					break;
 				case METHOD_SCALE:
-					scaleMorph(manipMorph, mx, my, new OMTVector(1,1,1));
+					manipTangView.getModel().scale(mx, my, new OMTVector(1,1,1));
 					break;
 			}
 		}
@@ -502,21 +434,16 @@ public class View extends BaseSimpleGame {
 	 */
 	private void doDeselection() {
 			//********* DESELECT PREVIOUS ********************* 
-			//if ( prevPick != null) prevPick.getTargetMesh().setRandomColors();
 			if ( prevPick != null )
 			{
-				/*
-				 * this should be done in a listener after firing an event
-				 * here
-				 */
-				
+				// loop over all known NeuronMorphologyViews
 				for (NeuronMorphologyView c : getView3D().getCells())
 				{
+					//test if the prevPick represented a SegmentView
 					SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
 					
 					if ( segView != null )
 					{
-						
 						if ( segView.correspondsToSegment() )
 						{
 							c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
@@ -529,8 +456,6 @@ public class View extends BaseSimpleGame {
 				}
 			}
 //			============== END DESLECT ============================
-			
-			
 	}
 	
 	/**
@@ -563,7 +488,7 @@ public class View extends BaseSimpleGame {
 				 * then get updated and change the color on the
 				 * appropriate geometry in the NeuronMorphologyView
 				 */
-				manipMorph = (NeuronMorphologyView) c; //for manipulating picked items
+				manipTangView = (NeuronMorphologyView) c; //for manipulating picked items
 				
 				if (segView.correspondsToSegment())
 				{

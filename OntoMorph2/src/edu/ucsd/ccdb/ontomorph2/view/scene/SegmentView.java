@@ -378,6 +378,12 @@ public class SegmentView extends TangibleView{
 		}
 	}
 
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 
