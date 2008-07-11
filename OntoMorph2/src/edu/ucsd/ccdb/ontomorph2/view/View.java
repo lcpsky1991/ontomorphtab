@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 //import java.nio.FloatBuffer;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +31,9 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.CameraNode;
 import com.jme.scene.Line;
+import com.jme.scene.SceneElement;
 import com.jme.scene.TriMesh;
+import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
@@ -39,6 +42,8 @@ import com.jme.util.geom.Debugger;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.*;
 import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
@@ -50,14 +55,12 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
 
 //===
 
-import com.jme.input.action.InputAction;
 import com.jme.input.action.InputActionEvent;
+import com.jme.input.action.KeyInputAction;
 import com.jme.input.action.MouseInputAction;
 import com.jme.input.action.MouseLook; 	//drag handler
-import com.jme.renderer.Camera;			//drag handler
 import com.jme.input.*;					//drag handler
-import edu.ucsd.ccdb.ontomorph2.view.MouseClickAndDrag;
-import org.fenggui.event.mouse.MouseButton;
+
 //=========
 
 /**
@@ -83,7 +86,7 @@ public class View extends BaseSimpleGame {
 	//=================================
 	// Global Interface-Objects
 	//=================================
-	public ViewCamera camNode;							//thisobject needed for manipulating the camera in a simple way
+	public ViewCamera camNode;					//thisobject needed for manipulating the camera in a simple way
 	RelativeMouse amouse; 						//the mouse object ref to entire screen, used to hide and show the mouse?
 	PickData prevPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
 	
@@ -284,15 +287,13 @@ public class View extends BaseSimpleGame {
 				//zoom camera if Z press
 				if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
 				{
-					camNode.zoomIn(dx);
+					camNode.zoomIn(dx);	
 				}
 				//move camera if Z NOT pressed
 				else
 				{
 					camNode.moveForward(dx);
 				}
-				
-				
 			}
 			
 			//====================================
@@ -313,8 +314,8 @@ public class View extends BaseSimpleGame {
 				float mx = MouseInput.get().getXDelta() / 100.0f;
 				float my = MouseInput.get().getYDelta() / 100.0f;
 
-				camNode.turnCounterClockwise(mx);
-				camNode.turnDown(my);
+				camNode.turnClockwise(mx);
+				camNode.turnUp(my);
 			}
 			else
 			{
@@ -345,8 +346,9 @@ public class View extends BaseSimpleGame {
 					
 						//set up next deselection
 						prevPick = results.getPickData(0);	//take the closest pick and set
-										
+						
 						doSelection();
+						
 						//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
 					} //end if of pr > 0
 				} //end if mouse button down
@@ -462,13 +464,29 @@ public class View extends BaseSimpleGame {
 	 * Select the currently chosen object
 	 * Called during mouse handling
 	 */
-	private void doSelection() {
+	private void doSelection() 
+	{
 //		************** SELECT **********************
 		//find the one that is closest
 		//the 0th element is closest to the origin of the ray with checkdistance
 		//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
 		
 		/* this should be done in a listener after firing an event here*/
+
+		
+		/**
+		 * @author caprea
+		 * experimental selection code area
+		 */
+		int a = 0;
+		int b = 0;
+		
+		{	//===== EXPERIMENTAL SELECT CODE ==============
+
+			
+		}
+		// end test code
+		
 		for (NeuronMorphologyView c : getView3D().getCells())
 		{ // loop over all NeuronMorphologyViews (the view representation of
 			// the morphology)
@@ -488,7 +506,9 @@ public class View extends BaseSimpleGame {
 				 * then get updated and change the color on the
 				 * appropriate geometry in the NeuronMorphologyView
 				 */
+
 				manipTangView = (NeuronMorphologyView) c; //for manipulating picked items
+
 				
 				if (segView.correspondsToSegment())
 				{
@@ -613,7 +633,19 @@ public class View extends BaseSimpleGame {
 	        	handleMouseInput();
 	        }	        
 	 };	
-	
+	 
+	 /**
+	  * Key input listener to handle events, so that it need not be accounted for every frame
+	  * @author caprea
+	  */
+	 KeyInputAction kbAction = new KeyInputAction()
+	 {
+		 public void performAction(InputActionEvent evt)
+		 {
+			 //TODO: move keyhandler here
+		 }
+	 };
+	 
 	/**
 	 * Convenience method for getting the underlying display system
 	 * @see DisplaySystem
