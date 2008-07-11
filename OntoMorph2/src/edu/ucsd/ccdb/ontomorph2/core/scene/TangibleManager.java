@@ -75,6 +75,33 @@ public class TangibleManager {
 		return root;
 	}
 
+	public int countSelected()
+	{
+		return selectedThings.size();
+	}
+	
+	/**
+	 * @author caprea
+	 * @return the most recently selected item (last item on the list), or NULL of list is empty
+	 */
+	public Tangible getSelectedRecent()
+	{
+		//return the last item on the list
+		if (selectedThings.size() > 0)	//only if the list is not empty
+		{
+			return selectedThings.get(selectedThings.size() - 1);
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	public Tangible getSelected(int index)
+	{
+		return selectedThings.get(index);
+	}
+	
 	public void addVolume(Tangible s) {
 		volumes.add((Volume) s);
 	}

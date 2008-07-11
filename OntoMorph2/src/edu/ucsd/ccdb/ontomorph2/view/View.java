@@ -1,10 +1,9 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
-import java.io.File;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 //import java.nio.FloatBuffer;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,7 +80,6 @@ public class View extends BaseSimpleGame {
 	float coordDelta;
 	private Scene _scene = null;
 
-	private int debugNum=0;		//for debugging
 	
 	//=================================
 	// Global Interface-Objects
@@ -115,8 +113,6 @@ public class View extends BaseSimpleGame {
 
 	private static int manipulation = METHOD_NONE; //use accesor
 	
-	
-
 	
 	/**
 	 * Returns the singleton instance.
@@ -254,8 +250,8 @@ public class View extends BaseSimpleGame {
 		KeyBindingManager.getKeyBindingManager().set("info", KeyInput.KEY_I);
 		KeyBindingManager.getKeyBindingManager().add("mem_report", KeyInput.KEY_I);
 		
-		//KeyBindingManager.getKeyBindingManager().set("zoom_in", KeyInput.KEY_Z);
-		//KeyBindingManager.getKeyBindingManager().set("zoom_out", KeyInput.KEY_X);
+		KeyBindingManager.getKeyBindingManager().set("zoom_in", KeyInput.KEY_RBRACKET);
+		KeyBindingManager.getKeyBindingManager().set("zoom_out", KeyInput.KEY_LBRACKET);
 		
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
@@ -270,7 +266,7 @@ public class View extends BaseSimpleGame {
 	{
 		
 		//handle mouse input
-		//TODO: get more sophisticated way of dealing with mouse input (pickresults has handler)
+		//NOTE:there is a more sophisticated way of dealing with mouse input than this (pickresults has handler)
 		try
 		{
 			boolean mouseLook = false;
@@ -342,8 +338,12 @@ public class View extends BaseSimpleGame {
 					
 					if ( results.getNumber() > 0)
 					{
-						doDeselection();
-					
+						//allow multiselection with shift
+						if ( !(KeyInput.get().isShiftDown()) )
+						{
+							TangibleManager.getInstance().unselectAll();
+						}
+						
 						//set up next deselection
 						prevPick = results.getPickData(0);	//take the closest pick and set
 						
@@ -369,36 +369,44 @@ public class View extends BaseSimpleGame {
 	 */
 	private void manipulateCurrentSelection() 
 	{
-		if (prevPick != null && manipTangView != null)
+		int cnt = TangibleManager.getInstance().countSelected();
+		if (prevPick != null && cnt > 0 )
 		{
 			//what action is being performed?
 			float mx = MouseInput.get().getXDelta();
 			float my = MouseInput.get().getYDelta();
 			
-			//TODO: replace unity vectors with ones based on camera axis
-			switch ( manipulation )
+			Tangible manip = null;
+			
+			for (int i=0; i < cnt; i++)
 			{
-				case METHOD_NONE:
-					//do nothing
-					break;
-				case METHOD_MOVE:
-					manipTangView.getModel().move(mx, my, new OMTVector(1,1,0));
-					break;
-				case METHOD_ROTATEX:
-					manipTangView.getModel().rotate(mx, my, new OMTVector(1,0,0));
-					break;
-				case METHOD_ROTATEY:
-					manipTangView.getModel().rotate(mx, my,new OMTVector(0,1,0));
-					break;
-				case METHOD_ROTATEZ:
-					manipTangView.getModel().rotate(mx, my,new OMTVector(0,0,1));
-					break;
-				case METHOD_LOOKAT:
-					camNode.lookAt(manipTangView.getLocalTranslation(), new OMTVector(0,1,0)); //make the camera point a thte object in question
-					break;
-				case METHOD_SCALE:
-					manipTangView.getModel().scale(mx, my, new OMTVector(1,1,1));
-					break;
+				manip = TangibleManager.getInstance().getSelected(i);
+				//TODO: replace unity vectors with ones based on camera axis
+				switch ( manipulation )
+				{
+					case METHOD_NONE:
+						//do nothing
+						break;
+					case METHOD_MOVE:
+						manip.move(mx, my, new OMTVector(1,1,0));
+						break;
+					case METHOD_ROTATEX:
+						manip.rotate(mx, my, new OMTVector(1,0,0));
+						break;
+					case METHOD_ROTATEY:
+						manip.rotate(mx, my,new OMTVector(0,1,0));
+						break;
+					case METHOD_ROTATEZ:
+						manip.rotate(mx, my,new OMTVector(0,0,1));
+						break;
+					case METHOD_LOOKAT:
+						camNode.lookAt(manip.getRelativePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question
+						break;
+					case METHOD_SCALE:
+						manip.scale(mx, my, new OMTVector(1,1,1));
+						break;
+				}
+				
 			}
 		}
 	}
@@ -431,10 +439,14 @@ public class View extends BaseSimpleGame {
 	}
 	
 	/**
+	 * @deprecated
 	 * Deselect the previously selected object
 	 * Called during mouse handling
 	 */
-	private void doDeselection() {
+	private void doDeselection() 
+	{
+		//broken on purpose so motivate cleaning up selection code
+		/*
 			//********* DESELECT PREVIOUS ********************* 
 			if ( prevPick != null )
 			{
@@ -457,6 +469,7 @@ public class View extends BaseSimpleGame {
 					}
 				}
 			}
+			*/
 //			============== END DESLECT ============================
 	}
 	
@@ -478,34 +491,49 @@ public class View extends BaseSimpleGame {
 		 * @author caprea
 		 * experimental selection code area
 		 */
-		int a = 0;
-		int b = 0;
-		
 		{	//===== EXPERIMENTAL SELECT CODE ==============
-
-			
+			for (NeuronMorphologyView cell : getView3D().getCells())
+			{
+				SegmentView pickSeg = ((NeuronMorphologyView) cell).getSegmentFromGeomBatch(prevPick.getTargetMesh());
+				if (pickSeg != null)
+				{ 
+					if (pickSeg.correspondsToSegmentGroup())
+					{
+						//update the cells
+						cell.getMorphology().selectSegmentGroup(pickSeg.getCorrespondingSegmentGroup());
+						
+						//gimme a tangible version of it
+						Tangible morph = cell.getMorphology();
+						
+						//put that tangible on the list
+						TangibleManager.getInstance().select(morph);
+					}
+				}
+			}			
 		}
 		// end test code
 		
+		/*
 		for (NeuronMorphologyView c : getView3D().getCells())
 		{ // loop over all NeuronMorphologyViews (the view representation of
 			// the morphology)
-			/*
-			 * Try to get a segView (view representation of a segment or
-			 * segment group) that matches the target mesh from the pick
-			 * results within this NeuronMorphologyView
-			 */
+		
+			//  Try to get a segView (view representation of a segment or
+			// segment group) that matches the target mesh from the pick
+			// results within this NeuronMorphologyView
+			//
+			
 			
 			SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
 			if (segView != null)
 			{ // if we found one
-				/*
-				 * tell the NeuronMorphology (the model representation
-				 * of the morphology) to note that we have selected a
-				 * segment or a segment group. The SceneObserver will
-				 * then get updated and change the color on the
-				 * appropriate geometry in the NeuronMorphologyView
-				 */
+				
+				 // tell the NeuronMorphology (the model representation
+				 // of the morphology) to note that we have selected a
+				 // segment or a segment group. The SceneObserver will
+				 // then get updated and change the color on the
+				 // appropriate geometry in the NeuronMorphologyView
+				 
 
 				manipTangView = (NeuronMorphologyView) c; //for manipulating picked items
 
@@ -520,6 +548,7 @@ public class View extends BaseSimpleGame {
 				}
 			}
 		}
+		*/
 	}
 	
 	/**
@@ -636,15 +665,29 @@ public class View extends BaseSimpleGame {
 	 
 	 /**
 	  * Key input listener to handle events, so that it need not be accounted for every frame
+	  * this is allowed to be repeatable, non-repeatables are handled as 'buttons'
 	  * @author caprea
 	  */
-	 KeyInputAction kbAction = new KeyInputAction()
+	 KeyInputAction repeatkbAction = new KeyInputAction()
 	 {
 		 public void performAction(InputActionEvent evt)
 		 {
 			 //TODO: move keyhandler here
 		 }
 	 };
+	 
+	 /**
+	  * for NONrepeatale keys or buttons
+	  * @author caprea
+	  */
+	 KeyInputAction norepeatkbAction = new KeyInputAction()
+	 {
+		 public void performAction(InputActionEvent evt)
+		 {
+			 //TODO: move keyhandler here
+		 }
+	 };
+	  
 	 
 	/**
 	 * Convenience method for getting the underlying display system
