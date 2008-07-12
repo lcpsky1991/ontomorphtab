@@ -18,6 +18,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
 /**
@@ -34,14 +35,15 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	private RotationVector _rotation = new RotationVector();
 	private CoordinateSystem sys = null;
 	private Node theSpatial = new Node();
-	private boolean selected = false;
-	private boolean _visible = true;
+	private boolean _visible = false;
 	private List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
 
 	private Color c = null;
 	private Color highlightedColor = null;
 	
 	public Tangible() {
+		TangibleManager.getInstance().addTangible(this);
+		this.addObserver(SceneObserver.getInstance());
 		//by default, all objects ought to be associated with an instance.
 		//the least specific instance that can be created is one of bfo:entity.
 		//addSemanticThing(SemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
@@ -178,7 +180,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	}
 
 	
-	protected void changed() {
+	public void changed() {
 		setChanged();
 		notifyObservers();
 	}

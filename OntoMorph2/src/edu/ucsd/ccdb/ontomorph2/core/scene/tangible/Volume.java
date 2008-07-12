@@ -50,10 +50,12 @@ public class Volume extends Tangible{
 		this.setCoordinateSystem(d);
 	}
 
+	
 	/**
 	 * 
 	 * @return Any ISemanticsAware objects that are geometrically inside this IVolume
 	 */
+	/*
 	public Set<ISemanticsAware> getContainedSemanticalObjects() {
 		Set<ISemanticsAware> l = new HashSet<ISemanticsAware>();
 		
@@ -64,7 +66,7 @@ public class Volume extends Tangible{
 			}
 		}
 		return l;
-	}
+	}*/
 
 	public boolean containsObject(Spatial s) {
 		return (_expShape.getWorldBound().intersects(s.getWorldBound()));

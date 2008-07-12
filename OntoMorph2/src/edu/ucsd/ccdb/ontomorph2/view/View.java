@@ -1,64 +1,46 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
-//import java.nio.FloatBuffer;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
-import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
-import com.jme.input.AbsoluteMouse;
 import com.jme.input.FirstPersonHandler;
+import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
-import com.jme.input.Mouse;
 import com.jme.input.MouseInput;
-import com.jme.input.MouseInputListener;
+import com.jme.input.RelativeMouse;
+import com.jme.input.action.InputActionEvent;
+import com.jme.input.action.KeyInputAction;
+import com.jme.input.action.MouseInputAction;
+import com.jme.input.action.MouseLook;
 import com.jme.intersection.PickData;
 import com.jme.intersection.PickResults;
 import com.jme.intersection.TrianglePickResults;
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.scene.CameraNode;
-import com.jme.scene.Line;
-import com.jme.scene.SceneElement;
+import com.jme.scene.Geometry;
 import com.jme.scene.TriMesh;
-import com.jme.scene.batch.GeomBatch;
-import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
-import com.jme.util.geom.BufferUtils;
 import com.jme.util.geom.Debugger;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.*;
-import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
-import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SegmentView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
-import edu.ucsd.ccdb.ontomorph2.core.changes.*;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.*;
-import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
-
-//===
-
-import com.jme.input.action.InputActionEvent;
-import com.jme.input.action.KeyInputAction;
-import com.jme.input.action.MouseInputAction;
-import com.jme.input.action.MouseLook; 	//drag handler
-import com.jme.input.*;					//drag handler
 
 //=========
 
@@ -71,6 +53,21 @@ import com.jme.input.*;					//drag handler
  */
 public class View extends BaseSimpleGame {
 
+//	==================================
+	// DECLARES
+	// - used for manipulating the objects, setting the mode says what you're doing with dragging
+	//==================================
+	public static final int METHOD_NONE = 0;
+	public static final int METHOD_MOVE = 1;
+	public static final int METHOD_MOVE_C = 2;
+	public static final int METHOD_SCALE = 4;
+	public static final int METHOD_ROTATEX = 8;
+	public static final int METHOD_ROTATEY = 16;
+	public static final int METHOD_ROTATEZ = 32;
+	public static final int METHOD_LOOKAT = 64;
+
+	private static int manipulation = METHOD_NONE; //use accesor
+	
 	private static View instance = null;
 	private static final Logger logger = Logger.getLogger(View.class.getName());
 //	The trimesh that i will change
@@ -86,7 +83,7 @@ public class View extends BaseSimpleGame {
 	//=================================
 	public ViewCamera camNode;					//thisobject needed for manipulating the camera in a simple way
 	RelativeMouse amouse; 						//the mouse object ref to entire screen, used to hide and show the mouse?
-	PickData prevPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
+	PickData currentPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
 	
 	TangibleView manipTangView=null;	//the most recent TangibleView to be selected/manipulated
 		
@@ -98,20 +95,6 @@ public class View extends BaseSimpleGame {
 	org.fenggui.Display disp; // FengGUI's display
 	
 	View3D view3D = null;
-	//==================================
-	// DECLARES
-	// - used for manipulating the objects, setting the mode says what you're doing with dragging
-	//==================================
-	public static final int METHOD_NONE = 0;
-	public static final int METHOD_MOVE = 1;
-	public static final int METHOD_MOVE_C = 2;
-	public static final int METHOD_SCALE = 4;
-	public static final int METHOD_ROTATEX = 8;
-	public static final int METHOD_ROTATEY = 16;
-	public static final int METHOD_ROTATEZ = 32;
-	public static final int METHOD_LOOKAT = 64;
-
-	private static int manipulation = METHOD_NONE; //use accesor
 	
 	
 	/**
@@ -137,6 +120,7 @@ public class View extends BaseSimpleGame {
 		//this.setDialogBehaviour(SimpleGame.ALWAYS_SHOW_PROPS_DIALOG);	
 		this.setDialogBehaviour(FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG);
 		view3D = new View3D();
+		
 	}
 	
 	/**
@@ -180,34 +164,6 @@ public class View extends BaseSimpleGame {
 		rootNode.setLightCombineMode(LightState.OFF);
 		
 		disp = View2D.getInstance();
-	}
-	
-	
-	
-	//this ismostly for debugging
-	//TODO: remove this function
-	private void createSphere(Vector3f p1)
-	{
-		//Cylinder(java.lang.String name, int axisSamples, int radialSamples, float radius, float height, boolean closed)
-		
-		float x,y,z;
-		x = p1.getX();
-		y = p1.getY();
-		z = p1.getZ();
-		
-		 Sphere s=new Sphere("My sphere",10,10,1f); //last number is radius
-		 s.setModelBound(new BoundingBox());
-		 s.updateModelBound();
-		 s.setRandomColors();
-		 s.setLocalTranslation(x,y,z);
-		 
-		 rootNode.attachChild(s);
-	}
-	
-	//for debugging
-	private void createLine(Vector3f apex, Vector3f base)
-	{
-		//TODO: remove
 	}
     	
 	private void configureControls()
@@ -345,11 +301,11 @@ public class View extends BaseSimpleGame {
 						}
 						
 						//set up next deselection
-						prevPick = results.getPickData(0);	//take the closest pick and set
+						currentPick = results.getPickData(0);	//take the closest pick and set
 						
 						doSelection();
 						
-						//System.out.println("Picked: " + prevPick.getTargetMesh().getName());
+						//System.out.println("Picked: " + currentPick.getTargetMesh().getName());
 					} //end if of pr > 0
 				} //end if mouse button down
 			} //end one-button mouse handling
@@ -370,7 +326,7 @@ public class View extends BaseSimpleGame {
 	private void manipulateCurrentSelection() 
 	{
 		int cnt = TangibleManager.getInstance().countSelected();
-		if (prevPick != null && cnt > 0 )
+		if (currentPick != null && cnt > 0 )
 		{
 			//what action is being performed?
 			float mx = MouseInput.get().getXDelta();
@@ -438,40 +394,7 @@ public class View extends BaseSimpleGame {
 		return pr;
 	}
 	
-	/**
-	 * @deprecated
-	 * Deselect the previously selected object
-	 * Called during mouse handling
-	 */
-	private void doDeselection() 
-	{
-		//broken on purpose so motivate cleaning up selection code
-		/*
-			//********* DESELECT PREVIOUS ********************* 
-			if ( prevPick != null )
-			{
-				// loop over all known NeuronMorphologyViews
-				for (NeuronMorphologyView c : getView3D().getCells())
-				{
-					//test if the prevPick represented a SegmentView
-					SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
-					
-					if ( segView != null )
-					{
-						if ( segView.correspondsToSegment() )
-						{
-							c.getMorphology().unselectSegment(segView.getCorrespondingSegment());
-						}
-						else if ( segView.correspondsToSegmentGroup() )
-						{
-							c.getMorphology().unselectSegmentGroup(segView.getCorrespondingSegmentGroup());	
-						}
-					}
-				}
-			}
-			*/
-//			============== END DESLECT ============================
-	}
+	
 	
 	/**
 	 * Select the currently chosen object
@@ -479,76 +402,10 @@ public class View extends BaseSimpleGame {
 	 */
 	private void doSelection() 
 	{
-//		************** SELECT **********************
-		//find the one that is closest
-		//the 0th element is closest to the origin of the ray with checkdistance
-		//This is the distance from the origin of the Ray to the nearest point on the BoundingVolume of the Geometry.
-		
-		/* this should be done in a listener after firing an event here*/
-
-		
-		/**
-		 * @author caprea
-		 * experimental selection code area
-		 */
-		{	//===== EXPERIMENTAL SELECT CODE ==============
-			for (NeuronMorphologyView cell : getView3D().getCells())
-			{
-				SegmentView pickSeg = ((NeuronMorphologyView) cell).getSegmentFromGeomBatch(prevPick.getTargetMesh());
-				if (pickSeg != null)
-				{ 
-					if (pickSeg.correspondsToSegmentGroup())
-					{
-						//update the cells
-						cell.getMorphology().selectSegmentGroup(pickSeg.getCorrespondingSegmentGroup());
-						
-						//gimme a tangible version of it
-						Tangible morph = cell.getMorphology();
-						
-						//put that tangible on the list
-						TangibleManager.getInstance().select(morph);
-					}
-				}
-			}			
+		TangibleView tv = TangibleViewManager.getInstance().getTangibleView(currentPick.getTargetMesh().getParentGeom());
+		if (tv != null) {
+			tv.getModel().select();
 		}
-		// end test code
-		
-		/*
-		for (NeuronMorphologyView c : getView3D().getCells())
-		{ // loop over all NeuronMorphologyViews (the view representation of
-			// the morphology)
-		
-			//  Try to get a segView (view representation of a segment or
-			// segment group) that matches the target mesh from the pick
-			// results within this NeuronMorphologyView
-			//
-			
-			
-			SegmentView segView = ((NeuronMorphologyView) c).getSegmentFromGeomBatch(prevPick.getTargetMesh());
-			if (segView != null)
-			{ // if we found one
-				
-				 // tell the NeuronMorphology (the model representation
-				 // of the morphology) to note that we have selected a
-				 // segment or a segment group. The SceneObserver will
-				 // then get updated and change the color on the
-				 // appropriate geometry in the NeuronMorphologyView
-				 
-
-				manipTangView = (NeuronMorphologyView) c; //for manipulating picked items
-
-				
-				if (segView.correspondsToSegment())
-				{
-					c.getMorphology().selectSegment(segView.getCorrespondingSegment());
-				}
-				else if (segView.correspondsToSegmentGroup())
-				{
-					c.getMorphology().selectSegmentGroup(segView.getCorrespondingSegmentGroup());
-				}
-			}
-		}
-		*/
 	}
 	
 	/**
@@ -806,6 +663,7 @@ public class View extends BaseSimpleGame {
 	public ViewCamera getCamera() {
 		return this.camNode;
 	}
+
 }
 
 

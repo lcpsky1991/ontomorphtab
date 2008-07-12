@@ -11,9 +11,14 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class Surface extends BezierMesh{
-
+public class Surface extends Tangible{
+	BezierMesh bm = null;
+	
 	public Surface(String s, OMTVector[][] array, int levelOfDetail) {
-		super(s, new BezierPatch(array, levelOfDetail));
+		this.bm = new BezierMesh(s, new BezierPatch(array, levelOfDetail));
+	}
+	
+	public BezierMesh asBezierMesh() {
+		return this.bm;
 	}
 }

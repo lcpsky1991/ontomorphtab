@@ -29,7 +29,7 @@ public class Curve3D extends Tangible{
 	private Vector3f _modelBinormal = null;
 	CoordinateSystem sys = null;
 	OMTVector[] controlPoints = null;
-	boolean seeAnchorPoints = false;
+	boolean seeAnchorPoints = true;
 		
 	
 	public Curve3D(String arg0, OMTVector[] arg1) {
@@ -224,6 +224,17 @@ public class Curve3D extends Tangible{
 	 */
 	public void setControlPoints(OMTVector[] points) {
 		this.theCurve = copyBezierCurve(points);
+		changed();
+	}
+
+	/**
+	 * Set a single control point for this curve.
+	 * @param i
+	 * @param pos
+	 */
+	public void setControlPoint(int i, OMTVector pos) {
+		this.controlPoints[i] =  pos;
+		setControlPoints(this.controlPoints);
 	}
 	
 }

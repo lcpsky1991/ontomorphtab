@@ -5,17 +5,21 @@ import java.util.Observer;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.SegmentGroupImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
  * This main observer is triggered when any scene object changes and updates
@@ -47,7 +51,8 @@ public class SceneObserver implements Observer{
 			_view.getView3D().setMeshes(scene.getMeshes());
 			
 		} else if (o instanceof NeuronMorphology) { //if an NeuronMorphology is changed
-			for (NeuronMorphologyView struct3d : _view.getView3D().getCells()) { //for all IStructure3Ds that are known
+			NeuronMorphologyView struct3d = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor((NeuronMorphology)o);
+			if (struct3d != null) {
 				NeuronMorphology morph = (NeuronMorphology)struct3d.getMorphology();
 				if (morph == o) { // find the one that matches this NeuronMorphology and update it
 					
@@ -70,20 +75,6 @@ public class SceneObserver implements Observer{
 					struct3d.updateRenderState();
 	
 				}
-				//UPDATE INFO STRING ON VIEW 2D
-				
-				if (((NeuronMorphology)o).hasSelectedSegmentGroups()) {
-					for (ISegmentGroup isg : ((NeuronMorphology)o).getSelectedSegmentGroups()) {
-						SegmentGroupImpl sg = (SegmentGroupImpl)isg;
-						//this is getting called more times than it should
-						String infoString = sg.getTags().toString() + "\n";
-						for (ISemanticThing s: sg.getSemanticThings()) {
-							infoString += (s.toString() + "\n"); 
-						}
-						infoString += ((NeuronMorphology)sg.getParentCell()).getSemanticThings();
-						View.getInstance().getView2D().setInfoText(infoString);
-					}
-				}
 			}
 		} else if (o instanceof ISemanticThing) {
 			ISemanticThing st = (ISemanticThing)o;
@@ -94,11 +85,12 @@ public class SceneObserver implements Observer{
 					sa.unselect();
 				}
 			}
-		} else if (o instanceof BrainRegion) {
-			BrainRegion br = (BrainRegion)o;
-			
-			View.getInstance().getView3D().updateBrainRegion(br);
-			
+		} else if (o instanceof Tangible) {
+//			catch all method for any leftover tangibles 
+			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible)o);
+			if (tv != null) {
+				tv.update();
+			}
 		}
 	}
 

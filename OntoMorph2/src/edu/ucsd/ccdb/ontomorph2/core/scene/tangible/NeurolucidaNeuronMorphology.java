@@ -61,8 +61,6 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 		} catch (JAXBException e) {
 			throw new OMTException("Problem loading " + _morphLoc.getFile(), e);
 		}
-		
-		this.addObserver(SceneObserver.getInstance());
 	}
 	
 	public NeurolucidaNeuronMorphology(URL morphLoc, PositionVector position, RotationVector rotation) {

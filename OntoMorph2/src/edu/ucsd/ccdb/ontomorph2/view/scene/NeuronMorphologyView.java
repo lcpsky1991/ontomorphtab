@@ -59,6 +59,7 @@ public class NeuronMorphologyView extends TangibleView{
 	CurveController _cc = null;
 	
 	public NeuronMorphologyView(NeuronMorphology morph) {
+		super(morph);
 		segViews = new ArrayList<SegmentView>();
 		currentMorph = morph;
 		this.setMorphMLNeuron(this.loadscene(morph), morph);
@@ -316,8 +317,15 @@ public class NeuronMorphologyView extends TangibleView{
 		}
 	}
 
+
 	@Override
-	protected void refreshColor() {
+	public void doHighlight() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void doUnhighlight() {
 		// TODO Auto-generated method stub
 		
 	}

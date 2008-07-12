@@ -7,25 +7,24 @@ import java.util.List;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
- * Implements an ISegmentGroup. Also is aware of semantic tags.
+ * Implements an ISegmentGroup. 
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @see ISegmentGroup
- * @see ISemanticsAware
  *
  */
-public class SegmentGroupImpl implements ISegmentGroup, ISemanticsAware{
+public class SegmentGroupImpl extends Tangible implements ISegmentGroup{
 
 	BigInteger id;
 	List<ISegment> segments = new ArrayList<ISegment>();
 	List<String> tags = new ArrayList<String>();
-	List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
-	Color color = null;
 	NeuronMorphology parentCell = null;
 	
-	public SegmentGroupImpl(NeuronMorphology parentCell, BigInteger id, List<ISegment> segments, List<String> tags) {
+	public SegmentGroupImpl(NeuronMorphology parentCell, BigInteger id, List<ISegment> segments, 
+			List<String> tags) {
 		this.id = id;
 		
 		this.segments.addAll(segments);
@@ -39,7 +38,7 @@ public class SegmentGroupImpl implements ISegmentGroup, ISemanticsAware{
 
 	public List<ISegment> getSegments() {
 		for (ISegment s : segments) {
-			s.setColor(color);
+			s.setColor(this.getColor());
 		}
 		return segments;
 	}
@@ -49,51 +48,30 @@ public class SegmentGroupImpl implements ISegmentGroup, ISemanticsAware{
 	}
 	
 	
-	public List<ISemanticThing> getSemanticThings() {
-		return this.semanticThings;
-	}
-	
 	public List<ISemanticThing> getAllSemanticThings() {
 		List<ISemanticThing> l = new ArrayList<ISemanticThing>();
-		l.addAll(this.semanticThings);
+		l.addAll(this.getSemanticThings());
 		for (ISegment sg : this.getSegments()) {
 			l.addAll(sg.getAllSemanticThings());
 		}
 		return l;
 	}
-	
-	public void addSemanticThing(ISemanticThing thing) {
-		this.semanticThings.add(thing);
-		thing.addSemanticsAwareAssociation(this);
-	}
-	
-	public void removeSemanticThing(ISemanticThing thing) {
-		this.semanticThings.remove(thing);
-		thing.removeSemanticsAwareAssociation(this);
-	}
-
-	public void setColor(Color color) {
-		this.color = color;		
-	}
-	
-	public Color getColor() {
-		return this.color;
-	}
-
-	public void select() {
-		getParentCell().selectSegmentGroup(this);
-	}
-
-	public void unselect() {
-		getParentCell().unselectSegmentGroup(this);
-	}
 
 	public NeuronMorphology getParentCell() {
 		return this.parentCell;
 	}
-
-	public boolean isSelected() {
-		return getParentCell().getSelectedSegmentGroups().contains(this);
+	
+	public void select() {
+		super.select();
+		SegmentGroupImpl sg = (SegmentGroupImpl)this;
+		//this is getting called more times than it should
+		String infoString = sg.getTags().toString() + "\n";
+		for (ISemanticThing s: sg.getSemanticThings()) {
+			infoString += (s.toString() + "\n"); 
+		}
+		infoString += ((NeuronMorphology)sg.getParentCell()).getSemanticThings();
+		View.getInstance().getView2D().setInfoText(infoString);
 	}
+
 
 }

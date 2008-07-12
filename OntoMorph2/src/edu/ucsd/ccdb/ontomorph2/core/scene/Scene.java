@@ -98,15 +98,7 @@ public class Scene extends Observable{
 	}
 	
 	private void addSceneObject(Tangible s) {
-		if (s instanceof Slide) {
-			manager.addSlide(s);
-		} else if (s instanceof NeuronMorphology) {
-			manager.addCell(s);
-		} else if (s instanceof Volume) {
-			manager.addVolume(s);
-		} else if (s instanceof DataMesh) {
-			manager.addMesh(s);
-		}
+		s.setVisible(true);
 	}
 	
 	/**
@@ -204,7 +196,7 @@ public class Scene extends Observable{
 		Curve3D curve1 = new Curve3D("Dentate Gyrus", array, d);
 		curve1.setColor(Color.BLUE);
 		curve1.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.01f);
-		manager.addCurve(curve1);
+		addSceneObject(curve1);
 
 		OMTVector c2v1 = new OMTVector(-5,-3,20);
 		OMTVector c2v2 = new OMTVector(45,-10,20);
@@ -216,9 +208,7 @@ public class Scene extends Observable{
 		Curve3D c2 = new Curve3D("CA",array2, d);
 		c2.setColor(Color.BLUE);
 		c2.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.1f);
-		manager.addCurve(c2);
-		
-
+		addSceneObject(c2);
 		
 		NeuronMorphology cell3 = new MorphMLNeuronMorphology(cell3URL, c2, 0.03f, 
 				NeuronMorphology.RENDER_AS_LOD_2, d);
@@ -226,9 +216,6 @@ public class Scene extends Observable{
 		//semantic thing for hippocampal CA3 neuron
 		cell3.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
 		addSceneObject(cell3);
-
-		
-		
 		
 		NeuronMorphology cell4 = new MorphMLNeuronMorphology(cell4URL, c2, 0.2f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
@@ -249,6 +236,7 @@ public class Scene extends Observable{
 		 *  Curve may need different model vectors for different NeuronMorphologies
 		 */
 
+		/*
 		NeuronMorphology cell6 = new MorphMLNeuronMorphology(cell6URL, c2, 0.8f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		//NeuronMorphology cell6 = new NeuronMorphology(cell6URL, null, null, NeuronMorphology.RENDER_AS_LOD);
@@ -256,7 +244,7 @@ public class Scene extends Observable{
 		//cell6.setUpVector(new OMTVector(1,0,0));
 		cell6.setUpVector(new OMTVector(0,0,1));
 		cell6.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA1_PYRAMIDAL_CELL_CLASS));
-		//addSceneObject(cell6);
+		addSceneObject(cell6);
 				
 		
 
@@ -266,7 +254,8 @@ public class Scene extends Observable{
 		//cell7.setUpVector(new OMTVector(1,0,0));
 		cell7.setUpVector(new OMTVector(0,0,1));
 		cell7.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA1_PYRAMIDAL_CELL_CLASS));
-		//addSceneObject(cell7);
+		addSceneObject(cell7);
+		*/
 		
 		/*
 		
@@ -321,7 +310,7 @@ public class Scene extends Observable{
 				{new OMTVector(p1.x, p1.y, p1.z-60), new OMTVector(p3.x, p3.y, p3.z-60), new OMTVector(p4.x, p4.y, p4.z-60), new OMTVector(p5.x, p5.y, p5.z-60)}
 		};
 		
-		Surface surf1 = new Surface("my surf", array3, 16);
+		//Surface surf1 = new Surface("my surf", array3, 16);
 		//manager.addSurface(surf1);
 		
 		p1 = new OMTVector(-20,0,20);
@@ -334,7 +323,7 @@ public class Scene extends Observable{
 				{new OMTVector(p1.x, p1.y, p1.z-60), new OMTVector(p2.x, p2.y, p2.z-60), new OMTVector(p2.x, p2.y, p2.z-60), new OMTVector(p3.x, p3.y, p3.z-60)}
 		};
 
-		Surface surf2 = new Surface("my surf", array4, 16);
+		//Surface surf2 = new Surface("my surf", array4, 16);
 		//manager.addSurface(surf2);
 		
 		
@@ -379,7 +368,7 @@ public class Scene extends Observable{
 		nml2.setCells(thecells);
 	}
 	
-	public ArrayList<Slide> getSlides() {
+	public Set<Slide> getSlides() {
 		return manager.getSlides();
 	}
 	

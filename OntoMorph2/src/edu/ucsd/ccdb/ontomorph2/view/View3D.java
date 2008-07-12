@@ -40,9 +40,6 @@ public class View3D extends Node{
 	private Node meshesNode = null;
 	private Node volumesNode = null;
 	private Node atlasNode = null;
-	private Set<NeuronMorphologyView> cells = null;
-	private Set<VolumeView> volumes = null;
-	private Set<BrainRegionView> brainRegions = null;
 	
 	public View3D() {
 		slidesNode = new Node();
@@ -61,10 +58,6 @@ public class View3D extends Node{
 		volumesNode.setLightCombineMode(LightState.OFF);
 		atlasNode.setLightCombineMode(LightState.COMBINE_CLOSEST);
 		
-		cells = new HashSet<NeuronMorphologyView>();
-		volumes = new HashSet<VolumeView>();
-		brainRegions = new HashSet<BrainRegionView>();
-		
 		this.attachChild(slidesNode);
 		this.attachChild(cellsNode);
 		this.attachChild(curvesNode);
@@ -74,7 +67,7 @@ public class View3D extends Node{
 		this.attachChild(atlasNode);
 	}
 	
-	public void setSlides(List<Slide> slides) {
+	public void setSlides(Set<Slide> slides) {
 		slidesNode.detachAllChildren();
 		for(Slide slide : slides){
 			slidesNode.attachChild(new SlideView(slide.getImageURL(),slide));
@@ -87,7 +80,6 @@ public class View3D extends Node{
 			NeuronMorphologyView cellView = new NeuronMorphologyView(cell);
 			Node n = cellView.getNode();
 			cellsNode.attachChild(n);
-			this.cells.add(cellView);
 		}
 	}
 
@@ -102,12 +94,8 @@ public class View3D extends Node{
 	public void setSurfaces(Set<Surface> surfaces) {
 		surfacesNode.detachAllChildren();
 		for(Surface surf : surfaces) {
-			surfacesNode.attachChild((Surface)surf);
+			surfacesNode.attachChild(surf.asBezierMesh());
 		}
-	}
-
-	public Set<NeuronMorphologyView> getCells() {
-		return this.cells;
 	}
 
 	public void setMeshes(Set<DataMesh> meshes) {
@@ -123,31 +111,8 @@ public class View3D extends Node{
 		volumesNode.detachAllChildren();
 		for (Volume vol : volumes) {
 			VolumeView volView = new VolumeView(vol);
-			this.volumes.add(volView);
 			volumesNode.attachChild(volView.getNode());
 		}
-	}
-	
-	public Set<VolumeView> getVolumes() {
-		return volumes;
-	}
-
-	/**
-	 * Draw the brain region, following the instructions on 
-	 * its visiblility and updating the view when necessary
-	 * @param br
-	 */
-	public void updateBrainRegion(BrainRegion br) {
-		
-		
-		for (BrainRegionView b : brainRegions) {
-			if (b.getBrainRegion().equals(br)) {
-				b.update();
-				return;
-			}
-		}
-		BrainRegionView bv = new BrainRegionView(br, atlasNode);
-		brainRegions.add(bv);
 	}
 	
 }

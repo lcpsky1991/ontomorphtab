@@ -18,7 +18,8 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
 
 /**
- * Keeps lists of all scene objects.
+ * Is the keeper for all Tangibles that have been intialized in the system.  
+ * Keeps track of selection of Tangibles.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
@@ -28,12 +29,8 @@ public class TangibleManager {
 	
 
 	private ArrayList<Tangible> selectedThings = null; 
-	ArrayList<Slide> slides = null;
-	Set<NeuronMorphology> cells = null;
-	Set<Curve3D> curves = null;
-	Set<Surface> surfaces = null;
-	Set<DataMesh> meshes = null;
-	Set<Volume> volumes = null;
+	ArrayList<Tangible> tangibles = null;
+	
 	/**
 	 * Holds singleton instance
 	 */
@@ -42,21 +39,8 @@ public class TangibleManager {
 	private TangibleManager() 
 	{
 		selectedThings = new ArrayList<Tangible>();
-		slides = new ArrayList<Slide>();
-		cells = new HashSet<NeuronMorphology>();
-		curves = new HashSet<Curve3D>();
-		surfaces = new HashSet<Surface>();
-		meshes = new HashSet<DataMesh>();
-		volumes = new HashSet<Volume>();
-	}
+		tangibles = new ArrayList<Tangible>();
 
-	public void addSlide(Tangible s)
-	{
-		slides.add((Slide) s);	
-	}
-
-	public void addCell(Tangible s) {
-		cells.add((NeuronMorphology) s);
 	}
 	
 	public MyNode getCellTree() {
@@ -102,41 +86,66 @@ public class TangibleManager {
 		return selectedThings.get(index);
 	}
 	
-	public void addVolume(Tangible s) {
-		volumes.add((Volume) s);
-	}
-
 	public Set<Volume> getVolumes() {
+		Set<Volume> volumes = new HashSet<Volume>();
+		for (Tangible t : this.tangibles) {
+			if (t instanceof Volume) {
+				volumes.add((Volume)t);
+			}
+		}
 		return volumes;
 	}
 
 	public Set<NeuronMorphology> getCells() {
+		Set<NeuronMorphology> cells = new HashSet<NeuronMorphology>();
+		for (Tangible t : this.tangibles) {
+			if (t instanceof NeuronMorphology) {
+				cells.add((NeuronMorphology)t);
+			}
+		}
 		return cells;
 	}
 
-	public ArrayList<Slide> getSlides() {
+	public Set<Slide> getSlides() {
+		Set<Slide> slides = new HashSet<Slide>();
+		for (Tangible t : this.tangibles) {
+			if (t instanceof Slide) {
+				slides.add((Slide)t);
+			}
+		}
 		return slides;
 	}
 
-	public void addMesh(Tangible s) {
-		meshes.add((DataMesh) s);
-	}
-
 	public Set<DataMesh> getMeshes() {
+		Set<DataMesh> meshes = new HashSet<DataMesh>();
+		for (Tangible t : this.tangibles) {
+			if (t instanceof DataMesh) {
+				meshes.add((DataMesh)t);
+			}
+		}
 		return meshes;
 	}
 
-	public Set<Curve3D> getCurves() {
-		return curves;
-	}
-
 	public Set<Surface> getSurfaces() {
+		Set<Surface> surfaces = new HashSet<Surface>();
+		for (Tangible t : this.tangibles) {
+			if (t instanceof Surface) {
+				surfaces.add((Surface)t);
+			}
+		}
 		return surfaces;
 	}
-
-	public void addCurve(Curve3D curve1) {
-		curves.add(curve1);
+	
+	public Set<Curve3D> getCurves() {
+		Set<Curve3D> surfaces = new HashSet<Curve3D>();
+		for (Tangible t : this.tangibles) {
+			if (t instanceof Curve3D) {
+				surfaces.add((Curve3D)t);
+			}
+		}
+		return surfaces;
 	}
+	
 
 	/**
 	 * Returns the singleton instance.
@@ -147,10 +156,6 @@ public class TangibleManager {
 			instance = new TangibleManager();
 		}
 		return instance;
-	}
-
-	public void addSurface(Surface surf2) {
-		surfaces.add(surf2);
 	}
 
 	/**
@@ -172,9 +177,18 @@ public class TangibleManager {
 		selectedThings.remove(thing);
 	}
 	
+	/**
+	 * Calls unselect on all selected Tangibles
+	 *
+	 */
 	public void unselectAll()
 	{
-		selectedThings.clear();
+		//call unselect on all objects rather than
+		//just clearing the list to trigger the changed 
+		//method in each object.
+		for (Tangible t : selectedThings) {
+			t.unselect();
+		}
 	}
 	
 	public void setHighlightColor(Color c)
@@ -185,5 +199,9 @@ public class TangibleManager {
 	public boolean isSelected(Tangible thing)
 	{
 		return selectedThings.contains(thing);
+	}
+
+	public void addTangible(Tangible tangible) {
+		this.tangibles.add(tangible);
 	}
 }

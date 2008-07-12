@@ -59,6 +59,7 @@ public class BasicSearchWidget {
         ta.setSize(100, 20);
         ta.setPosition(new Point(30,220));
         ta.setText(" Enter keyword");
+        /* commented out to avoid compiler error
         ta.addKeyPressedListener(new IKeyPressedListener(){
 			@Override
 			public void keyPressed(KeyPressedEvent keyPressedEvent) {
@@ -66,6 +67,7 @@ public class BasicSearchWidget {
 			}
         
 	    }  );
+	    */
         System.out.println(" X: " + ta.getX() + " Y: " + ta.getY() );
               
         Button button = new Button( "Start Search" );

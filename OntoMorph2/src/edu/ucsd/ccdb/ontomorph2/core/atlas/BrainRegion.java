@@ -52,8 +52,6 @@ public class BrainRegion extends Tangible{
 		this.parentAbbrev = parentAbbrev;
 		this.color = c;
 		this.regionId = Integer.parseInt(regionId);
-		
-		this.addObserver(SceneObserver.getInstance());
 		this.setCoordinateSystem(co);
 	}
 	

@@ -23,6 +23,8 @@ import com.jme.util.geom.BufferUtils;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.SegmentGroupImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.SegmentImpl;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
 import edu.ucsd.ccdb.ontomorph2.view.View;
@@ -42,12 +44,13 @@ public class SegmentView extends TangibleView{
 	private OMTDiscreteLodNode node = null;
 	
 	public SegmentView(ISegment seg) {
-		assert seg != null;
+		
+		super((SegmentImpl)seg);
 		this.seg = seg;
 	}
 	
 	public SegmentView(ISegmentGroup sg) {
-		assert sg != null;
+		super((SegmentGroupImpl)sg);
 		this.sg = sg;
 	}
 	
@@ -131,6 +134,7 @@ public class SegmentView extends TangibleView{
 	/**
 	 * @return True if this segment finds itself inside some IVolume
 	 */
+	/*
 	public boolean insideVolume() {
 		for (VolumeView vol : View.getInstance().getView3D().getVolumes()) {
 			for (Geometry g : this.getCurrentGeometries()) {
@@ -140,7 +144,7 @@ public class SegmentView extends TangibleView{
 			}
 		}
 		return false;
-	}
+	}*/
 
 	
 	
@@ -162,9 +166,9 @@ public class SegmentView extends TangibleView{
 
 
 	/**
-	 * Return a node that contains the geometries to visualize this ISegmentView
+	 * Return a node that contains the geometries to visualize this SegmentView
 	 * 
-	 * @param renderOption - an option to determine how the ISegmentView should be rendered
+	 * @param renderOption - an option to determine how the SegmentView should be rendered
 	 * @return
 	 */
 	public Node getViewNode(String renderOption) {
@@ -172,20 +176,38 @@ public class SegmentView extends TangibleView{
 			this.node = new OMTDiscreteLodNode(new DistanceSwitchModel(10));
 			
 			if (renderOption.equals(NeuronMorphology.RENDER_AS_LINES)) {
-				this.node.attachChild(this.getLine());
+				
+				Line l = this.getLine();
+				List<Geometry> ll = new ArrayList<Geometry>();
+				ll.add(l);
+				this.registerGeometries(ll);
+				this.node.attachChild(l);
+				
 			} else if (renderOption.equals(NeuronMorphology.RENDER_AS_CYLINDERS)) {
-				//node.attachChild(((SegmentView)seg).getClodMeshCylinder());
+				
 				this.node.attachChild(this.getCylinder());
+				
 			} else if (renderOption.equals(NeuronMorphology.RENDER_AS_LOD)) {
 				
-				this.node.addDiscreteLodNodeChild(this.getCylinder(), 0, 1000);
-				this.node.addDiscreteLodNodeChild(this.getLine(), 1000, 10000);
+				Cylinder c = this.getCylinder();
+				Line l = this.getLine();
+				List<Geometry> ll = new ArrayList<Geometry>();
+				ll.add(c);
+				ll.add(l);
+				this.registerGeometries(ll);
+				this.node.addDiscreteLodNodeChild(c, 0, 1000);
+				this.node.addDiscreteLodNodeChild(l, 1000, 10000);
 				
 			} else if (renderOption.equals(NeuronMorphology.RENDER_AS_LOD_2)){
 				
-				this.node.addDiscreteLodNodeChild(this.getCylindersFromSegGroup(), 0, 800);
-				this.node.addDiscreteLodNodeChild(this.getLine(), 800, 10000);
-				
+				List<Geometry> lg = this.getCylindersFromSegGroup();
+				Line l = this.getLine();
+				List<Geometry> ll = new ArrayList<Geometry>();
+				ll.addAll(lg);
+				ll.add(l);
+				this.registerGeometries(ll);
+				this.node.addDiscreteLodNodeChild(lg, 0, 800);
+				this.node.addDiscreteLodNodeChild(l, 800, 10000);
 			}
 		}
 		return this.node;
@@ -363,13 +385,16 @@ public class SegmentView extends TangibleView{
 	}
 	
 	protected void refreshColor() {
-		for (Geometry g : this.node.getAllGeometries()) {
-			chooseColor(g);
+		if (this.node != null) {
+			for (Geometry g : this.node.getAllGeometries()) {
+				chooseColor(g);
+			}
 		}
 	}
 	
 	private void setToDefaultColor(Geometry g) {
-		if (insideVolume()) {
+		//if (insideVolume()) {
+		if (false) {
 			g.setSolidColor(ColorRGBA.red);
 		} else if (correspondsToSegment()) {
 			g.setSolidColor(ColorUtil.convertColorToColorRGBA(getCorrespondingSegment().getColor()));
@@ -378,8 +403,20 @@ public class SegmentView extends TangibleView{
 		}
 	}
 
-	@Override
 	public void update() {
+		super.update();
+		refreshColor();
+	}
+
+
+	@Override
+	public void doHighlight() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void doUnhighlight() {
 		// TODO Auto-generated method stub
 		
 	}

@@ -1,28 +1,25 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.renderer.ColorRGBA;
+
+import com.jme.curve.BezierCurve;
 import com.jme.scene.Node;
-import com.jme.scene.shape.Sphere;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 
 public class CurveView extends TangibleView {
 
 	Node anchors = null;
+	BezierCurve b = null;
 	
 	public CurveView(Curve3D curve) {
-		super.setModel(curve);
-
+		super(curve);
+		
 		update();
 	}
 
-	@Override
-	protected void refreshColor() {
-		// TODO Auto-generated method stub
-
-	}
 	
 	public void update() {
 		//remove everything at the beginning because we can't be guaranteed to have
@@ -31,7 +28,8 @@ public class CurveView extends TangibleView {
 		this.detachAllChildren();
 		
 		Curve3D curve = ((Curve3D)getModel());
-		this.attachChild(curve.asBezierCurve());
+		this.b = (BezierCurve)curve.asBezierCurve();
+		this.attachChild(this.b);
 		
 		if (curve.getAnchorPointsVisibility()) {
 			renderAnchorPoints(curve);
@@ -39,7 +37,20 @@ public class CurveView extends TangibleView {
 		//no need to remove anchor points because this is done 
 		//automatically already
 		
+		
+		this.b.updateModelBound();
+		this.b.updateRenderState();
+		this.b.updateGeometricState(5f, true);
+		
+		if (anchors != null) {
+			this.anchors.updateModelBound();
+			this.anchors.updateRenderState();
+			this.anchors.updateGeometricState(5f, true);
+		}
+		
 		this.updateModelBound();
+	    this.updateRenderState();
+	    this.updateGeometricState(5f, true);
 	}
 
 	private void renderAnchorPoints(Curve3D curve) {
@@ -48,43 +59,26 @@ public class CurveView extends TangibleView {
 		}
 		OMTVector[] anchorPoints = curve.getControlPoints();
 		
+		int i = 0;
 		for (OMTVector v : anchorPoints) {
-			anchors.attachChild(new CurveAnchorPoint(v));
+			this.attachChild(new CurveAnchorPointView(new CurveAnchorPoint(curve, v, i++)));
 		}
-		anchors.updateModelBound();
+		
 		this.attachChild(anchors);
 	}
-	
-	protected class CurveAnchorPoint extends TangibleView {
-		
-		Sphere s = null;
-		
-		public CurveAnchorPoint(OMTVector position) {
-			this.s = new Sphere("curve anchor point", position, 5, 5, 1f);
-			s.setModelBound(new BoundingBox());
-			s.updateModelBound();
-			this.attachChild(s);
-		}
-		
-		public void setHighlighted(boolean highlight) {
-			if (highlight) {
-				this.s.setSolidColor(ColorRGBA.yellow);
-			} else {
-				this.s.setSolidColor(ColorRGBA.cyan);
-			}
-		}
 
-		@Override
-		protected void refreshColor() {
-			// TODO Auto-generated method stub
-			
-		}
 
-		@Override
-		public void update() {
-			// TODO Auto-generated method stub
-			
-		}
+	@Override
+	public void doHighlight() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void doUnhighlight() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

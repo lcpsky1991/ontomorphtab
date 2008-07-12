@@ -62,8 +62,6 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 		} catch (JAXBException e) {
 			throw new OMTException("Problem loading " + _morphLoc.getFile(), e);
 		}
-		
-		this.addObserver(SceneObserver.getInstance());
 	}
 	
 	public MorphMLNeuronMorphology(URL morphLoc, PositionVector position, RotationVector rotation) {

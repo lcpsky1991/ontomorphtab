@@ -22,7 +22,6 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  */
 public class BrainRegionView extends TangibleView{
 
-	BrainRegion br = null;
 	LightState lightState = null;
 	TriMesh mesh = null;
 	Node parentNode = null;
@@ -35,7 +34,8 @@ public class BrainRegionView extends TangibleView{
 	 * @param parentNode
 	 */
 	public BrainRegionView(BrainRegion br, Node parentNode) {
-		this.br = br;
+		super(br);
+		
 		this.parentNode = parentNode;
 		
 		this.mesh = br.getTriMesh();
@@ -60,7 +60,7 @@ public class BrainRegionView extends TangibleView{
 	}
 	
 	public BrainRegion getBrainRegion() {
-		return this.br;
+		return (BrainRegion)this.getModel();
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class BrainRegionView extends TangibleView{
 	 *
 	 */
 	public void update() {
-		switch(br.getVisibility()) {
+		switch(getBrainRegion().getVisibility()) {
 		case BrainRegion.VISIBLE:
 			makeVisible();
 			makeSolid();
@@ -86,7 +86,7 @@ public class BrainRegionView extends TangibleView{
 		}
 		
 	
-		if (br.isSelected()) {
+		if (getBrainRegion().isSelected()) {
 			this.highlight();
 		} else {
 			this.unhighlight();
@@ -149,11 +149,15 @@ public class BrainRegionView extends TangibleView{
 	}
 
 	@Override
-	protected void refreshColor() {
-		if (isHighlighted()) {
-			//
-		} else {
-			//
-		}
+	public void doHighlight() {
+		// TODO Auto-generated method stub
+		
 	}
+
+	@Override
+	public void doUnhighlight() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
