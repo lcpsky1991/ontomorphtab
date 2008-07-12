@@ -45,8 +45,6 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	Camera cam;
 	CameraNode camNode;
 	Node rootNode = new Node("root Node");
-	Quaternion rot;
-	Vector3f pos;
 	InputHandler input = new InputHandler();
 	public ViewCamera() {
 		init();	
@@ -245,7 +243,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         colors[1] = new ColorRGBA(0, 0, 1, 1);
         curve.setColorBuffer(0, BufferUtils.createFloatBuffer(colors));
 
-        Vector3f up = new Vector3f(200,100,-100);
+        Vector3f up = new Vector3f(0,1,0);
         System.out.println("up" + up);
         CurveOnceController cc = new CurveOnceController(curve, this, rotation);
         cc.setActive(false);
@@ -256,11 +254,13 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         cc.setUpVector(up);
         cc.setSpeed(.25f);
         cc.setDisableAfterClamp(true);
+        //this.getCamera().onFrameChange();
         //cc.setAutoRotation(true);
         //this.setLocalRotation(rotation);
         rootNode.attachChild(curve);
        //rootNode.attachChild(camNode);
         cc.setActive(true);
+        //this.getCamera().setDirection(up);
         //this.setLocalRotation(rotation);
         //cc.setActive(false);
         //this.setLocalRotation(rotation);
@@ -391,11 +391,5 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		Vector3f loc = new Vector3f(300f, -118f, 300f);
 		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y);
 		continuousZoomTo(loc, rotation, invZoom);
-	}
-	
-	
-	/*public void update(){
-			this.setLocalTranslation(pos);
-			this.setLocalRotation(rot);
-	}*/
+	}	
 }
