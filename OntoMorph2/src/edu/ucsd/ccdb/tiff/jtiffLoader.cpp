@@ -23,7 +23,7 @@
 #include <jni.h>
 #include "jtiffLoader.h"
 #include <iostream>
-#include "tiffLoader.cpp"
+#include "tiffLoader.h"
 #include <string.h>
 
 //MIN BUFFER is basicly an arbitrary number of how much the minimum buffersize should be; 1900x1200 screen
@@ -203,8 +203,12 @@ JNIEXPORT jintArray JNICALL Java_edu_ucsd_ccdb_tiff_jtiffLoader_getRGBA (JNIEnv 
  	
 	// copy the native info into the java array
 	//we do not need to copy the WHOLE buffer, only W * H * 4 (R G B A)
+#ifdef WIN32
+	env->SetIntArrayRegion(j_rgba, 0, c_w*c_h , (jint *)c_oBuf);	//problematic
+#else
 	env->SetIntArrayRegion(j_rgba, 0, c_w*c_h , (int *)c_oBuf);	//problematic
-	
+#endif
+
 	return  j_rgba;
 }
 
