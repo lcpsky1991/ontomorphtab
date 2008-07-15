@@ -27,20 +27,25 @@ public class CurveAnchorPointView extends TangibleView {
 	public CurveAnchorPointView(CurveAnchorPoint capt) {
 		super(capt);
 		this.s =  new Sphere("curve anchor point", capt.getAbsolutePosition(), 6, 6, 0.5f);
-					
 		s.setModelBound(new BoundingBox());
-		s.updateModelBound();
+		s.updateModelBound();	
 		
 		List<Geometry> ll = new ArrayList<Geometry>();
 		ll.add(s);
 		this.registerGeometries(ll);
 		
 		this.attachChild(s);
+		//this.update();
 	}
 
 	public void update(){
 		super.update();
+		
 		s.setLocalTranslation(this.getModel().getRelativePosition());
+		//this.getModel().getCoordinateSystem().applyToSpatial(s);		
+
+		s.setModelBound(new BoundingBox());
+		s.updateModelBound();
 	}
 	
 	public void doHighlight() {

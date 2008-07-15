@@ -71,6 +71,7 @@ public class View extends BaseSimpleGame {
 	private static int manipulation = METHOD_NONE; //use accesor
 	
 	private static View instance = null;
+	
 //	The trimesh that i will change
 	TriMesh square;
 	
@@ -278,13 +279,12 @@ public class View extends BaseSimpleGame {
 				//====================================
 				if (MouseInput.get().isButtonDown(1)) //right
 				{	
-					//MouseInput.get().setCursorVisible(false); //hide mouse cursor
-					//manipulateCurrentSelection();
-					displayContextMenu();
+					MouseInput.get().setCursorVisible(false); //hide mouse cursor
+					manipulateCurrentSelection();
 				}
 				else
 				{
-					//MouseInput.get().setCursorVisible(true); //show mouse cursor
+					MouseInput.get().setCursorVisible(true); //show mouse cursor
 				}
 				
 				//====================================
@@ -292,9 +292,6 @@ public class View extends BaseSimpleGame {
 				//====================================
 				if (MouseInput.get().isButtonDown(0)) //left 
 				{
-					hideContextMenu();
-					manipulateCurrentSelection();
-					
 					//get stuff we are trying to pick/select
 					PickResults results = getPickResults();
 					
@@ -318,7 +315,7 @@ public class View extends BaseSimpleGame {
 		} //end try
 		catch (Exception e)
 		{
-			//Log.warn("Exception caught in View.handleMouseInput()" + e.printStackTrace());
+			Log.warn("Exception caught in View.handleMouseInput(): " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -519,12 +516,13 @@ public class View extends BaseSimpleGame {
 						"\nWorld Rot: "+ camNode.getWorldRotation() + 
 						"\nDirection: " + camNode.getCamera().getDirection() +
 						"\nLoc Trans: "+ camNode.getLocalTranslation() +
-						"\nWorld Trans: "+ camNode.getWorldTranslation());
+						"\nWorld Trans: "+ camNode.getWorldTranslation() +
+						"\nZoom: " + camNode.getZoom());
 			}
 			
 			if ( isAction("reset"))
 			{
-				Log.warn("\nResetting");
+				Log.warn( "\nResetting");
 				camNode.reset();			
 			}
 			

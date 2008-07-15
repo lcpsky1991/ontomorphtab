@@ -2,6 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.core.scene;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -183,11 +184,19 @@ public class TangibleManager {
 	 */
 	public void unselectAll()
 	{
-		//call unselect on all objects rather than
-		//just clearing the list to trigger the changed 
-		//method in each object.
-		for (Tangible t : selectedThings) {
-			t.unselect();
+		
+		try {
+ 		     //call unselect on all objects rather than
+			//just clearing the list to trigger the changed 
+			//method in each object.
+			for (Tangible t : selectedThings) {
+				t.unselect();
+			}
+		} catch (ConcurrentModificationException e) {
+			//if we stepped afoul of modifying the array at the same time
+			//as another process, just try again.. can't be concurrently
+			//modifying it forever...
+			unselectAll();
 		}
 	}
 	

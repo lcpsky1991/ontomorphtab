@@ -40,6 +40,8 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String SLIDE_VIEW_SMOOTH = "Smoothly Zoom to View Example Slide";
 	public static final String ATLAS_LATERAL_VIEW_SMOOTH = "Smoothly Zoom To Atlas Lateral Side";
 	public static final String ATLAS_MEDIAL_VIEW_SMOOTH = "Smoothly Zoom To Atlas Medial Side";
+	public static final String ATLAS_CELL_VIEW_SMOOTH = "Smoothly Zoom To View Cells";
+	public static final String ATLAS_SUBCELL_VIEW_SMOOTH = "Smoothly Zoom To View Subcellular Components";
 	public static final String strMNU_MANIPULATE = "Manipulate Object";
 	public static final String strMNU_MANI_ROTATEA = "Rotate (X - Axis)";
 	public static final String strMNU_MANI_ROTATEB = "Rotate (Y - Axis)";
@@ -82,6 +84,8 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         makeMenuItem(ATLAS_LATERAL_VIEW, mnuView);
         makeMenuItem(ATLAS_MEDIAL_VIEW, mnuView);
         makeMenuItem(SLIDE_VIEW_SMOOTH, mnuView);
+        makeMenuItem(ATLAS_CELL_VIEW_SMOOTH, mnuView);
+        makeMenuItem(ATLAS_SUBCELL_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_LATERAL_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_MEDIAL_VIEW_SMOOTH, mnuView);
         
@@ -188,23 +192,31 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		{
 			View.getInstance().getCamera().setToSlideView();
 		} 
-		else if (ATLAS_LATERAL_VIEW.equals(arg0.getItem().getText())) 
+		else if (ATLAS_LATERAL_VIEW.equals(act)) 
 		{
 			View.getInstance().getCamera().setToAtlasLateralView();
 		} 
-		else if (ATLAS_MEDIAL_VIEW.equals(arg0.getItem().getText())) 
+		else if (ATLAS_MEDIAL_VIEW.equals(act)) 
 		{
 			View.getInstance().getCamera().setToAtlasMedialView();
 		}
-		else if (SLIDE_VIEW_SMOOTH.equals(arg0.getItem().getText())) 
+		else if (SLIDE_VIEW_SMOOTH.equals(act)) 
 		{
 			View.getInstance().getCamera().smoothlyZoomToSlideView();
+		} 
+		else if (ATLAS_CELL_VIEW_SMOOTH.equals(act)) 
+		{
+			View.getInstance().getCamera().smoothlyZoomToCellView();
 		}
-		else if (ATLAS_LATERAL_VIEW_SMOOTH.equals(arg0.getItem().getText())) 
+		else if (ATLAS_SUBCELL_VIEW_SMOOTH.equals(act)) 
+		{
+			View.getInstance().getCamera().smoothlyZoomToSubcellularView();
+		}
+		else if (ATLAS_LATERAL_VIEW_SMOOTH.equals(act)) 
 		{
 			View.getInstance().getCamera().smoothlyZoomToAtlasLateralView();
 		}
-		else if (ATLAS_MEDIAL_VIEW_SMOOTH.equals(arg0.getItem().getText())) 
+		else if (ATLAS_MEDIAL_VIEW_SMOOTH.equals(act)) 
 		{
 			View.getInstance().getCamera().smoothlyZoomToAtlasMedialView();
 		}

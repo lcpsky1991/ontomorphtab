@@ -59,6 +59,20 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		return camRotationRate;
 	}
 	
+	protected void reduceRotationRate() {
+		camRotationRate -= 0.001;
+		if (camRotationRate < 0) {
+			camRotationRate = 0;
+		}
+	}
+	
+	protected void increaseRotationRate() {
+		camRotationRate += 0.001;
+		if (camRotationRate > 2*FastMath.PI) {
+			camRotationRate = 2*FastMath.PI;
+		}
+	}
+	
 	protected void init() {
 //		====================================
 		// CAMERA SETUP
@@ -147,7 +161,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	public void turnClockwise(float amount) {
 //		key right
 		Quaternion roll = new Quaternion();
-		roll.fromAngleAxis( -1*amount, Vector3f.UNIT_Y ); //rotates Rate degrees
+		roll.fromAngleAxis( -1*amount*getRotationRate(), Vector3f.UNIT_Y ); //rotates Rate degrees
 		roll = this.getLocalRotation().multLocal(roll); // (q, save)
 		this.setLocalRotation(roll);
 	}
@@ -159,7 +173,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	public void turnCounterClockwise(float amount) {
 //		left key
 		Quaternion roll = new Quaternion();
-		roll.fromAngleAxis( 1*amount, Vector3f.UNIT_Y ); //rotates Rate degrees
+		roll.fromAngleAxis( 1*amount*getRotationRate(), Vector3f.UNIT_Y ); //rotates Rate degrees
 		roll = this.getLocalRotation().multLocal(roll); // (q, save)
 		this.setLocalRotation(roll);
 	}
@@ -171,7 +185,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	public void turnDown(float amount) {
 //		down
 		Quaternion roll = new Quaternion();
-		roll.fromAngleAxis( 1*amount, Vector3f.UNIT_X );//rotates Rate degrees
+		roll.fromAngleAxis( 1*amount*getRotationRate(), Vector3f.UNIT_X );//rotates Rate degrees
 		roll = this.getLocalRotation().multLocal(roll); // (q, save)
 		this.setLocalRotation(roll);
 	}
@@ -183,7 +197,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	public void turnUp(float amount) {
 //		up
 		Quaternion roll = new Quaternion();
-		roll.fromAngleAxis( -1*amount, Vector3f.UNIT_X ); //rotates Rate degrees
+		roll.fromAngleAxis( -1*amount*getRotationRate(), Vector3f.UNIT_X ); //rotates Rate degrees
 		roll = this.getLocalRotation().multLocal(roll); // (q, save)
 		this.setLocalRotation(roll);
 	}
@@ -208,6 +222,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 */
 	public void zoomIn(float amount) {
 		invZoom -= 0.01f * amount;
+		this.reduceRotationRate();
 		//float aspect = (float) display.getWidth() / (float) display.getHeight();
 		this.getCamera().setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
 		//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
@@ -220,6 +235,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 */
 	public void zoomOut(float amount) {
 		invZoom += 0.01f * amount;
+		this.increaseRotationRate();
 		//float aspect = (float) display.getWidth() / (float) display.getHeight();
 		this.getCamera().setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
 		//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
@@ -369,7 +385,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	public void smoothlyZoomToAtlasMedialView() {
 		Vector3f loc = new Vector3f(300f, -118f, -700f);
 		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*0, Vector3f.UNIT_Y);
-		continuousZoomTo(loc, rotation, invZoom);
+		continuousZoomTo(loc, rotation, 1.0f);
 		//System.out.println("waittttttttttttttttttttttttttttt");
 		//System.out.println("direction " + cam.getLocation());
 	}
@@ -381,7 +397,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	public void smoothlyZoomToSlideView() {
 		Vector3f loc = new Vector3f(-300f, -118f, -180f);
 		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y);
-		continuousZoomTo(loc, rotation, invZoom);
+		continuousZoomTo(loc, rotation, 1.0f);
 	}
 
 	/**
@@ -391,6 +407,22 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	public void smoothlyZoomToAtlasLateralView() {
 		Vector3f loc = new Vector3f(300f, -118f, 300f);
 		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y);
-		continuousZoomTo(loc, rotation, invZoom);
+		continuousZoomTo(loc, rotation, 1.0f);
+	}
+	
+	public void smoothlyZoomToCellView() {
+		Vector3f loc = new Vector3f(190f, -118f, -180f);
+		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y);
+		continuousZoomTo(loc, rotation, 1.0f);
+	}
+	
+	public void smoothlyZoomToSubcellularView() {
+		Vector3f loc = new Vector3f(278.8373f, -116.61807f, -179.73985f);
+		Quaternion rotation = new Quaternion(-0.05305708f,0.60644495f, 0.06914531f, 0.7903347f);
+		continuousZoomTo(loc, rotation, 0.21f);
+	}
+
+	public float getZoom() {
+		return invZoom;
 	}	
 }
