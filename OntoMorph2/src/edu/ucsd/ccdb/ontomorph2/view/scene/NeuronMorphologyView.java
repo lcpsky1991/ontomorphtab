@@ -26,6 +26,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
 
 /**
@@ -177,6 +178,7 @@ public class NeuronMorphologyView extends TangibleView{
 
 	
 	public Node loadscene(NeuronMorphology morph) {
+		long tick = Log.tick();
 		Node sceneRoot = new Node();
 		 /* 
          * Check the LightState. If none has been passed, create a new one and
@@ -207,7 +209,7 @@ public class NeuronMorphologyView extends TangibleView{
     		sceneRoot.attachChild(node);	
 
         }
-
+        Log.tock("NeuronMorphology.loadScene() took", tick);
     	return sceneRoot;
 	}
 	

@@ -53,7 +53,7 @@ public class Slide extends Tangible {
 			for(int i=0;i<file.size();i++)
 			{
 				CCDBFile f = (CCDBFile)file.get(i);
-				System.out.println(f.getCCDBCatagory());
+				//System.out.println(f.getCCDBCatagory());
 				if (f.getCCDBFileType() == CCDBFileType.IMAGE_JPEG) {
 						imageURL = f.getURL();
 				} 

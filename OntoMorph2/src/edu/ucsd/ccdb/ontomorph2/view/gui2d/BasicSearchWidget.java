@@ -34,6 +34,7 @@ import org.fenggui.util.Spacing;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
 
 /**
  * 2D widget that allows a user to type in keywords and issue a keyword search
@@ -68,7 +69,7 @@ public class BasicSearchWidget {
         
 	    }  );
 	    */
-        System.out.println(" X: " + ta.getX() + " Y: " + ta.getY() );
+        Log.warn(" X: " + ta.getX() + " Y: " + ta.getY() );
               
         Button button = new Button( "Start Search" );
         button.setSize(80, 30);

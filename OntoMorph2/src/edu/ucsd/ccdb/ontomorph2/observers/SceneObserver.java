@@ -1,7 +1,9 @@
 package edu.ucsd.ccdb.ontomorph2.observers;
 
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
@@ -18,6 +20,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View;
+import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
@@ -84,6 +87,19 @@ public class SceneObserver implements Observer{
 				} else if (!st.isSelected()) {
 					sa.unselect();
 				}
+			}
+		} else if (o instanceof BrainRegion) {
+			//this is a special case for now because we can't yet load into memory
+			//a brain region view for every brain region in the system since they
+			//eat up a lot of resources.  so we add them one by one
+			BrainRegion b = (BrainRegion)o;
+			BrainRegionView brv = (BrainRegionView)TangibleViewManager.getInstance().getTangibleViewFor(b);
+			if (brv == null) {
+				Set<BrainRegion> brs = new HashSet<BrainRegion>();
+				brs.add(b);
+				_view.getView3D().addBrainRegions(brs);
+			} else {
+				brv.update();
 			}
 		} else if (o instanceof Tangible) {
 //			catch all method for any leftover tangibles 

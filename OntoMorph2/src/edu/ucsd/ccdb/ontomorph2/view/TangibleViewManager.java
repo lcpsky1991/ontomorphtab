@@ -15,7 +15,8 @@ public class TangibleViewManager {
 	
 
 	HashMap<Geometry, TangibleView> geometryToTangibleView = null;
-	List<TangibleView> allTangibleViews = null;
+	HashMap<Tangible, TangibleView> tangibleToTangibleView = null;
+	
 	
 	
 	public static TangibleViewManager getInstance() {
@@ -27,7 +28,8 @@ public class TangibleViewManager {
 	
 	private TangibleViewManager() {
 		geometryToTangibleView = new HashMap<Geometry,TangibleView>();
-		allTangibleViews = new ArrayList<TangibleView>();
+		tangibleToTangibleView = new HashMap<Tangible, TangibleView>();
+		
 	}
 	
 	/**
@@ -35,7 +37,7 @@ public class TangibleViewManager {
 	 * @param tv
 	 */
 	public void addTangibleView(TangibleView tv) {
-		allTangibleViews.add(tv);
+		tangibleToTangibleView.put(tv.getModel(), tv);
 	}
 	
 	/**
@@ -44,12 +46,7 @@ public class TangibleViewManager {
 	 * @return - null if no tangible matches this model, otherwise, the corresponding TangibleView
 	 */
 	public TangibleView getTangibleViewFor(Tangible t) {
-		for (TangibleView tv : allTangibleViews) {
-			if (tv.getModel() != null && tv.getModel().equals(t)) {
-				return tv;
-			}
-		}
-		return null;
+		return tangibleToTangibleView.get(t);
 	}
 	
 

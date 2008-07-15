@@ -31,6 +31,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 /**
@@ -45,6 +46,8 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	Level2Cell theCell;
 	
 	public MorphMLNeuronMorphology(URL morphLoc) {
+		Log.warn("Loading MorphMLNeuronMorphology");
+		long tick = Log.tick();
 		_morphLoc = morphLoc;
 		
 		JAXBContext context;
@@ -62,6 +65,7 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 		} catch (JAXBException e) {
 			throw new OMTException("Problem loading " + _morphLoc.getFile(), e);
 		}
+		Log.tock("Loading MorphMLNeuronMorphology took ", tick);
 	}
 	
 	public MorphMLNeuronMorphology(URL morphLoc, PositionVector position, RotationVector rotation) {
@@ -119,6 +123,7 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getSegments()
 	 */
 	public List<ISegment> getSegments() {
+		long tick = Log.tick();
 		if (segmentList == null) {
 			segmentList = new ArrayList<ISegment>();
 			
@@ -144,6 +149,7 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 				}
 			}
 		}
+		Log.tock("MorphMLNeuronMorphology.getSegments() ran for ", tick);
 		return segmentList;
 	}
 	

@@ -30,6 +30,7 @@ import com.jme.bounding.BoundingSphere;
 
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.CurveOnceController;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
 /**
  * Wraps the camera functionality.
  * 
@@ -83,7 +84,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		setToSlideView();
 		
 		//camNode.setLocalTranslation(loc);
-		System.out.println("Rotation: " + this.getLocalRotation() + "\nTranslation: " + 
+		Log.warn("Rotation: " + this.getLocalRotation() + "\nTranslation: " + 
 				this.getLocalTranslation());
 			
 	}
@@ -236,7 +237,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         points[0] = cam.getLocation();
         points[1] = position;
 
-        System.out.println("current camera position" + points[0]);
+        Log.warn("current camera position" + points[0]);
         CatmullRomCurve curve = new CatmullRomCurve("Curve", points);
         ColorRGBA[] colors = new ColorRGBA[2];
         colors[0] = new ColorRGBA(0, 1, 0, 1);
@@ -244,11 +245,11 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         curve.setColorBuffer(0, BufferUtils.createFloatBuffer(colors));
 
         Vector3f up = new Vector3f(0,1,0);
-        System.out.println("up" + up);
+        Log.warn("up" + up);
         CurveOnceController cc = new CurveOnceController(curve, this, rotation);
         cc.setActive(false);
-        System.out.println("camNode " + camNode);
-        System.out.println(cc + " curve ");
+        Log.warn("camNode " + camNode);
+        Log.warn(cc + " curve ");
         this.addController(cc);
         cc.setRepeatType(Controller.RT_CLAMP);
         cc.setUpVector(up);
@@ -357,7 +358,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		//this.getCamera().setDirection(position);
 		//this.setLocalRotation(rotation);
 		this.update();*/
-		System.out.println("Smoothly zooming to: " + position.toString() + ", rotating to: " 
+		Log.warn("Smoothly zooming to: " + position.toString() + ", rotating to: " 
 				+ rotation.toString() + ", changing zoom to: " + zoom);
 	}
 	

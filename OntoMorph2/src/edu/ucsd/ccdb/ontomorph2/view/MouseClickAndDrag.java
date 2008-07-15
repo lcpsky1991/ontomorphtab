@@ -9,6 +9,9 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.input.*;
+
+import edu.ucsd.ccdb.ontomorph2.util.Log;
+
 import org.fenggui.event.mouse.MouseButton;
 
 /**
@@ -69,13 +72,13 @@ public class MouseClickAndDrag extends MouseInputAction {
         
         event = new InputActionEvent();
         //event.fireMouseClickEvent(1,2, MouseInput.get(),3);
-        System.out.println("event " + event.getTriggerDevice() );
+        Log.warn("event " + event.getTriggerDevice() );
         mouseInput = MouseInput.get();
         if(mouseInput.isButtonDown(0))
-        	System.out.println("mouse inputfsdfsddf "+ mouseInput);
+        	Log.warn("mouse inputfsdfsddf "+ mouseInput);
        //input.addAction( dragg, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_NONE, 2, true );
 
-    	System.out.println("Inside constructor" + position + " camera: " + camera + " speed " + speed);
+    	Log.warn("Inside constructor" + position + " camera: " + camera + " speed " + speed);
     }
 
     /**
@@ -89,7 +92,7 @@ public class MouseClickAndDrag extends MouseInputAction {
      */
     public void setLockAxis(Vector3f lockAxis) {
     	
-    	System.out.println("set lock Axis");
+    	Log.warn("set lock Axis");
         this.lockAxis = lockAxis;
         rotateLeft.setLockAxis(lockAxis);
         rotateRight.setLockAxis(lockAxis);
@@ -130,18 +133,18 @@ public class MouseClickAndDrag extends MouseInputAction {
 	public void performAction(InputActionEvent evt) {
          //MouseInput i = MouseInput.get();
     	
-		System.out.println("si viene para aca");
+		Log.warn("si viene para aca");
 		float time;
 		if(mouseInput.isButtonDown(0)){
        	  	
-				System.out.println("Mouse is Button Down");
+				Log.warn("Mouse is Button Down");
 				time = evt.getTime() * speed;
 		}        
 		else
 			time = 0;
          
 		if (position.x > 0) {
-			System.out.println("position x");
+			Log.warn("position x");
 			event.setTime(time * mouse.getLocalTranslation().x);
 			rotateRight.performAction(event);
 		} else if (position.x < 0) {

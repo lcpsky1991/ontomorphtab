@@ -89,4 +89,7 @@ public abstract class TangibleView extends Node {
 		}
 	}
 	
+	public int hashCode() {
+		return super.hashCode() + getModel().hashCode();
+	}
 }

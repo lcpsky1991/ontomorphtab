@@ -13,6 +13,7 @@ import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
@@ -35,6 +36,7 @@ public class BrainRegionView extends TangibleView{
 	 */
 	public BrainRegionView(BrainRegion br, Node parentNode) {
 		super(br);
+		long tick = Log.tick();
 		
 		this.parentNode = parentNode;
 		
@@ -56,7 +58,8 @@ public class BrainRegionView extends TangibleView{
            
 		this.parentNode.attachChild(this);
 		
-		this.update();		
+		this.update();
+		Log.tock("Loading BrainRegionView took", tick);
 	}
 	
 	public BrainRegion getBrainRegion() {

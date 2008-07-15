@@ -37,6 +37,8 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SegmentView;
@@ -69,7 +71,6 @@ public class View extends BaseSimpleGame {
 	private static int manipulation = METHOD_NONE; //use accesor
 	
 	private static View instance = null;
-	private static final Logger logger = Logger.getLogger(View.class.getName());
 //	The trimesh that i will change
 	TriMesh square;
 	
@@ -95,6 +96,7 @@ public class View extends BaseSimpleGame {
 	org.fenggui.Display disp; // FengGUI's display
 	
 	View3D view3D = null;
+	private ContextMenu contextMenu;
 	
 	
 	/**
@@ -111,7 +113,7 @@ public class View extends BaseSimpleGame {
 	public void setManipulation(int m)
 	{
 		manipulation = m;
-		System.out.println("Manipulation method set to: " + m);
+		Log.warn("Manipulation method set to: " + m);
 		
 	}
 	
@@ -276,12 +278,13 @@ public class View extends BaseSimpleGame {
 				//====================================
 				if (MouseInput.get().isButtonDown(1)) //right
 				{	
-					MouseInput.get().setCursorVisible(false); //hide mouse cursor
-					manipulateCurrentSelection();
+					//MouseInput.get().setCursorVisible(false); //hide mouse cursor
+					//manipulateCurrentSelection();
+					displayContextMenu();
 				}
 				else
 				{
-					MouseInput.get().setCursorVisible(true); //show mouse cursor
+					//MouseInput.get().setCursorVisible(true); //show mouse cursor
 				}
 				
 				//====================================
@@ -289,6 +292,9 @@ public class View extends BaseSimpleGame {
 				//====================================
 				if (MouseInput.get().isButtonDown(0)) //left 
 				{
+					hideContextMenu();
+					manipulateCurrentSelection();
+					
 					//get stuff we are trying to pick/select
 					PickResults results = getPickResults();
 					
@@ -312,13 +318,37 @@ public class View extends BaseSimpleGame {
 		} //end try
 		catch (Exception e)
 		{
-			logger.log(Level.SEVERE, "Exception caught in View.handleMouseInput(): " + e.getMessage());
+			Log.warn("Exception caught in View.handleMouseInput(): " + e.getMessage());
 		}
 	}
 	
 	
 	
-	
+	private ContextMenu getContextMenu() {
+		if (contextMenu == null) {
+			contextMenu = new ContextMenu();
+		}
+		return contextMenu;
+	}
+	private void hideContextMenu() {
+		getContextMenu().setVisible(false);
+	}
+
+	private void displayContextMenu() {
+		int cnt = TangibleManager.getInstance().countSelected();
+		//if (currentPick != null && cnt > 0 )
+		//{
+			//what action is being performed?
+			int mx = MouseInput.get().getXAbsolute();
+			int my = MouseInput.get().getYAbsolute();
+			getContextMenu().displayMenuFor(mx,my,null); 
+					//TangibleViewManager.getInstance().getTangibleView(
+							//currentPick.getTargetMesh().getParentGeom()));
+			
+			getContextMenu().setVisible(true);
+		//}
+	}
+
 	/**
 	 * Apply manipulations to the tangible that is currently selected
 	 * Called during mouse handling
@@ -426,10 +456,10 @@ public class View extends BaseSimpleGame {
 	             long freeMem = Runtime.getRuntime().freeMemory();
 	             long maxMem = Runtime.getRuntime().maxMemory();
 
-	             logger.info("|*|*|  Memory Stats  |*|*|");
-	             logger.info("Total memory: " + (totMem >> 10) + " kb");
-	             logger.info("Free memory: " + (freeMem >> 10) + " kb");
-	             logger.info("Max memory: " + (maxMem >> 10) + " kb");
+	             Log.warn("|*|*|  Memory Stats  |*|*|");
+	             Log.warn("Total memory: " + (totMem >> 10) + " kb");
+	             Log.warn("Free memory: " + (freeMem >> 10) + " kb");
+	             Log.warn("Max memory: " + (maxMem >> 10) + " kb");
 			}
 			
 			if ( isAction("toggleMouse"))
@@ -482,7 +512,7 @@ public class View extends BaseSimpleGame {
 			
 			if ( isAction("info"))
 			{
-				logger.log(Level.INFO, 
+				Log.warn( 
 						"\nAxes: " + "" +
 						"\nLoc Rotation: " + camNode.getLocalRotation() +
 						"\nWorld Rot: "+ camNode.getWorldRotation() + 
@@ -493,7 +523,7 @@ public class View extends BaseSimpleGame {
 			
 			if ( isAction("reset"))
 			{
-				logger.log(Level.INFO, "\nResetting");
+				Log.warn("\nResetting");
 				camNode.reset();			
 			}
 			

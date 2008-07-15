@@ -1,9 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.app;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
@@ -17,7 +19,12 @@ public class OntoMorph2 {
 	static Scene _scene;
 	
 	public static void main(String[] args) {
-
+        //		set global log level to warning
+		//useful link on this:
+		//http://www.jmonkeyengine.com/jmeforum/index.php?topic=5864.0
+		Log.getLogger("").setLevel(Level.WARNING);
+		Log.getLogger("").getHandlers()[0].setLevel(Level.WARNING);
+		
 		View view = View.getInstance();
 		
 		SceneObserver obs = SceneObserver.getInstance();

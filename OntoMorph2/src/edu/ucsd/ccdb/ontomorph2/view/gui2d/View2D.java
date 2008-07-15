@@ -18,6 +18,7 @@ import org.fenggui.util.Point;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
 
 
 /**
@@ -202,7 +203,7 @@ public class View2D extends Display  {
 				if ("Blue".equals(value)) light.setDiffuse(ColorRGBA.blue);
 				if ("Green".equals(value)) light.setDiffuse(ColorRGBA.green);
 				*/
-				System.out.println("Feature Not Implemented Yet");
+				Log.warn("Feature Not Implemented Yet");
 				//selectionChangedEvent..setVisible(false);
 			}
 			

@@ -77,9 +77,9 @@ public class CurveOnceController extends Controller {
 
     public void update(float time) {
     	
-    	System.out.println("comes into update curve");
+    	Log.warn("comes into update curve");
         if(mover == null || curve == null || up == null) {
-        	System.out.println("everything is null");
+        	Log.warn("everything is null");
             return;
         }
         currentTime += time * getSpeed();
@@ -87,11 +87,11 @@ public class CurveOnceController extends Controller {
         if (currentTime >= getMinTime() && currentTime <= getMaxTime()) {
 
             if (getRepeatType() == RT_CLAMP) {
-            	System.out.println("RT_CLAMP");
+            	Log.warn("RT_CLAMP");
                 deltaTime = currentTime - getMinTime();
-                System.out.println("delta time" + deltaTime);
+                Log.warn("delta time" + deltaTime);
                 newPoint = curve.getPoint(deltaTime,mover.getLocalTranslation());   // ***** added
-                System.out.println("newPoint" + newPoint);
+                Log.warn("newPoint" + newPoint);
                 mover.setLocalTranslation(newPoint);   // ***** added
                 if(deltaTime > .4 && deltaTime < .6){
                 	mover.setLocalRotation(rotation);
