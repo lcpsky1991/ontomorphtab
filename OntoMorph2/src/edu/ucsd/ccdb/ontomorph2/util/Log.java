@@ -19,7 +19,7 @@ public class Log extends Logger {
 	}
 	
 	public static void warn(String msg) {
-		getInstance().warning(msg);
+		getInstance().getLogger("").warning(msg);
 	}
 	
 	
