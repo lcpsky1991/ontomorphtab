@@ -60,7 +60,7 @@ public class CatmullRomCurve extends Curve {
 	private Vector3f firstPoint = new Vector3f();
 	private Vector3f lastPoint = new Vector3f();
 	private float partPercentage;
-	
+	private Vector3f controlPoints;
 	/**
 	 * Constructor instantiates a new <code>CatmullRomCurve</code> object.
 	 * 
@@ -98,6 +98,7 @@ public class CatmullRomCurve extends Curve {
 		lastTangent.normalizeLocal();
 		lastTangent.multLocal(0.01f);
 		last.mult(lastTangent, this.lastPoint);
+		this.controlPoints = controlPoints[1];
 	}
 
 	/**
@@ -226,7 +227,7 @@ public class CatmullRomCurve extends Curve {
 		tempVec1.mult(-t3 + 2 * t2 - t, point).addLocal(tempVec2.mult(3 * t3 - 5 * t2 + 1, tempVec0)).addLocal(tempVec3.mult(-3 * t3 + 4 * t2 + t, tempVec0)).addLocal(tempVec4.mult(t3 - t2, tempVec0));
 		return point;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see com.jme.scene.Spatial#findCollisions(com.jme.scene.Spatial, com.jme.intersection.CollisionResults)
 	 */

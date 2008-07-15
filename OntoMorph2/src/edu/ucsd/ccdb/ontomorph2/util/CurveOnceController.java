@@ -26,7 +26,7 @@ public class CurveOnceController extends Controller {
     private Curve curve;
     private Vector3f up;
     private Quaternion rotation;
-    private float orientationPrecision = 0.01f;
+    private float orientationPrecision = 1.0f;
     private float currentTime = 0.0f;
     private float deltaTime = 0.0f;
 
@@ -77,31 +77,33 @@ public class CurveOnceController extends Controller {
 
     public void update(float time) {
     	
-    	Log.warn("comes into update curve");
+    	//Log.warn("comes into update curve");
         if(mover == null || curve == null || up == null) {
-        	Log.warn("everything is null");
+        	//Log.warn("everything is null");
             return;
         }
+        float camRotationRate = FastMath.PI * 5 / 180;
+    	Quaternion roll = new Quaternion();
         currentTime += time * getSpeed();
-
+        //System.out.println("what it the time " + time);
         if (currentTime >= getMinTime() && currentTime <= getMaxTime()) {
-
             if (getRepeatType() == RT_CLAMP) {
-            	Log.warn("RT_CLAMP");
+            	//Log.warn("RT_CLAMP");
                 deltaTime = currentTime - getMinTime();
-                Log.warn("delta time" + deltaTime);
+                //Log.warn("delta time" + deltaTime);
                 newPoint = curve.getPoint(deltaTime,mover.getLocalTranslation());   // ***** added
-                Log.warn("newPoint" + newPoint);
+                //System.out.println(mover.getLocalTranslation());
+                //Log.warn("newPoint" + newPoint);
                 mover.setLocalTranslation(newPoint);   // ***** added
                 if(deltaTime > .4 && deltaTime < .6){
                 	mover.setLocalRotation(rotation);
                 }
                 if(autoRotation) {   // ***** added
-                    mover.setLocalRotation(
-                        curve.getOrientation(
-                            deltaTime,
-                            orientationPrecision,
-                            up));
+                	//System.out.println("la gran locura");
+            		roll.fromAngleAxis( 0*1.0f*camRotationRate, newPoint ); //rotates Rate degrees
+            		roll = mover.getLocalRotation().multLocal(roll); // (q, save)
+            		mover.setLocalRotation(roll);
+                    //mover.setLocalRotation(rotation);
                 }
                 if (isDisableAfterClamp() && lastPoint != null) {
                     if (lastPoint.equals(newPoint)) {
