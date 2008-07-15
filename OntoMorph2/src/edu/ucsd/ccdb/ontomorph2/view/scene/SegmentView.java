@@ -44,13 +44,14 @@ public class SegmentView extends TangibleView{
 	private OMTDiscreteLodNode node = null;
 	
 	public SegmentView(ISegment seg) {
-		
 		super((SegmentImpl)seg);
+		super.setName("Segment View - Segment");
 		this.seg = seg;
 	}
 	
 	public SegmentView(ISegmentGroup sg) {
 		super((SegmentGroupImpl)sg);
+		super.setName("Segment View - Segment Group");
 		this.sg = sg;
 	}
 	

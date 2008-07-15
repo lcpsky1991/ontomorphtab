@@ -26,6 +26,7 @@ public class CurveAnchorPointView extends TangibleView {
 	
 	public CurveAnchorPointView(CurveAnchorPoint capt) {
 		super(capt);
+		super.setName("CurveAnchorPointView");
 		this.s =  new Sphere("curve anchor point", capt.getAbsolutePosition(), 6, 6, 0.5f);
 		s.setModelBound(new BoundingBox());
 		s.updateModelBound();	

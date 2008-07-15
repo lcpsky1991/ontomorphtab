@@ -16,7 +16,7 @@ public class CurveView extends TangibleView {
 	
 	public CurveView(Curve3D curve) {
 		super(curve);
-		
+		super.setName("Curve3DView");
 		update();
 	}
 

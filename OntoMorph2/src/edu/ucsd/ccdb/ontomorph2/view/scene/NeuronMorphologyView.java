@@ -61,6 +61,7 @@ public class NeuronMorphologyView extends TangibleView{
 	
 	public NeuronMorphologyView(NeuronMorphology morph) {
 		super(morph);
+		super.setName("Neuron Morphology View");
 		segViews = new ArrayList<SegmentView>();
 		currentMorph = morph;
 		this.setMorphMLNeuron(this.loadscene(morph), morph);
@@ -179,7 +180,7 @@ public class NeuronMorphologyView extends TangibleView{
 	
 	public Node loadscene(NeuronMorphology morph) {
 		long tick = Log.tick();
-		Node sceneRoot = new Node();
+		Node sceneRoot = new Node("Neuron Morphology Root");
 		 /* 
          * Check the LightState. If none has been passed, create a new one and
          * attach it to the scene root

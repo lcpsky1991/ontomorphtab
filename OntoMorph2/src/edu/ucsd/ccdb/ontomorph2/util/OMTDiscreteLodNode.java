@@ -26,7 +26,7 @@ public class OMTDiscreteLodNode extends DiscreteLodNode {
 	private int activeChildren = 0;
 	
 	public OMTDiscreteLodNode(DistanceSwitchModel dsm) {
-		super("name", dsm);
+		super("Discrete Lod Node", dsm);
 		this._dsm = dsm;
 	}
 	
@@ -41,7 +41,7 @@ public class OMTDiscreteLodNode extends DiscreteLodNode {
     	//add the geoemetries to the currentGeometry list of lists
     	currentGeometries.add(activeChildren, g);
     	//attach the children at the 'activeChildren' index
-    	Node n = new Node();
+    	Node n = new Node("child from " + minDistance + "camera distance to " + maxDistance +"camera distance");
     	for (Geometry ge: g) {
     		n.attachChild(ge);
     	}

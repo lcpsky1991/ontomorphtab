@@ -1,46 +1,18 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
 import org.fenggui.Button;
-import org.fenggui.CheckBox;
-import org.fenggui.Container;
 import org.fenggui.Display;
-import org.fenggui.FengGUI;
-import org.fenggui.Label;
-import org.fenggui.RadioButton;
-import org.fenggui.ScrollContainer;
 import org.fenggui.TextEditor;
-import org.fenggui.ToggableGroup;
-import org.fenggui.background.PlainBackground;
-import org.fenggui.composites.TextArea;
 import org.fenggui.composites.Window;
 import org.fenggui.event.ActivationEvent;
 import org.fenggui.event.ButtonPressedEvent;
 import org.fenggui.event.IActivationListener;
 import org.fenggui.event.IButtonPressedListener;
-import org.fenggui.event.IKeyPressedListener;
-import org.fenggui.event.ISelectionChangedListener;
 import org.fenggui.event.ITextChangedListener;
-import org.fenggui.event.KeyPressedEvent;
-import org.fenggui.event.SelectionChangedEvent;
 import org.fenggui.event.TextChangedEvent;
-import org.fenggui.layout.BorderLayout;
-import org.fenggui.layout.BorderLayoutData;
-import org.fenggui.layout.FormAttachment;
-import org.fenggui.layout.FormData;
-import org.fenggui.layout.GridLayout;
-import org.fenggui.layout.RowLayout;
-import org.fenggui.layout.StaticLayout;
-import org.fenggui.tree.Tree;
-import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 import org.fenggui.util.Spacing;
-import org.fenggui.FengGUI;
 
-import EDU.oswego.cs.dl.util.concurrent.Callable;
-
-import com.jme.util.GameTaskQueueManager;
-
-import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 
@@ -65,6 +37,7 @@ public class BasicSearchWidget {
         window.getContentContainer().getAppearance().setPadding( new Spacing( 10, 10 ) );
             
         TextEditor ta = new TextEditor();
+        /*
        ta.addActivationListener(new IActivationListener(){
 
 		@Override
@@ -73,9 +46,9 @@ public class BasicSearchWidget {
 			System.out.println("activated");
 		}
     	   
-       });
+       });*/
         
-        /*ta.addTextChangedListener(new ITextChangedListener() {
+        ta.addTextChangedListener(new ITextChangedListener() {
             public void textChanged(TextChangedEvent textChangedEvent) {
                 System.out.println("Text has changed");
                 System.out.println(textChangedEvent.getText());  // null

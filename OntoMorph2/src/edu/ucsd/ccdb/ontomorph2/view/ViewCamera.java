@@ -374,6 +374,16 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y);
 		continuousZoomTo(loc, rotation, 0.5f);
 	}
+	
+	/**
+	 * Smoothly reposition, rotate, and zoom the camera to the atlas
+	 * slide view.
+	 */
+	public void smoothlyZoomToCerebSlideView() {
+		Vector3f loc = new Vector3f(483.25558f, -118f, -355.5132f);
+		Quaternion rotation = new Quaternion(0.0f,-3.2037497E-7f,0.0f,-1.0000037f);
+		continuousZoomTo(loc, rotation, 1.0f);
+	}
 
 	/**
 	 * Smoothly reposition, rotate, and zoom the camera to the atlas

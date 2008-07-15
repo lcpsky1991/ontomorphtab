@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.acarter.scenemonitor.SceneMonitor;
 import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
@@ -42,13 +43,14 @@ public class View3D extends Node{
 	private Node atlasNode = null;
 	
 	public View3D() {
-		slidesNode = new Node();
-		cellsNode = new Node();
-		curvesNode = new Node();
-		surfacesNode = new Node();
-		meshesNode = new Node();
-		volumesNode = new Node();
-		atlasNode = new Node();
+		super("View3D (Root)");
+		slidesNode = new Node("Slides");
+		cellsNode = new Node("Cells");
+		curvesNode = new Node("Curves");
+		surfacesNode = new Node("Surfaces");
+		meshesNode = new Node("Meshes");
+		volumesNode = new Node("Volumes");
+		atlasNode = new Node("Atlas");
 		
 		slidesNode.setLightCombineMode(LightState.OFF);
 		cellsNode.setLightCombineMode(LightState.OFF);
@@ -122,4 +124,11 @@ public class View3D extends Node{
 		}
 	}
 	
+	
+	public void showSceneMonitor() {
+		//for more on this:
+		//http://www.jmonkeyengine.com/jmeforum/index.php?topic=8159.msg64486#msg64486
+		SceneMonitor.getMonitor().registerNode(this, "Root Node");
+		SceneMonitor.getMonitor().showViewer(true);
+	}
 }

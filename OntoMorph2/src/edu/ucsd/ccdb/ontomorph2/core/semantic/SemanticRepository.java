@@ -13,6 +13,10 @@ import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.model.SimpleInstance;
 import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protege.util.ApplicationProperties;
+import edu.stanford.smi.protegex.owl.model.OWLModel;
+import edu.stanford.smi.protegex.owl.model.RDFObject;
+import edu.stanford.smi.protegex.owl.model.RDFSLiteral;
+import edu.stanford.smi.protegex.owl.model.query.QueryResults;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
@@ -120,7 +124,8 @@ public class SemanticRepository {
 			//ProjectManager projectManager = ProjectManager.getProjectManager();
 			//URI uri = new URI("file://C:\/Documents\and\ Settings\/stephen\/Desktop\/nifSaved\/nif.pprj");
 						
-			Project p = Project.loadProjectFromFile("etc/NIF/CKB_db.pprj", new ArrayList());
+			//Project p = Project.loadProjectFromFile("etc/NIF/CKB_db.pprj", new ArrayList());
+			Project p = Project.loadProjectFromFile("etc/NIF/CKB_mega_db_v2.pprj", new ArrayList());
 						
 			//projectManager.loadProject(uri);
 			owlModel = p.getKnowledgeBase();
@@ -199,6 +204,56 @@ public class SemanticRepository {
 
 	}
 
+	/**
+	 * Gets the CCDB Microscopy Product IDs that correspond to data sets taken from Mouse
+	 * @return
+	 */
+	public int[] getMPIDsForMouse() {
+		/*
+		QueryResults qr = null;
+		try {
+		String q = "SELECT distinct ?mpid" + 
+"\nWHERE" + 
+"\n{" +
+"\n?subject rdf:type ccdb:MICROSCOPYPRODUCT_OBJTAB ." +
+"\n?subject ccdb:mpid ?mpid ." +
+"\n?subject ccdb:SECURITY_LEVEL ?level ." +
+"\n?subject obo_base:has_part ?someting . "+
+"\n?something rdf:type birn_org_tax:birnlex_167 . " +
+"\nfilter regex(str(?level),\"1\")" +
+"\n}" +
+"\norder by ?mpid";
+		qr = ((OWLModel)getOWLModel()).executeSPARQLQuery(q);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (qr != null) {
+			if (qr.hasNext()) {
+				List vars = qr.getVariables();
+				Map varsToVals = qr.next();
+                
+				for (Object o : vars) {
+					RDFObject rdf = (RDFObject)varsToVals.get((String)o);
+					if (rdf instanceof RDFSLiteral) {
+						RDFSLiteral rdfs = (RDFSLiteral)rdf;
+						System.out.println(rdfs.getInt());
+					}
+				}
+            }
+		}
+		*/
+		//can't get above code to work, so for now hard coding the values
+		int[] hackOutput = {1, 14, 16, 17, 29, 3, 30, 31, 32, 33, 3339, 3379, 
+				  3380, 3382, 3383, 3384, 35, 3561, 3563, 3587, 3592, 
+				  3593, 36, 3652, 3659, 3687, 3693, 39, 3993, 3996, 
+				  4, 40, 4003, 	4043, 4044, 4045, 4046, 4047, 4048,
+				  4049, 4050, 4051, 4052, 4053, 4054, 4055, 4056, 
+				  4057, 4058, 4059, 4060, 4061, 4062, 4063, 4064, 
+				  4065, 4066, 4067, 4068, 4069, 4070, 4071, 4072,
+				  4073, 4074, 4075, 41, 48, 49, 50, 51, 53, 54, 
+				  6, 7};
+		return hackOutput;
+	}
 
 	public List<SemanticInstance> getMicroscopyProductInstances() {
 		return getInstancesFromRoot(getSemanticClass("ccdb:MICROSCOPYPRODUCT_OBJTAB").getCls(), false);

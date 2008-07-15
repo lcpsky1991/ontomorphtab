@@ -12,6 +12,7 @@ import org.fenggui.util.Point;
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
+import edu.ucsd.ccdb.ontomorph2.view.View3D;
 
 /**
  * Implements the main menu bar at the top of the application.  Also processes the events when
@@ -50,6 +51,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String strMNU_MANI_LOOK = "Focus Camera";
 	public static final String strMNU_MANI_SCALE = "Re-Scale";
 	public static final String BASIC_SEARCH = "Basic Search...";
+	public static final String SHOW_SCENE_MONITOR = "Show Scene Monitor...";
 	
 	
 	public MenuBar() {
@@ -117,6 +119,11 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         makeMenuItem(strMNU_MANI_ROTATEB, mnuManip);
         makeMenuItem(strMNU_MANI_ROTATEC, mnuManip);
         makeMenuItem(strMNU_MANI_LOOK, mnuManip);
+        
+        //=[ DEBUG ]=
+        Menu mnuDebug = new Menu();
+        mB.registerSubMenu(mnuDebug, "Debug");
+        makeMenuItem(SHOW_SCENE_MONITOR, mnuDebug);
 	}
 	
 	/**
@@ -246,6 +253,9 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if (BASIC_SEARCH.equals(act)) {
 			View2D.getInstance().loadBasicSearchBox();
+		}
+		else if (SHOW_SCENE_MONITOR.equals(act)) {
+			View.getInstance().getView3D().showSceneMonitor();
 		}
 	}
 }

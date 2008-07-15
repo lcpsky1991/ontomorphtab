@@ -25,6 +25,7 @@ public class SlideView extends TriMesh {
 	Slide _slide = null;
 	
 	public SlideView(URL imageURL, Slide slide) {
+		super.setName("Slide View");
 		_slide = slide;
 		setImageURL(imageURL);
 		init();

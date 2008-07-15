@@ -25,6 +25,7 @@ public abstract class TangibleView extends Node {
 	private Tangible model = null;
 	
 	public TangibleView(Tangible model) {
+		super("Tangible View");
 		this.setModel(model);
 		//register this instance with the TangibleViewManager
 		TangibleViewManager.getInstance().addTangibleView(this);

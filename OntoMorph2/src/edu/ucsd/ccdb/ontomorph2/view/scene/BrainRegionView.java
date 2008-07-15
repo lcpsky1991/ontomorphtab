@@ -36,6 +36,7 @@ public class BrainRegionView extends TangibleView{
 	 */
 	public BrainRegionView(BrainRegion br, Node parentNode) {
 		super(br);
+		super.setName("BrainRegionView");
 		long tick = Log.tick();
 		
 		this.parentNode = parentNode;
