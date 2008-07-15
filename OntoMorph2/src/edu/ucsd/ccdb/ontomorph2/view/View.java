@@ -28,6 +28,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Geometry;
 import com.jme.scene.TriMesh;
+import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.Debugger;
@@ -87,7 +88,7 @@ public class View extends BaseSimpleGame {
 	RelativeMouse amouse; 						//the mouse object ref to entire screen, used to hide and show the mouse?
 	PickData currentPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
 	
-	TangibleView manipTangView=null;	//the most recent TangibleView to be selected/manipulated
+	//manip not stored locally anymore
 		
 	FirstPersonHandler fpHandler = null;
 	MouseLook looker;	//not used
@@ -279,7 +280,7 @@ public class View extends BaseSimpleGame {
 				//====================================
 				if (MouseInput.get().isButtonDown(1)) //right
 				{	
-					MouseInput.get().setCursorVisible(false); //hide mouse cursor
+					//MouseInput.get().setCursorVisible(false); //hide mouse cursor
 					manipulateCurrentSelection();
 				}
 				else
@@ -306,7 +307,7 @@ public class View extends BaseSimpleGame {
 						//set up next deselection
 						currentPick = results.getPickData(0);	//take the closest pick and set
 						
-						doSelection();
+						doSelection(currentPick.getTargetMesh());
 						
 						//System.out.println("Picked: " + currentPick.getTargetMesh().getName());
 					} //end if of pr > 0
@@ -365,6 +366,9 @@ public class View extends BaseSimpleGame {
 			for (int i=0; i < cnt; i++)
 			{
 				manip = TangibleManager.getInstance().getSelected(i);
+				
+				if ( null == manip ) return;	//extra checking?
+				
 				//TODO: replace unity vectors with ones based on camera axis
 				switch ( manipulation )
 				{
@@ -384,7 +388,9 @@ public class View extends BaseSimpleGame {
 						manip.rotate(mx, my,new OMTVector(0,0,1));
 						break;
 					case METHOD_LOOKAT:
-						camNode.lookAt(manip.getRelativePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question
+						//TODO: fixme
+						Log.warn("LOOK AT is broken");
+						camNode.lookAt(manip.getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question
 						break;
 					case METHOD_SCALE:
 						manip.scale(mx, my, new OMTVector(1,1,1));
@@ -428,9 +434,10 @@ public class View extends BaseSimpleGame {
 	 * Select the currently chosen object
 	 * Called during mouse handling
 	 */
-	private void doSelection() 
+	private void doSelection(GeomBatch geo) 
 	{
-		TangibleView tv = TangibleViewManager.getInstance().getTangibleView(currentPick.getTargetMesh().getParentGeom());
+		TangibleView tv = TangibleViewManager.getInstance().getTangibleView(geo.getParentGeom());
+		
 		if (tv != null) {
 			tv.getModel().select();
 		}

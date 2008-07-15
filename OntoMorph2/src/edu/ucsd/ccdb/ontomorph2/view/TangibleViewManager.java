@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
@@ -12,7 +13,7 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 public class TangibleViewManager {
 
 	static TangibleViewManager manager = null;
-	
+	public static final ColorRGBA highlightSelectedColor = ColorRGBA.yellow;
 
 	HashMap<Geometry, TangibleView> geometryToTangibleView = null;
 	HashMap<Tangible, TangibleView> tangibleToTangibleView = null;
@@ -24,7 +25,7 @@ public class TangibleViewManager {
 			manager = new TangibleViewManager();
 		}
 		return manager;
-	}
+	} 
 	
 	private TangibleViewManager() {
 		geometryToTangibleView = new HashMap<Geometry,TangibleView>();

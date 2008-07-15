@@ -2,6 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import java.util.List;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
@@ -21,7 +22,8 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  *
  */
 public abstract class TangibleView extends Node {
-	private boolean highlighted = false;
+	//TODO: remove
+	private boolean highlighted = false; //nodes should not be tracking their own selection (ask the manager)
 	private Tangible model = null;
 	
 	public TangibleView(Tangible model) {
@@ -76,12 +78,27 @@ public abstract class TangibleView extends Node {
 	public abstract void doUnhighlight();
 
 	
-	public void update() {
-		if (this.getModel().isSelected()) {
+	public void update() 
+	{
+		if (this.getModel().isSelected()) 
+		{
 			this.highlight();
-		} else {
+		}
+		else 
+		{
 			this.unhighlight();
 		}
+		
+		
+		
+		//System.out.println("m rel pos: " + this.getModel().getRelativePosition() + " local pos:" + this.getLocalTranslation());
+		//System.out.println("m abs pos: " + this.getModel().getAbsolutePosition() + " world pos:" + this.getWorldTranslation());
+		this.worldTranslation = this.getModel().getAbsolutePosition();
+		this.worldScale = this.getModel().getAbsoluteScale();
+		this.worldRotation = this.getModel().getAbsoluteRotation();
+		
+		this.updateWorldBound();
+		this.updateModelBound();
 	}
 	
 	public void registerGeometries(List<Geometry> b) {

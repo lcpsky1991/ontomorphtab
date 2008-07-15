@@ -13,6 +13,7 @@ import com.jme.scene.shape.Sphere;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
+import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 
 /**
  * Visualizes a CurveAnchorPoint as a sphere.
@@ -36,24 +37,28 @@ public class CurveAnchorPointView extends TangibleView {
 		this.registerGeometries(ll);
 		
 		this.attachChild(s);
-		//this.update();
+		this.update();
 	}
 
 	public void update(){
 		super.update();
 		
-		s.setLocalTranslation(this.getModel().getRelativePosition());
+		//s.setLocalTranslation(this.getModel().getRelativePosition());
 		//this.getModel().getCoordinateSystem().applyToSpatial(s);		
 
-		s.setModelBound(new BoundingBox());
-		s.updateModelBound();
+		//s.setModelBound(new BoundingBox());
+		//s.updateModelBound();
 	}
 	
-	public void doHighlight() {
-		this.s.setSolidColor(ColorUtil.convertColorToColorRGBA(this.getModel().getColor()));
+	public void doHighlight() 
+	{
+		this.s.setSolidColor(TangibleViewManager.getInstance().highlightSelectedColor);
+		//this.s.setSolidColor(ColorUtil.convertColorToColorRGBA(this.getModel().getHighlightedColor()));
 	}
 	
-	public void doUnhighlight() {
-		this.s.setSolidColor(ColorUtil.convertColorToColorRGBA(this.getModel().getHighlightedColor()));
+	public void doUnhighlight() 
+	{
+		this.s.setSolidColor(ColorRGBA.white);
+		//this.s.setSolidColor(ColorUtil.convertColorToColorRGBA(this.getModel().getColor()));
 	}
 }

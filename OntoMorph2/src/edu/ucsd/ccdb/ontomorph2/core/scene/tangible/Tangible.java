@@ -206,6 +206,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		return this.sys;
 	}
 	
+	/**
+	 * puts the tangibles that called this member function on the selected list
+	 */
 	public void select() 
 	{
 		TangibleManager.getInstance().select(this);
@@ -280,15 +283,14 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		float delta = 0.01f * dx;
 		
 		OMTVector current = this.getRelativeScale();
-		
 		OMTVector nscale = new OMTVector(current.add(delta,delta,delta));
-		
 		
 		//do NOT scale if the new scale will 'flip' the object
 		if ( !(nscale.getX() < 0 || nscale.getY() < 0 || nscale.getZ() < 0 ) )
 		{
 			this.setRelativeScale(nscale);	
 		}
+		changed();
 	}
 	
 	
@@ -313,7 +315,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		end = this.getRelativeRotation().mult(more);
 		
 		this.setRelativeRotation( new RotationVector(end) );
-		
+		changed();
 	}
 	
 	/**
@@ -327,8 +329,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void move(float dx, float dy, OMTVector constraint)
 	{
 		//get changes in mouse movement
-		
-		
 		//TODO: calculate the viewing angle and apply to constraint
 		
 		dx = dx * constraint.getX();
@@ -340,6 +340,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		
 		//apply the movement
 		this.setRelativePosition( np );
+		changed();
 	}
 	
 	public int hashCode() {

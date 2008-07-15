@@ -53,7 +53,9 @@ public class SceneObserver implements Observer{
 			_view.getView3D().setSurfaces(scene.getSurfaces());
 			_view.getView3D().setMeshes(scene.getMeshes());
 			
-		} else if (o instanceof NeuronMorphology) { //if an NeuronMorphology is changed
+		} 
+		else if (o instanceof NeuronMorphology) 
+		{ //if an NeuronMorphology is changed
 			NeuronMorphologyView struct3d = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor((NeuronMorphology)o);
 			if (struct3d != null) {
 				NeuronMorphology morph = (NeuronMorphology)struct3d.getMorphology();
@@ -77,6 +79,10 @@ public class SceneObserver implements Observer{
 					struct3d.updateWorldBound();
 					struct3d.updateRenderState();
 	
+					if ( o instanceof Tangible)
+					{
+						System.out.println("trouble tangible");
+					}
 				}
 			}
 		} else if (o instanceof ISemanticThing) {

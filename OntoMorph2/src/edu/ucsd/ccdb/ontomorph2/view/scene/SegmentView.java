@@ -37,7 +37,7 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  *
  */
 public class SegmentView extends TangibleView{
-
+	private boolean highlighted = false; 
 	private ISegment seg = null;
 	private ISegmentGroup sg = null;
 	
@@ -378,9 +378,13 @@ public class SegmentView extends TangibleView{
 	}
 
 	private void chooseColor(Geometry g) {
-		if (isHighlighted()) {
+		if (isHighlighted()) 
+		{
+			//TODO: highlight color
 			g.setSolidColor(ColorRGBA.yellow);
-		} else {
+		}
+		else 
+		{
 			this.setToDefaultColor(g);	
 		}
 	}
