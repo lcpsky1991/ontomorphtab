@@ -318,7 +318,8 @@ public class View extends BaseSimpleGame {
 		} //end try
 		catch (Exception e)
 		{
-			Log.warn("Exception caught in View.handleMouseInput(): " + e.getMessage());
+			//Log.warn("Exception caught in View.handleMouseInput()" + e.printStackTrace());
+			e.printStackTrace();
 		}
 	}
 	

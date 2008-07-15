@@ -116,7 +116,7 @@ public class View3D extends Node{
 	}
 	
 	public void addBrainRegions(Set<BrainRegion> regions) {
-		atlasNode.detachAllChildren();
+		
 		for (BrainRegion br: regions) {
 			BrainRegionView brView = new BrainRegionView(br, atlasNode);
 		}

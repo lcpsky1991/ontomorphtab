@@ -24,6 +24,7 @@ import neuroml.generated.NeuroMLLevel2.Cells;
 
 import com.jme.math.Vector3f;
 
+import edu.ucsd.ccdb.ontomorph2.core.data.DataCacheManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
@@ -52,10 +53,18 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 		
 		JAXBContext context;
 		try {
-			context = JAXBContext.newInstance("neuroml.generated");
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			JAXBElement o = (JAXBElement)unmarshaller.unmarshal(new File(_morphLoc.getFile()));
-			NeuroMLLevel2 neuroml = (NeuroMLLevel2)o.getValue();
+			NeuroMLLevel2 neuroml = null;
+			//check to see if this particular file has already been loaded and cached
+			if (!DataCacheManager.getInstance().isMorphMLCached(_morphLoc.getFile())) {
+				context = JAXBContext.newInstance("neuroml.generated");
+				Unmarshaller unmarshaller = context.createUnmarshaller();
+				JAXBElement o = (JAXBElement)unmarshaller.unmarshal(new File(_morphLoc.getFile()));
+				neuroml = (NeuroMLLevel2)o.getValue();
+				DataCacheManager.getInstance().cacheMorphML(_morphLoc.getFile(), neuroml);
+			} else {
+				//if this file has already been loaded, retrieve it from the cache.
+				neuroml = (NeuroMLLevel2)DataCacheManager.getInstance().getCachedMorphML(_morphLoc.getFile());
+			}
 			
 			Cells c = neuroml.getCells();
 			
@@ -65,7 +74,7 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 		} catch (JAXBException e) {
 			throw new OMTException("Problem loading " + _morphLoc.getFile(), e);
 		}
-		Log.tock("Loading MorphMLNeuronMorphology took ", tick);
+		Log.tock("Loading MorphMLNeuronMorphology " + _morphLoc.getFile() + " took ", tick);
 	}
 	
 	public MorphMLNeuronMorphology(URL morphLoc, PositionVector position, RotationVector rotation) {
@@ -123,7 +132,6 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getSegments()
 	 */
 	public List<ISegment> getSegments() {
-		long tick = Log.tick();
 		if (segmentList == null) {
 			segmentList = new ArrayList<ISegment>();
 			
@@ -149,7 +157,6 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 				}
 			}
 		}
-		Log.tock("MorphMLNeuronMorphology.getSegments() ran for ", tick);
 		return segmentList;
 	}
 	

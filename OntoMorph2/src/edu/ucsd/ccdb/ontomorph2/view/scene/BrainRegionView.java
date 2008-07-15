@@ -59,7 +59,7 @@ public class BrainRegionView extends TangibleView{
 		this.parentNode.attachChild(this);
 		
 		this.update();
-		Log.tock("Loading BrainRegionView took", tick);
+		Log.tock("Loading BrainRegionView for " + br.getName() + "took ", tick);
 	}
 	
 	public BrainRegion getBrainRegion() {
