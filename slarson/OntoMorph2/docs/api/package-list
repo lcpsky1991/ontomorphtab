@@ -1,0 +1,14 @@
+edu.ucsd.ccdb.ontomorph2.app
+edu.ucsd.ccdb.ontomorph2.core.atlas
+edu.ucsd.ccdb.ontomorph2.core.changes
+edu.ucsd.ccdb.ontomorph2.core.data
+edu.ucsd.ccdb.ontomorph2.core.scene
+edu.ucsd.ccdb.ontomorph2.core.scene.tangible
+edu.ucsd.ccdb.ontomorph2.core.semantic
+edu.ucsd.ccdb.ontomorph2.core.spatial
+edu.ucsd.ccdb.ontomorph2.observers
+edu.ucsd.ccdb.ontomorph2.util
+edu.ucsd.ccdb.ontomorph2.view
+edu.ucsd.ccdb.ontomorph2.view.gui2d
+edu.ucsd.ccdb.ontomorph2.view.procedural
+edu.ucsd.ccdb.ontomorph2.view.scene
