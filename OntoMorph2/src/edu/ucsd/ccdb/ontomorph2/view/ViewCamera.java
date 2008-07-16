@@ -262,7 +262,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         colors[1] = new ColorRGBA(0, 0, 1, 1);
         curve.setColorBuffer(0, BufferUtils.createFloatBuffer(colors));*/
 
-        Vector3f up = new Vector3f(0,.707f,0);
+        Vector3f up = new Vector3f(0,1,0);
         Log.warn("up" + up);
         CurveOnceController cc = new CurveOnceController(curve, this, rotation);
         cc.setActive(false);
@@ -273,7 +273,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         cc.setUpVector(up);
         cc.setSpeed(zoom);
         cc.setDisableAfterClamp(true);
-        cc.setAutoRotation(true);
+        //cc.setAutoRotation(true);
         this.attachChild(curve);
         cc.setActive(true);
         

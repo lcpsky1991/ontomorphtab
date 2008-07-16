@@ -10,6 +10,7 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector3f;
+import com.jme.scene.CameraNode;
 import com.jme.scene.Controller;
 import com.jme.scene.Spatial;
 import com.jme.util.export.InputCapsule;
@@ -36,7 +37,7 @@ public class CurveOnceController extends Controller {
     private Vector3f lastPoint = new Vector3f();   // ***** added 
     private boolean disableAfter;     // ***** added
 
-    public CurveOnceController(Curve curve, Spatial mover, Quaternion rotation) {
+    public CurveOnceController(Curve curve, CameraNode mover, Quaternion rotation) {
         this.curve = curve;
         this.mover = mover;
         this.rotation = rotation;
@@ -85,6 +86,7 @@ public class CurveOnceController extends Controller {
         float camRotationRate = FastMath.PI * 5 / 180;
     	Quaternion roll = new Quaternion();
         currentTime += time * getSpeed();
+        Vector3f newUp;
         //System.out.println("what it the time " + time);
         if (currentTime >= getMinTime() && currentTime <= getMaxTime()) {
             if (getRepeatType() == RT_CLAMP) {
@@ -100,10 +102,31 @@ public class CurveOnceController extends Controller {
                 }
                 if(autoRotation) {   // ***** added
                 	//System.out.println("la gran locura");
-            		roll.fromAngleAxis( 0*1.0f*camRotationRate, newPoint ); //rotates Rate degrees
-            		roll = mover.getLocalRotation().multLocal(roll); // (q, save)
-            		mover.setLocalRotation(roll);
+                	/*angle = mover.getCamera().getFocus().getLocalRotation().toAngleAxis( new Vector3f(0,1,0) );
+
+            		x = mover.getCenter().x - distance*FastMath.sin( angle );
+            		z = mover.getCenter().z - distance*FastMath.cos( angle );
+            		
+            		mover.setLoc( x, y, z );
+            		mover.lookAt( mover.getFocus().getLoc(), Vector3f.UNIT_Y );
+            		float[] f = mover.getLocalRotation().toAngles(null);
+            		f[0] = f[0] * FastMath.RAD_TO_DEG;
+            		f[1] = f[1] * FastMath.RAD_TO_DEG;
+            		f[2] = f[2] * FastMath.RAD_TO_DEG;
+            	    */            	
+            		//roll.fromAngleAxis(0*1*4, newPoint ); //rotates Rate degrees
+            	//	roll = mover.getLocalRotation().multLocal(roll); // (q, save)
+            		//mover.setLocalRotation(roll);
+                	//mover.lookAt(up,new Vector3f(0,0,1));
+            		
+                	//System.out.println("float1" + f[0] + "float2" + f[1] + "float3" + f[2]);
+
                     //mover.setLocalRotation(rotation);
+                	/*mover.setLocalRotation(
+                            curve.getOrientation(
+                                deltaTime,
+                                orientationPrecision,
+                                up));*/
                 }
                 if (isDisableAfterClamp() && lastPoint != null) {
                     if (lastPoint.equals(newPoint)) {
