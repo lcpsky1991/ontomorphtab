@@ -3,6 +3,12 @@ package edu.ucsd.ccdb.ontomorph2.util;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Supports logging for the system.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ *
+ */
 public class Log extends Logger {
 
 	static Log log = null;
@@ -19,7 +25,11 @@ public class Log extends Logger {
 	}
 	
 	public static void warn(String msg) {
-		getInstance().getLogger("").warning(msg);
+		Log.getLogger("").warning(msg);
+	}
+	
+	public static void error(String msg) {
+		Log.getLogger("").severe(msg);	
 	}
 	
 	
