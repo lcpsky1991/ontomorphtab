@@ -41,11 +41,14 @@
 #include <math.h>
 #include "plugin.h"
 
-#ifdef TL_DEBUG
+/*
+#ifdef TL_DEBUG 
 	#define dPrintf(...)   printf(__VA_ARGS__)
 #else
-	#define dPrintf(...)
+	#define dPrintf(...)	
 #endif
+*/
+#define dPrintf					printf
 
 #define TL_OK					0
 #define TL_FAIL					-1000
