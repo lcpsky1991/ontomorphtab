@@ -166,7 +166,19 @@ public class TangibleManager {
 	 */
 	public void select(Tangible thing)
 	{
-		selectedThings.add(thing);
+		//only add if not already selected
+		if ( thing.isSelected() )
+		{
+			//dont add again
+		}
+		else
+		{
+			selectedThings.add(thing);	
+		}
+		
+		
+		System.out.println("selected " + thing  + " " + selectedThings.size());
+		
 	}
 	
 	/**
@@ -184,20 +196,30 @@ public class TangibleManager {
 	 */
 	public void unselectAll()
 	{
-		
-		try {
+
+		try 
+		{
  		     //call unselect on all objects rather than
 			//just clearing the list to trigger the changed 
 			//method in each object.
-			for (Tangible t : selectedThings) {
+			
+			//Must loop backward in deselection because they have to be 'removed' from the list that way
+			//otherwise you get some orphaned updates			
+			for (int i=selectedThings.size() - 1; i >= 0; i--)
+			{
+				Tangible t = selectedThings.get(i);
 				t.unselect();
 			}
-		} catch (ConcurrentModificationException e) {
+		} 
+		catch (ConcurrentModificationException e) {
 			//if we stepped afoul of modifying the array at the same time
 			//as another process, just try again.. can't be concurrently
 			//modifying it forever...
 			unselectAll();
 		}
+		
+		//clear the memory at the end of selection
+		selectedThings.clear();
 	}
 	
 	public void setHighlightColor(Color c)

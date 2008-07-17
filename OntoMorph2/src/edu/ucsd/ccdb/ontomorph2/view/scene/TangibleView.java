@@ -8,6 +8,7 @@ import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.batch.GeomBatch;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
@@ -23,7 +24,7 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  */
 public abstract class TangibleView extends Node {
 	//TODO: remove
-	private boolean highlighted = false; //nodes should not be tracking their own selection (ask the manager)
+	//private boolean highlighted = false; //nodes should not be tracking their own selection (ask the manager)
 	private Tangible model = null;
 	
 	public TangibleView(Tangible model) {
@@ -49,19 +50,11 @@ public abstract class TangibleView extends Node {
 	}
 	
 	/**
-	 * Return true if this visualization is highlighted, false if it is not
-	 * @return
-	 */
-	public boolean isHighlighted() {
-		return this.highlighted;
-	}
-	
-	/**
 	 * Switch the visualization of this ISegmentView to indicate that it has been selected
 	 *
 	 */
 	public final void highlight() {
-		highlighted = true;
+		//TangibleManager.getInstance().select(this.getModel()); //causes inf recursiveness
 		doHighlight();
 	}
 
@@ -69,8 +62,9 @@ public abstract class TangibleView extends Node {
 	 * Switch the visualization of this ISegmentView to indicate it is not selected
 	 *
 	 */
-	public final void unhighlight() {
-		highlighted = false;
+	public final void unhighlight() 
+	{
+		//TangibleManager.getInstance().unselect(this.getModel()); //causes inf recursiveness
 		doUnhighlight();
 	}
 	
@@ -88,8 +82,6 @@ public abstract class TangibleView extends Node {
 		{
 			this.unhighlight();
 		}
-		
-		
 		
 		//System.out.println("m rel pos: " + this.getModel().getRelativePosition() + " local pos:" + this.getLocalTranslation());
 		//System.out.println("m abs pos: " + this.getModel().getAbsolutePosition() + " world pos:" + this.getWorldTranslation());

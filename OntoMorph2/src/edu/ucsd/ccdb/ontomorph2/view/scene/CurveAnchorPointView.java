@@ -47,12 +47,13 @@ public class CurveAnchorPointView extends TangibleView {
 		//this.getModel().getCoordinateSystem().applyToSpatial(s);		
 
 		//s.setModelBound(new BoundingBox());
-		//s.updateModelBound();
+		
+		s.updateModelBound();
 	}
 	
 	public void doHighlight() 
 	{
-		this.s.setSolidColor(TangibleViewManager.getInstance().highlightSelectedColor);
+		this.s.setSolidColor(TangibleViewManager.highlightSelectedColor);
 		//this.s.setSolidColor(ColorUtil.convertColorToColorRGBA(this.getModel().getHighlightedColor()));
 	}
 	

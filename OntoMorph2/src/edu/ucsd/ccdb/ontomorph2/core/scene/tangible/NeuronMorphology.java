@@ -40,8 +40,8 @@ public abstract class NeuronMorphology extends Tangible{
 	
 	String _renderOption = RENDER_AS_LINES; //default render option
 	ArrayList<ISegment> segmentList = null;
-	Set<ISegment> selectedSegmentList = new HashSet<ISegment>();
-	Set<ISegmentGroup> selectedSegmentGroupList = new HashSet<ISegmentGroup>();
+	//Set<ISegment> selectedSegmentList = new HashSet<ISegment>();
+	//Set<ISegmentGroup> selectedSegmentGroupList = new HashSet<ISegmentGroup>();
 	Level2Cell theCell;
 	Set<ISegmentGroup> segmentGroupList = null;
 	List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
@@ -100,64 +100,6 @@ public abstract class NeuronMorphology extends Tangible{
 	public abstract Set<ISegmentGroup> getSegmentGroups();
 	
 
-	/** 
-	 * Convenience method to select a segment within this INeuronMorphology
-	 * @param s - the segment to select
-	 */
-	public void selectSegment(ISegment s) {
-		selectedSegmentList.add(s);
-		changed();
-	}
-	
-	/** 
-	 * Convenience method to unselect a segment within this INeuronMorphology
-	 * @param s - the segmen to unselect
-	 */
-	public void unselectSegment(ISegment s) {
-		selectedSegmentList.remove(s);
-		changed();
-	}
-
-	/**
-	 * 
-	 * @return all ISegment's that are currently selected
-	 */
-	public Set<ISegment> getSelectedSegments() {
-		return selectedSegmentList;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#selectSegmentGroup(edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegmentGroup)
-	 */
-	public void selectSegmentGroup(ISegmentGroup g) {
-		selectedSegmentGroupList.add(g);
-		changed();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#unselectSegmentGroup(edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegmentGroup)
-	 */
-	public void unselectSegmentGroup(ISegmentGroup g) {
-		selectedSegmentGroupList.remove(g);
-		changed();
-	}
-
-	/**
-	 * 
-	 * @return all ISegmentGroups that are currently selected
-	 */
-	public Set<ISegmentGroup> getSelectedSegmentGroups() {
-		return selectedSegmentGroupList;
-	}
-
-
-	/**
-	 * 
-	 * @return true if this INeuronMorphology has ISegmentGroups that are selected, false otherwise
-	 */
-	public boolean hasSelectedSegmentGroups() {
-		return getSelectedSegmentGroups().size() > 0;
-	}
 	
 	public List<ISemanticThing> getAllSemanticThings() {
 		List<ISemanticThing> l = new ArrayList<ISemanticThing>();

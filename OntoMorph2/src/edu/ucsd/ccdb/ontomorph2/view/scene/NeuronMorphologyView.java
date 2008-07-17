@@ -237,7 +237,9 @@ public class NeuronMorphologyView extends TangibleView{
 		  }
 	  }
 	  
-	  public void update() {
+	  public void update() 
+	  {
+		  super.update();
 		  this.detachAllChildren();
 		  this.attachChild(loadscene(currentMorph));
 		  updateModelBound();

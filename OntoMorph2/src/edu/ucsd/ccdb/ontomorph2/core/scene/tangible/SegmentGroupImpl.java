@@ -61,15 +61,32 @@ public class SegmentGroupImpl extends Tangible implements ISegmentGroup{
 		return this.parentCell;
 	}
 	
-	public void select() {
+	public void select() 
+	{
 		super.select();
-		SegmentGroupImpl sg = (SegmentGroupImpl)this;
-		//this is getting called more times than it should
-		String infoString = sg.getTags().toString() + "\n";
-		for (ISemanticThing s: sg.getSemanticThings()) {
-			infoString += (s.toString() + "\n"); 
+
+		//TODO: move this to the cell select
+		String infoString = "";
+		try
+		{
+			SegmentGroupImpl sg = (SegmentGroupImpl)this;
+
+			if (sg != null)
+			{
+	//			this is getting called more times than it should
+				infoString = sg.getTags().toString() + "\n";
+				for (ISemanticThing s : sg.getSemanticThings())
+				{
+					infoString += (s.getLabel() + "\n"); 
+				}
+				infoString += ((NeuronMorphology)sg.getParentCell()).getSemanticThings();
+			}
 		}
-		infoString += ((NeuronMorphology)sg.getParentCell()).getSemanticThings();
+		catch(Exception e)
+		{
+			infoString += "\n Exception: " + e.getMessage();
+		}
+		
 		View.getInstance().getView2D().setInfoText(infoString);
 	}
 

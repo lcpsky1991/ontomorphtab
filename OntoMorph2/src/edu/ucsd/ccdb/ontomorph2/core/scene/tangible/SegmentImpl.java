@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 
@@ -56,16 +57,25 @@ public class SegmentImpl extends Tangible implements ISegment, ISemanticsAware {
 		return _segGroupId;
 	}
 
-	public void select() {
-		getParentCell().selectSegment(this);
+	public void select() 
+	{
+		//TODO: call super?
+		System.out.println("Not finished seleted for SegmentImpl");
+		//getParentCell().select();
+		//getParentCell().selectSegment(this);
 	}
 
-	public void unselect() {
-		getParentCell().unselectSegment(this);
+	public void unselect() 
+	{
+//		TODO: call super?
+		System.out.println("Not finished seleted for SegmentImpl");
+		//getParentCell().unselectSegment(this);
+		//getParentCell().unselect();
 	}
 
-	public boolean isSelected() {
-		return getParentCell().getSelectedSegments().contains(this);
+	public boolean isSelected() 
+	{
+		return getParentCell().isSelected();
 	}
 
 	public NeuronMorphology getParentCell() {

@@ -438,7 +438,8 @@ public class View extends BaseSimpleGame {
 	{
 		TangibleView tv = TangibleViewManager.getInstance().getTangibleView(geo.getParentGeom());
 		
-		if (tv != null) {
+		if (tv != null) 
+		{
 			tv.getModel().select();
 		}
 	}

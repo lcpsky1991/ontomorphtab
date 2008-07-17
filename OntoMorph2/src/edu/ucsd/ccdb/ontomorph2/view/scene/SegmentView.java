@@ -27,6 +27,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.SegmentGroupImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.SegmentImpl;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
+import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
@@ -37,7 +38,7 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  *
  */
 public class SegmentView extends TangibleView{
-	private boolean highlighted = false; 
+	//private boolean highlighted = false; 
 	private ISegment seg = null;
 	private ISegmentGroup sg = null;
 	
@@ -378,10 +379,9 @@ public class SegmentView extends TangibleView{
 	}
 
 	private void chooseColor(Geometry g) {
-		if (isHighlighted()) 
+		if (this.getModel().isSelected()) 
 		{
-			//TODO: highlight color
-			g.setSolidColor(ColorRGBA.yellow);
+			g.setSolidColor(TangibleViewManager.highlightSelectedColor);
 		}
 		else 
 		{
@@ -399,12 +399,22 @@ public class SegmentView extends TangibleView{
 	
 	private void setToDefaultColor(Geometry g) {
 		//if (insideVolume()) {
-		if (false) {
+		
+		ColorRGBA def = ColorRGBA.white;
+		
+		if (false) 
+		{
 			g.setSolidColor(ColorRGBA.red);
-		} else if (correspondsToSegment()) {
-			g.setSolidColor(ColorUtil.convertColorToColorRGBA(getCorrespondingSegment().getColor()));
-		} else if (correspondsToSegmentGroup()) {
-			g.setSolidColor(ColorUtil.convertColorToColorRGBA(getCorrespondingSegmentGroup().getColor()));
+		}
+		else if (correspondsToSegment())
+		{
+			def = ColorUtil.convertColorToColorRGBA(getCorrespondingSegment().getColor());
+			g.setSolidColor(def);
+		} 
+		else if (correspondsToSegmentGroup()) 
+		{
+			def = ColorUtil.convertColorToColorRGBA(getCorrespondingSegmentGroup().getColor());
+			g.setSolidColor(def);
 		}
 	}
 

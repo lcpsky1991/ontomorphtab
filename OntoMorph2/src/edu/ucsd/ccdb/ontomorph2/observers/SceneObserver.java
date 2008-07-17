@@ -7,6 +7,7 @@ import java.util.Set;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
@@ -54,38 +55,8 @@ public class SceneObserver implements Observer{
 			_view.getView3D().setMeshes(scene.getMeshes());
 			
 		} 
-		else if (o instanceof NeuronMorphology) 
-		{ //if an NeuronMorphology is changed
-			NeuronMorphologyView struct3d = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor((NeuronMorphology)o);
-			if (struct3d != null) {
-				NeuronMorphology morph = (NeuronMorphology)struct3d.getMorphology();
-				if (morph == o) { // find the one that matches this NeuronMorphology and update it
-					
-					//Moves the segment to see if this is how to update model
-					PositionVector p = (PositionVector)struct3d.getMorphology().getAbsolutePosition();
-					struct3d.getNode().setLocalTranslation(p);
-					
-					RotationVector r = (RotationVector)struct3d.getMorphology().getAbsoluteRotation();
-					struct3d.getNode().setLocalRotation(r);
-					
-					OMTVector s = struct3d.getMorphology().getAbsoluteScale();
-					struct3d.getNode().setLocalScale(s);
-				
-					struct3d.updateSelected(morph.isSelected());
-					struct3d.updateSelectedSegments(morph.getSelectedSegments());
-					struct3d.updateSelectedSegmentGroups(morph.getSelectedSegmentGroups());
-					
-					struct3d.updateModelBound();
-					struct3d.updateWorldBound();
-					struct3d.updateRenderState();
-	
-					if ( o instanceof Tangible)
-					{
-						System.out.println("trouble tangible");
-					}
-				}
-			}
-		} else if (o instanceof ISemanticThing) {
+		
+		else if (o instanceof ISemanticThing) {
 			ISemanticThing st = (ISemanticThing)o;
 			for(ISemanticsAware sa : st.getSemanticsAwareAssociations()) {
 				if (st.isSelected()) {
@@ -96,9 +67,9 @@ public class SceneObserver implements Observer{
 			}
 		} else if (o instanceof BrainRegion) {
 			//this is a special case for now because we can't yet load into memory
-			//a brain region view for every brain region in the system since they
 			//eat up a lot of resources.  so we add them one by one
 			BrainRegion b = (BrainRegion)o;
+			//a brain region view for every brain region in the system since they
 			BrainRegionView brv = (BrainRegionView)TangibleViewManager.getInstance().getTangibleViewFor(b);
 			if (brv == null) {
 				Set<BrainRegion> brs = new HashSet<BrainRegion>();
@@ -107,10 +78,14 @@ public class SceneObserver implements Observer{
 			} else {
 				brv.update();
 			}
-		} else if (o instanceof Tangible) {
+		} 
+				
+		
+		else if (o instanceof Tangible) {
 //			catch all method for any leftover tangibles 
 			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible)o);
-			if (tv != null) {
+			if (tv != null) 
+			{
 				tv.update();
 			}
 		}
