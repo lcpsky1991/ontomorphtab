@@ -175,10 +175,6 @@ public class TangibleManager {
 		{
 			selectedThings.add(thing);	
 		}
-		
-		
-		System.out.println("selected " + thing  + " " + selectedThings.size());
-		
 	}
 	
 	/**

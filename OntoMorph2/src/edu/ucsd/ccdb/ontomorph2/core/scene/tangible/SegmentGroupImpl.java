@@ -63,7 +63,17 @@ public class SegmentGroupImpl extends Tangible implements ISegmentGroup{
 	
 	public void select() 
 	{
-		super.select();
+		// if this item has already been selected then we are interested in the CELL, so deslect the segmentgroup and select the cell instead 
+		if (this.isSelected())
+		{
+			super.unselect();
+			this.getParentCell().select();	
+		}
+		else
+		{
+			
+			super.select(); //this.select() is recursion, super.select() to use default selection
+		}
 
 		//TODO: move this to the cell select
 		String infoString = "";

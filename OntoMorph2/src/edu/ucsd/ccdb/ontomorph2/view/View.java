@@ -207,6 +207,7 @@ public class View extends BaseSimpleGame {
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_down", KeyInput.KEY_DOWN);
 		
 		KeyBindingManager.getKeyBindingManager().set("toggleMouse", KeyInput.KEY_M);
+		KeyBindingManager.getKeyBindingManager().set("show_selected", KeyInput.KEY_S);
 		
 		KeyBindingManager.getKeyBindingManager().set("info", KeyInput.KEY_I);
 		KeyBindingManager.getKeyBindingManager().add("mem_report", KeyInput.KEY_I);
@@ -485,7 +486,19 @@ public class View extends BaseSimpleGame {
 				
 			}
 				
-				
+			
+			if ( isAction("show_selected"))
+			{
+				int c = TangibleManager.getInstance().countSelected();
+				for (int i=0; i <c; i++)
+				{
+					Tangible t = TangibleManager.getInstance().getSelected(i);
+					System.out.println(t);
+				}
+				System.out.println("" + c + " total");
+			}
+			
+			
 			if ( isAction("cam_forward") || isAction("cam_forward_ns") ) 
 			{
 				camNode.moveForward(keyPressActionRate);

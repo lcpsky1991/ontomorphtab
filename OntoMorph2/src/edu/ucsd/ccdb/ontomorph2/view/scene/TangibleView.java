@@ -10,6 +10,7 @@ import com.jme.scene.batch.GeomBatch;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
@@ -83,14 +84,10 @@ public abstract class TangibleView extends Node {
 			this.unhighlight();
 		}
 		
-		//System.out.println("m rel pos: " + this.getModel().getRelativePosition() + " local pos:" + this.getLocalTranslation());
-		//System.out.println("m abs pos: " + this.getModel().getAbsolutePosition() + " world pos:" + this.getWorldTranslation());
-		this.worldTranslation = this.getModel().getAbsolutePosition();
-		this.worldScale = this.getModel().getAbsoluteScale();
-		this.worldRotation = this.getModel().getAbsoluteRotation();
-		
-		this.updateWorldBound();
-		this.updateModelBound();
+		//FIXME: setlocals may need to be changed to setWorld
+		setLocalTranslation(this.getModel().getAbsolutePosition());
+		setLocalScale(this.getModel().getAbsoluteScale());
+		setLocalRotation(this.getModel().getAbsoluteRotation());
 	}
 	
 	public void registerGeometries(List<Geometry> b) {

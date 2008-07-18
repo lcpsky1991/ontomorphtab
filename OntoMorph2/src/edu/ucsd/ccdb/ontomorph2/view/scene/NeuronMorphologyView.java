@@ -228,11 +228,11 @@ public class NeuronMorphologyView extends TangibleView{
 		  int target = chooseCableResolution(r);
 		  if (target == 0) {
 			  if (cableResolution == Integer.MAX_VALUE) {
-				  update();
+				  reload();
 			  }
 		  } else if (target == Integer.MAX_VALUE){
 			 if (cableResolution == 1) {
-				 update();
+				 reload();
 			 }
 		  }
 	  }
@@ -240,11 +240,17 @@ public class NeuronMorphologyView extends TangibleView{
 	  public void update() 
 	  {
 		  super.update();
+		  reload();
+	  }
+	
+	  public void reload()
+	  {
+		  super.update();
 		  this.detachAllChildren();
 		  this.attachChild(loadscene(currentMorph));
 		  updateModelBound();
 	  }
-	
+	  
 	  public NeuronMorphology getMorphology() {
 		  return currentMorph;
 	  }

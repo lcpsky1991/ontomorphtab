@@ -7,7 +7,6 @@ import java.util.Set;
 
 import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
-import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegmentGroup;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
@@ -55,7 +54,7 @@ public class SceneObserver implements Observer{
 			_view.getView3D().setMeshes(scene.getMeshes());
 			
 		} 
-		
+				
 		else if (o instanceof ISemanticThing) {
 			ISemanticThing st = (ISemanticThing)o;
 			for(ISemanticsAware sa : st.getSemanticsAwareAssociations()) {
@@ -67,9 +66,9 @@ public class SceneObserver implements Observer{
 			}
 		} else if (o instanceof BrainRegion) {
 			//this is a special case for now because we can't yet load into memory
+			//a brain region view for every brain region in the system since they
 			//eat up a lot of resources.  so we add them one by one
 			BrainRegion b = (BrainRegion)o;
-			//a brain region view for every brain region in the system since they
 			BrainRegionView brv = (BrainRegionView)TangibleViewManager.getInstance().getTangibleViewFor(b);
 			if (brv == null) {
 				Set<BrainRegion> brs = new HashSet<BrainRegion>();
@@ -78,14 +77,10 @@ public class SceneObserver implements Observer{
 			} else {
 				brv.update();
 			}
-		} 
-				
-		
-		else if (o instanceof Tangible) {
+		} else if (o instanceof Tangible) {
 //			catch all method for any leftover tangibles 
 			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible)o);
-			if (tv != null) 
-			{
+			if (tv != null) {
 				tv.update();
 			}
 		}

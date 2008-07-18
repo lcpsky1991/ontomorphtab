@@ -378,8 +378,15 @@ public class SegmentView extends TangibleView{
 		return l;
 	}
 
-	private void chooseColor(Geometry g) {
-		if (this.getModel().isSelected()) 
+	private void chooseColor(Geometry g) 
+	{
+		//select this segment if it is selected, or if its a part of a selected group or part of a selected cell
+		boolean sel = this.getModel().isSelected();
+		
+		if (correspondsToSegment()) sel = sel || getCorrespondingSegment().getParentCell().isSelected();
+		if (correspondsToSegmentGroup()) sel = sel || getCorrespondingSegmentGroup().getParentCell().isSelected();
+		
+		if (sel) 
 		{
 			g.setSolidColor(TangibleViewManager.highlightSelectedColor);
 		}
