@@ -238,7 +238,7 @@ public class View extends BaseSimpleGame {
         	//	WHEEL
         	//====================================
 			
-			float dx=MouseInput.get().getWheelDelta() / (keyPressActionRate * 10); //scale it by some factor so it's less jumpy
+			float dx=MouseInput.get().getWheelDelta() / (keyPressActionRate * 20); //scale it by some factor so it's less jumpy
 			if (dx != 0)	
 			{
 				//zoom camera if Z press
@@ -439,7 +439,13 @@ public class View extends BaseSimpleGame {
 	{
 		TangibleView tv = TangibleViewManager.getInstance().getTangibleView(geo.getParentGeom());
 		
-		if (tv != null) 
+		//if user selected a segment, assume they wanted to select the parent cell instead
+		if ( tv instanceof SegmentView && KeyInput.get().isControlDown())
+		{
+			SegmentView pickSeg = (SegmentView) tv;
+			pickSeg.getCorrespondingSegmentGroup().getParentCell().select();
+		}
+		else if (tv != null) 
 		{
 			tv.getModel().select();
 		}
