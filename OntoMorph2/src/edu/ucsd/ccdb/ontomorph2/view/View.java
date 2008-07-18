@@ -1,3 +1,4 @@
+
 package edu.ucsd.ccdb.ontomorph2.view;
 
 
@@ -224,7 +225,6 @@ public class View extends BaseSimpleGame {
 	
 	private void handleMouseInput()
 	{
-		
 		//handle mouse input
 		//NOTE:there is a more sophisticated way of dealing with mouse input than this (pickresults has handler)
 		try

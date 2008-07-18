@@ -37,6 +37,7 @@ import com.jme.intersection.CollisionResults;
 import com.jme.intersection.PickResults;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
+import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector3f;
 import com.jme.scene.Spatial;
@@ -159,22 +160,34 @@ public class CatmullRomCurve extends Curve {
 		//calculate tangent
 		Vector3f tangent = getPoint(time).subtract(getPoint(time + precision));
 		tangent = tangent.normalize();
+		
+		//System.out.println("tangent" + tangent);
 
 		//calculate binormal
 		Vector3f binormal = tangent.cross(up);
 		binormal = binormal.normalize();
-
+		//System.out.println("binormal" + binormal);
+		
 		//calculate normal
 		Vector3f normal = binormal.cross(tangent);
 		normal = normal.normalize();
-
+		//System.out.println("normal" + tangent);
+		
 		rotation.setColumn(0, tangent);
 		rotation.setColumn(1, normal);
 		rotation.setColumn(2, binormal);
 
+		//System.out.println("rotation" + rotation);
 		return rotation;
+	
 	}
 
+	public Quaternion getRotation(Vector3f newPoint)
+	{
+		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*1, Vector3f.UNIT_Y);
+		return rotation;
+		
+	}
 	/* (non-Javadoc)
 	 * @see com.jme.curve.Curve#getPoint(float)
 	 */

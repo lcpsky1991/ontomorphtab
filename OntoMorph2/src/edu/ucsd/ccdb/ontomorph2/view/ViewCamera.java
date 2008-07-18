@@ -246,24 +246,19 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * Smoothly reposition, rotation, and zoom the camera to the position
 	 * rotation and zoom level specified by the parameters.
 	 */
-	public void continuousZoomTo(Vector3f position, Quaternion rotation, float zoom) {
+	public void continuousZoomTo(Vector3f position, Vector3f rotation, float zoom) {
 		
 		
         Vector3f[] points = new Vector3f[2];
         points[0] = cam.getLocation();
         points[1] = position;
 
-        float distance = points[0].distance(points[1]);
-        System.out.println("distance " + distance);
+        //float distance = points[0].distance(points[1]);
+        //System.out.println("distance " + distance);
         Log.warn("current camera position" + points[0]);
         CatmullRomCurve curve = new CatmullRomCurve("Curve", points);
-        /*ColorRGBA[] colors = new ColorRGBA[2];
-        colors[0] = new ColorRGBA(0, 1, 0, 1);
-        colors[1] = new ColorRGBA(0, 0, 1, 1);
-        curve.setColorBuffer(0, BufferUtils.createFloatBuffer(colors));*/
 
         Vector3f up = new Vector3f(0,1,0);
-        Log.warn("up" + up);
         CurveOnceController cc = new CurveOnceController(curve, this, rotation);
         cc.setActive(false);
         Log.warn("camNode " + camNode);
@@ -273,84 +268,10 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         cc.setUpVector(up);
         cc.setSpeed(zoom);
         cc.setDisableAfterClamp(true);
-        //cc.setAutoRotation(true);
+        cc.setAutoRotation(true);
         this.attachChild(curve);
         cc.setActive(true);
         
-		/**CatmullRomCurve approach**/
-		/*CameraAnimationController cameraAnimationController;
-		//CameraAnimationController cameraAnimationController = new CameraAnimationController();
-		Vector3f up = new Vector3f(0, 1, 0);
-		
-		//create control Points
-	    Vector3f[] locations = new Vector3f[2];
-	    locations[0] = cam.getLocation();
-	    locations[1] = position;
-	    
-	    Vector3f[] directions = new Vector3f[2];
-	    directions[0] = position;
-	    directions[1] = position;
-	    	
-	    Vector3f[] ups = new Vector3f[2];
-	    ups[0] = new Vector3f(0,1,0);
-	    ups[1] = new Vector3f(0,1,0);
-	    
-	    Vector3f[] lefts = new Vector3f[2];
-	    lefts[0] = new Vector3f(1,0,0);
-	    lefts[1] = new Vector3f(1,0,0);
-
-
-	      Curve locCrc = new CatmullRomCurve("locCurve", locations);
-	      locCrc.setSteps(locations.length);
-	      Curve dirCrc = new CatmullRomCurve("dirCurve", directions);
-	      dirCrc.setSteps(directions.length);
-	      Curve leftCrc = new CatmullRomCurve("leftCurve", lefts);
-	      leftCrc.setSteps(lefts.length);
-	      Curve upCrc = new CatmullRomCurve("upCurve", ups);
-	      upCrc.setSteps(ups.length);
-	      cameraAnimationController = new CameraAnimationController(locCrc, upCrc, leftCrc, dirCrc, this);
-	      cameraAnimationController.setActive(true);
-	      this.addController(cameraAnimationController);
-	      cameraAnimationController.setSpeed(0.01f);
-	      this.updateGeometricState(0.0f, true);*/
-        //System.out.println(curve + "curce"); 
-	       
-	    
-		/**BezierCurve approach -- not working, but right path**/
-		/*
-		BezierCurve bc;
-		//get camera current position
-		Vector3f currentPosition = this.getCamera().getLocation();
-		
-		//create the path the camera will take
-		Vector3f[] cameraPoints = new Vector3f[2];
-		cameraPoints[0] = currentPosition;
-		cameraPoints[1] = position;
-		
-		System.out.println("position " + position + "current " + currentPosition);
-		
-		//create a path for the camera
-		bc = new BezierCurve("camera path", cameraPoints);
-		camNode = new CameraNode("camera Node",this.getCamera());		
-		//create controller to move cameraNode along the desire path
-		CurveController c = new CurveController(bc, camNode);
-		c.setRepeatType(Controller.RT_CLAMP);
-		c.setSpeed(.25f);
-		camNode.addController(c);
-		//c.setActive(true);
-        //c.setUpVector(new Vector3f(0.0f,1.0f,0.0f));
-        //c.setAutoRotation(false);  
-		//camNode.addController(c);
-		rootNode.attachChild(camNode);
-		
-	    pos = position;
-		rot = rotation;
-		System.out.println("Current direction of the camera" + currentPosition);
-		//this.getCamera().onFrustumChange();
-		//camNode.simpleUpdate(position,rotation);
-		//this.getCamera().setDirection(position);
-		//this.setLocalRotation(rotation);
-		this.update();*/
 		Log.warn("Smoothly zooming to: " + position.toString() + ", rotating to: " 
 				+ rotation.toString() + ", changing zoom to: " + zoom);
 	}
@@ -361,7 +282,8 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 */
 	public void smoothlyZoomToAtlasMedialView() {
 		Vector3f loc = new Vector3f(300f, -118f, -700f);
-		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*0, Vector3f.UNIT_Y);
+		Vector3f rotation = new Vector3f(300f, -118f, -180f);
+		//Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*0, Vector3f.UNIT_Y);
 		continuousZoomTo(loc, rotation, .5f);
 	}
 
@@ -371,7 +293,8 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 */
 	public void smoothlyZoomToSlideView() {
 		Vector3f loc = new Vector3f(-300f, -118f, -180f);
-		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y);
+		Vector3f rotation = new Vector3f(300f, -118f, -180f);
+		//Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y);
 		continuousZoomTo(loc, rotation, 0.5f);
 	}
 	
@@ -381,8 +304,8 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 */
 	public void smoothlyZoomToCerebSlideView() {
 		Vector3f loc = new Vector3f(483.25558f, -118f, -355.5132f);
-		Quaternion rotation = new Quaternion(0.0f,-3.2037497E-7f,0.0f,-1.0000037f);
-		continuousZoomTo(loc, rotation, 1.0f);
+		//Quaternion rotation = new Quaternion(0.0f,-3.2037497E-7f,0.0f,-1.0000037f);
+		continuousZoomTo(loc, loc, 1.0f);
 	}
 
 	/**
@@ -391,19 +314,24 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 */
 	public void smoothlyZoomToAtlasLateralView() {
 		Vector3f loc = new Vector3f(300f, -118f, 300f);
-		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y);
+		Vector3f rotation = new Vector3f(300f, -118f, -180f);
+		//Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y);
 		continuousZoomTo(loc, rotation, .5f);
 	}
 	
 	public void smoothlyZoomToCellView() {
 		Vector3f loc = new Vector3f(190f, -118f, -180f);
-		Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y);
+		Vector3f rotation = new Vector3f(250f, -118f, -180f);
+		//Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y);
 		continuousZoomTo(loc, rotation, .5f);
+		//System.out.println("cells rotation" + loc);
+		//System.out.println("unit y");
 	}
 	
 	public void smoothlyZoomToSubcellularView() {
 		Vector3f loc = new Vector3f(278.8373f, -116.61807f, -179.73985f);
-		Quaternion rotation = new Quaternion(-0.05305708f,0.60644495f, 0.06914531f, 0.7903347f);
+		Vector3f rotation = new Vector3f(298.8373f, -116.61807f, -179.73985f);
+		//Quaternion rotation = new Quaternion(-0.05305708f,0.60644495f, 0.06914531f, 0.7903347f);
 		continuousZoomTo(loc, rotation, 0.21f);
 	}
 
