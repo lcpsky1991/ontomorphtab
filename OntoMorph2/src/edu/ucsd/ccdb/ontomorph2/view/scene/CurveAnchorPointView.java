@@ -41,8 +41,18 @@ public class CurveAnchorPointView extends TangibleView {
 	}
 
 	public void update(){
-		super.update();
+		//super.update();
 		
+		if (this.getModel().isSelected()) 
+		{
+			this.highlight();
+		}
+		else 
+		{
+			this.unhighlight();
+		}
+		
+		 
 		//s.setLocalTranslation(this.getModel().getRelativePosition());
 		//this.getModel().getCoordinateSystem().applyToSpatial(s);		
 
