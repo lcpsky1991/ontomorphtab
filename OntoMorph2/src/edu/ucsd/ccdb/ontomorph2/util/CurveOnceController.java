@@ -29,7 +29,7 @@ public class CurveOnceController extends Controller {
     private Curve curve;
     private Vector3f up;
     private Vector3f rotation;
-    private Vector3f lastRotation;
+    private Vector3f lastRotation = new Vector3f(0,0,0);
     private float orientationPrecision = 0.1f;
     private float currentTime = 0.0f;
     private float deltaTime = 0.0f;
@@ -100,14 +100,17 @@ public class CurveOnceController extends Controller {
                 	mover.setLocalRotation(rotation);
                 }*/
                 if(autoRotation) {   // ***** added
-                	/*Camera cam = ((CameraNode) mover).getCamera();
-                	if((lastRotation!=rotation) && (lastRotation!= null)){
-                		System.out.println("not the same " + lastRotation.getX() + " " + rotation.getX());
+                	Camera cam = ((CameraNode) mover).getCamera();
+                	if((lastRotation.getX()!=rotation.getX()) && (lastRotation.getX()!= 0)){
+                		System.out.println("not the same " + lastRotation.getX() +" " + lastRotation.getY()
+                				+ " " + rotation.getX() + " " +  rotation.getY());
                 		//x = FastMath.abs(lastRotation - rotation.x);
                 		//System.out.println("distance" + x);
-                		lastRotation = rotation;                		
-                	}*/
+                		//lastRotation = rotation;                		
+                	}
                 	mover.lookAt(rotation, up);
+                	this.lastRotation = rotation;
+                	//System.out.println("lastrotation " + lastRotation + " rotation " + rotation);
                 }
                 if (isDisableAfterClamp() && lastPoint != null) {
                     if (lastPoint.equals(newPoint)) {
