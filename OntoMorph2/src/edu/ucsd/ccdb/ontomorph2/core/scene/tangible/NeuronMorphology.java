@@ -16,9 +16,14 @@ import neuroml.generated.Cell.Segments;
 
 import com.jme.math.Vector3f;
 
+import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 /**
  * Describes the morphology of the cell, independent of different ways of visualizing it.  
@@ -159,6 +164,18 @@ public abstract class NeuronMorphology extends Tangible{
 			return _upVector;
 		}
 		return Vector3f.UNIT_Y;
+	}
+	
+	/**
+	 * Returns the BrainRegion that this neuron morphology is currently located in
+	 * @return
+	 */
+	public BrainRegion getEnclosingBrainRegion(){
+		if (this.getCoordinateSystem() != null && this.getCoordinateSystem() instanceof AllenCoordinateSystem) {
+			OMTVector position = this.getRelativePosition();
+			return ReferenceAtlas.getInstance().getBrainRegionByVoxel((int)position.x, (int)position.y, (int)position.z);
+		} 
+		throw new OMTException("Cannot get encolosing brain region from a NeuronMorphology that is not set to the AllenCoordinateSystem", null);
 	}
 
 }

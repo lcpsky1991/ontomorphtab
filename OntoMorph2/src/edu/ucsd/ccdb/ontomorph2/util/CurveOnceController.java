@@ -2,7 +2,6 @@ package edu.ucsd.ccdb.ontomorph2.util;
 
 import java.io.IOException;
 
-import com.jme.bounding.BoundingSphere;
 import com.jme.curve.Curve;
 import com.jme.intersection.CollisionResults;
 import com.jme.intersection.PickResults;
@@ -11,7 +10,6 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
 import com.jme.scene.CameraNode;
 import com.jme.scene.Controller;
 import com.jme.scene.Spatial;
@@ -21,6 +19,7 @@ import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
 import com.jme.util.geom.BufferUtils;
 
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 
 public class CurveOnceController extends Controller {
@@ -28,9 +27,8 @@ public class CurveOnceController extends Controller {
 	private Spatial mover;
     private Curve curve;
     private Vector3f up;
-    private Vector3f rotation;
-    private Vector3f lastRotation = new Vector3f(0,0,0);
-    private float orientationPrecision = 0.1f;
+    private Quaternion rotation;
+    private float orientationPrecision = 1.0f;
     private float currentTime = 0.0f;
     private float deltaTime = 0.0f;
 
@@ -40,7 +38,7 @@ public class CurveOnceController extends Controller {
     private Vector3f lastPoint = new Vector3f();   // ***** added 
     private boolean disableAfter;     // ***** added
 
-    public CurveOnceController(Curve curve, CameraNode mover, Vector3f rotation) {
+    public CurveOnceController(Curve curve, CameraNode mover, RotationVector rotation) {
         this.curve = curve;
         this.mover = mover;
         this.rotation = rotation;
@@ -81,12 +79,16 @@ public class CurveOnceController extends Controller {
 
     public void update(float time) {
     	
+    	//Log.warn("comes into update curve");
         if(mover == null || curve == null || up == null) {
+        	//Log.warn("everything is null");
             return;
         }
-
+        float camRotationRate = FastMath.PI * 5 / 180;
+    	Quaternion roll = new Quaternion();
         currentTime += time * getSpeed();
-
+        Vector3f newUp;
+        //System.out.println("what it the time " + time);
         if (currentTime >= getMinTime() && currentTime <= getMaxTime()) {
             if (getRepeatType() == RT_CLAMP) {
             	//Log.warn("RT_CLAMP");
@@ -96,21 +98,36 @@ public class CurveOnceController extends Controller {
                 //System.out.println(mover.getLocalTranslation());
                 //Log.warn("newPoint" + newPoint);
                 mover.setLocalTranslation(newPoint);   // ***** added
-                /*if(deltaTime > .4 && deltaTime < .6){
+                if(deltaTime > .4 && deltaTime < .6){
                 	mover.setLocalRotation(rotation);
-                }*/
+                }
                 if(autoRotation) {   // ***** added
-                	Camera cam = ((CameraNode) mover).getCamera();
-                	if((lastRotation.getX()!=rotation.getX()) && (lastRotation.getX()!= 0)){
-                		System.out.println("not the same " + lastRotation.getX() +" " + lastRotation.getY()
-                				+ " " + rotation.getX() + " " +  rotation.getY());
-                		//x = FastMath.abs(lastRotation - rotation.x);
-                		//System.out.println("distance" + x);
-                		//lastRotation = rotation;                		
-                	}
-                	mover.lookAt(rotation, up);
-                	this.lastRotation = rotation;
-                	//System.out.println("lastrotation " + lastRotation + " rotation " + rotation);
+                	//System.out.println("la gran locura");
+                	/*angle = mover.getCamera().getFocus().getLocalRotation().toAngleAxis( new Vector3f(0,1,0) );
+
+            		x = mover.getCenter().x - distance*FastMath.sin( angle );
+            		z = mover.getCenter().z - distance*FastMath.cos( angle );
+            		
+            		mover.setLoc( x, y, z );
+            		mover.lookAt( mover.getFocus().getLoc(), Vector3f.UNIT_Y );
+            		float[] f = mover.getLocalRotation().toAngles(null);
+            		f[0] = f[0] * FastMath.RAD_TO_DEG;
+            		f[1] = f[1] * FastMath.RAD_TO_DEG;
+            		f[2] = f[2] * FastMath.RAD_TO_DEG;
+            	    */            	
+            		//roll.fromAngleAxis(0*1*4, newPoint ); //rotates Rate degrees
+            	//	roll = mover.getLocalRotation().multLocal(roll); // (q, save)
+            		//mover.setLocalRotation(roll);
+                	//mover.lookAt(up,new Vector3f(0,0,1));
+            		
+                	//System.out.println("float1" + f[0] + "float2" + f[1] + "float3" + f[2]);
+
+                    //mover.setLocalRotation(rotation);
+                	/*mover.setLocalRotation(
+                            curve.getOrientation(
+                                deltaTime,
+                                orientationPrecision,
+                                up));*/
                 }
                 if (isDisableAfterClamp() && lastPoint != null) {
                     if (lastPoint.equals(newPoint)) {
@@ -165,10 +182,7 @@ public class CurveOnceController extends Controller {
                 return;
             }
         }
-        //BoundingSphere sphere = new BoundingSphere(4, rotation);
-
     }
-
 
     private boolean isDisableAfterClamp() {   // ***** added
         return disableAfter;

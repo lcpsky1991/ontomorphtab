@@ -14,11 +14,14 @@ public class jviewer {
 			
 			try
 			{
+				System.setProperty("java.library.path", "lib");
 				jtiffLoader m = new jtiffLoader();
 
 				int[] vals;
 				
-				m.init("/home/caprea/Documents/data/images/alz_11x11_2xbin_6_24_pyr.tif");	//the DPI and screensize dont matter
+				//m.init("/home/caprea/Documents/data/images/alz_11x11_2xbin_6_24_pyr.tif");	//the DPI and screensize dont matter
+				m.init("./etc/img/ECE_191_hires_poster_pyr.tiff");	//the DPI and screensize dont matter
+				
 				
 				System.out.println("The image width through java is: " + m.getImageW() );
 				System.out.println("The image height through java is: " + m.getImageH() );

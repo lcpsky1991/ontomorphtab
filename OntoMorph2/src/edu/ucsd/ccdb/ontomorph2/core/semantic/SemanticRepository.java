@@ -268,4 +268,11 @@ public class SemanticRepository {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
+	public SemanticInstance getSemanticInstance(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

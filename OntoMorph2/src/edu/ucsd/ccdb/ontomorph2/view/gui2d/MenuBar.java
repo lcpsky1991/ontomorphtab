@@ -38,10 +38,11 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String SLIDE_VIEW = "View Example Slide";
 	public static final String ATLAS_LATERAL_VIEW = "View Atlas Lateral Side";
 	public static final String ATLAS_MEDIAL_VIEW = "View Atlas Medial Side";
-	public static final String SLIDE_VIEW_SMOOTH = "Smoothly Zoom to View Example Slide";
-	public static final String ATLAS_LATERAL_VIEW_SMOOTH = "Smoothly Zoom To Atlas Lateral Side";
-	public static final String ATLAS_MEDIAL_VIEW_SMOOTH = "Smoothly Zoom To Atlas Medial Side";
-	public static final String ATLAS_CELL_VIEW_SMOOTH = "Smoothly Zoom To View Cells";
+	public static final String SLIDE_VIEW_SMOOTH = "Smoothly Zoom to Hippocampus Slide";
+	public static final String SLIDE_VIEW_CEREB_SMOOTH = "Smoothly Zoom to Cerebellar Slide";
+	public static final String ATLAS_LATERAL_VIEW_SMOOTH = "Smoothly Zoom To Lateral Side";
+	public static final String ATLAS_MEDIAL_VIEW_SMOOTH = "Smoothly Zoom To Medial Side";
+	public static final String ATLAS_CELL_VIEW_SMOOTH = "Smoothly Zoom To View Hippocampal Cells";
 	public static final String ATLAS_SUBCELL_VIEW_SMOOTH = "Smoothly Zoom To View Subcellular Components";
 	public static final String strMNU_MANIPULATE = "Manipulate Object";
 	public static final String strMNU_MANI_ROTATEA = "Rotate (X - Axis)";
@@ -82,9 +83,10 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         //=[  VIEW  ]=
         Menu mnuView = new Menu();
         mB.registerSubMenu(mnuView, "View");
-        makeMenuItem(SLIDE_VIEW, mnuView);
-        makeMenuItem(ATLAS_LATERAL_VIEW, mnuView);
-        makeMenuItem(ATLAS_MEDIAL_VIEW, mnuView);
+        //makeMenuItem(SLIDE_VIEW, mnuView);
+        //makeMenuItem(ATLAS_LATERAL_VIEW, mnuView);
+        //makeMenuItem(ATLAS_MEDIAL_VIEW, mnuView);
+        makeMenuItem(SLIDE_VIEW_CEREB_SMOOTH, mnuView);
         makeMenuItem(SLIDE_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_CELL_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_SUBCELL_VIEW_SMOOTH, mnuView);
@@ -211,6 +213,10 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		{
 			View.getInstance().getCamera().smoothlyZoomToSlideView();
 		} 
+		else if (SLIDE_VIEW_CEREB_SMOOTH.equals(act)) 
+		{
+			View.getInstance().getCamera().smoothlyZoomToSlideCerebellumView();
+		}
 		else if (ATLAS_CELL_VIEW_SMOOTH.equals(act)) 
 		{
 			View.getInstance().getCamera().smoothlyZoomToCellView();

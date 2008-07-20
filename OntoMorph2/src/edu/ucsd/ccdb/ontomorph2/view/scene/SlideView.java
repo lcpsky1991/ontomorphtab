@@ -2,6 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import java.net.URL;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
@@ -122,6 +123,9 @@ public class SlideView extends TriMesh {
 		if (_slide.getAbsoluteRotation() != null) {
 			this.setLocalRotation(_slide.getAbsoluteRotation());
 		}
+		
+		this.setModelBound(new BoundingBox());
+		this.updateModelBound();
 	}
 	
 	private void setImageURL(URL imageURL) {

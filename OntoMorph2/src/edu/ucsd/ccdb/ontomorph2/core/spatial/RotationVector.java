@@ -25,6 +25,10 @@ public class RotationVector extends com.jme.math.Quaternion{
 	public RotationVector(Quaternion localRotation) {
 		super(localRotation);
 	}
+	
+	public RotationVector(float x, float y, float z, float w) {
+		super(x,y,z,w);
+	}
 
 	public Matrix3f asMatrix3f() {
 		// TODO Auto-generated method stub

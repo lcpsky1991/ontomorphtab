@@ -71,10 +71,6 @@ public class NeuronMorphologyView extends TangibleView{
 		return this;
 	}
 	
-	public boolean containsGeomBatch(GeomBatch gb) {
-		return getSegmentFromGeomBatch(gb) != null;
-	}
-	
 	/**
 	 * Return any SegmentView that is represented by this GeomBatch
 	 * 

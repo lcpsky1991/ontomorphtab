@@ -10,6 +10,9 @@ import com.jme.scene.lod.AreaClodMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
@@ -155,6 +158,20 @@ public class BrainRegion extends Tangible{
 
 	public String getName() {
 		return this.name;
+	}
+	
+	/**
+	 * Returns the SemanticClass corresponding to this BrainRegion.
+	 * @return
+	 */
+	public SemanticClass getSemanticClass() {
+		//need to be able to fill this in for every brain region.. 
+		//probably should just hard code the mapping for now.
+		return SemanticRepository.getInstance().getSemanticClass("");
+	}
+
+	public SemanticInstance getSemanticInstance() {
+		return SemanticRepository.getInstance().getSemanticInstance("");
 	}
 
 }

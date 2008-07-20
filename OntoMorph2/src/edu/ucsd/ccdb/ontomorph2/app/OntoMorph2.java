@@ -25,6 +25,8 @@ public class OntoMorph2 {
 		Log.getLogger("").setLevel(Level.WARNING);
 		Log.getLogger("").getHandlers()[0].setLevel(Level.WARNING);
 		
+		System.setProperty("java.library.path", "lib");
+		
 		View view = View.getInstance();
 		
 		SceneObserver obs = SceneObserver.getInstance();

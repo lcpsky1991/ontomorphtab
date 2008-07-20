@@ -3,6 +3,10 @@ package edu.ucsd.ccdb.ontomorph2.observers;
 import java.util.Observable;
 import java.util.Observer;
 
+import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
+
 /**
  * Updates the semantic repository when changes occur to semantic things.  For example,
  * when a cell is moved out of the bounds of a brain region into another one, the
@@ -16,8 +20,15 @@ import java.util.Observer;
 public class SemanticObserver implements Observer {
 
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-
+		if (o instanceof NeuronMorphology) {
+			NeuronMorphology nm = (NeuronMorphology)o;
+			BrainRegion br = nm.getEnclosingBrainRegion();
+			SemanticInstance brainRegionInstance = br.getSemanticInstance();
+			//does this brain region instance have a property saying
+			//that it has_part the instance from the neuron morphology??
+			//if so, do nothing
+			//if not, add it!
+		}
 	}
 
 }
