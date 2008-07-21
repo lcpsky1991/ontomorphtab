@@ -11,13 +11,17 @@ import java.net.MalformedURLException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.util.BitMath;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
+import edu.ucsd.ccdb.ontomorph2.view.View;
+import edu.ucsd.ccdb.ontomorph2.view.View3D;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
 
@@ -236,21 +240,25 @@ public class ReferenceAtlas {
 	}
 	
 	public void displayBasicAtlas() {
-		this.getBrainRegion("OLF").select();
-		this.getBrainRegion("HPF").select();
-		this.getBrainRegion("STRd").select();
-		this.getBrainRegion("STRv").select();
-		this.getBrainRegion("LSX").select();
-		this.getBrainRegion("sAMY").select();
-		this.getBrainRegion("PAL").select();
-		this.getBrainRegion("TH").select();
-		this.getBrainRegion("HY").select();
-		this.getBrainRegion("MBsen").select();
-		this.getBrainRegion("MBmot").select();
-		this.getBrainRegion("MBsta").select();
-		this.getBrainRegion("P").select();
-		this.getBrainRegion("MY").select();
-		this.getBrainRegion("CB").select();
+		Set<BrainRegion> brs = new HashSet<BrainRegion>();
+		
+		brs.add(this.getBrainRegion("OLF"));
+		brs.add(this.getBrainRegion("HPF"));
+		brs.add(this.getBrainRegion("STRd"));
+		brs.add(this.getBrainRegion("STRv"));
+		brs.add(this.getBrainRegion("LSX"));
+		brs.add(this.getBrainRegion("sAMY"));
+		brs.add(this.getBrainRegion("PAL"));
+		brs.add(this.getBrainRegion("TH"));
+		brs.add(this.getBrainRegion("HY"));
+		brs.add(this.getBrainRegion("MBsen"));
+		brs.add(this.getBrainRegion("MBmot"));
+		brs.add(this.getBrainRegion("MBsta"));
+		brs.add(this.getBrainRegion("P"));
+		brs.add(this.getBrainRegion("MY"));
+		brs.add(this.getBrainRegion("CB"));
+		
+		View.getInstance().getView3D().addBrainRegions(brs);
 	}
 	
 	public void displayLeafAtlas() {

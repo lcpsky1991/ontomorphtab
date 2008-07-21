@@ -81,7 +81,7 @@ public class BrainRegionView extends TangibleView{
 		case BrainRegion.INVISIBLE:
 			//make invisible
 			this.detachChild(this.mesh);
-		
+			
 			break;
 		case BrainRegion.TRANSPARENT:
 			makeVisible();

@@ -19,10 +19,6 @@ public interface ISemanticThing extends ISelectable{
 	
 	public void removeSemanticsAwareAssociation(ISemanticsAware obj);
 	
-	public String getLabel();
-	
-	public Cls getCls();
-	
 	/**
 	 * Returns a list of spatial semantic properties that hold between this
 	 * Semantic thing and the other semantic thing.

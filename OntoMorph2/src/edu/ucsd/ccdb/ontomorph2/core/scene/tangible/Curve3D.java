@@ -24,10 +24,8 @@ public class Curve3D extends Tangible{
 
 	BezierCurve theCurve = null;
 	BezierCurve absoluteCurve = null; // copy of the curve for coordinate systems
-	ColorRGBA color = null;
 	float delta = 0.1f;
 	private Vector3f _modelBinormal = null;
-	CoordinateSystem sys = null;
 	OMTVector[] controlPoints = null;
 	boolean seeAnchorPoints = true;
 		
@@ -40,23 +38,6 @@ public class Curve3D extends Tangible{
 	public Curve3D(String string, OMTVector[] array, CoordinateSystem d) {
 		this(string, array);
 		setCoordinateSystem(d);
-	}
-	
-	public void setCoordinateSystem(CoordinateSystem sys) {
-		this.sys = sys;
-		
-	}
-	
-	public CoordinateSystem getCoordinateSystem() {
-		return this.sys;
-	}
-
-	/**
-	 * Set the color of the curve.
-	 */
-	public void setColor(Color color) {
-		this.color = ColorUtil.convertColorToColorRGBA(color);
-		theCurve.setSolidColor(this.color);
 	}
 	
 	/**
@@ -107,14 +88,13 @@ public class Curve3D extends Tangible{
 	 * @return a copy of this Curve3D
 	 * @see Curve
 	 */
-	public Curve asBezierCurve() {
+	public Curve getBezierCurve() {
 		Curve copy = copyBezierCurve(this.controlPoints);
 		return copy;
 	}
 	
 	private BezierCurve copyBezierCurve(OMTVector[] controlPoints) {
 		BezierCurve copy = new BezierCurve(theCurve.getName(), controlPoints);
-		copy.setSolidColor(this.color);
 		
 		//apply coordinate system to this curve.
 		if (this.getCoordinateSystem() != null) {
@@ -198,7 +178,7 @@ public class Curve3D extends Tangible{
 	 */
 	public void setAnchorPointsVisibility(boolean visible) {
 		this.seeAnchorPoints = visible;
-		setChanged();
+		changed();
 	}
 	
 	/**
@@ -216,16 +196,6 @@ public class Curve3D extends Tangible{
 	public OMTVector[] getControlPoints() {
 		return this.controlPoints;
 	}
-	
-	/**
-	 * Sets the control points for this curve
-	 * 
-	 * @param points
-	 */
-	public void setControlPoints(OMTVector[] points) {
-		this.theCurve = copyBezierCurve(points);
-		changed();
-	}
 
 	/**
 	 * Set a single control point for this curve.
@@ -234,7 +204,8 @@ public class Curve3D extends Tangible{
 	 */
 	public void setControlPoint(int i, OMTVector pos) {
 		this.controlPoints[i] =  pos;
-		setControlPoints(this.controlPoints);
+		this.theCurve = copyBezierCurve(this.controlPoints);
+		changed();
 	}
 	
 }

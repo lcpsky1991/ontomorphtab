@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.view;
+package edu.ucsd.ccdb.ontomorph2.misc;
 
 import com.jme.input.action.*;
 import com.jme.input.FirstPersonHandler;
@@ -11,6 +11,7 @@ import com.jme.renderer.Camera;
 import com.jme.input.*;
 
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 
 import org.fenggui.event.mouse.MouseButton;
 

@@ -7,44 +7,11 @@ import java.util.Observable;
 import edu.stanford.smi.protege.model.Cls;
 import edu.stanford.smi.protege.model.Instance;
 
-public class SemanticThingImpl extends Observable implements ISemanticThing {
+public abstract class SemanticThingImpl extends Observable implements ISemanticThing {
 
-	Cls OWLClass = null;
-	Instance owlInstance = null;
 	String URI = null;
 	List<ISemanticsAware> semanticsAware = new ArrayList<ISemanticsAware>();
-	private boolean selected;
-	
-	public SemanticThingImpl() {
-		
-	}
-	
-	public SemanticThingImpl(Cls owlClass, String uri) {
-		OWLClass = owlClass;
-		this.URI = uri;
-	}
-	
-	public SemanticThingImpl(Instance owlInstance) {
-		this.owlInstance = owlInstance;
-	}
-	
-	/**
-	 * Get the underlying protege representation of a semantic class
-	 */
-	public Cls getCls() {
-		return OWLClass;
-	}
-	
-	/**
-	 * Get the OWL label
-	 */
-	public String getLabel() {
-		return SemanticRepository.getInstance().getClassLabel(OWLClass, URI);
-	}
-	
-	public String toString() {
-		return getLabel();
-	}
+	private boolean selected;	
 
 	public List<ISemanticsAware> getSemanticsAwareAssociations() {
 		return this.semanticsAware;

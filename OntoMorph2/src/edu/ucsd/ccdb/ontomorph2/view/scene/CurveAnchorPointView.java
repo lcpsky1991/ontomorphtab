@@ -12,6 +12,7 @@ import com.jme.scene.Geometry;
 import com.jme.scene.shape.Sphere;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 
@@ -28,7 +29,7 @@ public class CurveAnchorPointView extends TangibleView {
 	public CurveAnchorPointView(CurveAnchorPoint capt) {
 		super(capt);
 		super.setName("CurveAnchorPointView");
-		this.s =  new Sphere("curve anchor point", capt.getAbsolutePosition(), 6, 6, 0.5f);
+		this.s =  new Sphere("curve anchor point", new OMTVector(0,0,0), 6, 6, 0.5f);
 		s.setModelBound(new BoundingBox());
 		s.updateModelBound();	
 		
@@ -37,11 +38,12 @@ public class CurveAnchorPointView extends TangibleView {
 		this.registerGeometries(ll);
 		
 		this.attachChild(s);
+		
 		this.update();
 	}
 
 	public void update(){
-		//super.update();
+		this.setLocalTranslation(getModel().getAbsolutePosition());
 		
 		if (this.getModel().isSelected()) 
 		{
@@ -52,24 +54,18 @@ public class CurveAnchorPointView extends TangibleView {
 			this.unhighlight();
 		}
 		
-		 
-		//s.setLocalTranslation(this.getModel().getRelativePosition());
-		//this.getModel().getCoordinateSystem().applyToSpatial(s);		
-
-		//s.setModelBound(new BoundingBox());
-		
 		s.updateModelBound();
+		s.updateRenderState();
+		s.updateGeometricState(5f, true);
 	}
 	
 	public void doHighlight() 
 	{
-		this.s.setSolidColor(TangibleViewManager.highlightSelectedColor);
-		//this.s.setSolidColor(ColorUtil.convertColorToColorRGBA(this.getModel().getHighlightedColor()));
+		this.s.setDefaultColor(TangibleViewManager.highlightSelectedColor);
 	}
 	
 	public void doUnhighlight() 
 	{
-		this.s.setSolidColor(ColorRGBA.white);
-		//this.s.setSolidColor(ColorUtil.convertColorToColorRGBA(this.getModel().getColor()));
+		this.s.setDefaultColor(ColorRGBA.white);
 	}
 }

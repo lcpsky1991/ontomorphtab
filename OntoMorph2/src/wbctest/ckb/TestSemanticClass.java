@@ -11,10 +11,10 @@ public class TestSemanticClass extends TestCase {
 	 */
 	public void testGetCls() {
 		SemanticClass s = SemanticRepository.getInstance().getSemanticClass("sao:sao830368389");
-		assertNotNull(s.getCls());
+		assertNotNull(s);
 		
 		SemanticClass s2 = SemanticRepository.getInstance().getSemanticClass("ccdb:MICROSCOPYPRODUCT_OBJTAB");
-		assertNotNull(s2.getCls());
+		assertNotNull(s2);
 
 	}
 

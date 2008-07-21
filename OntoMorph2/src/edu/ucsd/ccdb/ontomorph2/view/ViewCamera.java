@@ -410,7 +410,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	}
 	
 	public void smoothlyZoomToSlideCerebellumView() {
-		PositionVector loc = new PositionVector(278.8373f, -116.61807f, -179.73985f);
+		PositionVector loc = new PositionVector(458.9234f, -118.0f, -356.11566f);
 		RotationVector rotation = new RotationVector(0.0f,0.04361951f, 0.0f, 0.9990494f);
 		continuousZoomTo(loc, rotation, 0.21f);
 	}

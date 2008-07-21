@@ -12,6 +12,8 @@ import com.jme.scene.Node;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
@@ -31,6 +33,23 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
  */
 public abstract class Tangible extends Observable implements ISemanticsAware{
 
+	public static final String CHANGED_RELATIVE_POSITION = "relative position";
+	public static final String CHANGED_RELATIVE_ROTATION = "relative rotation";
+	public static final String CHANGED_RELATIVE_SCALE = "relative scale";
+	public static final String CHANGED_SET_COORDINATE_SYSTEM = "coordinate system";
+	public static final String CHANGED_SELECT = "select";
+	public static final String CHANGED_UNSELECT = "unselect";
+	public static final String CHANGED_VISIBLE = "visible";
+	public static final String CHANGED_COLOR = "color";
+	public static final String CHANGED_HIGHLIGHTED_COLOR = "highlighted color";
+	public static final String CHANGED_ADD_SEMANTIC_THING = "add semantic thing";
+	public static final String CHANGED_REMOVE_SEMANTIC_THING = "remove semantic thing";
+	public static final String CHANGED_SCALE = "scale";
+	public static final String CHANGED_ROTATE = "rotate";
+	public static final String CHANGED_MOVE = "move";
+	public static final String CHANGED_NAME = "name";
+	
+	
 	private PositionVector _position = new PositionVector();
 	private RotationVector _rotation = new RotationVector();
 	private CoordinateSystem sys = null;
@@ -39,7 +58,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	private List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
 
 	private Color c = null;
-	private Color highlightedColor = null;
+	private Color highlightedColor = Color.yellow;
+	
+	private String name;
 	
 	public Tangible() {
 		TangibleManager.getInstance().addTangible(this);
@@ -86,7 +107,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void setRelativePosition(PositionVector pos) {
 		if (pos != null) {
 			theSpatial.setLocalTranslation(pos);
-			changed();
+			changed(CHANGED_RELATIVE_POSITION);
 		}
 	}
 	
@@ -101,7 +122,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void setRelativeRotation(RotationVector rot) {
 		if (rot != null) {
 			theSpatial.setLocalRotation(rot);
-			changed();
+			changed(CHANGED_RELATIVE_ROTATION);
 		}
 	}
 
@@ -112,7 +133,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 */
 	public void setRelativeScale(OMTVector v) {
 		theSpatial.setLocalScale(v);
-		changed();
+		changed(CHANGED_RELATIVE_SCALE);
 	}
 	
 	/**
@@ -122,6 +143,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 */
 	public void setRelativeScale(float f) {
 		theSpatial.setLocalScale(f);
+		changed(CHANGED_RELATIVE_SCALE);
 	}
 	
 
@@ -181,8 +203,16 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 
 	
 	public void changed() {
-		setChanged();
-		notifyObservers();
+		changed(null);
+	}
+	
+	protected void changed(String argument) {
+		this.setChanged();
+		if (argument == null) {
+			notifyObservers();
+		} else {
+			notifyObservers(argument);
+		}
 	}
 	
 	/**
@@ -194,6 +224,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 */
 	public void setCoordinateSystem(CoordinateSystem sys) {
 		this.sys = sys;
+		changed(CHANGED_SET_COORDINATE_SYSTEM);
 	}
 	
 	/**
@@ -212,7 +243,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void select() 
 	{
 		TangibleManager.getInstance().select(this);
-		changed();
+		changed(CHANGED_SELECT);
 	}
 	
 	public boolean isSelected() 
@@ -223,7 +254,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void unselect() 
 	{
 		TangibleManager.getInstance().unselect(this);
-		changed();
+		changed(CHANGED_UNSELECT);
 	}
 	
 	public boolean isVisible() {
@@ -232,21 +263,21 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 
 	public void setVisible(boolean b) {
 		_visible = b;
-		changed();
+		changed(CHANGED_VISIBLE);
 	}
 	
 	public void setColor(Color c) {
 		this.c = c;
-		changed();
+		changed(CHANGED_COLOR);
 	}
 	
 	public Color getColor() {
 		return this.c;
 	}
 	
-	public void setHighlightedColor(Color c) {
+	protected void setHighlightedColor(Color c) {
 		this.highlightedColor = c;
-		changed();
+		changed(CHANGED_HIGHLIGHTED_COLOR);
 	}
 	
 	public Color getHighlightedColor() {
@@ -264,11 +295,13 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void addSemanticThing(ISemanticThing thing) {
 		this.semanticThings.add(thing);
 		thing.addSemanticsAwareAssociation(this);
+		changed(CHANGED_ADD_SEMANTIC_THING);
 	}
 	
 	public void removeSemanticThing(ISemanticThing thing) {
 		this.semanticThings.remove(thing);
 		thing.removeSemanticsAwareAssociation(this);
+		changed(CHANGED_REMOVE_SEMANTIC_THING);
 	}
 	
 
@@ -290,7 +323,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		{
 			this.setRelativeScale(nscale);	
 		}
-		changed();
+		changed(CHANGED_SCALE);
 	}
 	
 	
@@ -315,7 +348,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		end = this.getRelativeRotation().mult(more);
 		
 		this.setRelativeRotation( new RotationVector(end) );
-		changed();
+		changed(CHANGED_ROTATE);
 	}
 	
 	/**
@@ -340,10 +373,32 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		
 		//apply the movement
 		this.setRelativePosition( np );
-		changed();
+		changed(CHANGED_MOVE);
 	}
 	
 	public int hashCode() {
 		return super.hashCode() + theSpatial.hashCode();
 	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+		changed(CHANGED_NAME);
+	}
+	
+	/**
+	 * Returns the SemanticClass corresponding to this Tangible.
+	 * @return
+	 */
+	public SemanticClass getSemanticClass() {
+		return getSemanticInstance().getSemanticClass();
+	}
+
+	public SemanticInstance getSemanticInstance() {
+		return null;//SemanticRepository.getInstance().getSemanticInstance("");
+	}
+
 }

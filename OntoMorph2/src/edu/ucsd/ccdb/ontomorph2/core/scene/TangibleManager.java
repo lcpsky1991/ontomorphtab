@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
@@ -15,6 +16,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
 
@@ -31,6 +33,7 @@ public class TangibleManager {
 
 	private ArrayList<Tangible> selectedThings = null; 
 	ArrayList<Tangible> tangibles = null;
+	boolean multiSelect = false;
 	
 	/**
 	 * Holds singleton instance
@@ -51,12 +54,11 @@ public class TangibleManager {
 			MyNode node = new MyNode(n.getName(), n);
 			
 			for (ISemanticThing t : ((ISemanticsAware)n).getAllSemanticThings()) {	
-				node.children.add(new MyNode(t.getLabel(), t));
+				node.children.add(new MyNode(t.toString(), t));
 			}
 			
 			root.children.add(node);
 		}
-				
 		return root;
 	}
 
@@ -82,9 +84,8 @@ public class TangibleManager {
 		}
 	}
 	
-	public Tangible getSelected(int index)
-	{
-		return selectedThings.get(index);
+	public List<Tangible> getSelected() {
+		return this.selectedThings;
 	}
 	
 	public Set<Volume> getVolumes() {
@@ -166,15 +167,25 @@ public class TangibleManager {
 	 */
 	public void select(Tangible thing)
 	{
-		//only add if not already selected
-		if ( thing.isSelected() )
-		{
-			//dont add again
+		//if we are not doing multi selection, get rid of everything 
+		//else but this thing.
+		if (!getMultiSelect()) { 
+			this.unselectAll();
 		}
-		else
+//		only add if not already selected
+		if ( !thing.isSelected() )
 		{
 			selectedThings.add(thing);	
 		}
+		Log.warn("Currently selected: " + selectedThings.toString());
+	}
+	
+	public void setMultiSelect(boolean multi) {
+		this.multiSelect = multi;
+	}
+	
+	public boolean getMultiSelect() {
+		return this.multiSelect;
 	}
 	
 	/**
@@ -216,11 +227,6 @@ public class TangibleManager {
 		
 		//clear the memory at the end of selection
 		selectedThings.clear();
-	}
-	
-	public void setHighlightColor(Color c)
-	{
-		
 	}
 	
 	public boolean isSelected(Tangible thing)

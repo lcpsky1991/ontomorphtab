@@ -1,6 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
-import com.hp.hpl.jena.rdf.model.impl.PropertyImpl;
+import edu.stanford.smi.protegex.owl.model.impl.AbstractOWLProperty;
 
 /**
  * Represents an OWL Property.
@@ -8,11 +8,12 @@ import com.hp.hpl.jena.rdf.model.impl.PropertyImpl;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class SemanticProperty extends PropertyImpl {
+public class SemanticProperty{
 
-	public SemanticProperty(String arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
+	AbstractOWLProperty property = null;
+	
+	public SemanticProperty(AbstractOWLProperty aop) {
+		this.property = aop; 
 	}
 
 }

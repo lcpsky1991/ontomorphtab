@@ -77,7 +77,7 @@ public class SegmentGroupImpl extends Tangible implements ISegmentGroup{
 				infoString = sg.getTags().toString() + "\n";
 				for (ISemanticThing s : sg.getSemanticThings())
 				{
-					infoString += (s.getLabel() + "\n"); 
+					infoString += (s.toString() + "\n"); 
 				}
 				infoString += ((NeuronMorphology)sg.getParentCell()).getSemanticThings();
 			}

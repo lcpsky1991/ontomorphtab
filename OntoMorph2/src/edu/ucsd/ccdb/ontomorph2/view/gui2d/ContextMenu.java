@@ -1,6 +1,12 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
+import java.util.List;
+import java.util.Set;
+
 import org.fenggui.background.PlainBackground;
+import org.fenggui.border.Border;
+import org.fenggui.border.PlainBorder;
+import org.fenggui.border.TitledBorder;
 import org.fenggui.event.IMenuItemPressedListener;
 import org.fenggui.event.MenuItemPressedEvent;
 import org.fenggui.menu.Menu;
@@ -27,18 +33,30 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	static final String ANNOTATE = "Annotate";
 	static final String ANIMATE = "Animate";
 	static final String PROPERTIES = "Display Properties";
+	static ContextMenu instance = null;
+	TitledBorder border = null;
 	
-	public ContextMenu() {
-		View2D.getInstance().addWidget(this);
+	public static ContextMenu getInstance() {
+		if (instance == null) {
+			instance = new ContextMenu();
+		}
+		return instance;
+	}
+	
+	private ContextMenu() {
 		
         Menu mnuContext = this;
     
         
         this.setShrinkable(false);
+        this.setSize(100,200);
         //this.getAppearance().removeAll();
-		//this.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
-		//this.getAppearance().setTextColor(Color.WHITE);
-		
+		this.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
+		border = new TitledBorder("context menu");
+		border.setTextColor(Color.WHITE);
+		this.getAppearance().add(border);
+		this.getAppearance().setTextColor(Color.WHITE);
+		this.getAppearance().setTextSelectionColor(Color.YELLOW);
         
         makeMenuItem(ANNOTATE, mnuContext);
         makeMenuItem(ANIMATE, mnuContext);
@@ -48,10 +66,22 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
         this.layout();
 	}
 	
-	public void displayMenuFor(int x, int y, TangibleView t) {
+	public void displayMenuFor(int xCoord, int yCoord, List<Tangible> t) {
+		int x = xCoord;
+		int y = yCoord;
+		this.setXY(x, y);
 		
-		this.setPosition(new Point(x,y));
-        
+		if (t != null & t.size() == 1) {
+			border.setTitle(t.iterator().next().getName());
+		}
+		
+		if(this.equals(View2D.getInstance().getDisplay().getPopupWidget())) // popupmenu is already visible!
+		{
+			View2D.getInstance().removePopup();
+		}
+		
+		View2D.getInstance().displayPopUp(this);
+		
 	}
 	/**
 	 * Conveiniance method that wraps the creation of menus
@@ -93,5 +123,6 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		} else if (PROPERTIES.equals(opt)) {
 			System.out.println("show properties");
 		}
+		View2D.getInstance().removePopup();
 	}
 }

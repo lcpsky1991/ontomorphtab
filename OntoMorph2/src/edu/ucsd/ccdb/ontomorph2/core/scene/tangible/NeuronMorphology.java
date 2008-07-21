@@ -45,11 +45,8 @@ public abstract class NeuronMorphology extends Tangible{
 	
 	String _renderOption = RENDER_AS_LINES; //default render option
 	ArrayList<ISegment> segmentList = null;
-	//Set<ISegment> selectedSegmentList = new HashSet<ISegment>();
-	//Set<ISegmentGroup> selectedSegmentGroupList = new HashSet<ISegmentGroup>();
 	Level2Cell theCell;
 	Set<ISegmentGroup> segmentGroupList = null;
-	List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
 	PositionVector lookAtPosition = null;
 	
 	Curve3D _curve = null;

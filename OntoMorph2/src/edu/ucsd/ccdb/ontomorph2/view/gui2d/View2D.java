@@ -10,6 +10,7 @@ import org.fenggui.border.PlainBorder;
 import org.fenggui.composites.Window;
 import org.fenggui.event.ISelectionChangedListener;
 import org.fenggui.event.SelectionChangedEvent;
+import org.fenggui.event.mouse.MouseButton;
 import org.fenggui.layout.StaticLayout;
 import org.fenggui.tree.Tree;
 import org.fenggui.util.Color;
@@ -17,7 +18,7 @@ import org.fenggui.util.Point;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.misc.FengJMEInputHandler;
+import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 
 
@@ -258,7 +259,6 @@ public class View2D extends Display  {
 			basicSearch = new BasicSearchWidget(this);
 		}
 	}
-	
 	
 
 }

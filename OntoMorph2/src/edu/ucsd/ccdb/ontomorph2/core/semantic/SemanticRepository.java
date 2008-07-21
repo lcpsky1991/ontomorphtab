@@ -13,7 +13,11 @@ import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.model.SimpleInstance;
 import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protege.util.ApplicationProperties;
+import edu.stanford.smi.protegex.owl.database.OWLDatabaseModel;
+import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
+import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
+import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 import edu.stanford.smi.protegex.owl.model.RDFObject;
 import edu.stanford.smi.protegex.owl.model.RDFSLiteral;
 import edu.stanford.smi.protegex.owl.model.query.QueryResults;
@@ -29,9 +33,9 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
  */
 public class SemanticRepository {
 	
-	//JenaOWLModel owlModel = null;
-	KnowledgeBase owlModel = null;
-	Map<String, Cls> clsFlyweightStore = new HashMap<String,Cls>();
+	
+	OWLDatabaseModel owlModel = null;
+	Map<String, OWLNamedClass> clsFlyweightStore = new HashMap<String,OWLNamedClass>();
 	/**
 	 * Holds singleton instance
 	 */
@@ -43,17 +47,17 @@ public class SemanticRepository {
 	
 
 	
-	public KnowledgeBase getOWLModel() {
+	public OWLModel getOWLModel() {
 		return owlModel;
 	}
 
 	public SemanticClass getSemanticClass(String uri) {
-		Cls cls = null;
+		OWLNamedClass cls = null;
 		if (owlModel != null) {
 			try {
 				cls = clsFlyweightStore.get(uri);
 				if (cls == null) {
-					cls = owlModel.getCls(uri);
+					cls = owlModel.getOWLNamedClass(uri);
 					clsFlyweightStore.put(uri, cls);
 				}
 			} catch (Exception e ) {
@@ -80,10 +84,10 @@ public class SemanticRepository {
 	 * @param requireLabel - if set to true, requires that the instance have a label in order to be included in the return list
 	 * @return
 	 */
-	public List<SemanticInstance> getInstancesFromRoot(Cls rootClass, boolean requireLabel) {
+	public List<SemanticInstance> getInstancesFromRoot(SemanticClass rootClass, boolean requireLabel) {
 		List<SemanticInstance> runningList = new ArrayList<SemanticInstance>();
 		for (Iterator it = rootClass.getInstances().iterator(); it.hasNext(); ) {
-			Instance i = (Instance)it.next();
+			OWLIndividual i = (OWLIndividual)it.next();
 			if (i instanceof SimpleInstance) {
 				SemanticInstance si = new SemanticInstance(i);
 				if (requireLabel) {
@@ -104,7 +108,7 @@ public class SemanticRepository {
 	 * @return a list of SemanticInstanceImpls
 	 */
 	public List<SemanticInstance> getCellInstances() {
-		return getInstancesFromRoot(getSemanticClass("sao:sao1813327414").getCls(), true);
+		return getInstancesFromRoot(getSemanticClass("sao:sao1813327414"), true);
 	}
 	
 	//initialize the semantic repository by connecting to the 
@@ -128,7 +132,7 @@ public class SemanticRepository {
 			Project p = Project.loadProjectFromFile("etc/NIF/CKB_mega_db_v2.pprj", new ArrayList());
 						
 			//projectManager.loadProject(uri);
-			owlModel = p.getKnowledgeBase();
+			owlModel = (OWLDatabaseModel)p.getKnowledgeBase();
 					    			
 			/*
 			JenaOWLModel owlModel = ProtegeOWL.createJenaOWLModel();
@@ -256,7 +260,7 @@ public class SemanticRepository {
 	}
 
 	public List<SemanticInstance> getMicroscopyProductInstances() {
-		return getInstancesFromRoot(getSemanticClass("ccdb:MICROSCOPYPRODUCT_OBJTAB").getCls(), false);
+		return getInstancesFromRoot(getSemanticClass("ccdb:MICROSCOPYPRODUCT_OBJTAB"), false);
 	}
 	
 	/**
@@ -264,14 +268,14 @@ public class SemanticRepository {
 	 * @param string
 	 * @return
 	 */
-	public ISemanticThing createNewInstanceOfClass(String string) {
+	public SemanticInstance createNewInstanceOfClass(String uri) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 
-	public SemanticInstance getSemanticInstance(String string) {
+	public SemanticInstance getSemanticInstance(String uri) {
 		// TODO Auto-generated method stub
 		return null;
 	}

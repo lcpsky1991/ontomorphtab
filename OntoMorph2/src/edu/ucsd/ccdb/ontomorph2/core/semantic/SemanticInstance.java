@@ -1,8 +1,21 @@
 package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import com.hp.hpl.jena.ontology.OntModel;
+
 import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
+import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
+import edu.stanford.smi.protegex.owl.model.OWLIndividual;
+import edu.stanford.smi.protegex.owl.model.OWLModel;
+import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
+import edu.stanford.smi.protegex.owl.model.RDFProperty;
+import edu.stanford.smi.protegex.owl.model.impl.AbstractOWLProperty;
 
 
 /**
@@ -13,10 +26,29 @@ import edu.stanford.smi.protege.model.Slot;
  */
 public class SemanticInstance extends SemanticThingImpl {
 
-	Instance _ins = null;
+	OWLIndividual instance = null;
+	SemanticClass sc = null;
 	
-	public SemanticInstance(Instance i) {
-		this._ins = i;
+	public SemanticInstance(OWLIndividual owlInstance) {
+		this.instance = owlInstance;
+	}
+	
+	public SemanticClass getSemanticClass() {
+		if (sc == null) {
+			
+			sc = new SemanticClass((OWLNamedClass)instance.getRDFType());
+		}
+		return this.sc;
+	}
+	
+	public List<SemanticProperty> getProperties() {
+		List<SemanticProperty> l = new ArrayList<SemanticProperty>();
+		Collection c = instance.getRDFProperties();
+		for(Iterator it = c.iterator(); it.hasNext();) {
+			AbstractOWLProperty aop = (AbstractOWLProperty)it.next();
+			l.add(new SemanticProperty(aop));
+		}
+		return l;
 	}
 	
 	public String getLabel() {
@@ -28,23 +60,8 @@ public class SemanticInstance extends SemanticThingImpl {
 		
 		Slot rdfsLabel = owlModel.getSlot("rdfs:label");
 		if (owlModel != null) {
-
-			//Cls root = owlModel.getRootCls();
-			//Cls entity = owlModel.getCls("bfo:Entity");
-			//System.out.println("The root class is: " + entity.getName());
-			//Node rootNode = getTree().addRoot();
 			rdfsLabel = owlModel.getSlot("rdfs:label");
-			label = (String)_ins.getDirectOwnSlotValue(rdfsLabel);
-			
-			/*
-			String prefix = null;//owlModel.getPrefixForResourceName(entity.getName());
-			if (prefix != null) {
-				label =  prefix + ":" + label;
-			}
-			
-			if (this.URI != null) {
-				label = label + "(" + this.URI + ")";
-			}*/
+			label = (String)instance.getDirectOwnSlotValue(rdfsLabel);
 		}
 		return label;
 	}

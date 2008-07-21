@@ -35,6 +35,7 @@ import com.jme.util.geom.BufferUtils;
 import com.jmex.model.converters.FormatConverter;
 import com.jmex.model.converters.MaxToJme;
 
+import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
 
 

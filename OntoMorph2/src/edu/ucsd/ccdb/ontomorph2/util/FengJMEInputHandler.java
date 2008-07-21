@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.misc;
+package edu.ucsd.ccdb.ontomorph2.util;
 
 import org.fenggui.Display;
 import org.fenggui.event.Key;

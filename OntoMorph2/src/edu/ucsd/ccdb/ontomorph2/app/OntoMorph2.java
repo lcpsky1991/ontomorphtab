@@ -38,13 +38,24 @@ public class OntoMorph2 {
 		//since the view takes over the thread after it is started
 		//need to have the view do the initial loading of the scene.
 		view.setScene(_scene);	
-		view.start();
+		try {
+			view.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.error("SEVERE ERROR");
+		}
 	}
 	
 	//gets called by View during initialization
 	public static void initialization() {
 		//scene can't be loaded before View has been initializaed
-		_scene.load();
+		try {
+			_scene.load();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.error("SEVERE ERROR");
+		}
+		
 		View.getInstance().getView2D().addInfoText("This is an example of \nloading neuronal morphologies...");
 	}
 	

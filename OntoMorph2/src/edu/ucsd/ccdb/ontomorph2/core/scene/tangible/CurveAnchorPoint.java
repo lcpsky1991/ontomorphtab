@@ -36,4 +36,20 @@ public class CurveAnchorPoint extends Tangible {
 		
 		parentCurve.setControlPoint(this.i, this.getRelativePosition());
 	}
+	
+	/**
+	 * Null implementation overriding super class functionality 
+	 * to prevent rotation
+	 */
+	public void rotate(float dx, float dy, OMTVector constraint){
+		//CurveAnchorPoints shouldn't rotate
+	}
+	
+	/**
+	 * Null implementation overriding super class functionality 
+	 * to prevent scaling
+	 */
+	public void scale(float dx, float dy, OMTVector constraint) {
+		//CurveAnchorPoints shouldn't scale
+	}
 }

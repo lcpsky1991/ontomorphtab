@@ -38,8 +38,6 @@ public class BrainRegion extends Tangible{
 	 */
 	public static final int TRANSPARENT = 2;
 
-	
-	private String name;
 	private String abbrev;
 	private String parentAbbrev;
 	private int regionId;
@@ -50,12 +48,12 @@ public class BrainRegion extends Tangible{
 	private int visibility = TRANSPARENT; // by default
 	
 	public BrainRegion(String name, String abbrev, String parentAbbrev, Color c, String regionId, CoordinateSystem co){
-		this.name = name;
 		this.abbrev = abbrev;
 		this.parentAbbrev = parentAbbrev;
 		this.color = c;
 		this.regionId = Integer.parseInt(regionId);
 		this.setCoordinateSystem(co);
+		this.setName(name);
 	}
 	
 	/**
@@ -65,7 +63,7 @@ public class BrainRegion extends Tangible{
 	public void setVisibility(int mode) {
 		if (visibility != mode) {
 			visibility = mode;
-			changed();
+			changed(CHANGED_VISIBLE);
 		}
 	}
 	
@@ -155,23 +153,4 @@ public class BrainRegion extends Tangible{
 		this.mesh = null;
 		System.gc();
 	}
-
-	public String getName() {
-		return this.name;
-	}
-	
-	/**
-	 * Returns the SemanticClass corresponding to this BrainRegion.
-	 * @return
-	 */
-	public SemanticClass getSemanticClass() {
-		//need to be able to fill this in for every brain region.. 
-		//probably should just hard code the mapping for now.
-		return SemanticRepository.getInstance().getSemanticClass("");
-	}
-
-	public SemanticInstance getSemanticInstance() {
-		return SemanticRepository.getInstance().getSemanticInstance("");
-	}
-
 }

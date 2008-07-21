@@ -55,7 +55,6 @@ public abstract class TangibleView extends Node {
 	 *
 	 */
 	public final void highlight() {
-		//TangibleManager.getInstance().select(this.getModel()); //causes inf recursiveness
 		doHighlight();
 	}
 
@@ -65,7 +64,6 @@ public abstract class TangibleView extends Node {
 	 */
 	public final void unhighlight() 
 	{
-		//TangibleManager.getInstance().unselect(this.getModel()); //causes inf recursiveness
 		doUnhighlight();
 	}
 	

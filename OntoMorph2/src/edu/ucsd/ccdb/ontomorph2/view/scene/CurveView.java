@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 
+import com.jme.bounding.BoundingBox;
 import com.jme.curve.BezierCurve;
 import com.jme.scene.Node;
 
@@ -8,6 +9,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 
 public class CurveView extends TangibleView {
 
@@ -25,19 +27,33 @@ public class CurveView extends TangibleView {
 		//remove everything at the beginning because we can't be guaranteed to have
 		//the same BezierCurve from Curve since it gives us a copy every time.
 		//(see Curve3D.asBezierCurve() comment.
-		this.detachAllChildren();
+		this.detachChild(this.b);
 		
 		Curve3D curve = ((Curve3D)getModel());
-		this.b = (BezierCurve)curve.asBezierCurve();
+		this.b = (BezierCurve)curve.getBezierCurve();
+		
+		if (this.getModel().isSelected()) 
+		{
+			this.highlight();
+		}
+		else 
+		{
+			this.unhighlight();
+		}
+		
+		
 		this.attachChild(this.b);
 		
 		if (curve.getAnchorPointsVisibility()) {
 			renderAnchorPoints(curve);
+		} else {
+			this.detachChild(anchors);
+			anchors = null;
 		}
 		//no need to remove anchor points because this is done 
 		//automatically already
 		
-		
+		this.b.setModelBound(new BoundingBox());
 		this.b.updateModelBound();
 		this.b.updateRenderState();
 		this.b.updateGeometricState(5f, true);
@@ -56,28 +72,26 @@ public class CurveView extends TangibleView {
 	private void renderAnchorPoints(Curve3D curve) {
 		if (anchors == null) {
 			anchors = new Node();
+			OMTVector[] anchorPoints = curve.getControlPoints();
+			
+			int i = 0;
+			for (OMTVector v : anchorPoints) {
+				this.attachChild(new CurveAnchorPointView(new CurveAnchorPoint(curve, v, i++)));
+			}
+			this.attachChild(anchors);
 		}
-		OMTVector[] anchorPoints = curve.getControlPoints();
-		
-		int i = 0;
-		for (OMTVector v : anchorPoints) {
-			this.attachChild(new CurveAnchorPointView(new CurveAnchorPoint(curve, v, i++)));
-		}
-		
-		this.attachChild(anchors);
 	}
 
 
 	@Override
 	public void doHighlight() {
-		// TODO Auto-generated method stub
-		
+		this.b.setDefaultColor(ColorUtil.convertColorToColorRGBA(((Curve3D)getModel()).getColor()));
 	}
 
 
 	@Override
 	public void doUnhighlight() {
-		// TODO Auto-generated method stub
+		this.b.setDefaultColor(ColorUtil.convertColorToColorRGBA(((Curve3D)getModel()).getHighlightedColor()));
 		
 	}
 	

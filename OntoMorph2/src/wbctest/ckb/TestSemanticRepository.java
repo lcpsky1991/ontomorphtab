@@ -22,7 +22,8 @@ public class TestSemanticRepository extends TestCase {
 	 */
 	public void testGetMicroscopyProducts() {
 		//there are 184 microscopy product instances in the current version of the CKB.
-		assertTrue(SemanticRepository.getInstance().getMicroscopyProductInstances().size() == 184);
+		System.err.println(SemanticRepository.getInstance().getMicroscopyProductInstances().size());
+		assertTrue(SemanticRepository.getInstance().getMicroscopyProductInstances().size() == 577);
 	}
 	
 	public void testGetMPIDsForMouse() {

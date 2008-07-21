@@ -65,16 +65,8 @@ public class SceneObserver implements Observer{
 				}
 			}
 		} else if (o instanceof BrainRegion) {
-			//this is a special case for now because we can't yet load into memory
-			//a brain region view for every brain region in the system since they
-			//eat up a lot of resources.  so we add them one by one
-			BrainRegion b = (BrainRegion)o;
-			BrainRegionView brv = (BrainRegionView)TangibleViewManager.getInstance().getTangibleViewFor(b);
-			if (brv == null) {
-				Set<BrainRegion> brs = new HashSet<BrainRegion>();
-				brs.add(b);
-				_view.getView3D().addBrainRegions(brs);
-			} else {
+			BrainRegionView brv = (BrainRegionView)TangibleViewManager.getInstance().getTangibleViewFor((BrainRegion)o);
+			if (brv != null && Tangible.CHANGED_VISIBLE.equals(arg)) {
 				brv.update();
 			}
 		} else if (o instanceof Tangible) {

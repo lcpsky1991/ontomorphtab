@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.fenggui.event.mouse.MouseButton;
+
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
 import com.jme.image.Texture;
@@ -61,7 +63,7 @@ public class View extends BaseSimpleGame {
 	// DECLARES
 	// - used for manipulating the objects, setting the mode says what you're doing with dragging
 	//==================================
-	public static final int METHOD_NONE = 0;
+	public static final int METHOD_PICK = 0;
 	public static final int METHOD_MOVE = 1;
 	public static final int METHOD_MOVE_C = 2;
 	public static final int METHOD_SCALE = 4;
@@ -70,7 +72,7 @@ public class View extends BaseSimpleGame {
 	public static final int METHOD_ROTATEZ = 32;
 	public static final int METHOD_LOOKAT = 64;
 
-	private static int manipulation = METHOD_NONE; //use accesor
+	private static int manipulation = METHOD_PICK; //use accesor
 	
 	private static View instance = null;
 	
@@ -99,7 +101,6 @@ public class View extends BaseSimpleGame {
 	org.fenggui.Display disp; // FengGUI's display
 	
 	View3D view3D = null;
-	private ContextMenu contextMenu;
 	
 	
 	/**
@@ -282,11 +283,13 @@ public class View extends BaseSimpleGame {
 				if (MouseInput.get().isButtonDown(1)) //right
 				{	
 					//MouseInput.get().setCursorVisible(false); //hide mouse cursor
-					manipulateCurrentSelection();
+					doPick();
+					ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
+							MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
 				}
 				else
 				{
-					MouseInput.get().setCursorVisible(true); //show mouse cursor
+					//MouseInput.get().setCursorVisible(true); //show mouse cursor
 				}
 				
 				//====================================
@@ -294,24 +297,23 @@ public class View extends BaseSimpleGame {
 				//====================================
 				if (MouseInput.get().isButtonDown(0)) //left 
 				{
-					//get stuff we are trying to pick/select
-					PickResults results = getPickResults();
-					
-					if ( results.getNumber() > 0)
-					{
-						//allow multiselection with shift
-						if ( !(KeyInput.get().isShiftDown()) )
-						{
-							TangibleManager.getInstance().unselectAll();
-						}
+					if (MouseInput.get().getXDelta() == 0 && MouseInput.get().getYDelta() == 0) {
+						//not dragging, just clicking
+						doPick();
+					} else {
+						//dragging
+						manipulateCurrentSelection();
+					}
+					/*
+					if (drag){
+						//move, rotate, scale whatever is currently selected.. 
+						//don't do new selections until mouse comes back up
+					} else if (doubleClick){
+						//do new selections
+					} else if (singleClick) {
 						
-						//set up next deselection
-						currentPick = results.getPickData(0);	//take the closest pick and set
-						
-						doSelection(currentPick.getTargetMesh());
-						
-						//System.out.println("Picked: " + currentPick.getTargetMesh().getName());
-					} //end if of pr > 0
+					}*/
+
 				} //end if mouse button down
 			} //end one-button mouse handling
 		} //end try
@@ -322,83 +324,84 @@ public class View extends BaseSimpleGame {
 		}
 	}
 	
-	
-	
-	private ContextMenu getContextMenu() {
-		if (contextMenu == null) {
-			contextMenu = new ContextMenu();
-		}
-		return contextMenu;
-	}
-	private void hideContextMenu() {
-		getContextMenu().setVisible(false);
-	}
-
-	private void displayContextMenu() {
-		int cnt = TangibleManager.getInstance().countSelected();
-		//if (currentPick != null && cnt > 0 )
-		//{
-			//what action is being performed?
-			int mx = MouseInput.get().getXAbsolute();
-			int my = MouseInput.get().getYAbsolute();
-			getContextMenu().displayMenuFor(mx,my,null); 
-					//TangibleViewManager.getInstance().getTangibleView(
-							//currentPick.getTargetMesh().getParentGeom()));
-			
-			getContextMenu().setVisible(true);
-		//}
-	}
-
 	/**
 	 * Apply manipulations to the tangible that is currently selected
 	 * Called during mouse handling
 	 */
 	private void manipulateCurrentSelection() 
-	{
-		int cnt = TangibleManager.getInstance().countSelected();
-		if (currentPick != null && cnt > 0 )
+	{		
+		
+		
+		float mx = MouseInput.get().getXDelta();
+		float my = MouseInput.get().getYDelta();
+		//TODO: replace unity vectors with ones based on camera axis
+		switch ( manipulation )
 		{
-			//what action is being performed?
-			float mx = MouseInput.get().getXDelta();
-			float my = MouseInput.get().getYDelta();
+		case METHOD_PICK:
+			//do nothing
+			break;
+		case METHOD_MOVE:
+			moveSelected(mx, my);
+			break;
+		case METHOD_ROTATEX:
+			rotateSelected(mx, my, new OMTVector(1,0,0));
+			break;
+		case METHOD_ROTATEY:
+			rotateSelected(mx, my,new OMTVector(0,1,0));
+			break;
+		case METHOD_ROTATEZ:
+			rotateSelected(mx, my,new OMTVector(0,0,1));
+			break;
+		case METHOD_LOOKAT:
+			/* needs to be re-engineered to deal with multiple selections
+			if (manip != null)
+				//TODO: fixme
+				Log.warn("LOOK AT is broken");
+			camNode.lookAt(manip.getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question
+			*/
+			break;
+		case METHOD_SCALE:
+			scaleSelected(mx, my);
+			break;
+		}
 			
-			Tangible manip = null;
+		
+	}
+	
+	private void moveSelected(float mx, float my) {
+		for (Tangible manip : TangibleManager.getInstance().getSelected())
+		{
+			manip.move(mx, my, new OMTVector(1,1,0));
+		}
+	}
+	
+	private void rotateSelected(float mx, float my, OMTVector v) {
+		for (Tangible manip : TangibleManager.getInstance().getSelected())
+		{
+			manip.rotate(mx, my, v);
+		}
+	}
+	
+	private void scaleSelected(float mx, float my) {
+		for (Tangible manip : TangibleManager.getInstance().getSelected()) {
+			manip.scale(mx, my,  new OMTVector(1,1,1));
+		}
+	}
+		
+	
+	private void doPick() {
+		//get stuff we are trying to pick/select
+		PickResults results = getPickResults();
+		
+		if ( results.getNumber() > 0)
+		{
+			currentPick = results.getPickData(0);	//take the closest pick and set
 			
-			for (int i=0; i < cnt; i++)
-			{
-				manip = TangibleManager.getInstance().getSelected(i);
-				
-				if ( null == manip ) return;	//extra checking?
-				
-				//TODO: replace unity vectors with ones based on camera axis
-				switch ( manipulation )
-				{
-					case METHOD_NONE:
-						//do nothing
-						break;
-					case METHOD_MOVE:
-						manip.move(mx, my, new OMTVector(1,1,0));
-						break;
-					case METHOD_ROTATEX:
-						manip.rotate(mx, my, new OMTVector(1,0,0));
-						break;
-					case METHOD_ROTATEY:
-						manip.rotate(mx, my,new OMTVector(0,1,0));
-						break;
-					case METHOD_ROTATEZ:
-						manip.rotate(mx, my,new OMTVector(0,0,1));
-						break;
-					case METHOD_LOOKAT:
-						//TODO: fixme
-						Log.warn("LOOK AT is broken");
-						camNode.lookAt(manip.getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question
-						break;
-					case METHOD_SCALE:
-						manip.scale(mx, my, new OMTVector(1,1,1));
-						break;
-				}
-				
-			}
+			doSelection(currentPick.getTargetMesh());
+		
+		} else {
+			//if there are no results, unselect everything
+			TangibleManager.getInstance().unselectAll();
 		}
 	}
 	
@@ -438,17 +441,28 @@ public class View extends BaseSimpleGame {
 	private void doSelection(GeomBatch geo) 
 	{
 		TangibleView tv = TangibleViewManager.getInstance().getTangibleView(geo.getParentGeom());
+	
+		if ( KeyInput.get().isShiftDown() )
+		{
+			//turn on multiselection
+			TangibleManager.getInstance().setMultiSelect(true);
+		}
 		
 		//if user selected a segment, assume they wanted to select the parent cell instead
 		if ( tv instanceof SegmentView && KeyInput.get().isControlDown())
 		{
 			SegmentView pickSeg = (SegmentView) tv;
+			
 			pickSeg.getCorrespondingSegmentGroup().getParentCell().select();
+			
 		}
 		else if (tv != null) 
 		{
 			tv.getModel().select();
 		}
+		
+		//turn off multiselection
+		TangibleManager.getInstance().setMultiSelect(false);
 	}
 	
 	/**
@@ -495,13 +509,10 @@ public class View extends BaseSimpleGame {
 			
 			if ( isAction("show_selected"))
 			{
-				int c = TangibleManager.getInstance().countSelected();
-				for (int i=0; i <c; i++)
-				{
-					Tangible t = TangibleManager.getInstance().getSelected(i);
+				for (Tangible t : TangibleManager.getInstance().getSelected()) {
 					System.out.println(t);
 				}
-				System.out.println("" + c + " total");
+				System.out.println("" + TangibleManager.getInstance().countSelected() + " total");
 			}
 			
 			
