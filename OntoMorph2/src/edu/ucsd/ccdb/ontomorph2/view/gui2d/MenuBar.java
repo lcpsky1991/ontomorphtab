@@ -12,6 +12,7 @@ import org.fenggui.util.Point;
 import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
+import edu.ucsd.ccdb.ontomorph2.view.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.View3D;
 
 /**
@@ -25,7 +26,6 @@ import edu.ucsd.ccdb.ontomorph2.view.View3D;
  *
  */
 public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPressedListener{
-
 	
 	public static final String LOAD_SCENE = "Load Scene...";
 	public static final String SAVE_SCENE = "Save Scene...";

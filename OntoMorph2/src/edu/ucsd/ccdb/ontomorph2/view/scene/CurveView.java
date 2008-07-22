@@ -30,7 +30,7 @@ public class CurveView extends TangibleView {
 		this.detachChild(this.b);
 		
 		Curve3D curve = ((Curve3D)getModel());
-		this.b = (BezierCurve)curve.getBezierCurve();
+		this.b = (BezierCurve)curve.getCurve();
 		
 		if (this.getModel().isSelected()) 
 		{
@@ -72,11 +72,9 @@ public class CurveView extends TangibleView {
 	private void renderAnchorPoints(Curve3D curve) {
 		if (anchors == null) {
 			anchors = new Node();
-			OMTVector[] anchorPoints = curve.getControlPoints();
 			
-			int i = 0;
-			for (OMTVector v : anchorPoints) {
-				this.attachChild(new CurveAnchorPointView(new CurveAnchorPoint(curve, v, i++)));
+			for (CurveAnchorPoint c : curve.getAnchorPoints()) {
+				this.attachChild(new CurveAnchorPointView(c));
 			}
 			this.attachChild(anchors);
 		}

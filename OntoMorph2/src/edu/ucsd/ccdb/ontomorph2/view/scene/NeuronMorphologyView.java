@@ -94,7 +94,7 @@ public class NeuronMorphologyView extends TangibleView{
 		this.attachChild(n);
 		
 		if (morph.getCurve() != null) {
-			_cc = new CurveController(morph.getCurve().getBezierCurve(), this);
+			_cc = new CurveController(morph.getCurve().getCurve(), this);
 			_cc.setAutoRotation(true);
 			_cc.setUpVector(morph.getUpVector());
 			_cc.update(morph.getTime());

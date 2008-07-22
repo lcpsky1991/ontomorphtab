@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.view.gui2d;
+package edu.ucsd.ccdb.ontomorph2.view;
 
 import org.fenggui.ComboBox;
 import org.fenggui.Display;
@@ -20,6 +20,11 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.AtlasBrowser;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.BasicSearchWidget;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.MenuBar;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyTreeModel;
 
 
 /**
@@ -130,7 +135,7 @@ public class View2D extends Display  {
 	
 	
 	
-	protected void loadCellChooser() {
+	public void loadCellChooser() {
 		MyNode root = TangibleManager.getInstance().getCellTree();
 		
 		Window window = FengGUI.createWindow(this, true, false, false, true);
@@ -164,13 +169,13 @@ public class View2D extends Display  {
 		});
 	}
 	
-	protected void loadAtlasBrowser() {
+	public void loadAtlasBrowser() {
 		if (aBrowser == null) {
 			aBrowser = new AtlasBrowser(this);
 		}
 	}
 	
-	protected void loadFileChooser() {
+	public void loadFileChooser() {
 //		 Create a dialog and set it to some location on the screen
 		Window frame = new Window();
 		this.addWidget(frame);
@@ -213,7 +218,7 @@ public class View2D extends Display  {
 	
 	
 //	get a tree pane display showing cells and their semantic contents
-	void loadInstanceBrowser()
+	public void loadInstanceBrowser()
 	{
 		Display display = this;
 		MyNode root = SemanticRepository.getInstance().getInstanceTree();

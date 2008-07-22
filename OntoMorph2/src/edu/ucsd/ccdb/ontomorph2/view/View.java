@@ -43,7 +43,6 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
-import edu.ucsd.ccdb.ontomorph2.view.gui2d.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SegmentView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
@@ -231,6 +230,7 @@ public class View extends BaseSimpleGame {
 		//NOTE:there is a more sophisticated way of dealing with mouse input than this (pickresults has handler)
 		try
 		{
+			
 			boolean mouseLook = false;
 			int numMouseBut = MouseInput.get().getButtonCount();
 			

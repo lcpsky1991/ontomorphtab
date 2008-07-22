@@ -17,6 +17,7 @@ import org.fenggui.util.Point;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
+import edu.ucsd.ccdb.ontomorph2.view.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
@@ -30,6 +31,8 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
  */
 public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	
+	static final String NEW = "New...";
+	static final String CURVE = "Curve";
 	static final String ANNOTATE = "Annotate";
 	static final String ANIMATE = "Animate";
 	static final String PROPERTIES = "Display Properties";
@@ -58,9 +61,15 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		this.getAppearance().setTextColor(Color.WHITE);
 		this.getAppearance().setTextSelectionColor(Color.YELLOW);
         
+		  
+        Menu newMenu = new Menu();
+        mnuContext.registerSubMenu(newMenu, NEW);
+		makeMenuItem(CURVE, newMenu);
+        
         makeMenuItem(ANNOTATE, mnuContext);
         makeMenuItem(ANIMATE, mnuContext);
         makeMenuItem(PROPERTIES, mnuContext);
+      
         
         this.setSizeToMinSize();
         this.layout();
@@ -104,7 +113,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			else if ( mparent instanceof Menu)
 			{
 				MenuItem mnuToAdd = new MenuItem(name);
-		        mnuToAdd.addMenuItemPressedListener(this);
+				mnuToAdd.addMenuItemPressedListener(this);
 		        mparent.addItem(mnuToAdd);	
 			}
 		}
@@ -122,6 +131,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			System.out.println("do animation");
 		} else if (PROPERTIES.equals(opt)) {
 			System.out.println("show properties");
+		} else if (CURVE.equals(opt)) {
+			//make a new bezier curve right here
 		}
 		View2D.getInstance().removePopup();
 	}
