@@ -135,6 +135,8 @@ public class CatmullRomCurve extends Curve {
 		rotation.setColumn(0, tangent);
 		rotation.setColumn(1, normal);
 		rotation.setColumn(2, binormal);
+		
+		System.out.println("matrix rotation" + rotation);
 		return rotation;
 	}
 
@@ -177,7 +179,7 @@ public class CatmullRomCurve extends Curve {
 		rotation.setColumn(1, normal);
 		rotation.setColumn(2, binormal);
 
-		//System.out.println("rotation" + rotation);
+		System.out.println("matrix rotation" + rotation);
 		return rotation;
 	
 	}

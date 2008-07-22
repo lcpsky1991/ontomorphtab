@@ -248,12 +248,11 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * Smoothly reposition, rotation, and zoom the camera to the position
 	 * rotation and zoom level specified by the parameters.
 	 */
-	public void continuousZoomTo(PositionVector position, RotationVector rotation, float zoom) {
-		
+	public void continuousZoomTo(Vector3f location, Vector3f objectPosition, float zoom) {		
 		
         Vector3f[] points = new Vector3f[2];
         points[0] = cam.getLocation();
-        points[1] = position;
+        points[1] = location;
 
         float distance = points[0].distance(points[1]);
         System.out.println("distance " + distance);
@@ -265,8 +264,8 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         curve.setColorBuffer(0, BufferUtils.createFloatBuffer(colors));*/
 
         Vector3f up = new Vector3f(0,1,0);
+        CurveOnceController cc = new CurveOnceController(curve, this, objectPosition);
         Log.warn("up" + up);
-        CurveOnceController cc = new CurveOnceController(curve, this, rotation);
         cc.setActive(false);
         Log.warn("camNode " + camNode);
         Log.warn(cc + " curve ");
@@ -275,10 +274,12 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         cc.setUpVector(up);
         cc.setSpeed(zoom);
         cc.setDisableAfterClamp(true);
-        //cc.setAutoRotation(true);
+        cc.setAutoRotation(true);
         this.attachChild(curve);
         cc.setActive(true);
         
+		//Log.warn("Smoothly zooming to: " + position.toString() + ", rotating to: " 
+				//+ rotation.toString() + ", changing zoom to: " + zoom);
 		/**CatmullRomCurve approach**/
 		/*CameraAnimationController cameraAnimationController;
 		//CameraAnimationController cameraAnimationController = new CameraAnimationController();
@@ -353,8 +354,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		//this.getCamera().setDirection(position);
 		//this.setLocalRotation(rotation);
 		this.update();*/
-		Log.warn("Smoothly zooming to: " + position.toString() + ", rotating to: " 
-				+ rotation.toString() + ", changing zoom to: " + zoom);
+	
 	}
 	
 	/**
@@ -362,9 +362,10 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * medial view.
 	 */
 	public void smoothlyZoomToAtlasMedialView() {
-		PositionVector loc = new PositionVector(300f, -118f, -700f);
-		RotationVector rotation = new RotationVector(FastMath.DEG_TO_RAD*0, PositionVector.UNIT_Y);
-		continuousZoomTo(loc, rotation, .5f);
+		Vector3f loc = new Vector3f(300f, -118f, -700f);
+		Vector3f position = new Vector3f(300f, -118f, -180f);
+		//Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*0, Vector3f.UNIT_Y);		
+		continuousZoomTo(loc, position, .5f);
 	}
 
 	/**
@@ -372,48 +373,51 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * slide view.
 	 */
 	public void smoothlyZoomToSlideView() {
-		PositionVector loc = new PositionVector(-300f, -118f, -180f);
-		RotationVector rotation = new RotationVector(FastMath.DEG_TO_RAD*90, PositionVector.UNIT_Y);
-		continuousZoomTo(loc, rotation, 0.5f);
+		Vector3f loc = new Vector3f(-300f, -118f, -180f);
+		Vector3f position = new Vector3f(300f, -118f, -180f);
+		//Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y);
+		continuousZoomTo(loc, position, 0.5f);
 	}
 	
-	/**
-	 * Smoothly reposition, rotate, and zoom the camera to the atlas
-	 * slide view.
-	 */
-	public void smoothlyZoomToCerebSlideView() {
-		PositionVector loc = new PositionVector(483.25558f, -118f, -355.5132f);
-		RotationVector rotation = new RotationVector(0.0f,-3.2037497E-7f,0.0f,-1.0000037f);
-		continuousZoomTo(loc, rotation, 1.0f);
-	}
 
 	/**
 	 * Smoothly reposition, rotate, and zoom the camera to the atlas
 	 * lateral view.
 	 */
 	public void smoothlyZoomToAtlasLateralView() {
-		PositionVector loc = new PositionVector(300f, -118f, 300f);
-		RotationVector rotation = new RotationVector(FastMath.DEG_TO_RAD*180, PositionVector.UNIT_Y);
-		continuousZoomTo(loc, rotation, .5f);
+		Vector3f loc = new Vector3f(300f, -118f, 300f);
+		Vector3f position = new Vector3f(300f, -118f, -180f);
+		//Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y);
+
+		continuousZoomTo(loc, position, .5f);
 	}
 	
 	public void smoothlyZoomToCellView() {
-		PositionVector loc = new PositionVector(190f, -118f, -180f);
-		RotationVector rotation = new RotationVector(FastMath.DEG_TO_RAD*90, PositionVector.UNIT_Y);
-		continuousZoomTo(loc, rotation, .5f);
+
+		Vector3f loc = new Vector3f(190f, -118f, -180f);
+		Vector3f position = new Vector3f(250f, -118f, -180f);
+		continuousZoomTo(loc,position,.21f);
+		//Quaternion rotation = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y);
+
+
 	}
 	
 	public void smoothlyZoomToSubcellularView() {
-		PositionVector loc = new PositionVector(278.8373f, -116.61807f, -179.73985f);
-		RotationVector rotation = new RotationVector(-0.05305708f,0.60644495f, 0.06914531f, 0.7903347f);
-		continuousZoomTo(loc, rotation, 0.21f);
+
+		Vector3f loc = new Vector3f(278.8373f, -116.61807f, -179.73985f);
+		Vector3f position = new Vector3f(298.8373f, -116.61807f, -179.73985f);
+		//Quaternion rotation = new Quaternion(-0.05305708f,0.60644495f, 0.06914531f, 0.7903347f);
+
+		continuousZoomTo(loc, position, 0.21f);
 	}
+
 	
 	public void smoothlyZoomToSlideCerebellumView() {
-		PositionVector loc = new PositionVector(458.9234f, -118.0f, -356.11566f);
-		RotationVector rotation = new RotationVector(0.0f,0.04361951f, 0.0f, 0.9990494f);
-		continuousZoomTo(loc, rotation, 0.21f);
+		Vector3f loc = new Vector3f(458.9234f, -118.0f, -356.11566f);
+		Vector3f position = new Vector3f(458.9234f, -118.0f, -218.11566f);
+		continuousZoomTo(loc, position, 0.21f);
 	}
+	
 
 	public float getZoom() {
 		return invZoom;
