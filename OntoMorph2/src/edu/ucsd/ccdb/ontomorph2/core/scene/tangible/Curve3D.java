@@ -1,6 +1,8 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.jme.curve.BezierCurve;
 import com.jme.curve.Curve;
@@ -13,9 +15,10 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
+import edu.ucsd.ccdb.ontomorph2.view.scene.CurveAnchorPointView;
 
 /**
- * Defines a Bezier curve in the framework.
+ * Defines a Bezier curve in the framework that is manipulable by anchor points.
  * 
  *  
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
@@ -23,15 +26,15 @@ import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 public class Curve3D extends Tangible{
 
 	BezierCurve theCurve = null;
-	BezierCurve absoluteCurve = null; // copy of the curve for coordinate systems
 	float delta = 0.1f;
 	private Vector3f _modelBinormal = null;
 	OMTVector[] controlPoints = null;
 	boolean seeAnchorPoints = true;
+	List<CurveAnchorPoint> anchors = null;
 		
 	
 	public Curve3D(String arg0, OMTVector[] arg1) {
-		theCurve = new BezierCurve(arg0, arg1);
+		setName(arg0);
 		controlPoints = arg1;
 	}
 
@@ -41,14 +44,28 @@ public class Curve3D extends Tangible{
 	}
 	
 	/**
+	 * Get a list of the CurveAnchorPoints for this Curve
+	 * @return
+	 */
+	public List<CurveAnchorPoint> getAnchorPoints() {
+		if (anchors == null) {
+			anchors = new ArrayList<CurveAnchorPoint>();
+			for (int i = 0; i< controlPoints.length; i++) {
+				anchors.add(new CurveAnchorPoint(this, controlPoints[i], i));
+			}
+		}
+		return anchors;
+	}
+	
+	/**
 	 * compute a very small vector that is 
 	 * approximately tangent to the point of 'time' given
 	 * @param time
 	 * @return - the tangent Vector3f
 	 */
 	public Vector3f getTangent(float time) {
-		Vector3f p1 = theCurve.getPoint(getTimeMinusDelta(time));
-		Vector3f p2 = theCurve.getPoint(getTimePlusDelta(time));
+		Vector3f p1 = getCurve().getPoint(getTimeMinusDelta(time));
+		Vector3f p2 = getCurve().getPoint(getTimePlusDelta(time));
 		return p2.subtract(p1).normalize();
 	}
 	
@@ -60,10 +77,10 @@ public class Curve3D extends Tangible{
 	 */
 	public Vector3f getNormal(float time) {
 		
-		Vector3f px = theCurve.getPoint(getTimeMinusDelta(time));
-		Vector3f py = theCurve.getPoint(getTimePlusDelta(time));
+		Vector3f px = getCurve().getPoint(getTimeMinusDelta(time));
+		Vector3f py = getCurve().getPoint(getTimePlusDelta(time));
 		
-		Vector3f pe = theCurve.getPoint(time);
+		Vector3f pe = getCurve().getPoint(time);
 		Vector3f pf = new Vector3f((py.x - px.x)/2+px.x, (py.y - px.y)/2+px.y, (py.z - px.z)/2+px.z);
 
 		return pf.subtract(pe).normalize();
@@ -88,13 +105,17 @@ public class Curve3D extends Tangible{
 	 * @return a copy of this Curve3D
 	 * @see Curve
 	 */
-	public Curve getBezierCurve() {
-		Curve copy = copyBezierCurve(this.controlPoints);
-		return copy;
+	public Curve getCurve() {
+		if (theCurve == null) {
+			theCurve = copyBezierCurve();
+		}
+		return theCurve;
 	}
 	
-	private BezierCurve copyBezierCurve(OMTVector[] controlPoints) {
-		BezierCurve copy = new BezierCurve(theCurve.getName(), controlPoints);
+	//have to copy the curve because JME BezierCurve class 
+	//does not allow modification of the control points
+	private BezierCurve copyBezierCurve() {
+		BezierCurve copy = new BezierCurve(this.getName(), this.controlPoints);
 		
 		//apply coordinate system to this curve.
 		if (this.getCoordinateSystem() != null) {
@@ -134,12 +155,12 @@ public class Curve3D extends Tangible{
 	 */
 	public Matrix3f getOrientation(float time, float precision, Vector3f up) {
 		if (up == null) {
-			return theCurve.getOrientation(time, precision);
+			return getCurve().getOrientation(time, precision);
 		}
 		Matrix3f rotation = new Matrix3f();
 
 		//calculate tangent
-		Vector3f tangent = theCurve.getPoint(time).subtract(theCurve.getPoint(time + precision));
+		Vector3f tangent = getCurve().getPoint(time).subtract(getCurve().getPoint(time + precision));
 		tangent = tangent.normalize();
 
 		//calculate binormal
@@ -168,7 +189,7 @@ public class Curve3D extends Tangible{
 	 * @return a PositionVector on this Curve3D at time.
 	 */
 	public PositionVector getPoint(float time) {
-		return new PositionVector(theCurve.getPoint(time));
+		return new PositionVector(getCurve().getPoint(time));
 	}
 
 	/**
@@ -193,7 +214,7 @@ public class Curve3D extends Tangible{
 	 * Gives the control points that define this curve
 	 * @return an array of OMTVectors with all the control points in order.
 	 */
-	public OMTVector[] getControlPoints() {
+	protected OMTVector[] getControlPoints() {
 		return this.controlPoints;
 	}
 
@@ -202,10 +223,16 @@ public class Curve3D extends Tangible{
 	 * @param i
 	 * @param pos
 	 */
-	public void setControlPoint(int i, OMTVector pos) {
+	protected void setControlPoint(int i, OMTVector pos) {
 		this.controlPoints[i] =  pos;
-		this.theCurve = copyBezierCurve(this.controlPoints);
 		changed();
+	}
+	
+	public void changed() {
+		//null theCurve to force a getCurve to recreate the 
+		// underlying curve instance
+		this.theCurve = null;
+		super.changed();
 	}
 	
 }
