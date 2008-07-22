@@ -1,5 +1,6 @@
 package wbctest.spatial;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jme.curve.BezierCurve;
@@ -47,9 +48,14 @@ public class TestCurve3D extends TestCase {
 
 	/*
 	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D.getControlPoints()'
+	 * 
+	 * This test we try getting anchor points for both curves, then using the "move" method on them,
+	 * then testing to see if they end up where we thing they should.
 	 */
 	public void testGetCurveAnchorPoints() {
+		//anchor points from the curve with no coordinate system
 		List<CurveAnchorPoint> cPoints1 = testCurve1.getAnchorPoints();
+		//anchor points from the curve with the Demo coordinate system
 		List<CurveAnchorPoint> cPoints2 = testCurve2.getAnchorPoints();
 		
 		for (int i = 0; i < cPoints1.size(); i++) {
@@ -59,19 +65,61 @@ public class TestCurve3D extends TestCase {
 			assertTrue(!cPoints1.get(i).getAbsolutePosition().equals(cPoints2.get(i).getAbsolutePosition()));
 		}
 		
-		CurveAnchorPoint cPoints1a = cPoints1.get(1);
-		CurveAnchorPoint cPoints2a = cPoints1.get(2);
+		List<List<CurveAnchorPoint>> temp = new ArrayList<List<CurveAnchorPoint>>();
+		temp.add(cPoints1);
+		temp.add(cPoints2);
 		
-		float oldX = cPoints1a.getRelativePosition().x;
-		float oldY = cPoints1a.getRelativePosition().y;
-		float oldZ = cPoints1a.getRelativePosition().z;
-		cPoints1a.move(0.5f, 0.5f, new OMTVector(1,1,0));
+		//do the same thing for both CurveAnchorPoints lists
+		int i = 1;
+		for (List<CurveAnchorPoint> temp2 : temp) {
 		
-		assertEquals(cPoints1.get(1).getRelativePosition(), new PositionVector(oldX + 0.5f, oldY + 0.5f, oldZ));
-		
-		cPoints1a.move(0.5f, 0.5f, new OMTVector(1,1,0));
-		cPoints2a.move(0.5f, -0.5f, new OMTVector(1,1,0));
-		cPoints2a.move(0.5f, -0.5f, new OMTVector(1,1,0));
+			CurveAnchorPoint anchorPoint1 = temp2.get(1);
+			CurveAnchorPoint anchorPoint2 = temp2.get(2);
+			
+			//record original position
+			float oldX1 = anchorPoint1.getRelativePosition().x;
+			float oldY1 = anchorPoint1.getRelativePosition().y;
+			float oldZ1 = anchorPoint1.getRelativePosition().z;
+			
+			//do move
+			anchorPoint1.move(0.5f, 0.5f, new OMTVector(1,1,0));
+			
+			//test
+			assertEquals("Testing predicted movement on point 1 of curve " + i, cPoints1.get(1).getRelativePosition(), 
+					new PositionVector(oldX1 + 0.5f, oldY1 + 0.5f, oldZ1));
+			
+			//do move
+			anchorPoint1.move(0.5f, 0.5f, new OMTVector(1,1,0));
+			//test
+			assertEquals("Testing second predicted movement on point 1 of curve " + i, cPoints1.get(1).getRelativePosition(), 
+					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1));
+			
+			//record original position
+			float oldX2 = anchorPoint2.getRelativePosition().x;
+			float oldY2 = anchorPoint2.getRelativePosition().y;
+			float oldZ2 = anchorPoint2.getRelativePosition().z;
+			
+			//do move
+			anchorPoint2.move(0.5f, -0.5f, new OMTVector(1,1,0));
+			
+			//test
+			assertEquals("Testing predicted movement on point 2 of curve " + i, cPoints1.get(2).getRelativePosition(), 
+					new PositionVector(oldX2 + 0.5f, oldY2 - 0.5f, oldZ2));
+			//test
+			assertEquals("make sure point one is still where we expect it for curve " +i, cPoints1.get(1).getRelativePosition(), 
+					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1));
+			
+			//do move
+			anchorPoint2.move(0.5f, -0.5f, new OMTVector(1,1,0));
+			
+			//test
+			assertEquals("Testing predicted movement on point 2 of curve " + i, cPoints1.get(2).getRelativePosition(), 
+					new PositionVector(oldX2 + 1.0f, oldY2 - 1.0f, oldZ2));
+			//test
+			assertEquals("make sure point one is still where we expect it for curve " + i, cPoints1.get(1).getRelativePosition(), 
+					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1));
+			i++;
+		}
 	}
 
 	
