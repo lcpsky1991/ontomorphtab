@@ -20,6 +20,7 @@ import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
 import com.jme.util.geom.BufferUtils;
+import edu.ucsd.ccdb.ontomorph2.util.MemPool;
 
 import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 
@@ -36,6 +37,7 @@ public class CurveOnceController extends Controller {
     private float angle;
     private Quaternion rot;
     
+    float camRotationRate = FastMath.PI * 5 / 180;
     private boolean cycleForward = true;
     private boolean autoRotation = false;
     private Vector3f newPoint = new Vector3f();  // ***** added
@@ -89,42 +91,65 @@ public class CurveOnceController extends Controller {
 
         currentTime += time * getSpeed();
     	Camera cam = ((CameraNode) mover).getCamera();
+    	
         if (currentTime >= getMinTime() && currentTime <= getMaxTime()) {
             if (getRepeatType() == RT_CLAMP) {
-            	//Log.warn("RT_CLAMP");
                 deltaTime = currentTime - getMinTime();
-                //Log.warn("delta time" + deltaTime);
                 newPoint = curve.getPoint(deltaTime,mover.getLocalTranslation());   // ***** added
-                //System.out.println(mover.getLocalTranslation());
-                //Log.warn("newPoint" + newPoint);
                 mover.setLocalTranslation(newPoint);   // ***** added
                 /*if(deltaTime > .4 && deltaTime < .6){
                 	mover.setLocalRotation(rotation);
                 }*/
+                System.out.println("camera direction " + cam.getLocation() + " " + newPoint);
                 if(autoRotation) {   // ***** added
                 	mover.lookAt(rotation,up);
-                	/*Camera cam = ((CameraNode) mover).getCamera();
-                	if((lastRotation.getX()!=rotation.getX()) && (lastRotation.getX()!= 0)){
-                		System.out.println("not the same " + lastRotation.getX() +" " + lastRotation.getY()
-                				+ " " + rotation.getX() + " " +  rotation.getY());
-                		//x = FastMath.abs(lastRotation - rotation.x);
-                		//System.out.println("distance" + x);
-                		//lastRotation = rotation;                		
-                	}
-                	mover.lookAt(rotation, up);
-                	this.lastRotation = rotation;
-                	System.out.println("current camera locaiton " +cam.getLocation());*/
-                	
-                	//mover.setLocalRotation(
-                			 //curve.getOrientation(deltaTime,orientationPrecision, up));
-                	/*angle = newPoint.angleBetween(up);
-                	rot = new Quaternion().fromAngleAxis(angle, Vector3f.UNIT_Y);
-                	rot = mover.getLocalRotation().multLocal(rot);
-                	mover.setLocalRotation(rot);
-                	if(angle<1){
+                	/*Quaternion vert = mover.getLocalRotation().fromAngleAxis( 
+                			-FastMath.PI/angle, new Vector3f(1,0,0));
+                	rot = new Quaternion();
+                	rot = mover.getLocalRotation().multLocal(vert);
+                	mover.setLocalRotation(rot);*/
+                	/*if(angle<1){
                 		System.out.println("angle is zero");
-                	}
-                	System.out.println("newPoint " + newPoint + "rotation " + up+ " angleradian " + angle + " rot " + rot);*/
+                	}*/
+                	
+                	/*Vector3f lookAtObject=new Vector3f(rotation).subtractLocal(cam.getLocation()).normalizeLocal();
+                	// Left vector
+                	MemPool.m3a.setColumn(0,new Vector3f(0,1,0).crossLocal(lookAtObject));
+                	// Up vector
+                	MemPool.m3a.setColumn(1,new Vector3f(1,0,0).crossLocal(lookAtObject));
+                	// Direction vector
+                	MemPool.m3a.setColumn(2,lookAtObject);
+                	mover.setLocalRotation(MemPool.m3a);*/
+                	/*Matrix3f rot = new Matrix3f();
+
+            		//calculate tangent
+                	Vector3f tangent = new Vector3f(rotation).subtractLocal(cam.getLocation()).normalizeLocal();
+            		//tangent = tangent.normalize();
+            		
+            		//System.out.println("tangent" + tangent);
+
+            		//calculate binormal
+            		Vector3f binormal = up.cross(tangent);
+            		binormal = binormal.normalize();
+            		//System.out.println("binormal" + binormal);
+            		
+            		//calculate normal
+            		Vector3f normal =binormal.cross(tangent);
+            		normal = normal.normalize();
+            		//System.out.println("normal" + tangent);
+            		
+            		rot.setColumn(0, normal);
+            		rot.setColumn(1, binormal);
+            		rot.setColumn(2, tangent);
+            		
+            		mover.setLocalRotation(rot);*/
+                	//System.out.println("newPoint " + newPoint + "rotation " + mover.getWorldRotation()+ " angleradian " + angle + " rot " + rot);
+              
+                	/*mover.setLocalRotation(
+                            curve.getOrientation(
+                                deltaTime,
+                                orientationPrecision,
+                                rotation));*/
                 }
                 if (isDisableAfterClamp() && lastPoint != null) {
                     if (lastPoint.equals(newPoint)) {
