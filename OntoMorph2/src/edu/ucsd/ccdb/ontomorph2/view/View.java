@@ -63,9 +63,9 @@ public class View extends BaseSimpleGame {
 	// DECLARES
 	// - used for manipulating the objects, setting the mode says what you're doing with dragging
 	//==================================
-	public static final int METHOD_PICK = 0;
-	public static final int METHOD_MOVE = 1;
-	public static final int METHOD_MOVE_C = 2;
+	public static final int METHOD_NONE = 0;
+	public static final int METHOD_PICK = 1;
+	public static final int METHOD_MOVE = 2;
 	public static final int METHOD_SCALE = 4;
 	public static final int METHOD_ROTATEX = 8;
 	public static final int METHOD_ROTATEY = 16;
@@ -414,6 +414,7 @@ public class View extends BaseSimpleGame {
 //		because dendrites can be densely packed need precision of triangles instead of bounding boxes
 		PickResults pr = new TrianglePickResults(); 
 		
+		
 		//Get the position that the mouse is pointing to
 		Vector2f mPos = new Vector2f();
 		mPos.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
@@ -449,7 +450,7 @@ public class View extends BaseSimpleGame {
 			TangibleManager.getInstance().setMultiSelect(true);
 		}
 		
-		//if user selected a segment, assume they wanted to select the parent cell instead
+		//if user selected a segment, assume they wanted to select the parent cell instead if control is down
 		if ( tv instanceof SegmentView && KeyInput.get().isControlDown())
 		{
 			SegmentView pickSeg = (SegmentView) tv;
