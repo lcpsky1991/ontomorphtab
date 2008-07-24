@@ -60,6 +60,7 @@ public class CatmullRomCurve extends Curve {
 	private Vector3f tempVec4 = new Vector3f();
 	private Vector3f firstPoint = new Vector3f();
 	private Vector3f lastPoint = new Vector3f();
+	private Vector3f up = new Vector3f(0,1,0);
 	private float partPercentage;
 	private Vector3f controlPoints;
 	/**
@@ -153,32 +154,33 @@ public class CatmullRomCurve extends Curve {
 	 * @return the rotation matrix.
 	 * @see com.jme.curve.Curve#getOrientation(float, float)
 	 */
-	public Matrix3f getOrientation(float time, float precision, Vector3f up) {
-		if (up == null) {
+	public Matrix3f getOrientation(float time, float precision, Vector3f direction) {
+		if (direction == null) {
 			return getOrientation(time, precision);
 		}
 		Matrix3f rotation = new Matrix3f();
 
 		//calculate tangent
-		Vector3f tangent = up.subtract(getPoint(time+precision));
+		Vector3f tangent = direction.subtract(getPoint(precision+time));
 		tangent = tangent.normalize();
 		
 		//System.out.println("tangent" + tangent);
 
 		//calculate binormal
-		Vector3f binormal = tangent.cross(new Vector3f(0,0,0));
+		Vector3f binormal = tangent.cross(up);
 		binormal = binormal.normalize();
 		//System.out.println("binormal" + binormal);
 		
 		//calculate normal
-		Vector3f normal = binormal.cross(tangent);
+		Vector3f normal = tangent.cross(binormal);
 		normal = normal.normalize();
 		//System.out.println("normal" + tangent);
 		
-		rotation.setColumn(0, normal);
-		rotation.setColumn(1, binormal);
+		rotation.setColumn(0, binormal);
+		rotation.setColumn(1, normal);
 		rotation.setColumn(2, tangent);
 
+		System.out.println("rotation" + rotation);
 		return rotation;
 	
 	}

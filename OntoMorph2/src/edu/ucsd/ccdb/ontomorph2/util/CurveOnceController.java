@@ -33,7 +33,7 @@ public class CurveOnceController extends Controller {
     private Vector3f lastRotation = new Vector3f(0,0,0);
     private float orientationPrecision = 0.1f;
     private float currentTime = 0.0f;
-    private float deltaTime = 0.0f;
+    private float deltaTime = 1.0f;
     private float angle;
     private Quaternion rot;
     
@@ -100,7 +100,7 @@ public class CurveOnceController extends Controller {
                 /*if(deltaTime > .4 && deltaTime < .6){
                 	mover.setLocalRotation(rotation);
                 }*/
-                System.out.println("camera direction " + cam.getLocation() + " " + newPoint);
+                //System.out.println("camera direction " + cam.getLocation() + " " + newPoint);
                 if(autoRotation) {   // ***** added
                 	mover.lookAt(rotation,up);
                 	/*Quaternion vert = mover.getLocalRotation().fromAngleAxis( 
