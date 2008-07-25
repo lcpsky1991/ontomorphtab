@@ -109,10 +109,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void setRelativePosition(PositionVector pos) {
 		if (pos != null) {
 			theSpatial.setLocalTranslation(pos);
-			if (this.getCoordinateSystem() == null)
-			{
-				System.out.println("Attempting to setRelative on no coords system");
-			}
 			Vector3f test = theSpatial.getLocalTranslation();
 			changed(CHANGED_RELATIVE_POSITION);
 		}
