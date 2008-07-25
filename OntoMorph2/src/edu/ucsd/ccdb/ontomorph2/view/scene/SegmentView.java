@@ -423,6 +423,10 @@ public class SegmentView extends TangibleView{
 			def = ColorUtil.convertColorToColorRGBA(getCorrespondingSegmentGroup().getColor());
 			g.setSolidColor(def);
 		}
+		else
+		{
+			g.setSolidColor(ColorRGBA.white);
+		}
 	}
 
 	public void update() {

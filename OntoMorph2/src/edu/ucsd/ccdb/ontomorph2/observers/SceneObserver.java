@@ -21,58 +21,78 @@ import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.CurveAnchorPointView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
- * This main observer is triggered when any scene object changes and updates
- * the view accordingly.
+ * This main observer is triggered when any scene object changes and updates the
+ * view accordingly.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @author caprea
  */
-public class SceneObserver implements Observer{
+public class SceneObserver implements Observer {
 
 	View _view;
+
 	/**
 	 * Holds singleton instance
 	 */
 	private static SceneObserver instance;
 
-	public void update(Observable o, Object arg) {
-		if (o instanceof Scene) {
-			Scene scene = (Scene)o;
+	public void update(Observable o, Object arg)
+	{
+		if (o instanceof Scene)
+		{
+			Scene scene = (Scene) o;
 			_view.getView3D().setVolumes(scene.getVolumes());
 			_view.getView3D().setSlides(scene.getSlides());
 			_view.getView3D().setCells(scene.getCells());
-			for (NeuronMorphology c: scene.getCells()) {
-				NeuronMorphology mi = (NeuronMorphology)c;
+			for (NeuronMorphology c : scene.getCells())
+			{
+				NeuronMorphology mi = (NeuronMorphology) c;
 				mi.addObserver(this);
 			}
 			_view.getView3D().setCurves(scene.getCurves());
 			_view.getView3D().setSurfaces(scene.getSurfaces());
 			_view.getView3D().setMeshes(scene.getMeshes());
-			
-		} 
-				
-		else if (o instanceof ISemanticThing) {
-			ISemanticThing st = (ISemanticThing)o;
-			for(ISemanticsAware sa : st.getSemanticsAwareAssociations()) {
-				if (st.isSelected()) {
+
+		}
+
+		else if (o instanceof ISemanticThing)
+		{
+			ISemanticThing st = (ISemanticThing) o;
+			for (ISemanticsAware sa : st.getSemanticsAwareAssociations())
+			{
+				if (st.isSelected())
+				{
 					sa.select();
-				} else if (!st.isSelected()) {
+				}
+				else if (!st.isSelected())
+				{
 					sa.unselect();
 				}
 			}
-		} else if (o instanceof BrainRegion) {
-			BrainRegionView brv = (BrainRegionView)TangibleViewManager.getInstance().getTangibleViewFor((BrainRegion)o);
-			if (brv != null && Tangible.CHANGED_VISIBLE.equals(arg)) {
+		}
+		else if (o instanceof BrainRegion)
+		{
+			BrainRegionView brv = (BrainRegionView) TangibleViewManager
+			        .getInstance().getTangibleViewFor((BrainRegion) o);
+			if (brv != null && Tangible.CHANGED_VISIBLE.equals(arg))
+			{
 				brv.update();
 			}
-		} else if (o instanceof Tangible) {
-//			catch all method for any leftover tangibles 
-			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible)o);
-			if (tv != null) {
+		}
+
+		else if (o instanceof Tangible)
+		{
+			// catch all method for any leftover tangibles
+			TangibleView tv = TangibleViewManager.getInstance()
+			        .getTangibleViewFor((Tangible) o);
+			if (tv != null)
+			{
 				tv.update();
 			}
 		}
@@ -81,22 +101,27 @@ public class SceneObserver implements Observer{
 	/**
 	 * prevents instantiation
 	 */
-	private SceneObserver() {
+	private SceneObserver()
+	{
 		// prevent creation
 	}
 
 	/**
 	 * Returns the singleton instance.
-	 @return	the singleton instance
+	 * 
+	 * @return the singleton instance
 	 */
-	static public SceneObserver getInstance() {
-		if (instance == null) {
+	static public SceneObserver getInstance()
+	{
+		if (instance == null)
+		{
 			instance = new SceneObserver();
 		}
 		return instance;
 	}
 
-	public void setView(View view) {
+	public void setView(View view)
+	{
 		_view = view;
 	}
 

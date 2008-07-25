@@ -40,6 +40,7 @@ import com.jme.util.geom.Debugger;
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -206,6 +207,7 @@ public class View extends BaseSimpleGame {
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_cw", KeyInput.KEY_RIGHT);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_up", KeyInput.KEY_UP);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_down", KeyInput.KEY_DOWN);
+		KeyBindingManager.getKeyBindingManager().set("update", KeyInput.KEY_U);
 		
 		KeyBindingManager.getKeyBindingManager().set("toggleMouse", KeyInput.KEY_M);
 		KeyBindingManager.getKeyBindingManager().set("show_selected", KeyInput.KEY_S);
@@ -517,6 +519,13 @@ public class View extends BaseSimpleGame {
 				System.out.println("" + TangibleManager.getInstance().countSelected() + " total");
 			}
 			
+			if ( isAction("update"))
+			{
+				for (Tangible t : TangibleManager.getInstance().getCells())
+				{
+					t.unselect();
+				}
+			}
 			
 			if ( isAction("cam_forward") || isAction("cam_forward_ns") ) 
 			{
@@ -565,7 +574,7 @@ public class View extends BaseSimpleGame {
 				Log.warn( "\nResetting");
 				camNode.reset();			
 			}
-			
+
 			if ( isAction("zoom_in")) {
 				camNode.zoomIn(keyPressActionRate);
 			}

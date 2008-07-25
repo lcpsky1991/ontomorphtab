@@ -118,7 +118,8 @@ public class Curve3D extends Tangible{
 		BezierCurve copy = new BezierCurve(this.getName(), this.controlPoints);
 		
 		//apply coordinate system to this curve.
-		if (this.getCoordinateSystem() != null) {
+		if (this.getCoordinateSystem() != null) 
+		{
 			this.getCoordinateSystem().applyToSpatial(copy);
 		}
 		return copy;

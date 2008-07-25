@@ -42,30 +42,14 @@ public class CurveAnchorPointView extends TangibleView {
 		this.update();
 	}
 
-	public void update(){
-		this.setLocalTranslation(getModel().getAbsolutePosition());
-		
-		if (this.getModel().isSelected()) 
-		{
-			this.highlight();
-		}
-		else 
-		{
-			this.unhighlight();
-		}
-		
-		s.updateModelBound();
-		s.updateRenderState();
-		s.updateGeometricState(5f, true);
-	}
 	
 	public void doHighlight() 
 	{
-		this.s.setDefaultColor(TangibleViewManager.highlightSelectedColor);
+		this.s.setSolidColor(TangibleViewManager.highlightSelectedColor);	
 	}
 	
 	public void doUnhighlight() 
 	{
-		this.s.setDefaultColor(ColorRGBA.white);
+		this.s.setSolidColor(ColorRGBA.white);
 	}
 }

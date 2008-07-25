@@ -3,6 +3,7 @@ package edu.ucsd.ccdb.ontomorph2.view.scene;
 import java.util.List;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
@@ -24,13 +25,11 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  *
  */
 public abstract class TangibleView extends Node {
-	//TODO: remove
-	//private boolean highlighted = false; //nodes should not be tracking their own selection (ask the manager)
 	private Tangible model = null;
 	
 	public TangibleView(Tangible model) {
-		super("Tangible View");
-		this.setModel(model);
+		super("Tangible View for " + model.getName());
+		this.setModel(model);	
 		//register this instance with the TangibleViewManager
 		TangibleViewManager.getInstance().addTangibleView(this);
 	}
@@ -83,9 +82,11 @@ public abstract class TangibleView extends Node {
 		}
 		
 		//FIXME: setlocals may need to be changed to setWorld
+	   
 		setLocalTranslation(this.getModel().getAbsolutePosition());
 		setLocalScale(this.getModel().getAbsoluteScale());
 		setLocalRotation(this.getModel().getAbsoluteRotation());
+			
 	}
 	
 	public void registerGeometries(List<Geometry> b) {

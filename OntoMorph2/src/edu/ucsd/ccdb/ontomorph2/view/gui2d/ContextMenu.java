@@ -53,8 +53,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
         
         this.setShrinkable(false);
         this.setSize(100,200);
-        //this.getAppearance().removeAll();
-		this.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
+        this.getAppearance().removeAll();
+		this.getAppearance().add(new PlainBackground(new Color(0.5f, 0.5f, 0.5f, 5.0f)));
 		border = new TitledBorder("context menu");
 		border.setTextColor(Color.WHITE);
 		this.getAppearance().add(border);
@@ -90,7 +90,6 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		}
 		
 		View2D.getInstance().displayPopUp(this);
-		
 	}
 	/**
 	 * Conveiniance method that wraps the creation of menus
