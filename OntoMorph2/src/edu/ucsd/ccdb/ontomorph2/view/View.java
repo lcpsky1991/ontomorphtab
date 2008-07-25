@@ -207,8 +207,9 @@ public class View extends BaseSimpleGame {
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_cw", KeyInput.KEY_RIGHT);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_up", KeyInput.KEY_UP);
 		KeyBindingManager.getKeyBindingManager().set("cam_turn_down", KeyInput.KEY_DOWN);
+		KeyBindingManager.getKeyBindingManager().set("object_left", KeyInput.KEY_1);
+		KeyBindingManager.getKeyBindingManager().set("object_right", KeyInput.KEY_2);
 		KeyBindingManager.getKeyBindingManager().set("update", KeyInput.KEY_U);
-		
 		KeyBindingManager.getKeyBindingManager().set("toggleMouse", KeyInput.KEY_M);
 		KeyBindingManager.getKeyBindingManager().set("show_selected", KeyInput.KEY_S);
 		
@@ -581,6 +582,14 @@ public class View extends BaseSimpleGame {
 			
 			if ( isAction("zoom_out")) {
 				camNode.zoomOut(keyPressActionRate);
+			}
+			
+			if(isAction("object_left")){
+				camNode.SphereLeftRotation(keyPressActionRate);
+			}
+			
+			if(isAction("object_right")){
+				camNode.SphereLeftRotation(keyPressActionRate);
 			}
 			
 		}//end key input
