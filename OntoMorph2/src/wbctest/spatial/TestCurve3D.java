@@ -46,6 +46,55 @@ public class TestCurve3D extends TestCase {
 		assertNotNull(bCurve2);
 	}
 
+	
+	
+	public void testMovePoints()
+	{
+		List<CurveAnchorPoint> ptsNoCoords = testCurve1.getAnchorPoints();
+		List<CurveAnchorPoint> ptsDemo = testCurve2.getAnchorPoints();
+		
+		
+		PositionVector orig=null;
+		PositionVector dest=null;
+		PositionVector destL=null;
+		
+		CurveAnchorPoint capOrig=null;
+		CurveAnchorPoint capDest=null;
+
+		assertEquals(ptsDemo.get(1).getRelativePosition(),ptsNoCoords.get(1).getRelativePosition());
+		assertTrue(!ptsDemo.get(1).getAbsolutePosition().equals(ptsNoCoords.get(1).getAbsolutePosition()));
+		
+		//move the anchr points for the demo curve
+		//for ( int i =0; i < ptsDemo.size(); i++)
+		{
+			//try DEMO
+			capOrig = ptsDemo.get(1);
+			orig = capOrig.getAbsolutePosition();
+			//orig = capOrig.getRelativePosition();
+			capOrig.move(5f, 10f, new OMTVector(1,1,0));
+			dest = capOrig.getAbsolutePosition();
+			//dest = capOrig.getRelativePosition();
+			System.out.println("orig: " + orig + "   -->  " + dest);
+			
+			//try NO COORDs
+			capOrig = ptsNoCoords.get(1);
+			orig = capOrig.getAbsolutePosition();
+			//orig = capOrig.getRelativePosition();
+			capOrig.move(10f, 10f, new OMTVector(1,1,0));
+			dest = capOrig.getAbsolutePosition();
+			//dest = capOrig.getRelativePosition();
+			System.out.println("no orig: " + orig + "   -->  " + dest);			
+		}
+		
+		
+		/**	RESULTS
+		 * Moving an object by .move does not change it's relative position
+		 */
+		
+	}
+	
+	
+	
 	/*
 	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D.getControlPoints()'
 	 * 
