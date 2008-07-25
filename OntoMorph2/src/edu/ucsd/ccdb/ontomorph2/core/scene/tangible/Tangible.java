@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Observable;
 
 import com.jme.math.Quaternion;
+import com.jme.math.TransformMatrix;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 
@@ -91,9 +92,10 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 * @return - the PositionVector
 	 * @see CoordinateSystem
 	 */
-	public PositionVector getRelativePosition() {
+	public PositionVector getRelativePosition()
+	{
 		_position.set(theSpatial.getLocalTranslation());
-		return _position;
+		return new PositionVector(_position);
 	}
 
 	/** 
@@ -107,6 +109,11 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void setRelativePosition(PositionVector pos) {
 		if (pos != null) {
 			theSpatial.setLocalTranslation(pos);
+			if (this.getCoordinateSystem() == null)
+			{
+				System.out.println("Attempting to setRelative on no coords system");
+			}
+			Vector3f test = theSpatial.getLocalTranslation();
 			changed(CHANGED_RELATIVE_POSITION);
 		}
 	}
@@ -179,10 +186,13 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 */
 	public PositionVector getAbsolutePosition() {
 		
-		if (this.getCoordinateSystem() == null) {
+		if (this.getCoordinateSystem() == null) 
+		{
 			return this.getRelativePosition();
 		}
+		
 		Vector3f v = this.getCoordinateSystem().multPoint(this.getRelativePosition());
+		
 		if (v != null) {
 			return new PositionVector(v);
 		}
@@ -370,6 +380,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		
 		//get the position, add the change, store the new position
 		PositionVector np = new PositionVector( this.getRelativePosition().asVector3f().add(dx,dy,dz) );
+		//PositionVector np = new PositionVector( this.getAbsolutePosition().asVector3f().add(dx,dy,dz) );
 		
 		//apply the movement
 		this.setRelativePosition( np );
