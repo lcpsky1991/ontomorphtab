@@ -1,8 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.derby.impl.sql.compile.CountAggregateDefinition;
 import org.fenggui.background.PlainBackground;
 import org.fenggui.border.Border;
 import org.fenggui.border.PlainBorder;
@@ -11,10 +14,16 @@ import org.fenggui.event.IMenuItemPressedListener;
 import org.fenggui.event.MenuItemPressedEvent;
 import org.fenggui.menu.Menu;
 import org.fenggui.menu.MenuItem;
-import org.fenggui.util.Color;
+import org.fenggui.util.Color; //conflict with other import
 import org.fenggui.util.Point;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
@@ -75,13 +84,57 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
         this.layout();
 	}
 	
-	public void displayMenuFor(int xCoord, int yCoord, List<Tangible> t) {
+	public void displayMenuFor(int xCoord, int yCoord, List<Tangible> t) 
+	{
 		int x = xCoord;
 		int y = yCoord;
 		this.setXY(x, y);
 		
+		//handles the case of a SINGLE selection
 		if (t != null & t.size() == 1) {
 			border.setTitle(t.iterator().next().getName());
+		}	//handles the case of multiselection
+		else if ( t != null & t.size() > 1)
+		{
+			String check="";
+			HashMap types = new HashMap();
+			
+			//loop through and see if they are all the same types			
+			for (int i =0; i < t.size(); i++) //dont exit quick because we need the info later anyways
+			{
+				check = t.get(i).getName();
+				//if map contains the word incriment it
+				if ( types.containsKey(check) )
+				{
+					int c = (Integer) types.get(check) + 1;
+					types.put(check, c);
+				} //otherwise create it and flag that its a multiset
+			}
+			
+			//if they are the same then just call it that
+			if ( types.size() > 1)
+			{
+				border.setTitle("Many [" + types.keySet().iterator().next() + "]");
+			}
+			//otherwise we may be smart about it and figure out what we've got
+			else
+			{
+				String title = "Set";
+				Set possible = types.keySet();
+				
+				while (possible.iterator().hasNext()  )
+				{
+					title += " [" + possible.iterator().next() + "]";
+				}
+				
+				//but the title can't be too long
+				if (title.length() > 20)
+				{
+					title = title.substring(0, 20) + "] ...";
+				}
+				
+				border.setTitle(title);
+			}
 		}
 		
 		if(this.equals(View2D.getInstance().getDisplay().getPopupWidget())) // popupmenu is already visible!
@@ -123,16 +176,41 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
         
 	}
 	public void menuItemPressed(MenuItemPressedEvent arg0) {
+		
 		String opt = arg0.getItem().getText();
+	
 		if (ANNOTATE.equals(opt)) {
 			System.out.println("do annotation");
 		} else if (ANIMATE.equals(opt)) {
 			System.out.println("do animation");
 		} else if (PROPERTIES.equals(opt)) {
 			System.out.println("show properties");
-		} else if (CURVE.equals(opt)) {
+		} else if (CURVE.equals(opt)) 
+		{
 			//make a new bezier curve right here
+			testCreateCurve();
 		}
 		View2D.getInstance().removePopup();
 	}
+	
+	//FIXME: MOVE this function and replace its signature with something appropriate
+	public void testCreateCurve()
+	{
+		Tangible orig = TangibleManager.getInstance().getSelectedRecent();
+		
+		OMTVector a = new OMTVector(12,10,20);
+		OMTVector b = new OMTVector(-9,30,20);
+		OMTVector c = new OMTVector(0,0,0);
+		
+		OMTVector[] pts = {a, b, c};
+		a = orig.getAbsolutePosition();
+		b = new OMTVector(orig.getAbsolutePosition().add(5f,5f,5f));
+
+		Curve3D cap = new Curve3D("capreas new deal", pts, new DemoCoordinateSystem());
+		cap.setColor(java.awt.Color.BLUE);
+		cap.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.01f);
+		View.getInstance().getScene().addToScene(cap);
+		cap.select();
+	}
+	
 }

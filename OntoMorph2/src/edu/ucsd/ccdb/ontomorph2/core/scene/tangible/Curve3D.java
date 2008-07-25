@@ -20,7 +20,7 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.CurveAnchorPointView;
 /**
  * Defines a Bezier curve in the framework that is manipulable by anchor points.
  * 
- *  
+ * @author caprea
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
 public class Curve3D extends Tangible{

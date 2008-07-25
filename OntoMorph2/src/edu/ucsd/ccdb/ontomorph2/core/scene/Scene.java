@@ -101,6 +101,25 @@ public class Scene extends Observable{
 		s.setVisible(true);
 	}
 	
+	
+	/**
+	 * Intended for use with ContextMenu and other processes to add objects to scene (network?) 
+	 * @param obj oject to add to scene
+	 * @return true if successful
+	 */
+	public boolean addToScene(Tangible obj)
+	{
+		try
+		{
+			addSceneObject(obj);
+			return true;
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+	}
+	
 	/**
 	 * Loads data from the cellular knowledge base, which is a
 	 * metadata warehouse.  Once the metadata is sorted through,
