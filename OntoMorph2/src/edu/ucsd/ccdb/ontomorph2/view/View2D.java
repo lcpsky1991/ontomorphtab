@@ -23,6 +23,7 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.AtlasBrowser;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.BasicSearchWidget;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MenuBar;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.MiniMap;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyTreeModel;
 
@@ -46,6 +47,7 @@ public class View2D extends Display  {
 	
 	private AtlasBrowser aBrowser = null;
 	private BasicSearchWidget basicSearch = null;
+	private MiniMap miniMap = null;
 	
 	protected TextEditor getInfoText() {
 		if (infoText == null ) {
@@ -265,5 +267,10 @@ public class View2D extends Display  {
 		}
 	}
 	
+	public void loadMiniMap(){
+		if(miniMap == null){
+			miniMap = new MiniMap(this);
+		}
+	}
 
 }

@@ -10,5 +10,10 @@ import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
  *
  */
 public class SemanticQuery {
+	
+	String queryString = null;
+	public void createSimpleQuery(String queryString) {
+		this.queryString= queryString;
+	}
 
 }

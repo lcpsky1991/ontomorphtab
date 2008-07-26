@@ -309,7 +309,8 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         
         this.lookAt(currentDirection, Vector3f.UNIT_Z.clone());
         this.getCamera().update();*/
-        BoundingSphere sphere = new BoundingSphere(10f, currentDirection);
+		BoundingSphere sphere = new BoundingSphere(10f, currentDirection);
+        System.out.println("Bounding Sphere " + sphere.getRadius()+ " " + sphere.getCenter());
 	}
 	
 	/**
