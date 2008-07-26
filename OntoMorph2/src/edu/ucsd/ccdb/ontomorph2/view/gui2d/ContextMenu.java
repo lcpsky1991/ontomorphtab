@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.derby.impl.sql.compile.CountAggregateDefinition;
 import org.fenggui.background.PlainBackground;
 import org.fenggui.border.Border;
 import org.fenggui.border.PlainBorder;
@@ -179,6 +178,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		String opt = arg0.getItem().getText();
 	
+		Tangible orig = TangibleManager.getInstance().getSelectedRecent();
+		
 		if (ANNOTATE.equals(opt)) {
 			System.out.println("do annotation");
 		} else if (ANIMATE.equals(opt)) {
@@ -188,29 +189,32 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		} else if (CURVE.equals(opt)) 
 		{
 			//make a new bezier curve right here
-			testCreateCurve();
+			if (orig != null)
+			{
+				testCreateCurve(orig);
+			}
 		}
 		View2D.getInstance().removePopup();
 	}
 	
-	//FIXME: MOVE this function and replace its signature with something appropriate
-	public void testCreateCurve()
+	//TODO: MOVE this function and replace its signature with something appropriate
+	public void testCreateCurve(Tangible src)
 	{
-		Tangible orig = TangibleManager.getInstance().getSelectedRecent();
+		OMTVector a = new OMTVector(16,13,20);
+		OMTVector b = new OMTVector(-5,35,20);
+		OMTVector c = new OMTVector(0,0,20);
 		
-		OMTVector a = new OMTVector(12,10,20);
-		OMTVector b = new OMTVector(-9,30,20);
-		OMTVector c = new OMTVector(0,0,0);
+		b = new OMTVector(src.getRelativePosition().add(3f,3f,0f));
+		c = new OMTVector(src.getRelativePosition().add(10f,10f,0f));
+		a = new OMTVector(src.getRelativePosition().add(-5f,-5f,0f));
 		
 		OMTVector[] pts = {a, b, c};
-		a = orig.getAbsolutePosition();
-		b = new OMTVector(orig.getAbsolutePosition().add(5f,5f,5f));
-
 		Curve3D cap = new Curve3D("capreas new deal", pts, new DemoCoordinateSystem());
-		cap.setColor(java.awt.Color.BLUE);
-		cap.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.01f);
-		View.getInstance().getScene().addToScene(cap);
-		cap.select();
+		cap.setColor(java.awt.Color.orange);
+		cap.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.01f);		
+		
+		//redraw the scene, but not the whole scene, let observer know the curves have changed
+		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);
 	}
 	
 }

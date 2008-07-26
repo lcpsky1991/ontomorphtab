@@ -59,7 +59,14 @@ public class Scene extends Observable{
 									+ File.separatorChar;
 	public static final String allenMeshDir = allenDir + "Mesh25" + File.separatorChar;
 
-
+	public static final int CHANGED_PART = 1;
+	public static final int CHANGED_LOAD = 0;
+	public static final int CHANGED_VOLUME = 2;
+	public static final int CHANGED_SLIDE = 3;
+	public static final int CHANGED_CELL = 4;
+	public static final int CHANGED_CURVE = 5;
+	public static final int CHANGED_SURFACE = 6;
+	
 	
 	URL cell3URL = null;
 	URL cell4URL = null;
@@ -101,25 +108,7 @@ public class Scene extends Observable{
 		s.setVisible(true);
 	}
 	
-	
-	/**
-	 * Intended for use with ContextMenu and other processes to add objects to scene (network?) 
-	 * @param obj oject to add to scene
-	 * @return true if successful
-	 */
-	public boolean addToScene(Tangible obj)
-	{
-		try
-		{
-			addSceneObject(obj);
-			return true;
-		}
-		catch (Exception e)
-		{
-			return false;
-		}
-	}
-	
+		
 	/**
 	 * Loads data from the cellular knowledge base, which is a
 	 * metadata warehouse.  Once the metadata is sorted through,
@@ -357,7 +346,7 @@ public class Scene extends Observable{
 	
 		addSceneObject(mesh);
 		
-		changed();
+		changed(CHANGED_LOAD);
 	}
 
 	public void save() {
@@ -395,9 +384,9 @@ public class Scene extends Observable{
 		return manager.getCells();
 	}
 
-	 public void changed () {       
+	 public void changed (int arg) {       
 		  setChanged();                 
-		  notifyObservers();            
+		  notifyObservers(arg);            
 	 }
 
 	public Set<Curve3D> getCurves() {

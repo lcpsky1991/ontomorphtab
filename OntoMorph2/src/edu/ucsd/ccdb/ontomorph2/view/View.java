@@ -95,7 +95,7 @@ public class View extends BaseSimpleGame {
 	//manip not stored locally anymore
 		
 	FirstPersonHandler fpHandler = null;
-	MouseLook looker;	//not used
+	//MouseLook looker;	//not used
 	private boolean pointerEnabled = false;
 	
 	float keyPressActionRate = 1.0f; //the rate of rotation by a single key press
@@ -357,12 +357,9 @@ public class View extends BaseSimpleGame {
 			rotateSelected(mx, my,new OMTVector(0,0,1));
 			break;
 		case METHOD_LOOKAT:
-			/* needs to be re-engineered to deal with multiple selections
-			if (manip != null)
-				//TODO: fixme
-				Log.warn("LOOK AT is broken");
-			camNode.lookAt(manip.getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question
-			*/
+			//FIXME: /* needs to be re-engineered to deal with multiple selections */
+			Log.warn("LOOK AT is broken");
+			camNode.lookAt(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question
 			break;
 		case METHOD_SCALE:
 			scaleSelected(mx, my);

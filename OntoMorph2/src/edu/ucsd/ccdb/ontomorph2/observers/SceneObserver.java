@@ -46,19 +46,27 @@ public class SceneObserver implements Observer {
 	{
 		if (o instanceof Scene)
 		{
-			Scene scene = (Scene) o;
-			_view.getView3D().setVolumes(scene.getVolumes());
-			_view.getView3D().setSlides(scene.getSlides());
-			_view.getView3D().setCells(scene.getCells());
-			for (NeuronMorphology c : scene.getCells())
+			if (arg != null && arg.equals(Scene.CHANGED_CURVE))
 			{
-				NeuronMorphology mi = (NeuronMorphology) c;
-				mi.addObserver(this);
+				Scene origscene = (Scene) o;
+				_view.getView3D().setCurves(origscene.getCurves());		
 			}
-			_view.getView3D().setCurves(scene.getCurves());
-			_view.getView3D().setSurfaces(scene.getSurfaces());
-			_view.getView3D().setMeshes(scene.getMeshes());
-
+			else
+			{	
+				//Default case for reloading entire scene (this is used for load in prototype)
+				//FIXME: the default case should not be this bad, following code should be special 'load' case
+				Scene scene = (Scene) o;
+				_view.getView3D().setVolumes(scene.getVolumes());
+				_view.getView3D().setSlides(scene.getSlides());
+				_view.getView3D().setCells(scene.getCells());
+				for (NeuronMorphology c : scene.getCells())
+				{
+					NeuronMorphology mi = (NeuronMorphology) c;
+					mi.addObserver(this);
+				}
+				_view.getView3D().setCurves(scene.getCurves());
+				_view.getView3D().setSurfaces(scene.getSurfaces());
+			}
 		}
 
 		else if (o instanceof ISemanticThing)

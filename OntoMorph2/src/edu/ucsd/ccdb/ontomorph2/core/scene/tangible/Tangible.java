@@ -22,6 +22,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
+import edu.ucsd.ccdb.ontomorph2.view.View3D;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
 /**
@@ -81,7 +82,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 */
 	public RotationVector getRelativeRotation() {
 		_rotation.set(theSpatial.getLocalRotation());
-		return _rotation;
+		return new RotationVector(_rotation);
 	}
 
 	/**

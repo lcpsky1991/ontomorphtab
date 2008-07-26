@@ -20,6 +20,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
@@ -130,5 +131,10 @@ public class View3D extends Node{
 		//http://www.jmonkeyengine.com/jmeforum/index.php?topic=8159.msg64486#msg64486
 		SceneMonitor.getMonitor().registerNode(this, "Root Node");
 		SceneMonitor.getMonitor().showViewer(true);
+	}
+	
+	protected void addTangible(Tangible introduced)
+	{
+		System.out.println("See me!");
 	}
 }
