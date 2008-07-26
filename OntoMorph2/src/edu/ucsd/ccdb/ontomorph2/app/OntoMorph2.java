@@ -9,7 +9,11 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
- * Main class for the application.
+ * Main class for the application.  Here environment properties and application 
+ * configuration files are read and processed.  Logging is configured.  The main 
+ * classes for the MVC architecture are initialized.  View, SceneObserver, and 
+ * Scene are initialized and related to each other.  The scene is loaded with 
+ * Tangibles from the central repository.  High-level error handling happens here as well.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *

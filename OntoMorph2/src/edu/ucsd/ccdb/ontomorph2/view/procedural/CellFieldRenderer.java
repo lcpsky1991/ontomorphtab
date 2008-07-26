@@ -1,6 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.view.procedural;
 
-import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
 
 
 /** 

@@ -14,7 +14,7 @@ import com.jme.scene.VBOInfo;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 
-import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;

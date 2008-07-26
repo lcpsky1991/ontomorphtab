@@ -1,13 +1,13 @@
 package wbctest.ckb;
 
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import junit.framework.TestCase;
 
 public class TestSemanticRepository extends TestCase {
 
 	/*
-	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository.getSemanticClass(String)'
+	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository.getSemanticClass(String)'
 	 */
 	public void testGetSemanticClass() {
 		//get semantic thing for a pyramidal cell
@@ -18,7 +18,7 @@ public class TestSemanticRepository extends TestCase {
 	}
 
 	/*
-	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository.getMicroscopyProducts()'
+	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository.getMicroscopyProducts()'
 	 */
 	public void testGetMicroscopyProducts() {
 		//there are 184 microscopy product instances in the current version of the CKB.

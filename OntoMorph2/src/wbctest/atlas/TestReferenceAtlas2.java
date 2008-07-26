@@ -5,15 +5,15 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
-import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.util.BitMath;
 import junit.framework.TestCase;
 
 public class TestReferenceAtlas2 extends TestCase {
 
 	/*
-	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas.getBrainRegion(int, int, int)'
+	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas.getBrainRegion(int, int, int)'
 	 */
 	public void testGetBrainRegionIntIntInt() {
 		ReferenceAtlas atlas = ReferenceAtlas.getInstance();

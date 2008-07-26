@@ -3,7 +3,7 @@ package edu.ucsd.ccdb.ontomorph2.observers;
 import java.util.Observable;
 import java.util.Observer;
 
-import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 

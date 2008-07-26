@@ -8,6 +8,7 @@ import java.util.List;
 import edu.stanford.smi.protege.model.Cls;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 
 /** 
  * Represents an OWL class.

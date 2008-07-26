@@ -33,8 +33,8 @@ package wbctest.atlas;
 
 	import com.jme.app.SimpleGame;
 
-import edu.ucsd.ccdb.ontomorph2.core.atlas.BrainRegion;
-import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
 
 	/**
 	 * <code>TestAnisotropic</code>

@@ -13,7 +13,7 @@ import org.fenggui.event.TextChangedEvent;
 import org.fenggui.util.Point;
 import org.fenggui.util.Spacing;
 
-import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 
 /**

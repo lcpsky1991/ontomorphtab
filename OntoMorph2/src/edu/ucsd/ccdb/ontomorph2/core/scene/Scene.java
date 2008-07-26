@@ -23,6 +23,7 @@ import com.jme.math.Quaternion;
 import com.jme.scene.shape.Box;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
@@ -34,7 +35,6 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
@@ -55,6 +55,7 @@ public class Scene extends Observable{
 	public static final String morphMLDir = baseDir + "morphml" 
 											+ File.separatorChar + "hippocampus" + File.separatorChar;
 	public static final String mitoDir = baseDir + File.separatorChar + "mito" + File.separatorChar;
+	public static final String objDir = baseDir + File.separatorChar + "obj" + File.separatorChar;
 	public static final String allenDir = baseDir + File.separatorChar + "allen" 
 									+ File.separatorChar;
 	public static final String allenMeshDir = allenDir + "Mesh25" + File.separatorChar;
@@ -75,6 +76,9 @@ public class Scene extends Observable{
 	URL cell7URL = null;
 	URL cell11URL = null;
 	URL mitoObjURL = null;
+	URL mito2ObjURL = null;
+	URL astroObjURL = null;
+	URL plasmaObjURL = null;
 	URL hippo1URL = null;
 	URL hippo2URL = null;
 	URL hippo3aURL = null;
@@ -92,6 +96,10 @@ public class Scene extends Observable{
 			cell7URL = new File(morphMLDir + "pc2a.morph.xml").toURI().toURL();
 			cell11URL = new File(morphMLDir + "5199202a.morph.xml").toURI().toURL();
 			mitoObjURL = new File(mitoDir + "mito_outer.obj").toURI().toURL();
+			
+			mito2ObjURL = new File(objDir + "mitochondrion.obj").toURI().toURL();
+			astroObjURL = new File(objDir + "astrocyte process.obj").toURI().toURL();
+			plasmaObjURL = new File(objDir + "plasma membrane.obj").toURI().toURL();
 			
 			hippo1URL = new File(imgDir + "hippo_slice1.jpg").toURI().toURL();
 			hippo2URL = new File(imgDir + "hippo_slice2.jpg").toURI().toURL();
@@ -334,7 +342,7 @@ public class Scene extends Observable{
 		//Surface surf2 = new Surface("my surf", array4, 16);
 		//manager.addSurface(surf2);
 		
-		
+		/*
 		DataMesh mesh = new DataMesh();
 		//mesh.loadMaxFile("etc/mito/mito_outer.3ds");
 		mesh.setObjMeshURL(mitoObjURL);
@@ -343,9 +351,42 @@ public class Scene extends Observable{
 		mesh.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
 		mesh.setRelativeScale(0.0002f);
 		mesh.setCoordinateSystem(d);
+		*/
+		//addSceneObject(mesh);
+		/*
+		DataMesh mito2 = new DataMesh();
+		mito2.setObjMeshURL(mito2ObjURL);
+		mito2.setRelativePosition(new PositionVector(0.49f, -3.3f, 20.03f));
+		mito2.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
+		mito2.setRelativeScale(0.0002f);
+		mito2.setCoordinateSystem(d);
 	
-		addSceneObject(mesh);
+		addSceneObject(mito2);
 		
+<<<<<<< .mine
+		
+		DataMesh astro = new DataMesh();
+		astro.setObjMeshURL(astroObjURL);
+		astro.setRelativePosition(new PositionVector(0.49f, -3.3f, 20.09f));
+		astro.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
+		astro.setRelativeScale(0.0002f);
+		astro.setCoordinateSystem(d);
+	
+		addSceneObject(astro);
+		*/
+
+		/*
+		DataMesh plasma = new DataMesh();
+		plasma.setObjMeshURL(plasmaObjURL);
+		plasma.setRelativePosition(new PositionVector(0.49f, -3.3f, 21.05f));
+		plasma.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
+		plasma.setRelativeScale(0.0002f);
+		plasma.setCoordinateSystem(d);
+	
+		addSceneObject(plasma);
+		*/
+		
+
 		changed(CHANGED_LOAD);
 	}
 

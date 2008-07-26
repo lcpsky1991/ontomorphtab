@@ -4,9 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 
+import com.jme.bounding.BoundingSphere;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
+import com.jme.scene.lod.AreaClodMesh;
+import com.jme.scene.state.RenderState;
 import com.jme.util.export.binary.BinaryImporter;
 import com.jmex.model.converters.FormatConverter;
 import com.jmex.model.converters.MaxToJme;
@@ -51,7 +55,13 @@ public class MeshViewImpl {
 			if (o instanceof TriMesh) {
 				TriMesh mesh = (TriMesh)o;
 				mesh.setSolidColor(ColorRGBA.orange);
+				
 				//object.addDiscreteLodNodeChild(mesh, 0, 1000);
+				
+				
+				//this works but adds a significant time overhead to loading the program
+				//object.attachChild(this.getClodMeshFromGeometry(mesh));
+				
 				object.attachChild(mesh);
 			} else if (o instanceof Node) {
 
@@ -99,5 +109,25 @@ public class MeshViewImpl {
 
 	public Node getNode() {
 		return object;
+	}
+	
+	private AreaClodMesh getClodMeshFromGeometry(Geometry cylinder) {
+		AreaClodMesh acm = new AreaClodMesh(cylinder.getName(),
+                (TriMesh) cylinder, null);
+        acm.setLocalTranslation(cylinder.getLocalTranslation());
+        acm.setLocalRotation(cylinder.getLocalRotation());
+        acm.setModelBound(new BoundingSphere());
+        acm.updateModelBound();
+        // Allow 1/2 of a triangle in every pixel on the screen in
+        // the bounds.
+        acm.setTrisPerPixel(.5f);
+        // Force a move of 2 units before updating the mesh geometry
+        acm.setDistanceTolerance(2);
+        // Give the clodMe sh node the material state that the
+        // original had.
+        //acm.setRenderState(meshParent.getChild(i).getRenderStateList()[RenderState.RS_MATERIAL]); //Note: Deprecated
+        acm.setRenderState(cylinder.getRenderState(RenderState.RS_MATERIAL));
+        // Attach clod node.
+        return acm;
 	}
 }

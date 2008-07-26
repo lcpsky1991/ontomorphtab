@@ -1,7 +1,7 @@
 package wbctest.ckb;
 
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import junit.framework.TestCase;
 
 public class TestSemanticClass extends TestCase {

@@ -134,14 +134,14 @@ public class TestCurve3D extends TestCase {
 			anchorPoint1.move(0.5f, 0.5f, new OMTVector(1,1,0));
 			
 			//test
-			assertEquals("Testing predicted movement on point 1 of curve " + i, cPoints1.get(1).getRelativePosition(), 
-					new PositionVector(oldX1 + 0.5f, oldY1 + 0.5f, oldZ1));
+			assertEquals("Testing predicted movement on point 1 of curve " + i, 
+					new PositionVector(oldX1 + 0.5f, oldY1 + 0.5f, oldZ1), cPoints1.get(1).getRelativePosition());
 			
 			//do move
 			anchorPoint1.move(0.5f, 0.5f, new OMTVector(1,1,0));
 			//test
-			assertEquals("Testing second predicted movement on point 1 of curve " + i, cPoints1.get(1).getRelativePosition(), 
-					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1));
+			assertEquals("Testing second predicted movement on point 1 of curve " + i, 
+					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1), cPoints1.get(1).getRelativePosition());
 			
 			//record original position
 			float oldX2 = anchorPoint2.getRelativePosition().x;
@@ -152,21 +152,21 @@ public class TestCurve3D extends TestCase {
 			anchorPoint2.move(0.5f, -0.5f, new OMTVector(1,1,0));
 			
 			//test
-			assertEquals("Testing predicted movement on point 2 of curve " + i, cPoints1.get(2).getRelativePosition(), 
-					new PositionVector(oldX2 + 0.5f, oldY2 - 0.5f, oldZ2));
+			assertEquals("Testing predicted movement on point 2 of curve " + i, 
+					new PositionVector(oldX2 + 0.5f, oldY2 - 0.5f, oldZ2), cPoints1.get(2).getRelativePosition());
 			//test
-			assertEquals("make sure point one is still where we expect it for curve " +i, cPoints1.get(1).getRelativePosition(), 
-					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1));
+			assertEquals("make sure point one is still where we expect it for curve " +i, 
+					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1), cPoints1.get(1).getRelativePosition());
 			
 			//do move
 			anchorPoint2.move(0.5f, -0.5f, new OMTVector(1,1,0));
 			
 			//test
-			assertEquals("Testing predicted movement on point 2 of curve " + i, cPoints1.get(2).getRelativePosition(), 
-					new PositionVector(oldX2 + 1.0f, oldY2 - 1.0f, oldZ2));
+			assertEquals("Testing predicted movement on point 2 of curve " + i, 
+					new PositionVector(oldX2 + 1.0f, oldY2 - 1.0f, oldZ2), cPoints1.get(2).getRelativePosition());
 			//test
-			assertEquals("make sure point one is still where we expect it for curve " + i, cPoints1.get(1).getRelativePosition(), 
-					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1));
+			assertEquals("make sure point one is still where we expect it for curve " + i, 
+					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1), cPoints1.get(1).getRelativePosition());
 			i++;
 		}
 	}

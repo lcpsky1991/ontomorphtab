@@ -16,6 +16,7 @@ import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 import edu.stanford.smi.protegex.owl.model.RDFProperty;
 import edu.stanford.smi.protegex.owl.model.impl.AbstractOWLProperty;
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 
 
 /**

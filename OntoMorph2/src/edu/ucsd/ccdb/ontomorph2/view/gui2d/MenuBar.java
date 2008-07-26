@@ -9,7 +9,7 @@ import org.fenggui.menu.MenuItem;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 
-import edu.ucsd.ccdb.ontomorph2.core.atlas.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;

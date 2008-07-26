@@ -316,8 +316,6 @@
 
 	    <packageset dir="src" defaultexcludes="yes">
 	      <include name="edu/ucsd/ccdb/ontomorph2/**"/>
-	      <exclude name="neuroml/**"/>
-	      <exclude name="wbctest/atlas/**"/>
 	      <exclude name="edu/ucsd/ccdb/ontomorph2/misc/**"/>
 	    </packageset>
 
