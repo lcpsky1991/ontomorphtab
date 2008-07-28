@@ -45,7 +45,7 @@ public class BrainRegion extends Tangible{
 	private BatchMesh mesh;
 	private AreaClodMesh aMesh;
 	private TriMesh tMesh;
-	private int visibility = TRANSPARENT; // by default
+	private int visibility = INVISIBLE; // by default
 	
 	public BrainRegion(String name, String abbrev, String parentAbbrev, Color c, String regionId, CoordinateSystem co){
 		this.abbrev = abbrev;

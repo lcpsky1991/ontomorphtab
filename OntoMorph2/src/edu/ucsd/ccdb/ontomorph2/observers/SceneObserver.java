@@ -88,8 +88,17 @@ public class SceneObserver implements Observer {
 		{
 			BrainRegionView brv = (BrainRegionView) TangibleViewManager
 			        .getInstance().getTangibleViewFor((BrainRegion) o);
-			if (brv != null && Tangible.CHANGED_VISIBLE.equals(arg))
+			if (Tangible.CHANGED_VISIBLE.equals(arg))
 			{
+				if (brv == null) {
+					Set s = new HashSet();
+					s.add(o);
+					View.getInstance().getView3D().addBrainRegions(s);
+					
+					brv = (BrainRegionView) TangibleViewManager
+			        .getInstance().getTangibleViewFor((BrainRegion) o);
+				} 
+				
 				brv.update();
 			}
 		}

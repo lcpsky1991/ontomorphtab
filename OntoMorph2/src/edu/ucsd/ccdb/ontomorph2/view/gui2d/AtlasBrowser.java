@@ -63,13 +63,6 @@ public class AtlasBrowser implements ISelectionChangedListener{
 		radioButtons.setLayoutManager(new RowLayout(true));
         radioButtons.getAppearance().setPadding(new Spacing(10, 10));
         
-        /*
-        Button btn = FengGUI.createButton(radioButtons, "Apply");
-        btn.updateMinSize();
-        btn.setSizeToMinSize();
-        btn.setExpandable(false);
-        */
-        
         FengGUI.createLabel(radioButtons, "");
         
         final ToggableGroup<String> group = new ToggableGroup<String>();
@@ -80,7 +73,7 @@ public class AtlasBrowser implements ISelectionChangedListener{
         transpButton = FengGUI.createRadioButton(radioButtons, TRANSPARENT, group);
         transpButton.setValue(TRANSPARENT);
         
-        RadioButton<String> invisButton = FengGUI.createRadioButton(radioButtons, INVISIBLE, group);
+        invisButton = FengGUI.createRadioButton(radioButtons, INVISIBLE, group);
         invisButton.setValue(INVISIBLE);
         
         group.addSelectionChangedListener(this);

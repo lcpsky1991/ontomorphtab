@@ -35,6 +35,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String LIST_INSTANCES = "List Instances...";
 	public static final String SHOW_ATLAS = "Show Atlas...";
 	public static final String DISPLAY_BASIC_ATLAS = "Display Basic Atlas";
+	public static final String HIDE_BASIC_ATLAS = "Hide Basic Atlas";
 	public static final String SLIDE_VIEW = "View Example Slide";
 	public static final String ATLAS_LATERAL_VIEW = "View Atlas Lateral Side";
 	public static final String ATLAS_MEDIAL_VIEW = "View Atlas Medial Side";
@@ -111,6 +112,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         mB.registerSubMenu(mnuAtlas, "Reference Atlas");
         makeMenuItem(SHOW_ATLAS, mnuAtlas);
         makeMenuItem(DISPLAY_BASIC_ATLAS, mnuAtlas);
+        makeMenuItem(HIDE_BASIC_ATLAS, mnuAtlas);
         
         //=[ MANIPULATE  ]= 
         Menu mnuManip = new Menu();
@@ -196,6 +198,10 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		else if ( DISPLAY_BASIC_ATLAS.equals(act) )
 		{
 			ReferenceAtlas.getInstance().displayBasicAtlas();
+		}
+		else if ( HIDE_BASIC_ATLAS.equals(act) )
+		{
+			ReferenceAtlas.getInstance().hideBasicAtlas();
 		}
 		else if ( SLIDE_VIEW.equals(act) )
 		{
