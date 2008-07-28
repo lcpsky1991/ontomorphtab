@@ -1,5 +1,10 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
+import java.io.File;
+
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+
 import org.fenggui.ComboBox;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
@@ -177,6 +182,30 @@ public class View2D extends Display  {
 	}
 	
 	public void loadFileChooser() {
+		
+		
+//			Create a file chooser
+			final JFileChooser fc = new JFileChooser();
+			
+//			In response to a button click:
+			JFrame f = new JFrame();
+			f.setSize(0,0);
+			f.setLocation(100,100);
+			f.setVisible(true);
+			int returnVal = fc.showOpenDialog(f);
+			
+	        if (returnVal == JFileChooser.APPROVE_OPTION) {
+	            File file = fc.getSelectedFile();
+	            TangibleManager.getInstance().loadFile(file);
+	      
+	        } else {
+	            Log.warn("Open command cancelled by user.");
+	        }
+			
+			f.dispose();
+			
+			/*
+		
 //		 Create a dialog and set it to some location on the screen
 		Window frame = new Window();
 		this.addWidget(frame);
@@ -204,17 +233,18 @@ public class View2D extends Display  {
 			{
 				if (!selectionChangedEvent.isSelected()) return;
 				String value = selectionChangedEvent.getToggableWidget().getText();
-				/*
-				if ("White".equals(value)) light.setDiffuse(ColorRGBA.white);
-				if ("Red".equals(value)) light.setDiffuse(ColorRGBA.red);
-				if ("Blue".equals(value)) light.setDiffuse(ColorRGBA.blue);
-				if ("Green".equals(value)) light.setDiffuse(ColorRGBA.green);
-				*/
+				
+				//if ("White".equals(value)) light.setDiffuse(ColorRGBA.white);
+				//if ("Red".equals(value)) light.setDiffuse(ColorRGBA.red);
+				//if ("Blue".equals(value)) light.setDiffuse(ColorRGBA.blue);
+				//if ("Green".equals(value)) light.setDiffuse(ColorRGBA.green);
+				
 				Log.warn("Feature Not Implemented Yet");
 				//selectionChangedEvent..setVisible(false);
 			}
 			
 		});
+		*/
 	}
 	
 	

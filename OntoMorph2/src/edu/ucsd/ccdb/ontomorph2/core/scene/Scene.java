@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+
 import neuroml.generated.CellInstance;
 import neuroml.generated.Instances;
 import neuroml.generated.NetworkML;
@@ -39,6 +42,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
  * Defines the totality of the objects that can be viewed in the 3D world
@@ -172,6 +176,7 @@ public class Scene extends Observable{
 						new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-20,OMTVector.UNIT_Z));
 		addSceneObject(new Slide(cerebImage, new PositionVector(610,110,100), rot, 110, 1.11f));
 		
+		
 		Volume v1 = new Volume(new Box("my box", new OMTVector(-21,-1,15), 20f, 10f, 20f), d);
 		//v1.setVisible(false);
 		//addSceneObject(v1);
@@ -294,7 +299,6 @@ public class Scene extends Observable{
 			addSceneObject(cell11);
 		}
 		
-		
 		/*
 		NeuronMorphology cell12 = new NeuronMorphology(); 
 		URL cell12URL = Scene.class.getClassLoader().getResource("etc/morphml/hippocampus/pv08d.morph.xml");
@@ -342,7 +346,7 @@ public class Scene extends Observable{
 		//Surface surf2 = new Surface("my surf", array4, 16);
 		//manager.addSurface(surf2);
 		
-		/*
+		
 		DataMesh mesh = new DataMesh();
 		//mesh.loadMaxFile("etc/mito/mito_outer.3ds");
 		mesh.setObjMeshURL(mitoObjURL);
@@ -351,9 +355,9 @@ public class Scene extends Observable{
 		mesh.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
 		mesh.setRelativeScale(0.0002f);
 		mesh.setCoordinateSystem(d);
-		*/
-		//addSceneObject(mesh);
-		/*
+		
+		addSceneObject(mesh);
+		
 		DataMesh mito2 = new DataMesh();
 		mito2.setObjMeshURL(mito2ObjURL);
 		mito2.setRelativePosition(new PositionVector(0.49f, -3.3f, 20.03f));
@@ -362,9 +366,7 @@ public class Scene extends Observable{
 		mito2.setCoordinateSystem(d);
 	
 		addSceneObject(mito2);
-		
-<<<<<<< .mine
-		
+		/*
 		DataMesh astro = new DataMesh();
 		astro.setObjMeshURL(astroObjURL);
 		astro.setRelativePosition(new PositionVector(0.49f, -3.3f, 20.09f));

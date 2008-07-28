@@ -27,7 +27,7 @@ import edu.ucsd.ccdb.ontomorph2.view.View3D;
  */
 public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPressedListener{
 	
-	public static final String LOAD_SCENE = "Load Scene...";
+	public static final String LOAD_SCENE = "Import File...";
 	public static final String SAVE_SCENE = "Save Scene...";
 	public static final String CELLS = "Cells...";
 	public static final String VOLUMES = "Volumes...";
@@ -169,6 +169,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		
 		if ( LOAD_SCENE.equals(act) )
 		{
+			
 			View2D.getInstance().loadFileChooser();
 		}
 		else if ( SAVE_SCENE.equals(act) )

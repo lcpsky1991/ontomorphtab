@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene;
 
 import java.awt.Color;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
@@ -236,5 +237,9 @@ public class TangibleManager {
 
 	public void addTangible(Tangible tangible) {
 		this.tangibles.add(tangible);
+	}
+
+	public void loadFile(File file) {
+		Log.warn("Opening file " + file.getPath());		
 	}
 }
