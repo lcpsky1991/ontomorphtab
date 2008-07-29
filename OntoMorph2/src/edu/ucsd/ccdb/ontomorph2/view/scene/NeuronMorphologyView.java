@@ -22,7 +22,7 @@ import com.jme.system.DisplaySystem;
 import com.jme.util.AreaUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegment;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegmentGroup;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
@@ -165,7 +165,7 @@ public class NeuronMorphologyView extends TangibleView{
 //			}
 //			
 //		} else {
-			for (ISegmentGroup sg: morph.getSegmentGroups()) {
+			for (ICable sg: morph.getSegmentGroups()) {
 				segmentView.add(new SegmentView(sg));
 			}
 //		}
@@ -299,8 +299,8 @@ public class NeuronMorphologyView extends TangibleView{
 		}
 	}
 
-	public void updateSelectedSegmentGroups(Set<ISegmentGroup> sgs) {
-		for (ISegmentGroup seg : sgs) {
+	public void updateSelectedSegmentGroups(Set<ICable> sgs) {
+		for (ICable seg : sgs) {
 			for (SegmentView sv : this.segViews) {
 				if (seg.equals(sv.getCorrespondingSegmentGroup())) {
 					sv.highlight();

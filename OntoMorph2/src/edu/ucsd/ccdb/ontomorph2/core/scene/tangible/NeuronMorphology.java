@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import neuroml.generated.Level2Cell;
 import neuroml.generated.Point;
 import neuroml.generated.Segment;
 import neuroml.generated.Cell.Cables;
@@ -43,9 +42,8 @@ public abstract class NeuronMorphology extends Tangible{
 	
 	
 	String _renderOption = RENDER_AS_LINES; //default render option
-	ArrayList<ISegment> segmentList = null;
-	Level2Cell theCell;
-	Set<ISegmentGroup> segmentGroupList = null;
+	
+	Set<ICable> segmentGroupList = null;
 	PositionVector lookAtPosition = null;
 	
 	Curve3D _curve = null;
@@ -98,14 +96,14 @@ public abstract class NeuronMorphology extends Tangible{
 	 * 
 	 * @return the ISegmentGroups that are associated with this INeuronMorphology
 	 */
-	public abstract Set<ISegmentGroup> getSegmentGroups();
+	public abstract Set<ICable> getSegmentGroups();
 	
 
 	
 	public List<ISemanticThing> getAllSemanticThings() {
 		List<ISemanticThing> l = new ArrayList<ISemanticThing>();
 		l.addAll(getSemanticThings());
-		for (ISegmentGroup sg : this.getSegmentGroups()) {
+		for (ICable sg : this.getSegmentGroups()) {
 			l.addAll(sg.getAllSemanticThings());
 		}
 		return l;

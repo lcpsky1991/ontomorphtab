@@ -5,8 +5,11 @@ import java.io.File;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
@@ -14,18 +17,21 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import neuroml.generated.Level2Cell;
-import neuroml.generated.NeuroMLLevel2;
+import neuroml.generated.Level3Cell;
+import neuroml.generated.Level3Cells;
+
+import neuroml.generated.NeuroMLLevel3;
 import neuroml.generated.Point;
 import neuroml.generated.Segment;
 import neuroml.generated.Cell.Cables;
 import neuroml.generated.Cell.Segments;
-import neuroml.generated.NeuroMLLevel2.Cells;
+
 
 import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.DataCacheManager;
 import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
@@ -44,7 +50,8 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 public class MorphMLNeuronMorphology extends NeuronMorphology{
 	
 	URL _morphLoc = null;
-	Level2Cell theCell;
+	Level3Cell theCell;
+	Map<Segment, MorphMLSegmentImpl> segmentMap = new HashMap<Segment, MorphMLSegmentImpl>();
 	
 	public MorphMLNeuronMorphology(URL morphLoc) {
 		Log.warn("Loading MorphMLNeuronMorphology");
@@ -53,20 +60,20 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 		
 		JAXBContext context;
 		try {
-			NeuroMLLevel2 neuroml = null;
+			NeuroMLLevel3 neuroml = null;
 			//check to see if this particular file has already been loaded and cached
 			if (!DataCacheManager.getInstance().isMorphMLCached(_morphLoc.getFile())) {
 				context = JAXBContext.newInstance("neuroml.generated");
 				Unmarshaller unmarshaller = context.createUnmarshaller();
 				JAXBElement o = (JAXBElement)unmarshaller.unmarshal(new File(_morphLoc.getFile()));
-				neuroml = (NeuroMLLevel2)o.getValue();
+				neuroml = (NeuroMLLevel3)o.getValue();
 				DataCacheManager.getInstance().cacheMorphML(_morphLoc.getFile(), neuroml);
 			} else {
 				//if this file has already been loaded, retrieve it from the cache.
-				neuroml = (NeuroMLLevel2)DataCacheManager.getInstance().getCachedMorphML(_morphLoc.getFile());
+				neuroml = (NeuroMLLevel3)DataCacheManager.getInstance().getCachedMorphML(_morphLoc.getFile());
 			}
 			
-			Cells c = neuroml.getCells();
+			Level3Cells c = neuroml.getCells();
 			
 			assert c.getCell().size() == 1;
 			theCell = c.getCell().get(0);
@@ -116,8 +123,17 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 		this.setCoordinateSystem(c);
 	}
 
-	public Level2Cell getMorphMLCell() {
+	public Level3Cell getMorphMLCell() {
 		return theCell;
+	}
+	
+	public ISegment getMorphMLSegment(Segment seg) {
+		if (this.segmentMap.get(seg) == null) {
+			MorphMLSegmentImpl ms = new MorphMLSegmentImpl(this, seg);
+			this.segmentMap.put(seg, ms);
+			return ms;
+		}
+		return this.segmentMap.get(seg);
 	}
 	
 	/**
@@ -131,6 +147,7 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getSegments()
 	 */
+	/*
 	public List<ISegment> getSegments() {
 		if (segmentList == null) {
 			segmentList = new ArrayList<ISegment>();
@@ -158,15 +175,56 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 			}
 		}
 		return segmentList;
+	}*/
+	
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getSegments()
+	 */
+	public List<ISegment> getSegments() {
+		List<ISegment> segmentList = new ArrayList<ISegment>();
+
+		for (Segments s : theCell.getSegments()) {
+			for (Segment seg : s.getSegment()) {
+				segmentList.add(getMorphMLSegment(seg));
+			}
+		}
+		return segmentList;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getSegments()
+	 */
+	protected List<ISegment> getMorphMLSegmentsForCableId(BigInteger id) {
+		List<ISegment> segmentList = new ArrayList<ISegment>();
+
+		for (Segments s : theCell.getSegments()) {
+			for (Segment seg : s.getSegment()) {
+				if (seg.getCable().equals(id)) {
+					segmentList.add(getMorphMLSegment(seg));
+				}
+			}
+		}
+		return segmentList;
+	}
+	
+	protected Segment getSegmentFromId(BigInteger id) {
+		List<Segments> segments  = theCell.getSegments();
+		for (Segments s : segments) {
+			for (Segment seg : s.getSegment()) {
+				if (seg.getId().equals(id)) {
+					return seg;
+				}
+			}
+		}
+		return null;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getSegmentGroups()
 	 */
-	public Set<ISegmentGroup> getSegmentGroups() {
+	public Set<ICable> getSegmentGroups() {
 		if (segmentGroupList == null) {
-			segmentGroupList = new HashSet<ISegmentGroup>();
+			segmentGroupList = new HashSet<ICable>();
 			Cables c = theCell.getCables();
 			for(neuroml.generated.Cable cab : c.getCable()) {
 				BigInteger id = cab.getId();
@@ -176,7 +234,7 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 						childSegments.add(s);
 					}
 				}
-				SegmentGroupImpl segGroup = new SegmentGroupImpl(this, id, childSegments, cab.getGroup());
+				ICable segGroup = new MorphMLCableImpl(this, cab);
 				segmentGroupList.add(segGroup);
 				/* Hackish way to extract some info from the MorphML Files I happen to have
 				 * This needs to be generalized

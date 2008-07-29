@@ -14,7 +14,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
  * @see INeuronMorphology
  *
  */
-public interface ISegmentGroup extends ISemanticsAware{
+public interface ICable extends ISemanticsAware{
 
 	/**
 	 * @link aggregation

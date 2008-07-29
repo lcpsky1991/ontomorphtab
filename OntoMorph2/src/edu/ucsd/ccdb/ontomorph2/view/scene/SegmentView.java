@@ -21,10 +21,9 @@ import com.jme.scene.state.RenderState;
 import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegment;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegmentGroup;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.SegmentGroupImpl;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.SegmentImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
@@ -40,18 +39,18 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
 public class SegmentView extends TangibleView{
 	//private boolean highlighted = false; 
 	private ISegment seg = null;
-	private ISegmentGroup sg = null;
+	private ICable sg = null;
 	
 	private OMTDiscreteLodNode node = null;
 	
 	public SegmentView(ISegment seg) {
-		super((SegmentImpl)seg);
+		super((Tangible)seg);
 		super.setName("Segment View - Segment");
 		this.seg = seg;
 	}
 	
-	public SegmentView(ISegmentGroup sg) {
-		super((SegmentGroupImpl)sg);
+	public SegmentView(ICable sg) {
+		super((Tangible)sg);
 		super.setName("Segment View - Segment Group");
 		this.sg = sg;
 	}
@@ -86,7 +85,7 @@ public class SegmentView extends TangibleView{
 	 * 
 	 * @see #correspondsToSegmentGroup()
 	 */
-	public ISegmentGroup getCorrespondingSegmentGroup() {
+	public ICable getCorrespondingSegmentGroup() {
 		return this.sg;
 	}
 	

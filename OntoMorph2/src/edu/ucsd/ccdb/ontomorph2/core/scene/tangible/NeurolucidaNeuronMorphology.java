@@ -16,13 +16,10 @@ import javax.xml.bind.Unmarshaller;
 
 import neurolucida.generated.NeurolucidaData;
 import neurolucida.generated.Tree;
-import neuroml.generated.Level2Cell;
-import neuroml.generated.NeuroMLLevel2;
 import neurolucida.generated.Point;
 import neuroml.generated.Segment;
 import neuroml.generated.Cell.Cables;
 import neuroml.generated.Cell.Segments;
-import neuroml.generated.NeuroMLLevel2.Cells;
 
 import com.jme.math.Vector3f;
 
@@ -45,6 +42,7 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	
 	URL _morphLoc = null;
 	List<Tree> treeList = null;
+	ArrayList<ISegment> segmentList = null;
 	
 	public NeurolucidaNeuronMorphology(URL morphLoc) {
 		_morphLoc = morphLoc;
@@ -166,9 +164,9 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getSegmentGroups()
 	 */
-	public Set<ISegmentGroup> getSegmentGroups() {
+	public Set<ICable> getSegmentGroups() {
 		if (segmentGroupList == null) {
-			segmentGroupList = new HashSet<ISegmentGroup>();
+			segmentGroupList = new HashSet<ICable>();
 			/*
 			Cables c = theCell.getCables();
 			for(neuroml.generated.Cable cab : c.getCable()) {

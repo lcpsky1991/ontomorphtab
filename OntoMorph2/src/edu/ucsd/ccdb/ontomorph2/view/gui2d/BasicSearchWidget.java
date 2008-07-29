@@ -79,8 +79,8 @@ public class BasicSearchWidget implements ITextChangedListener{
         //MouseInput.get().setCursorVisible(true);
 	}
 
-	@Override
 	public void textChanged(TextChangedEvent arg0) {
-		System.out.println("text changed");
+		// TODO Auto-generated method stub
+		
 	}
 }

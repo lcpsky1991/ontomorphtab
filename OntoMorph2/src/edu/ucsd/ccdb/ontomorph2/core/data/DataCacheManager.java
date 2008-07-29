@@ -4,7 +4,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import neuroml.generated.NeuroMLLevel2;
+
+import neuroml.generated.NeuroMLLevel3;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.reader.CCDBFile;
 
@@ -29,7 +30,7 @@ public class DataCacheManager {
 		return manager;
 	}
 	
-	public void cacheMorphML(String url, NeuroMLLevel2 morphml){
+	public void cacheMorphML(String url, NeuroMLLevel3 morphml){
 		cache.put(url, morphml);
 	}
 	

@@ -5,38 +5,35 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import neuroml.generated.Cable;
+
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
- * Implements an ISegmentGroup. 
+ * Implements an ICable. 
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see ISegmentGroup
+ * @see ICable
  *
  */
-public class SegmentGroupImpl extends Tangible implements ISegmentGroup{
+public class MorphMLCableImpl extends Tangible implements ICable{
 
-	BigInteger id;
-	List<ISegment> segments = new ArrayList<ISegment>();
-	List<String> tags = new ArrayList<String>();
-	NeuronMorphology parentCell = null;
+	Cable c = null;
+	MorphMLNeuronMorphology parentCell = null;
 	
-	public SegmentGroupImpl(NeuronMorphology parentCell, BigInteger id, List<ISegment> segments, 
-			List<String> tags) {
-		this.id = id;
-		
-		this.segments.addAll(segments);
-		this.tags.addAll(tags);
+	public MorphMLCableImpl(MorphMLNeuronMorphology parentCell, Cable c) {
 		this.parentCell = parentCell;
+		this.c = c;
 	}
 	
 	public BigInteger getId() {
-		return id;
+		return c.getId();
 	}
 
 	public List<ISegment> getSegments() {
+		List<ISegment> segments = this.parentCell.getMorphMLSegmentsForCableId(this.getId());
 		for (ISegment s : segments) {
 			s.setColor(this.getColor());
 		}
@@ -44,7 +41,7 @@ public class SegmentGroupImpl extends Tangible implements ISegmentGroup{
 	}
 	
 	public List<String> getTags() {
-		return tags;
+		return this.c.getGroup();
 	}
 	
 	
@@ -57,7 +54,7 @@ public class SegmentGroupImpl extends Tangible implements ISegmentGroup{
 		return l;
 	}
 
-	public NeuronMorphology getParentCell() {
+	public MorphMLNeuronMorphology getParentCell() {
 		return this.parentCell;
 	}
 	
@@ -69,7 +66,7 @@ public class SegmentGroupImpl extends Tangible implements ISegmentGroup{
 		String infoString = "";
 		try
 		{
-			SegmentGroupImpl sg = (SegmentGroupImpl)this;
+			MorphMLCableImpl sg = (MorphMLCableImpl)this;
 
 			if (sg != null)
 			{

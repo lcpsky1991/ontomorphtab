@@ -4,12 +4,19 @@ import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import neuroml.generated.Segment;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegment;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLSegmentImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
@@ -148,7 +155,6 @@ public class TangibleManager {
 		}
 		return surfaces;
 	}
-	
 
 	/**
 	 * Returns the singleton instance.
@@ -240,6 +246,17 @@ public class TangibleManager {
 	}
 
 	public void loadFile(File file) {
-		Log.warn("Opening file " + file.getPath());		
+		if (file != null && file.canRead()) {
+			Log.warn("Trying to open file " + file.getPath());
+			if (file.getPath().endsWith(".tiff") || file.getPath().endsWith(".tif")) {
+				//add slide to scene
+				//TangibleManager.getInstance().addTangible(new Slide(file.toURI().toURL(), null, null, null));
+			} else {
+				Log.warn("This is not a file type that can be opened");
+			}
+
+		} else {
+			Log.warn("Can't open File!");
+		}
 	}
 }

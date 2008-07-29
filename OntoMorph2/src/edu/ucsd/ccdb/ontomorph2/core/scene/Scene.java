@@ -15,11 +15,11 @@ import javax.swing.JFrame;
 import neuroml.generated.CellInstance;
 import neuroml.generated.Instances;
 import neuroml.generated.NetworkML;
-import neuroml.generated.NeuroMLLevel2;
+
 import neuroml.generated.Point;
 import neuroml.generated.Population;
 import neuroml.generated.Populations;
-import neuroml.generated.NeuroMLLevel2.Cells;
+
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -319,6 +319,25 @@ public class Scene extends Observable{
 		cell13.getMorphology().setRenderOption(NeuronMorphology.RENDER_AS_LINES);
 		addSceneObject(cell13);*/
 		
+		loadSurfaces();
+		
+		loadMeshes();
+
+		changed(CHANGED_LOAD);
+	}
+
+	public void save() {
+	}
+	
+	public void loadSurfaces() {
+
+		OMTVector p1 = new OMTVector(-5,2,20);
+		OMTVector p2 = new OMTVector(-16,10,20);
+		OMTVector p2a = new OMTVector(-40, -12,20);
+		OMTVector p3 = new OMTVector(-50,-8,20);
+		OMTVector p4 = new OMTVector(-30,-3,20);
+		OMTVector p5 = new OMTVector(-10,-4,20);
+		
 		p1 = new OMTVector(-10,-5,20);
 		p2 = new OMTVector(3,-9,20);
 		p3 = new OMTVector(14,-10,20);
@@ -346,6 +365,11 @@ public class Scene extends Observable{
 
 		//Surface surf2 = new Surface("my surf", array4, 16);
 		//manager.addSurface(surf2);
+	}
+	
+	public void loadMeshes() {
+
+		DemoCoordinateSystem d = new DemoCoordinateSystem();
 		
 		
 		DataMesh mesh = new DataMesh();
@@ -389,35 +413,6 @@ public class Scene extends Observable{
 		addSceneObject(plasma);
 		*/
 		
-
-		changed(CHANGED_LOAD);
-	}
-
-	public void save() {
-		Instances ins = new Instances();
-		Cells thecells = new Cells();
-		for (NeuronMorphology c : manager.getCells()) {
-			CellInstance ci = new CellInstance();
-			Point loc = new Point();
-			loc.setX(c.getRelativePosition().getX());
-			loc.setY(c.getRelativePosition().getY());
-			loc.setZ(c.getRelativePosition().getZ());
-			ci.setLocation(loc);
-			//ci.setId(c.getMorphology().get)
-			ins.getInstance().add(ci);
-			
-			//thecells.getCell().add(((NeuronMorphology)c).getMorphMLCell());
-		}
-		Population pop = new Population();
-		
-		Populations p = new Populations();
-		p.getPopulation().add(pop);
-		NetworkML nml = new NetworkML();
-		nml.setPopulations(p);
-		
-
-		NeuroMLLevel2 nml2 = new NeuroMLLevel2();
-		nml2.setCells(thecells);
 	}
 	
 	public Set<Slide> getSlides() {
