@@ -1,90 +1,64 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
 import org.fenggui.Button;
+import org.fenggui.Container;
 import org.fenggui.Display;
+import org.fenggui.FengGUI;
 import org.fenggui.TextEditor;
+import org.fenggui.composites.TextArea;
 import org.fenggui.composites.Window;
 import org.fenggui.event.ActivationEvent;
 import org.fenggui.event.ButtonPressedEvent;
 import org.fenggui.event.IActivationListener;
 import org.fenggui.event.IButtonPressedListener;
+import org.fenggui.event.IKeyPressedListener;
 import org.fenggui.event.ITextChangedListener;
+import org.fenggui.event.KeyPressedEvent;
 import org.fenggui.event.TextChangedEvent;
+import org.fenggui.layout.BorderLayout;
+import org.fenggui.layout.BorderLayoutData;
+import org.fenggui.layout.FormLayout;
 import org.fenggui.util.Point;
 import org.fenggui.util.Spacing;
 
+import com.jme.input.Input;
+import com.jme.input.InputHandler;
+import com.jme.input.KeyBindingManager;
+import com.jme.input.MouseInput;
+
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 
 /**
  * 2D widget that allows a user to type in keywords and issue a keyword search
  *
  */
-public class BasicSearchWidget {
-
-	
+public class BasicSearchWidget implements ITextChangedListener{
+    
+	InputHandler input = new InputHandler();
+	KeyBindingManager keyboard;	
 	
 	public BasicSearchWidget(Display d) {
-		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
 		
-		Window window = new Window();
-		d.addWidget(window);
+		input = new FengJMEInputHandler(d);
+		keyboard = KeyBindingManager.getKeyBindingManager();
+			
+		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
+				
+		Window window = FengGUI.createWindow(d, true, false, false, true);
 		window.setSize(200, 300);
-		window.setTitle("Search");
-		window.setPosition(new Point(0,100));
 		//window.getContentContainer().setLayoutManager( new RowLayout(false) );
-		d.layout();
-        window.getContentContainer().getAppearance().setPadding( new Spacing( 10, 10 ) );
-            
-        TextEditor ta = new TextEditor();
-        /*
-       ta.addActivationListener(new IActivationListener(){
+        window.getContentContainer().setLayoutManager(new BorderLayout());
+		window.setTitle("Search");       
 
-		@Override
-		public void widgetActivationChanged(ActivationEvent activationEvent) {
-			// TODO Auto-generated method stub
-			System.out.println("activated");
-		}
-    	   
-       });*/
+        TextEditor textArea = FengGUI.createTextField(window.getContentContainer());
+        textArea.setText("Enter Keyword");
+        textArea.setSize(100, 20);
+		//window.getContentContainer().addWidget(textArea);
+        textArea.addTextChangedListener(this);        
+        System.out.println("writing state " + textArea.isInWritingState());
         
-        ta.addTextChangedListener(new ITextChangedListener() {
-            public void textChanged(TextChangedEvent textChangedEvent) {
-                System.out.println("Text has changed");
-                System.out.println(textChangedEvent.getText());  // null
-                //System.out.println(ta.getText());  
-                if(textChangedEvent.getText()!= null){
-                }
-            }
-        });
-        /*ta.addKeyPressedListener(new IKeyPressedListener() {
-
-			@Override
-			public void keyPressed(KeyPressedEvent arg0) {
-				System.out.println("Key is pressed");
-			}
-
-        });*/	
-        ta.setSize(100, 20);
-        ta.setText(" Enter keyword");
-        //ta.setMultiline(true);
-        //window.getContentContainer().addWidget(ta);
-        ta.setPosition(new Point(30,220));
-        window.getContentContainer().addWidget(ta);
-        System.out.println("writing state " + ta.isInWritingState());
-
-        /* commented out to avoid compiler error
-        ta.addKeyPressedListener(new IKeyPressedListener(){
-			@Override
-			public void keyPressed(KeyPressedEvent keyPressedEvent) {
-				// TODO Auto-generated method stub				
-			}
-        
-	    }  );
-	    */   
-
-        Log.warn(" X: " + ta.getX() + " Y: " + ta.getY() );
-              
         Button button = new Button( "Start Search" );
         button.setSize(80, 30);
         button.setPosition(new Point(45, 180));
@@ -99,7 +73,14 @@ public class BasicSearchWidget {
         window.getContentContainer().addWidget( button );
         //window.pack();
         
+		window.setPosition(new Point(0,100));
+        textArea.setPosition(new Point(30,220));
+        window.layout();
+        //MouseInput.get().setCursorVisible(true);
 	}
 
-
+	@Override
+	public void textChanged(TextChangedEvent arg0) {
+		System.out.println("text changed");
+	}
 }

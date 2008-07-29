@@ -20,6 +20,10 @@ import org.fenggui.layout.StaticLayout;
 import org.fenggui.tree.Tree;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
+import org.lwjgl.opengl.GL13;
+
+import com.jme.input.KeyInput;
+import com.jme.input.MouseInput;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
@@ -101,6 +105,22 @@ public class View2D extends Display  {
 
 	
 	/**
+	 * @override
+	 */
+	protected void cleanup()
+	{
+		//TODO: Clear Keyboard and Mouse Listeners if mouse is within a popup, textfield or FengGui app
+	}
+
+	/**
+	 * @override 	 
+	 * @param tpf
+	 */
+	public void render(float tpf) {
+		//TODO: render FengGui after JME to ensure FengGui apps are on top of JME 
+    }
+
+	/**
 	 * Create our GUI.  FengGUI init code goes in here
 	 *
 	 */
@@ -116,7 +136,21 @@ public class View2D extends Display  {
 		this.layout();
 	}
  
-	
+	/*protected void render(float interpolation)
+	{
+		// Clear previous
+		this.getRenderer().clearBuffers();
+
+		// Draw jME stuff
+		this.getRenderer().draw(rootNode);
+
+		// Set back to first texture unit so GUI displays properly
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+
+		// Draw GUI
+		this.display();
+	}*/
+
 	
 	/**
 	 * prevents instantiation

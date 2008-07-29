@@ -24,7 +24,7 @@ public class FengJMEInputHandler extends InputHandler
 	private KeyInputAction keyAction;
 	
 	private boolean keyHandled;
-	private boolean mouseHandled;
+	private boolean mouseHandled, mouseOverGui;
 	
 	public FengJMEInputHandler(Display disp)
 	{
@@ -53,6 +53,19 @@ public class FengJMEInputHandler extends InputHandler
 		return mouseHandled;
 	}
 	
+	public boolean isMouseOverGui() {
+        return mouseOverGui;
+    }
+	
+	public void setMouseOverGui( boolean mouseOver ) {
+        mouseOverGui = mouseOver;
+    }
+	
+	public void reset() {
+        keyHandled = false;
+        mouseHandled = false;
+    }
+	
 	private class KeyAction extends KeyInputAction
 	{
 		
@@ -61,6 +74,7 @@ public class FengJMEInputHandler extends InputHandler
 			char character = evt.getTriggerCharacter();
 			Key key = mapKeyEvent();
 			if(evt.getTriggerPressed()) {
+				System.out.println("performs Action FengJME");
 				keyHandled = disp.fireKeyPressedEvent(character, key);
 				// Bug workaround see note after code
 				if (key == Key.LETTER || key == Key.DIGIT)
@@ -169,10 +183,9 @@ public class FengJMEInputHandler extends InputHandler
 		        	}
 		        	break;
 	    	}
-			
+			System.out.println("keyclass" + keyClass);
 	        return keyClass;
 		}
-		
 	}
 	
 	private class MouseListener implements MouseInputListener
@@ -180,7 +193,7 @@ public class FengJMEInputHandler extends InputHandler
 		
 		private boolean down;
 		private int lastButton;
-		
+				
 		public void onButton(int button, boolean pressed, int x, int y)
 		{
 			down = pressed;
