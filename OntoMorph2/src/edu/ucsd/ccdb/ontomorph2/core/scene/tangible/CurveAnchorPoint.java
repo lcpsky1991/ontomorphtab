@@ -71,4 +71,16 @@ public class CurveAnchorPoint extends Tangible {
 	public void scale(float dx, float dy, OMTVector constraint) {
 		//CurveAnchorPoints shouldn't scale
 	}
+	
+	public String getName()
+	{
+		String info="";
+		info = super.getName();
+		
+		if (info == null || info == "")
+		{
+			return "P" + this.i + " of " + this.getParentCurve().getName();
+		}
+		return info;	//if it has a name return it
+	}
 }
