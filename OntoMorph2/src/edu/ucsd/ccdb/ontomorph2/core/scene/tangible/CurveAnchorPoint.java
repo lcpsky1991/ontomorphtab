@@ -38,6 +38,25 @@ public class CurveAnchorPoint extends Tangible {
 	}
 	
 	/**
+	 * Meant to be used to access the functionality of the curve this anchor point belongs to
+	 * Should not be used for creating new curves, but ok for creating new anchor points
+	 * @return reference to the tangible of the curve3d associated with this point
+	 */
+	public Curve3D getParentCurve()
+	{
+		return this.parentCurve;
+	}
+	
+	/**
+	 * 
+	 * @return i the index (time) of the point along the curve)
+	 */
+	public int getIndex()
+	{
+		return i;
+	}
+	
+	/**
 	 * Null implementation overriding super class functionality 
 	 * to prevent rotation
 	 */

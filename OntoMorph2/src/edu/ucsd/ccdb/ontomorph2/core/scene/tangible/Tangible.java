@@ -50,6 +50,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public static final String CHANGED_ROTATE = "rotate";
 	public static final String CHANGED_MOVE = "move";
 	public static final String CHANGED_NAME = "name";
+	public static final String CHANGED_ADD_PART = "add part";
 	
 	
 	private PositionVector _position = new PositionVector();

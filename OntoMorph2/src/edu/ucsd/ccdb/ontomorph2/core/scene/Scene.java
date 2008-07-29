@@ -71,6 +71,7 @@ public class Scene extends Observable{
 	public static final int CHANGED_CELL = 4;
 	public static final int CHANGED_CURVE = 5;
 	public static final int CHANGED_SURFACE = 6;
+	public static final int CHANGED_UNKNOWN = -1;
 	
 	
 	URL cell3URL = null;

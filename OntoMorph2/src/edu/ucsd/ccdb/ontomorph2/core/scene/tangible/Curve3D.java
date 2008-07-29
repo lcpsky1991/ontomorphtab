@@ -2,6 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.awt.Color;
 import java.util.ArrayList;
+
 import java.util.List;
 
 import com.jme.curve.BezierCurve;
@@ -9,13 +10,14 @@ import com.jme.curve.Curve;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
-import edu.ucsd.ccdb.ontomorph2.view.scene.CurveAnchorPointView;
+import edu.ucsd.ccdb.ontomorph2.view.View;
+
 
 /**
  * Defines a Bezier curve in the framework that is manipulable by anchor points.
@@ -55,6 +57,15 @@ public class Curve3D extends Tangible{
 			}
 		}
 		return anchors;
+	}
+	
+	/**
+	 * Counts the number of controlpoints that define this curve
+	 * @return the number of points defining this curve
+	 */
+	public int getAnchorCount()
+	{
+		return controlPoints.length;
 	}
 	
 	/**
@@ -228,6 +239,59 @@ public class Curve3D extends Tangible{
 		this.controlPoints[i] =  pos;
 		changed();
 	}
+	
+	
+	
+	/**
+	 * Adds a new anchorpoint to the curve. If index is -1 or less, anchor point will be appended to the end of curve
+	 * @param i the index of which to insert the control point, 
+	 * @param pos
+	 */
+	public void addControlPoint(int index, OMTVector pos)
+	{
+		//TODO: impliment the index parameter, currently only appends
+		OMTVector modlist[] = new OMTVector[controlPoints.length+1]; //make the new list one element larger 
+		
+		
+		//if no index supplied append a new control point
+		if ( index < 0 )
+		{
+			index = controlPoints.length;	//length is a conveiniant way to get the [ (last element index)+1 ]
+		}
+		
+		//copy over the control points for points before index
+		for (int x=0; x < index; x++)
+		{
+			modlist[x] = controlPoints[x];
+		}
+		
+		//insert the new control point
+		modlist[index] = pos;		
+		
+		//now append the rest of the points
+		for (int x=index; x < controlPoints.length; x++)
+		{
+			modlist[x+1] = controlPoints[x]; //copy over the values from original into ind+1 of modified list
+		}
+		
+		//now copy the list back to be saved
+		controlPoints = modlist;
+		
+		anchors = null; //forces recreation of anchor-list next time getAnchors is called
+		anchors = getAnchorPoints();
+		
+		//deselect the previous point and select the newly created one
+		CurveAnchorPoint prev = anchors.get(index-1);
+		CurveAnchorPoint curr = anchors.get(index);
+		prev.unselect();
+		curr.select();
+		
+		//update the scene
+		changed();
+		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);	//FIXME: possible site of tension with model/view/controller
+		
+	}
+	
 	
 	public void changed() {
 		//null theCurve to force a getCurve to recreate the 

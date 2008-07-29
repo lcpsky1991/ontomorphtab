@@ -24,8 +24,10 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
+import edu.ucsd.ccdb.ontomorph2.view.scene.CurveAnchorPointView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
@@ -44,6 +46,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	static final String ANNOTATE = "Annotate";
 	static final String ANIMATE = "Animate";
 	static final String PROPERTIES = "Display Properties";
+	static final String ANCHOR = "Anchor Point";
 	static ContextMenu instance = null;
 	TitledBorder border = null;
 	
@@ -73,12 +76,11 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
         Menu newMenu = new Menu();
         mnuContext.registerSubMenu(newMenu, NEW);
 		makeMenuItem(CURVE, newMenu);
-        
+		makeMenuItem(ANCHOR, newMenu);
         makeMenuItem(ANNOTATE, mnuContext);
         makeMenuItem(ANIMATE, mnuContext);
         makeMenuItem(PROPERTIES, mnuContext);
       
-        
         this.setSizeToMinSize();
         this.layout();
 	}
@@ -166,6 +168,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				MenuItem mnuToAdd = new MenuItem(name);
 				mnuToAdd.addMenuItemPressedListener(this);
 		        mparent.addItem(mnuToAdd);	
+
 			}
 		}
 		catch (Exception e)
@@ -189,12 +192,31 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		} else if (CURVE.equals(opt)) 
 		{
 			//make a new bezier curve right here
-			if (orig != null)
+			if (orig instanceof Tangible)
 			{
 				testCreateCurve(orig);
 			}
 		}
+		else if (ANCHOR.equals(opt))
+		{
+			if (orig instanceof CurveAnchorPoint)
+			{
+				testCreatePoint(orig);
+			}
+		}
 		View2D.getInstance().removePopup();
+	}
+	
+	public void testCreatePoint(Tangible src)
+	{
+		CurveAnchorPoint cp = (CurveAnchorPoint) src;
+		int time = cp.getIndex() + 1;
+		
+		OMTVector place = new OMTVector(src.getRelativePosition().add(1f,1f,0f));
+		
+		cp.getParentCurve().addControlPoint(time, place);
+		
+		
 	}
 	
 	//TODO: MOVE this function and replace its signature with something appropriate

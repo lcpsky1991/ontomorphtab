@@ -46,15 +46,22 @@ public class SceneObserver implements Observer {
 	{
 		if (o instanceof Scene)
 		{
-			if (arg != null && arg.equals(Scene.CHANGED_CURVE))
+			String msg = "";
+			
+//			setting arg to not be null simplifies error checking (dont need to check for null cases)
+			if (arg == null) arg = Scene.CHANGED_UNKNOWN;  
+			
+				//========= CURVES	=======================
+			if ( arg.equals(Scene.CHANGED_CURVE))
 			{
 				Scene origscene = (Scene) o;
-				_view.getView3D().setCurves(origscene.getCurves());		
+				_view.getView3D().setCurves(origscene.getCurves());
+				msg = "reloading curves";
 			}
-			else
-			{	
-				//Default case for reloading entire scene (this is used for load in prototype)
-				//FIXME: the default case should not be this bad, following code should be special 'load' case
+				//============ LOAD ==============
+			else if (arg.equals(Scene.CHANGED_LOAD) ) 
+			{
+				//(this is used for load in prototype)
 				Scene scene = (Scene) o;
 				_view.getView3D().setVolumes(scene.getVolumes());
 				_view.getView3D().setSlides(scene.getSlides());
@@ -66,7 +73,16 @@ public class SceneObserver implements Observer {
 				}
 				_view.getView3D().setCurves(scene.getCurves());
 				_view.getView3D().setSurfaces(scene.getSurfaces());
+				msg = "reloading entire scene";
 			}
+				//======== DEFAULT ===========
+			else	
+			{
+				//Default case for reloading entire scene 
+				System.err.println("Warning in WBC SceneObserver: argument supplied for update scene not accounted for (" + arg +")");
+			}
+			
+			System.out.println("Performance Mesg: " + msg);
 		}
 
 		else if (o instanceof ISemanticThing)
@@ -106,8 +122,7 @@ public class SceneObserver implements Observer {
 		else if (o instanceof Tangible)
 		{
 			// catch all method for any leftover tangibles
-			TangibleView tv = TangibleViewManager.getInstance()
-			        .getTangibleViewFor((Tangible) o);
+			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
 			if (tv != null)
 			{
 				tv.update();
