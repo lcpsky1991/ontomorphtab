@@ -2,7 +2,10 @@ package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 
 import com.jme.bounding.BoundingBox;
+import com.jme.bounding.BoundingSphere;
+import com.jme.bounding.*;
 import com.jme.curve.BezierCurve;
+import com.jme.intersection.BoundingPickResults;
 import com.jme.scene.Node;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
@@ -38,8 +41,6 @@ public class CurveView extends TangibleView {
 		
 		this.attachChild(this.b);
 		
-		
-
 		if (curve.getAnchorPointsVisibility()) {
 			renderAnchorPoints(curve);
 		} else {
@@ -59,7 +60,8 @@ public class CurveView extends TangibleView {
 		
 		this.b.setModelBound(new BoundingBox());
 		this.b.updateModelBound();
-		this.b.updateRenderState();
+		this.b.updateWorldBound();
+		this.b.updateRenderState(); 
 		this.b.updateGeometricState(5f, true);
 		
 		if (anchors != null) {
@@ -68,9 +70,11 @@ public class CurveView extends TangibleView {
 			this.anchors.updateGeometricState(5f, true);
 		}
 		
-		this.updateModelBound();
+		
 	    this.updateRenderState();
 	    this.updateGeometricState(5f, true);
+	    this.updateWorldBound();
+	    this.updateModelBound();
 	}
 
 	private void renderAnchorPoints(Curve3D curve) {

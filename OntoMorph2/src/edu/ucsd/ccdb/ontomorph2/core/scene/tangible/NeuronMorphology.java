@@ -171,5 +171,7 @@ public abstract class NeuronMorphology extends Tangible{
 		} 
 		throw new OMTException("Cannot get encolosing brain region from a NeuronMorphology that is not set to the AllenCoordinateSystem", null);
 	}
+	
+	
 
 }

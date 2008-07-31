@@ -37,6 +37,7 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
  * about the design of this class is available on the website.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @author caprea
  *
  */
 public class ContextMenu extends Menu implements IMenuItemPressedListener{
@@ -63,7 +64,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
     
         
         this.setShrinkable(false);
-        this.setSize(100,200);
+        this.setSize(200,200);
         this.getAppearance().removeAll();
 		this.getAppearance().add(new PlainBackground(new Color(0.5f, 0.5f, 0.5f, 5.0f)));
 		border = new TitledBorder("context menu");
@@ -215,8 +216,6 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		OMTVector place = new OMTVector(src.getRelativePosition().add(1f,1f,0f));
 		
 		cp.getParentCurve().addControlPoint(time, place);
-		
-		
 	}
 	
 	//TODO: MOVE this function and replace its signature with something appropriate
@@ -238,5 +237,13 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		//redraw the scene, but not the whole scene, let observer know the curves have changed
 		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);
 	}
+	
+	
+	/**
+	 * 
+	 * 		mousePos.set( mouse.getLocalTranslation().x, mouse.getLocalTranslation().y );
+            DisplaySystem.getDisplaySystem().getWorldCoordinates( mousePos, 0, pickRay.origin );
+            DisplaySystem.getDisplaySystem().getWorldCoordinates( mousePos, 0.3f, pickRay.direction ).subtractLocal( pickRay.origin ).normalizeLocal()
+	 */
 	
 }

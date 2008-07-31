@@ -7,6 +7,7 @@ import java.util.Set;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
@@ -46,7 +47,8 @@ public class SceneObserver implements Observer {
 		if (o instanceof Scene)
 		{
 			String msg = "";
-			
+			Scene scene = (Scene) o;
+			boolean redoScene = false;
 //			setting arg to not be null simplifies error checking (dont need to check for null cases)
 			if (arg == null) arg = Scene.CHANGED_UNKNOWN;  
 			
@@ -60,27 +62,44 @@ public class SceneObserver implements Observer {
 				//============ LOAD ==============
 			else if (arg.equals(Scene.CHANGED_LOAD) ) 
 			{
-				//(this is used for load in prototype)
-				Scene scene = (Scene) o;
-				_view.getView3D().setVolumes(scene.getVolumes());
 				_view.getView3D().setSlides(scene.getSlides());
-				_view.getView3D().setCells(scene.getCells());
-				for (NeuronMorphology c : scene.getCells())
-				{
-					NeuronMorphology mi = (NeuronMorphology) c;
-					mi.addObserver(this);
-				}
-				_view.getView3D().setCurves(scene.getCurves());
-				_view.getView3D().setSurfaces(scene.getSurfaces());
-				msg = "reloading entire scene";
+				msg = "reloading slides";
+				redoScene = true;
 			}
+			else if (arg.equals(Scene.CHANGED_TEST))
+			{
+				_view.getView3D().setCurves(scene.getCurves());
+				_view.getView3D().setCells(scene.getCells());
+				
+				msg = "reloading test";
+			}
+			
 				//======== DEFAULT ===========
 			else	
 			{
 				//Default case for reloading entire scene 
 				System.err.println("Warning in WBC SceneObserver: argument supplied for update scene not accounted for (" + arg +")");
+				redoScene = true;
 			}
 			
+			//	RELOAD most things
+			//(this is used for load in prototype)
+			if ( redoScene )
+			{
+				_view.getView3D().setVolumes(scene.getVolumes());
+				
+				_view.getView3D().setCells(scene.getCells());
+				for (NeuronMorphology c : scene.getCells())
+				{
+					
+					NeuronMorphology mi = (NeuronMorphology) c;
+					mi.addObserver(this);
+				}
+				_view.getView3D().setCurves(scene.getCurves());
+				_view.getView3D().setSurfaces(scene.getSurfaces());
+
+				msg += "\nreloading entire scene";				
+			}			
 			System.out.println("Performance Mesg: " + msg);
 		}
 
@@ -118,6 +137,27 @@ public class SceneObserver implements Observer {
 			}
 		}
 
+		else if (o instanceof CurveAnchorPoint)
+		{
+			CurveAnchorPoint point = (CurveAnchorPoint) o;	
+			Curve3D changed = point.getParentCurve();
+			TangibleView tv = null; //used for updating 
+			for ( NeuronMorphology c : _view.getScene().getCells())
+			{
+				if ( c.getCurve().equals(changed) )	//if this cell is a part of the curve that has been modified
+				{
+					//then update the cell
+					c.positionAlongCurve(c.getCurve(), c.getTime());
+					tv = TangibleViewManager.getInstance().getTangibleViewFor(c);
+					if (tv != null)	tv.update();
+				}
+			}
+			
+			//now update the anchorpoint itself
+			tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
+			if ( tv != null) tv.update();
+		}
+		
 		else if (o instanceof Tangible)
 		{
 			// catch all method for any leftover tangibles

@@ -11,6 +11,8 @@ import org.fenggui.event.mouse.MouseButton;
 
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
+import com.jme.bounding.BoundingBox;
+import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
 import com.jme.input.FirstPersonHandler;
 import com.jme.input.InputHandler;
@@ -25,14 +27,20 @@ import com.jme.input.action.MouseLook;
 import com.jme.intersection.PickData;
 import com.jme.intersection.PickResults;
 import com.jme.intersection.TrianglePickResults;
+import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Geometry;
+import com.jme.scene.Line;
 import com.jme.scene.TriMesh;
 import com.jme.scene.batch.GeomBatch;
+import com.jme.scene.batch.LineBatch;
+import com.jme.scene.shape.Cone;
+import com.jme.scene.shape.Cylinder;
+import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.Debugger;
@@ -41,6 +49,7 @@ import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -89,7 +98,6 @@ public class View extends BaseSimpleGame {
 	// Global Interface-Objects
 	//=================================
 	public ViewCamera camNode;					//thisobject needed for manipulating the camera in a simple way
-	RelativeMouse amouse; 						//the mouse object ref to entire screen, used to hide and show the mouse?
 	PickData currentPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
 	
 	//manip not stored locally anymore
@@ -97,11 +105,13 @@ public class View extends BaseSimpleGame {
 	FirstPersonHandler fpHandler = null;
 	//MouseLook looker;	//not used
 	private boolean pointerEnabled = false;
-	
+	private boolean debugMode = false;
+	Line debugRay = null;	//used for mouse picking debugging mode
 	float keyPressActionRate = 1.0f; //the rate of rotation by a single key press
 	org.fenggui.Display disp; // FengGUI's display
 	
 	View3D view3D = null;
+	
 	
 	
 	/**
@@ -188,9 +198,6 @@ public class View extends BaseSimpleGame {
 		
         input.clearActions();	//removes all input actions not specifically programmed
         
-        amouse = new RelativeMouse("The Mouse");
-        amouse.registerWithInputHandler(input);					// Assign the mouse to an input handler
-        rootNode.attachChild(amouse);	        
         
 		//Bind the Escape key to kill our test app
 		KeyBindingManager.getKeyBindingManager().set("quit", KeyInput.KEY_ESCAPE);
@@ -210,6 +217,7 @@ public class View extends BaseSimpleGame {
 		KeyBindingManager.getKeyBindingManager().set("object_sphere", KeyInput.KEY_1);
 		KeyBindingManager.getKeyBindingManager().set("update", KeyInput.KEY_U);
 		KeyBindingManager.getKeyBindingManager().set("toggleMouse", KeyInput.KEY_M);
+		KeyBindingManager.getKeyBindingManager().set("toggleDebug", KeyInput.KEY_D);
 		KeyBindingManager.getKeyBindingManager().set("show_selected", KeyInput.KEY_S);
 		
 		KeyBindingManager.getKeyBindingManager().set("info", KeyInput.KEY_I);
@@ -223,7 +231,6 @@ public class View extends BaseSimpleGame {
 		
 		//(InputActionInterface action, java.lang.String deviceName, int button, int axis, boolean allowRepeats) 
         input.addAction( mouseAction, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, false );
-
 	}
 	
 	
@@ -358,7 +365,11 @@ public class View extends BaseSimpleGame {
 		case METHOD_LOOKAT:
 			//FIXME: /* needs to be re-engineered to deal with multiple selections */
 			Log.warn("LOOK AT is broken");
-			camNode.lookAt(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question
+			try
+			{
+				camNode.lookAt(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question	
+			}
+			catch(Exception e){};
 			break;
 		case METHOD_SCALE:
 			scaleSelected(mx, my);
@@ -397,8 +408,11 @@ public class View extends BaseSimpleGame {
 		{
 			currentPick = results.getPickData(0);	//take the closest pick and set
 			
+			GeomBatch obj = currentPick.getTargetMesh(); 
 			doSelection(currentPick.getTargetMesh());
-		
+			
+			//obj.setSolidColor(ColorRGBA.pink);
+			
 		} else {
 			//if there are no results, unselect everything
 			TangibleManager.getInstance().unselectAll();
@@ -424,12 +438,18 @@ public class View extends BaseSimpleGame {
 		
 		// Create a ray starting from the camera, and going in the direction
 		// of the mouse's location
-		Ray mouseRay = new Ray(closePoint, farPoint.subtractLocal(closePoint).normalizeLocal());
+		//Ray mouseRay = new Ray(closePoint, farPoint.subtractLocal(closePoint).normalizeLocal());
+		
+		Vector3f worldCoords = display.getWorldCoordinates(mPos, 0);
+		Ray mouseRay = new Ray(cam.getLocation(), worldCoords.subtractLocal(cam.getLocation()));
+		
+		createDebugRay(closePoint, farPoint);
 		
 		// Does the mouse's ray intersect the box's world bounds?
 		pr.clear();
 		pr.setCheckDistance(true);  //this function is undocumented, orders the items in pickresults
 		rootNode.findPick(mouseRay, pr);
+		
 		return pr;
 	}
 	
@@ -504,9 +524,15 @@ public class View extends BaseSimpleGame {
 					fpHandler.setEnabled(true);
 					MouseInput.get().setCursorVisible(false);
 				}
-				
 			}
-				
+			
+			if ( isAction("toggleDebug")) 
+			{
+				debugMode = !debugMode;
+				{
+					System.out.println("Debug Mode set to: " + debugMode);
+				}
+			}
 			
 			if ( isAction("show_selected"))
 			{
@@ -624,7 +650,51 @@ public class View extends BaseSimpleGame {
 		 }
 	 };
 	  
-	 
+//	this ismostly for debugging
+     private void createSphere(Vector3f p1)
+     {
+             //Cylinder(java.lang.String name, int axisSamples, int radialSamples, float radius, float height, boolean closed)
+             
+              Sphere s=new Sphere("My sphere",10,10,1f); //last number is radius
+              s.setModelBound(new BoundingSphere());
+              s.updateModelBound();
+              s.setRandomColors();
+              s.setLocalTranslation(p1);
+              
+              rootNode.attachChild(s);
+     }
+
+     /**
+      * For showing the pickray in debugging mode
+      */
+     
+     private void createDebugRay(Vector3f begin, Vector3f end)
+     {
+    	if (!debugMode) return;	//do not waste processing time if debug mode is off
+    	
+    	
+    	rootNode.detachChild(debugRay);
+    	Vector3f verts[] = { begin, end};
+    	debugRay = new Line("wand",verts,null,null,null);
+    	debugRay.setRandomColors();
+
+    	//Cone(java.lang.String name, int axisSamples, int radialSamples, float radius, float height, boolean closed)     	
+    	Cone wand = new Cone("wand", 50,50,15, 15, true );
+    	wand.setLocalTranslation(begin);
+    	wand.setLocalRotation(new Quaternion().fromAngleAxis(0, Vector3f.UNIT_X));
+    	wand.setModelBound(new BoundingBox());
+    	
+    	wand.setRandomColors();
+    	wand.updateModelBound();
+    	wand.updateWorldBound();
+    	
+    	
+    	rootNode.attachChild(debugRay);
+    	rootNode.attachChild(wand);
+    	rootNode.updateModelBound();
+     }
+     
+     
 	/**
 	 * Convenience method for getting the underlying display system
 	 * @see DisplaySystem

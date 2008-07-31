@@ -132,9 +132,4 @@ public class View3D extends Node{
 		SceneMonitor.getMonitor().registerNode(this, "Root Node");
 		SceneMonitor.getMonitor().showViewer(true);
 	}
-	
-	protected void addTangible(Tangible introduced)
-	{
-		System.out.println("See me!");
-	}
 }

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import java.util.List;
 
+import com.jme.bounding.BoundingBox;
+import com.jme.bounding.BoundingSphere;
 import com.jme.curve.BezierCurve;
 import com.jme.curve.Curve;
 import com.jme.math.FastMath;
@@ -18,6 +20,9 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
+
+
+//TODO: use setModelBound on spatial, maybe this will fix the problem 
 
 /**
  * Defines a Bezier curve in the framework that is manipulable by anchor points.
@@ -33,7 +38,7 @@ public class Curve3D extends Tangible{
 	OMTVector[] controlPoints = null;
 	boolean seeAnchorPoints = true;
 	List<CurveAnchorPoint> anchors = null;
-		
+	
 	
 	public Curve3D(String arg0, OMTVector[] arg1) {
 		setName(arg0);
