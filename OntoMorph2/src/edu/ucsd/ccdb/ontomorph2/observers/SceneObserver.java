@@ -142,6 +142,11 @@ public class SceneObserver implements Observer {
 			CurveAnchorPoint point = (CurveAnchorPoint) o;	
 			Curve3D changed = point.getParentCurve();
 			TangibleView tv = null; //used for updating 
+
+			//now update the anchorpoint itself
+			tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
+			if ( tv != null) tv.update();	//update the anchorpoint
+			
 			for ( NeuronMorphology c : _view.getScene().getCells())
 			{
 				if ( c.getCurve().equals(changed) )	//if this cell is a part of the curve that has been modified
@@ -152,10 +157,6 @@ public class SceneObserver implements Observer {
 					if (tv != null)	tv.update();
 				}
 			}
-			
-			//now update the anchorpoint itself
-			tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
-			if ( tv != null) tv.update();
 		}
 		
 		else if (o instanceof Tangible)
