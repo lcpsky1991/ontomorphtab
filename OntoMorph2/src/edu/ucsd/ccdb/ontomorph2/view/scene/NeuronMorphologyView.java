@@ -236,7 +236,8 @@ public class NeuronMorphologyView extends TangibleView{
 	  public void update() 
 	  {
 		  super.update();
-		  reload();
+		  updateModelBound();
+		  //reload(); //uncomment this and highlighting will work again
 	  }
 	
 	  public void reload()

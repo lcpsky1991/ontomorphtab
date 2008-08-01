@@ -1,11 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 
-import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingSphere;
 import com.jme.bounding.*;
 import com.jme.curve.BezierCurve;
 import com.jme.intersection.BoundingPickResults;
+import com.jme.intersection.PickResults;
+import com.jme.math.Ray;
 import com.jme.scene.Node;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
@@ -102,5 +102,25 @@ public class CurveView extends TangibleView {
 		this.b.setSolidColor(ColorUtil.convertColorToColorRGBA(this.getModel().getColor()));
 		//this.b.setDefaultColor(ColorUtil.convertColorToColorRGBA(((Curve3D)getModel()).getHighlightedColor()));
 	}
+	
+	
+	/**
+	 * @author caprea
+	 * overwrites findPick in so that it can be picked (JME doesnt support this)
+     */
+	/*
+    public void findPick(Ray ray, PickResults results) 
+    {
+        if (getWorldBound() == null || !isCollidable) {
+            return;
+        }
+        if (getWorldBound().intersects(ray)) {
+            // find the triangle that is being hit.
+            // add this node and the triangle to the PickResults list.
+            //results.addPick(ray, this.b.getBatch(0));
+            System.out.println("interescts " + this.b.getBatch(0));
+        }
+    }
+    */
 	
 }

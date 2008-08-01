@@ -137,6 +137,7 @@ public class SceneObserver implements Observer {
 			}
 		}
 
+		
 		else if (o instanceof CurveAnchorPoint)
 		{
 			CurveAnchorPoint point = (CurveAnchorPoint) o;	
@@ -158,6 +159,7 @@ public class SceneObserver implements Observer {
 				}
 			}
 		}
+		
 		
 		else if (o instanceof Tangible)
 		{

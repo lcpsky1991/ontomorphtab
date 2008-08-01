@@ -35,13 +35,18 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Geometry;
 import com.jme.scene.Line;
+import com.jme.scene.SceneElement;
 import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.LineBatch;
 import com.jme.scene.shape.Cone;
 import com.jme.scene.shape.Cylinder;
 import com.jme.scene.shape.Sphere;
+import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.TextureState;
+import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.Debugger;
 
@@ -98,8 +103,8 @@ public class View extends BaseSimpleGame {
 	// Global Interface-Objects
 	//=================================
 	public ViewCamera camNode;					//thisobject needed for manipulating the camera in a simple way
-	PickData currentPick;							//made global because it's a conveiniant way to deselect the previous selection since it's stored
 	
+	//currentPick not stored globally anymore
 	//manip not stored locally anymore
 		
 	FirstPersonHandler fpHandler = null;
@@ -107,6 +112,8 @@ public class View extends BaseSimpleGame {
 	private boolean pointerEnabled = false;
 	private boolean debugMode = false;
 	Line debugRay = null;	//used for mouse picking debugging mode
+	Cone wand = null;
+	
 	float keyPressActionRate = 1.0f; //the rate of rotation by a single key press
 	org.fenggui.Display disp; // FengGUI's display
 	
@@ -404,16 +411,23 @@ public class View extends BaseSimpleGame {
 		//get stuff we are trying to pick/select
 		PickResults results = getPickResults();
 		
+		PickData currentPick;	//stores information for mouse picking					
+		
 		if ( results.getNumber() > 0)
 		{
 			currentPick = results.getPickData(0);	//take the closest pick and set
 			
-			GeomBatch obj = currentPick.getTargetMesh(); 
-			doSelection(currentPick.getTargetMesh());
 			
-			//obj.setSolidColor(ColorRGBA.pink);
+			for (int i = 0; i < results.getNumber(); i++)
+			{
+				GeomBatch obj = results.getPickData(i).getTargetMesh();
+				System.out.println("result: " + obj);
+			}
 			
-		} else {
+			doSelection(currentPick.getTargetMesh());			
+		} 
+		else 
+		{
 			//if there are no results, unselect everything
 			TangibleManager.getInstance().unselectAll();
 		}
@@ -427,21 +441,23 @@ public class View extends BaseSimpleGame {
 //		because dendrites can be densely packed need precision of triangles instead of bounding boxes
 		PickResults pr = new TrianglePickResults(); 
 		
-		
 		//Get the position that the mouse is pointing to
 		Vector2f mPos = new Vector2f();
 		mPos.set(MouseInput.get().getXAbsolute() ,MouseInput.get().getYAbsolute() );
 		
+		Vector3f closePoint = new Vector3f();
+		Vector3f farPoint = new Vector3f();
+		Vector3f dir = new Vector3f();
+		
 		// Get the world location of that X,Y value
-		Vector3f farPoint = display.getWorldCoordinates(mPos, 1.0f);
-		Vector3f closePoint = display.getWorldCoordinates(mPos, 0.0f);
+		farPoint = display.getWorldCoordinates(mPos, 1.0f);
+		closePoint = display.getWorldCoordinates(mPos, 0.0f);
+		dir = farPoint.subtract(closePoint).normalize();
 		
 		// Create a ray starting from the camera, and going in the direction
 		// of the mouse's location
 		//Ray mouseRay = new Ray(closePoint, farPoint.subtractLocal(closePoint).normalizeLocal());
-		
-		Vector3f worldCoords = display.getWorldCoordinates(mPos, 0);
-		Ray mouseRay = new Ray(cam.getLocation(), worldCoords.subtractLocal(cam.getLocation()));
+		Ray mouseRay = new Ray(closePoint, dir);
 		
 		createDebugRay(closePoint, farPoint);
 		
@@ -672,26 +688,45 @@ public class View extends BaseSimpleGame {
      {
     	if (!debugMode) return;	//do not waste processing time if debug mode is off
     	
-    	
     	rootNode.detachChild(debugRay);
+    	rootNode.detachChild(wand);
     	Vector3f verts[] = { begin, end};
-    	debugRay = new Line("wand",verts,null,null,null);
+    	debugRay = new Line("d ray",verts,null,null,null);
     	debugRay.setRandomColors();
 
+    	int len = (int)begin.subtract(end).length();
+    	
     	//Cone(java.lang.String name, int axisSamples, int radialSamples, float radius, float height, boolean closed)     	
-    	Cone wand = new Cone("wand", 50,50,15, 15, true );
+    	wand = new Cone("wand", 50,len/2, 15, len, true );
     	wand.setLocalTranslation(begin);
-    	wand.setLocalRotation(new Quaternion().fromAngleAxis(0, Vector3f.UNIT_X));
-    	wand.setModelBound(new BoundingBox());
-    	
+    	wand.lookAt(end, begin);	//points the cone in the direction such that base is on object of interest and the apex is at camera
     	wand.setRandomColors();
-    	wand.updateModelBound();
-    	wand.updateWorldBound();
     	
+	    
     	
+//    	===== make wand transparent ====
+    	// Transparency does not seem to work
+		//disable writing to zbuffer
+		ZBufferState zb = View.getInstance().getRenderer().createZBufferState();
+		zb.setWritable(false);
+		zb.setEnabled(true);
+		wand.setRenderState(zb);
+		
+		//enable alpha blending
+		AlphaState as = View.getInstance().getRenderer().createAlphaState();
+	      as.setBlendEnabled(true);
+	      as.setSrcFunction(AlphaState.SB_SRC_ALPHA);      
+	      as.setDstFunction(AlphaState.DB_ONE);
+	      as.setTestEnabled(true);
+	      as.setTestFunction(AlphaState.TF_GREATER);
+	      as.setEnabled(true);
+	    wand.setRenderState(as);
+	    wand.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+	    wand.updateRenderState();
+	    
     	rootNode.attachChild(debugRay);
-    	rootNode.attachChild(wand);
-    	rootNode.updateModelBound();
+    	//rootNode.attachChild(wand);
+    	
      }
      
      
