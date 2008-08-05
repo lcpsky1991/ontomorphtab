@@ -476,31 +476,7 @@
       </fail>
    </target>
 	
-	<!-- exporting the database schema from the hibernate mapping
-	<target name="export.database.schema" depends="generate.hibernate.mapping">
-
-	  <taskdef name="schemaexport"
-	    classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask"
-	    classpathref="schemaexport.lib.path"/>
-
-	  <mkdir dir="${database}"/>
-
-	  <schemaexport
-	    properties="${hibernate.properties}"
-	    quiet="yes"
-	    text="no"
-	    drop="no"
-	    delimiter=";"
-	    output="${database}/schema.sql">
-	    <fileset dir="${hibernate.mapping}">
-	      <include name="**/*.hbm.xml"/>
-	    </fileset>
-	  </schemaexport>
-
-	</target>
-	-->
-	
-	<target name="exportDatabaseSchema" depends="compileGeneratedNeuroMLClasses-1.7.2-hyperjaxb2">
+	<target name="exportDatabaseSchema">
 		<!-- Hibernate Tools import -->
 		<taskdef name="schemaexport"
 			classname="org.hibernate.tool.hbm2ddl.SchemaExportTask"
@@ -509,13 +485,13 @@
 		<mkdir dir="db"/>
 
 	    <schemaexport
-			    properties="target/classes/hibernate.properties"
+			    properties="etc/hibernateTemp/target/classes/hibernate.properties"
 			    quiet="yes"
 			    text="no"
 			    drop="no"
 			    delimiter=";"
 			    output="db/schema.sql">
-			    <fileset dir="target/classes">
+			    <fileset dir="etc/hibernateTemp/target/classes">
 			      <include name="**/*.hbm.xml"/>
 			    </fileset>
 		</schemaexport>
@@ -579,8 +555,8 @@
 	
 		<target name="generateNeuroMLClasses-1.7.2-hyperjaxb2">
 			<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="hyperjaxb2.compile.path"/>
-			<mkdir dir="target/generated-sources/xjc"/>
-			<xjc target="target/generated-sources/xjc" extension="true">
+			<mkdir dir="etc/hibernateTemp/target/generated-sources/xjc"/>
+			<xjc target="etc/hibernateTemp/target/generated-sources/xjc" extension="true">
 				<arg line="
 					-Xequals
 					-XhashCode
@@ -596,15 +572,15 @@
 		</target>
 	
 	<target name="compileGeneratedNeuroMLClasses-1.7.2-hyperjaxb2" depends="generateNeuroMLClasses-1.7.2-hyperjaxb2">
-			<mkdir dir="target/classes"/>
+			<mkdir dir="etc/hibernateTemp/target/classes"/>
 			<javac
-				destdir="target/classes" 
-				srcdir="target/generated-sources/xjc"
+				destdir="etc/hibernateTemp/target/classes" 
+				srcdir="etc/hibernateTemp/target/generated-sources/xjc"
 				classpathref="hyperjaxb2.compile.path">
 			</javac>
-			<copy todir="target/classes">
+			<copy todir="etc/hibernateTemp/target/classes">
 				<fileset dir="etc/neuroml-schemas/1.7.2"/>
-				<fileset dir="target/generated-sources/xjc">
+				<fileset dir="etc/hibernateTemp/target/generated-sources/xjc">
 					<exclude name="**/*.java" />
 				</fileset>
 			</copy>
@@ -612,7 +588,7 @@
 		
 		<target name="packageGeneratedNeuroMLClasses-1.7.2-hyperjaxb2" depends="compileGeneratedNeuroMLClasses-1.7.2-hyperjaxb2">
 			<jar destfile="lib/HyperJaxb2NeuroML-1.7.2.jar"
-				basedir="target/classes"/> 
+				basedir="etc/hibernateTemp/target/classes"/> 
 		</target>
 	
 	<target name="generateNeurolucidaClasses" >
