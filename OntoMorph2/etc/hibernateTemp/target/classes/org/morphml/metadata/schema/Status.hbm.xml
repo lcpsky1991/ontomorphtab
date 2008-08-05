@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.metadata.schema.Status]"
+          name="org.morphml.metadata.schema.Status"
+          table="Status">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Issue"
+            table="Status_Issue">
+         <key>
+            <column name="Status_Issue_Hjid"/>
+         </key>
+         <list-index>
+            <column name="Status_Issue_Hjindex"/>
+         </list-index>
+         <element type="org.hibernate.type.StringType">
+            <column name="Hjvalue"/>
+         </element>
+      </list>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Value">
+         <column name="Value_"/>
+         <type name="org.hibernate.type.StringType"/>
+      </property>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Contributor"
+            table="Status_Contributor">
+         <key>
+            <column name="Status_Contributor_Hjid"/>
+         </key>
+         <list-index>
+            <column name="Status_Contributor_Hjindex"/>
+         </list-index>
+         <one-to-many class="org.morphml.metadata.schema.Person"/>
+      </list>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Comment"
+            table="Status_Comment_">
+         <key>
+            <column name="Status_Comment__Hjid"/>
+         </key>
+         <list-index>
+            <column name="Status_Comment__Hjindex"/>
+         </list-index>
+         <element type="org.hibernate.type.StringType">
+            <column name="Hjvalue"/>
+         </element>
+      </list>
+      <subclass discriminator-value="org.morphml.metadata.schema.Status"
+                name="org.morphml.metadata.schema.impl.StatusImpl"/>
+   </class>
+</hibernate-mapping>

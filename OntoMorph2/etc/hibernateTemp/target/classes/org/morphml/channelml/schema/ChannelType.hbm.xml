@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.channelml.schema.ChannelType]"
+          name="org.morphml.channelml.schema.ChannelType"
+          table="ChannelType">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <many-to-one class="org.morphml.channelml.schema.CurrentVoltageRelation"
+                   name="CurrentVoltageRelation">
+         <column name="CurrentVoltageRelation"/>
+      </many-to-one>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Density">
+         <column name="Density"/>
+         <type name="org.hibernate.type.StringType"/>
+      </property>
+      <many-to-one class="org.morphml.metadata.schema.Authors" name="AuthorList">
+         <column name="AuthorList"/>
+      </many-to-one>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="HhGate"
+            table="ChannelType_HhGate">
+         <key>
+            <column name="ChannelType_HhGate_Hjid"/>
+         </key>
+         <list-index>
+            <column name="ChannelType_HhGate_Hjindex"/>
+         </list-index>
+         <one-to-many class="org.morphml.channelml.schema.HHGate"/>
+      </list>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="KsGate"
+            table="ChannelType_KsGate">
+         <key>
+            <column name="ChannelType_KsGate_Hjid"/>
+         </key>
+         <list-index>
+            <column name="ChannelType_KsGate_Hjindex"/>
+         </list-index>
+         <one-to-many class="org.morphml.channelml.schema.KSGate"/>
+      </list>
+      <many-to-one class="org.morphml.channelml.schema.ImplementationPrefs" name="ImplPrefs">
+         <column name="ImplPrefs"/>
+      </many-to-one>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Group"
+            table="ChannelType_Group_">
+         <key>
+            <column name="ChannelType_Group__Hjid"/>
+         </key>
+         <list-index>
+            <column name="ChannelType_Group__Hjindex"/>
+         </list-index>
+         <element type="org.hibernate.type.StringType">
+            <column name="Hjvalue"/>
+         </element>
+      </list>
+      <many-to-one class="org.morphml.metadata.schema.Properties" name="Properties">
+         <column name="Properties"/>
+      </many-to-one>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Name">
+         <column name="Name_"/>
+         <type name="org.hibernate.type.StringType"/>
+      </property>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Notes">
+         <column name="Notes"/>
+         <type name="org.hibernate.type.StringType"/>
+      </property>
+      <many-to-one class="org.morphml.metadata.schema.Status" name="Status">
+         <column name="Status"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.metadata.schema.ModelDBReference" name="ModelDBref">
+         <column name="ModelDBref"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.metadata.schema.Annotation" name="Annotation">
+         <column name="Annotation"/>
+      </many-to-one>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Publication"
+            table="ChannelType_Publication">
+         <key>
+            <column name="ChannelType_Publication_Hjid"/>
+         </key>
+         <list-index>
+            <column name="ChannelType_Publication_Hjin_0"/>
+         </list-index>
+         <one-to-many class="org.morphml.metadata.schema.Publication"/>
+      </list>
+      <many-to-one class="org.morphml.metadata.schema.NeuronDBReference" name="NeuronDBref">
+         <column name="NeuronDBref"/>
+      </many-to-one>
+      <subclass discriminator-value="org.morphml.channelml.schema.ChannelType"
+                name="org.morphml.channelml.schema.impl.ChannelTypeImpl"/>
+   </class>
+</hibernate-mapping>

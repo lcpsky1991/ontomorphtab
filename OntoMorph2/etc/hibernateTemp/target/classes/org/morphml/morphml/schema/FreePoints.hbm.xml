@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <subclass discriminator-value="[org.morphml.morphml.schema.FreePoints]"
+             extends="org.morphml.metadata.schema.Points"
+             name="org.morphml.morphml.schema.FreePoints">
+      <subclass discriminator-value="org.morphml.morphml.schema.FreePoints"
+                name="org.morphml.morphml.schema.impl.FreePointsImpl"/>
+   </subclass>
+</hibernate-mapping>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.metadata.schema.Properties]"
+          name="org.morphml.metadata.schema.Properties"
+          table="Properties">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Property"
+            table="Properties_Property">
+         <key>
+            <column name="Properties_Property_Hjid"/>
+         </key>
+         <list-index>
+            <column name="Properties_Property_Hjindex"/>
+         </list-index>
+         <one-to-many class="org.morphml.metadata.schema.Property"/>
+      </list>
+      <subclass discriminator-value="org.morphml.metadata.schema.Properties"
+                name="org.morphml.metadata.schema.impl.PropertiesImpl"/>
+   </class>
+</hibernate-mapping>

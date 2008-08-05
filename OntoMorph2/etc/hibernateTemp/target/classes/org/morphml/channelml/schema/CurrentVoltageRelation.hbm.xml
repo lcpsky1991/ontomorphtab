@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.channelml.schema.CurrentVoltageRelation]"
+          name="org.morphml.channelml.schema.CurrentVoltageRelation"
+          table="CurrentVoltageRelation">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Name">
+         <column name="Name_"/>
+         <type name="org.hibernate.type.StringType"/>
+      </property>
+      <many-to-one class="org.morphml.channelml.schema.Ohmic" name="Ohmic">
+         <column name="Ohmic"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.channelml.schema.IntegrateAndFire" name="IntegrateAndFire">
+         <column name="IntegrateAndFire"/>
+      </many-to-one>
+      <subclass discriminator-value="org.morphml.channelml.schema.CurrentVoltageRelation"
+                name="org.morphml.channelml.schema.impl.CurrentVoltageRelationImpl"/>
+   </class>
+</hibernate-mapping>

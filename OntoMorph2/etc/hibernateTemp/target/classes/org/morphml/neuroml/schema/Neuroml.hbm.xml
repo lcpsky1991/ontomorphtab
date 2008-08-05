@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <subclass discriminator-value="[org.morphml.neuroml.schema.Neuroml]"
+             extends="org.morphml.neuroml.schema.NeuroMLLevel3"
+             name="org.morphml.neuroml.schema.Neuroml">
+      <subclass discriminator-value="org.morphml.neuroml.schema.Neuroml"
+                name="org.morphml.neuroml.schema.impl.NeuromlImpl"/>
+   </subclass>
+</hibernate-mapping>

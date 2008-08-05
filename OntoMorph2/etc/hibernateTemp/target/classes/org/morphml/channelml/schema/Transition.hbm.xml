@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.channelml.schema.Transition]"
+          name="org.morphml.channelml.schema.Transition"
+          table="Transition">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Source">
+         <column name="Source_"/>
+         <type name="org.hibernate.type.StringType"/>
+      </property>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Target">
+         <column name="Target"/>
+         <type name="org.hibernate.type.StringType"/>
+      </property>
+      <many-to-one class="org.morphml.channelml.schema.VoltageConcGate" name="VoltageConcGate">
+         <column name="VoltageConcGate"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.channelml.schema.VoltageGate" name="VoltageGate">
+         <column name="VoltageGate"/>
+      </many-to-one>
+      <subclass discriminator-value="org.morphml.channelml.schema.Transition"
+                name="org.morphml.channelml.schema.impl.TransitionImpl"/>
+   </class>
+</hibernate-mapping>

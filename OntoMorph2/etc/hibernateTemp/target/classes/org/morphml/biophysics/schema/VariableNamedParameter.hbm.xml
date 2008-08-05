@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.biophysics.schema.VariableNamedParameter]"
+          name="org.morphml.biophysics.schema.VariableNamedParameter"
+          table="VariableNamedParameter">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Name">
+         <column name="Name_"/>
+         <type name="org.hibernate.type.StringType"/>
+      </property>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="InhomogeneousValue"
+            table="VariableNamedParameter_Inhom_0">
+         <key>
+            <column name="VariableNamedParameter_Inhom_1"/>
+         </key>
+         <list-index>
+            <column name="VariableNamedParameter_Inhom_2"/>
+         </list-index>
+         <one-to-many class="org.morphml.biophysics.schema.InhomogeneousValue"/>
+      </list>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Group"
+            table="VariableNamedParameter_Group_">
+         <key>
+            <column name="VariableNamedParameter_Group_0"/>
+         </key>
+         <list-index>
+            <column name="VariableNamedParameter_Group_1"/>
+         </list-index>
+         <element type="org.hibernate.type.StringType">
+            <column name="Hjvalue"/>
+         </element>
+      </list>
+      <subclass discriminator-value="org.morphml.biophysics.schema.VariableNamedParameter"
+                name="org.morphml.biophysics.schema.impl.VariableNamedParameterImpl"/>
+   </class>
+</hibernate-mapping>

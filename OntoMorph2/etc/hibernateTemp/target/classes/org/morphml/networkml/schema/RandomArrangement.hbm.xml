@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.networkml.schema.RandomArrangement]"
+          name="org.morphml.networkml.schema.RandomArrangement"
+          table="RandomArrangement">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Notes">
+         <column name="Notes"/>
+         <type name="org.hibernate.type.StringType"/>
+      </property>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="PopulationSize">
+         <column name="PopulationSize"/>
+         <type name="org.hibernate.type.BigIntegerType"/>
+      </property>
+      <many-to-one class="org.morphml.metadata.schema.RectangularBox" name="RectangularLocation">
+         <column name="RectangularLocation"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.metadata.schema.Annotation" name="Annotation">
+         <column name="Annotation"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.metadata.schema.Sphere" name="SphericalLocation">
+         <column name="SphericalLocation"/>
+      </many-to-one>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Group"
+            table="RandomArrangement_Group_">
+         <key>
+            <column name="RandomArrangement_Group__Hjid"/>
+         </key>
+         <list-index>
+            <column name="RandomArrangement_Group__Hji_0"/>
+         </list-index>
+         <element type="org.hibernate.type.StringType">
+            <column name="Hjvalue"/>
+         </element>
+      </list>
+      <many-to-one class="org.morphml.metadata.schema.Properties" name="Properties">
+         <column name="Properties"/>
+      </many-to-one>
+      <subclass discriminator-value="org.morphml.networkml.schema.RandomArrangement"
+                name="org.morphml.networkml.schema.impl.RandomArrangementImpl"/>
+   </class>
+</hibernate-mapping>

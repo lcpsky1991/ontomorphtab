@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.networkml.schema.ConnectivityPattern]"
+          name="org.morphml.networkml.schema.ConnectivityPattern"
+          table="ConnectivityPattern">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <many-to-one class="org.morphml.networkml.schema.ConnectivityPattern$AllToAllType"
+                   name="AllToAll">
+         <column name="AllToAll"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.networkml.schema.ConnectivityPattern$FixedProbabilityType"
+                   name="FixedProbability">
+         <column name="FixedProbability"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.networkml.schema.PerCellConnection" name="PerCellConnection">
+         <column name="PerCellConnection"/>
+      </many-to-one>
+      <subclass discriminator-value="org.morphml.networkml.schema.ConnectivityPattern"
+                name="org.morphml.networkml.schema.impl.ConnectivityPatternImpl"/>
+   </class>
+</hibernate-mapping>

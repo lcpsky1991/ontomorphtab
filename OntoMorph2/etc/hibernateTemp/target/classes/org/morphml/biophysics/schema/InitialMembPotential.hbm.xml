@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.biophysics.schema.InitialMembPotential]"
+          name="org.morphml.biophysics.schema.InitialMembPotential"
+          table="InitialMembPotential">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="VariableParameter"
+            table="InitialMembPotential_Variabl_0">
+         <key>
+            <column name="InitialMembPotential_Variabl_1"/>
+         </key>
+         <list-index>
+            <column name="InitialMembPotential_Variabl_2"/>
+         </list-index>
+         <one-to-many class="org.morphml.biophysics.schema.VariableParameter"/>
+      </list>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Parameter"
+            table="InitialMembPotential_Paramet_0">
+         <key>
+            <column name="InitialMembPotential_Paramet_1"/>
+         </key>
+         <list-index>
+            <column name="InitialMembPotential_Paramet_2"/>
+         </list-index>
+         <one-to-many class="org.morphml.biophysics.schema.UnnamedParameter"/>
+      </list>
+      <subclass discriminator-value="org.morphml.biophysics.schema.InitialMembPotential"
+                name="org.morphml.biophysics.schema.impl.InitialMembPotentialImpl"/>
+   </class>
+</hibernate-mapping>
