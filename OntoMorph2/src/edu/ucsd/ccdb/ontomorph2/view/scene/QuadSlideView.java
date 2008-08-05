@@ -7,6 +7,7 @@ import com.jme.image.Texture;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.scene.TriMesh;
+import com.jme.scene.shape.Quad;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
@@ -21,20 +22,20 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
-public class SlideView extends TriMesh {
+public class QuadSlideView extends Quad {
 	
 	URL imageURL = null;
 	Slide _slide = null;
 	private DisplaySystem display = null;
 	
-	public SlideView(Slide slide) {
+	public QuadSlideView(Slide slide) {
 		super.setName("Slide View");
 		_slide = slide;
 		setImageURL(slide.getImageURL());
 		init();
 	}
 	
-	public SlideView(Slide slide, DisplaySystem disp) {
+	public QuadSlideView(Slide slide, DisplaySystem disp) {
 		super.setName("Slide View");
 		_slide = slide;
 		setImageURL(slide.getImageURL());
@@ -43,73 +44,9 @@ public class SlideView extends TriMesh {
 	}
 
 	private void init() {
+		this.initialize(20f,20f);
 		
-		float ratio = _slide.getRatio();
-		float scale = _slide.getAbsoluteScale().x;
-		float x = _slide.getAbsolutePosition().x;
-		float y = _slide.getAbsolutePosition().y;
-		float z = _slide.getAbsolutePosition().z;
-		
-		y-=113;
-		x-=180;
-		z-=305;
-		
-		
-		Vector3f v1 = new Vector3f(x,y,z);
-		Vector3f v2 = new Vector3f(ratio*scale+x,y,z);
-		Vector3f v3 = new Vector3f(x,scale+y,z);
-		Vector3f v4 = new Vector3f(ratio*scale+x,scale+y,z);
-		
-		/*
-		Vector3f v1 = new Vector3f(0,0,0);
-		Vector3f v2 = new Vector3f(ratio*scale,0,0);
-		Vector3f v3 = new Vector3f(0,scale,0);
-		Vector3f v4 = new Vector3f(ratio*scale,scale,0);
-		*/
-		/*
-		CoordinateSystem d = _slide.getCoordinateSystem();
-		v1 = d.multPoint(v1);
-		v2 = d.multPoint(v2);
-		v3 = d.multPoint(v3);
-		v4 = d.multPoint(v4);
-		*/
-//		Vertex positions for the mesh
-		
-		/*
-		float xFact = -300;
-		v1.x = xFact;
-		v2.x = xFact;
-		v3.x = xFact;
-		v4.x = xFact;
-		*/
-		
-		
-		Vector3f[] vertexes={ v1,v2,v3,v4 };
-		
-		//texture coordinates for each position
-		int coordDelta=1;
-		Vector2f[] texCoords ={
-				new Vector2f(0,0),
-				new Vector2f(coordDelta,0),
-				new Vector2f(0,coordDelta),
-				new Vector2f(coordDelta,coordDelta),
-		};
-		//The indexes of Vertex/Normal/Color/TexCoord sets.  Every 3
-		//makes a triangle.
-		int[] indexes={
-				0,1,2,1,3,2
-		};
-		//create the square
-		this.setName("my mesh");
-		this.setVertexBuffer(0, BufferUtils.createFloatBuffer(vertexes));
-		this.setTextureBuffer(0, BufferUtils.createFloatBuffer(texCoords));
-		this.setIndexBuffer(0, BufferUtils.createIntBuffer(indexes));
-		/*
-		square = new TriMesh("my mesh", BufferUtils.createFloatBuffer(vertexes),
-				null,null, BufferUtils.createFloatBuffer(texCoords), 
-				BufferUtils.createIntBuffer(indexes));
-		*/
-		//get my texturestate
+//		get my texturestate
 		TextureState ts = null;
 		if (this.display == null) {
 			ts = View.getInstance().getDisplaySystem().getRenderer().createTextureState();

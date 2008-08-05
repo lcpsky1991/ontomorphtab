@@ -345,6 +345,80 @@
 		<classpath refid="project.classpath"/>
 	</taskdef>
 	
+	<!-- hyper jaxb target
+	<target name="generate.sources">
+	  <taskdef name="xjc"
+	    classname="com.sun.tools.xjc.XJCTask"
+	    classpathref="xjc.lib.path"/>
+	  <mkdir dir="${generated.sources}"/>
+	  <xjc target="${generated.sources}">
+	    <arg line="-nv"/>
+	    <arg line="-extension"/>
+	    <arg line="-Xhibernate-xdoclets"/>
+	    <binding dir="${basedir}">
+	      <include name="binding/*.xml"/>
+	    </binding>
+	    <schema dir="${basedir}">
+	      <include name="schema/*.xsd"/>
+	    </schema>
+	  </xjc>
+	</target>
+	-->
+<!-- hybernate mapping	
+	<target name="generate.hibernate.mapping" depends="jar">
+
+	  <taskdef name="hibernatedoclet"
+	    classname="xdoclet.modules.hibernate.HibernateDocletTask"
+	    classpathref="hibernatedoclet.lib.path"/>
+
+	  <tstamp>
+	    <format property="TODAY" pattern="dd-MM-yy"/>
+	  </tstamp>
+
+	  <mkdir dir="${hibernate.mapping}"/>
+
+	  <hibernatedoclet
+	    destdir="${hibernate.mapping}"
+	    mergedir="${generated.sources}"
+	    excludedtags="@version,@author,@todo,@see,@throws"
+	    addedtags="@xdoclet-generated at ${TODAY},@copyright The XDoclet Team,@author XDoclet"
+	    force="false"
+	    verbose="false">
+
+	    <fileset dir="${generated.sources}">
+	      <include name="**/*.java"/>
+	      <exclude name="**/runtime/*.java"/>
+	    </fileset>
+
+	    <hibernate version="2.0"/>
+	  </hibernatedoclet>
+	</target>
+	-->
+	
+	<!-- exporting the database schema from the hibernate mapping
+	<target name="export.database.schema" depends="generate.hibernate.mapping">
+
+	  <taskdef name="schemaexport"
+	    classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask"
+	    classpathref="schemaexport.lib.path"/>
+
+	  <mkdir dir="${database}"/>
+
+	  <schemaexport
+	    properties="${hibernate.properties}"
+	    quiet="yes"
+	    text="no"
+	    drop="no"
+	    delimiter=";"
+	    output="${database}/schema.sql">
+	    <fileset dir="${hibernate.mapping}">
+	      <include name="**/*.hbm.xml"/>
+	    </fileset>
+	  </schemaexport>
+
+	</target>
+	-->
+	
 	<target name="generateNeuroMLClasses-1.7-modified" >
 		<!-- http://java.sun.com/webservices/docs/1.6/jaxb/ant.html -->
 		<xjc destdir="src/" package="neuroml.generated" removeOldOutput="yes">

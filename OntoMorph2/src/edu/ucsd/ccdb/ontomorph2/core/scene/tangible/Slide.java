@@ -24,17 +24,14 @@ public class Slide extends Tangible {
 	URL _imageURL = null;
 	float ratio = 1f;
 	
+	public Slide(URL imageURL) {
+		_imageURL = imageURL;
+	}
+	
 	public Slide(URL imageURL, PositionVector position, RotationVector rotation) {
 		_imageURL = imageURL;
 		setRelativePosition(position);
 		setRelativeRotation(rotation);
-	}
-	
-	
-	public Slide(URL filePath, PositionVector position, RotationVector rotation, OMTVector scale, float ratio) {
-		this(filePath, position, rotation);
-		setRelativeScale(scale);
-		this.ratio = ratio;
 	}
 	
 	public Slide(URL filePath, PositionVector position, RotationVector rotation, float scale, float ratio) {
@@ -72,37 +69,12 @@ public class Slide extends Tangible {
 		setRelativeRotation(rot);
 		setRelativePosition(pos);
 		
-		
 		this.ratio = ratio;
 	}
-
-	public Slide(URL hippo3cURL, PositionVector impl, RotationVector rotation, OMTVector scale, float ratio, CoordinateSystem d) {
-		this(hippo3cURL, impl, rotation, scale, ratio);
-		this.setCoordinateSystem(d);
-	}
-	
-	public Slide(URL hippo3cURL, PositionVector impl, RotationVector rotation, float scale, float ratio, CoordinateSystem d) {
-		this(hippo3cURL, impl, rotation, scale, ratio);
-		this.setCoordinateSystem(d);
-	}
-	
-	
-	public Slide(URL hippo3cURL, PositionVector impl, OMTVector scale, float ratio, CoordinateSystem d) {
-		this(hippo3cURL, impl, new RotationVector(), scale, ratio);
-		this.setCoordinateSystem(d);
-	}
-	public Slide(URL hippo3cURL, PositionVector impl, float scale, float ratio, CoordinateSystem d) {
-		this(hippo3cURL, impl, new RotationVector(), scale, ratio);
-		this.setCoordinateSystem(d);
-	}
-	
-	
-
 
 	public URL getImageURL() {
 		return _imageURL;
 	}
-
 
 	public float getRatio() {
 		return ratio;
