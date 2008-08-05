@@ -8,13 +8,10 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import neuroml.generated.CellInstance;
-import neuroml.generated.Level3Cells;
-import neuroml.generated.NetworkML;
-import neuroml.generated.NeuroMLLevel3;
-import neuroml.generated.Population;
-import neuroml.generated.Populations;
-import edu.ucsd.ccdb.ontomorph2.core.data.DataCacheManager;
+import org.morphml.networkml.schema.CellInstance;
+import org.morphml.networkml.schema.NetworkmlType;
+import org.morphml.networkml.schema.Population;
+
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
@@ -26,7 +23,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 public class NeuroMLNetwork extends Tangible {
 	
 	URL loc = null;
-	NetworkML network = null;
+	NetworkmlType network = null;
 	
 	public NeuroMLNetwork(URL morphLoc) {
 		Log.warn("Loading NeuroMLNetwork");
@@ -41,17 +38,19 @@ public class NeuroMLNetwork extends Tangible {
 			context = JAXBContext.newInstance("neuroml.generated");
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			JAXBElement o = (JAXBElement)unmarshaller.unmarshal(new File(loc.getFile()));
-			network = (NetworkML)o.getValue();
+			network = (NetworkmlType)o.getValue();
 			
 			
-			for (Population p : network.getPopulations().getPopulation()) {
+			for (Object ob : network.getPopulations().getPopulation()) {
+				Population p = (Population)ob;
 				String cellType = p.getCellType();
 				
 				//retrieve the NeuronMorphology that has this cell name
+				/*
 				for (CellInstance ci : p.getInstances().getInstance()) {
 					//set position of each instance of the neuron morphology
 					//ci.getLocation()
-				}
+				}*/
 			}
 
 		} catch (JAXBException e) {

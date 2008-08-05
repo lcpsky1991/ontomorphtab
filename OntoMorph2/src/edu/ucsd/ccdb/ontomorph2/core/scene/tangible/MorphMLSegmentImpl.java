@@ -1,14 +1,9 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
-import java.awt.Color;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
-import neuroml.generated.Segment;
+import org.morphml.morphml.schema.Segment;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 
 /**
@@ -51,13 +46,13 @@ public class MorphMLSegmentImpl extends Tangible implements ISegment, ISemantics
 		//the parent segment and get its distal radius instead.
 		if (s.getProximal() == null){
 			Segment ps = this.parentCell.getSegmentFromId(s.getParent());
-			return ps.getDistal().getDiameter().floatValue();
+			return (float)ps.getDistal().getDiameter();
 		}
-		return s.getProximal().getDiameter().floatValue();
+		return (float)s.getProximal().getDiameter();
 	}
 
 	public float getDistalRadius() {
-		return s.getDistal().getDiameter().floatValue();
+		return (float)s.getDistal().getDiameter();
 	}
 
 	public BigInteger getSegmentGroupId() {

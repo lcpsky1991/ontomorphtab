@@ -8999,6 +8999,7 @@ Original fileName:H:\\cells\\ca3\\henze\\cell2zr.txt
             </mml:cable>
         </mml:cables>
         <!--Adding the biophysical parameters-->
+        <!--
         <biophysics units="Physiological Units">
             <bio:specificCapacitance>
                 <bio:parameter value="1.0">
@@ -9016,5 +9017,6 @@ Original fileName:H:\\cells\\ca3\\henze\\cell2zr.txt
                 </bio:parameter>
             </bio:initialMembPotential>
         </biophysics>
+        -->
     </cell>
 </cells></neuroml>

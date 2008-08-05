@@ -8,10 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import neuroml.generated.Point;
-import neuroml.generated.Segment;
-import neuroml.generated.Cell.Cables;
-import neuroml.generated.Cell.Segments;
 
 import com.jme.math.Vector3f;
 

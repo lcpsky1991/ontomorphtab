@@ -1,22 +1,14 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene;
 
-import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
-import neuroml.generated.Segment;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegment;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLSegmentImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;

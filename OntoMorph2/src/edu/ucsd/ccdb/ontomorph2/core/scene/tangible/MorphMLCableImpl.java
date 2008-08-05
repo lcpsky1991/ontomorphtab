@@ -5,7 +5,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import neuroml.generated.Cable;
+import org.morphml.morphml.schema.Cable;
+
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;

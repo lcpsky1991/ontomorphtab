@@ -4,22 +4,9 @@ import java.awt.Color;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Set;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-
-import neuroml.generated.CellInstance;
-import neuroml.generated.Instances;
-import neuroml.generated.NetworkML;
-
-import neuroml.generated.Point;
-import neuroml.generated.Population;
-import neuroml.generated.Populations;
-
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -42,7 +29,6 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
-import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
  * Defines the totality of the objects that can be viewed in the 3D world

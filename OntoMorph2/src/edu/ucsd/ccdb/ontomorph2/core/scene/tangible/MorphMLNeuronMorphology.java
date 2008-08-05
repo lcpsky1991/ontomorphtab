@@ -2,12 +2,12 @@ package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,27 +17,23 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import neuroml.generated.Level3Cell;
-import neuroml.generated.Level3Cells;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.morphml.morphml.schema.Cable;
+import org.morphml.morphml.schema.Segment;
+import org.morphml.morphml.schema.Cell.CablesType;
+import org.morphml.morphml.schema.Cell.SegmentsType;
+import org.morphml.neuroml.schema.Level3Cell;
+import org.morphml.neuroml.schema.Level3Cells;
+import org.morphml.neuroml.schema.NeuroMLLevel3;
+import org.morphml.neuroml.schema.impl.NeuromlImpl;
 
-import neuroml.generated.NeuroMLLevel3;
-import neuroml.generated.Point;
-import neuroml.generated.Segment;
-import neuroml.generated.Cell.Cables;
-import neuroml.generated.Cell.Segments;
-
-
-import com.jme.math.Vector3f;
-
-import edu.ucsd.ccdb.ontomorph2.core.data.DataCacheManager;
+import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
-import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
@@ -61,22 +57,26 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 		JAXBContext context;
 		try {
 			NeuroMLLevel3 neuroml = null;
-			//check to see if this particular file has already been loaded and cached
-			if (!DataCacheManager.getInstance().isMorphMLCached(_morphLoc.getFile())) {
-				context = JAXBContext.newInstance("neuroml.generated");
-				Unmarshaller unmarshaller = context.createUnmarshaller();
-				JAXBElement o = (JAXBElement)unmarshaller.unmarshal(new File(_morphLoc.getFile()));
-				neuroml = (NeuroMLLevel3)o.getValue();
-				DataCacheManager.getInstance().cacheMorphML(_morphLoc.getFile(), neuroml);
-			} else {
-				//if this file has already been loaded, retrieve it from the cache.
-				neuroml = (NeuroMLLevel3)DataCacheManager.getInstance().getCachedMorphML(_morphLoc.getFile());
-			}
 			
+			if (!DataRepository.getInstance().isFileCached(_morphLoc.getFile(), NeuromlImpl.class)) {
+				
+				context = JAXBContext.newInstance("org.morphml.neuroml.schema");
+//				Create the unmarshaller
+				final Unmarshaller unmarshaller = context.createUnmarshaller();
+//				Unmarshall the XML
+				neuroml = (NeuromlImpl)unmarshaller.unmarshal(new File(_morphLoc.getFile()));
+				//cache it for next time
+				DataRepository.getInstance().cacheFile(_morphLoc.getFile(), neuroml);
+			} else {
+//				if this file has already been loaded, retrieve it from the cache.
+				Log.warn("Retrieving this MorphMLNeuronMorphology from the cache!");
+				neuroml = (NeuroMLLevel3)DataRepository.getInstance().getCachedFile(_morphLoc.getFile(), NeuromlImpl.class);
+			}
+
 			Level3Cells c = neuroml.getCells();
 			
 			assert c.getCell().size() == 1;
-			theCell = c.getCell().get(0);
+			theCell = (Level3Cell)c.getCell().get(0);
 			
 		} catch (JAXBException e) {
 			throw new OMTException("Problem loading " + _morphLoc.getFile(), e);
@@ -183,8 +183,10 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	public List<ISegment> getSegments() {
 		List<ISegment> segmentList = new ArrayList<ISegment>();
 
-		for (Segments s : theCell.getSegments()) {
-			for (Segment seg : s.getSegment()) {
+		for (Object o : theCell.getSegments()) {
+			SegmentsType s = (SegmentsType)o;
+			for (Object ob : s.getSegment()) {
+				Segment seg = (Segment)ob;
 				segmentList.add(getMorphMLSegment(seg));
 			}
 		}
@@ -197,8 +199,10 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	protected List<ISegment> getMorphMLSegmentsForCableId(BigInteger id) {
 		List<ISegment> segmentList = new ArrayList<ISegment>();
 
-		for (Segments s : theCell.getSegments()) {
-			for (Segment seg : s.getSegment()) {
+		for (Object o : theCell.getSegments()) {
+			SegmentsType s = (SegmentsType)o;
+			for (Object ob : s.getSegment()) {
+				Segment seg = (Segment)ob;
 				if (seg.getCable().equals(id)) {
 					segmentList.add(getMorphMLSegment(seg));
 				}
@@ -208,9 +212,10 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	}
 	
 	protected Segment getSegmentFromId(BigInteger id) {
-		List<Segments> segments  = theCell.getSegments();
-		for (Segments s : segments) {
-			for (Segment seg : s.getSegment()) {
+		List<SegmentsType> segments  = theCell.getSegments();
+		for (SegmentsType s : segments) {
+			for (Object o : s.getSegment()) {
+				Segment seg = (Segment)o;
 				if (seg.getId().equals(id)) {
 					return seg;
 				}
@@ -225,8 +230,9 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	public Set<ICable> getSegmentGroups() {
 		if (segmentGroupList == null) {
 			segmentGroupList = new HashSet<ICable>();
-			Cables c = theCell.getCables();
-			for(neuroml.generated.Cable cab : c.getCable()) {
+			CablesType c = theCell.getCables();
+			for(Object o: c.getCable()) {
+				Cable cab = (Cable)o;
 				BigInteger id = cab.getId();
 				ArrayList<ISegment> childSegments = new ArrayList<ISegment>();
 				for (ISegment s : this.getSegments()) {
@@ -239,7 +245,8 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 				/* Hackish way to extract some info from the MorphML Files I happen to have
 				 * This needs to be generalized
 				 */
-				for (String s : cab.getGroup()) {
+				for (Object ob : cab.getGroup()) {
+					String s = (String)ob;
 					if ("dendrite_group".equals(s)) {
 						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("sao:sao1211023249"));
 					}

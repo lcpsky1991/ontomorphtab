@@ -220,7 +220,7 @@ public class NeuronMorphologyView extends TangibleView{
 	    super.draw(r);
 	  }*/
 	  
-	  public void selectLevelOfDetail(Renderer r) {
+	  protected void selectLevelOfDetail(Renderer r) {
 		  int target = chooseCableResolution(r);
 		  if (target == 0) {
 			  if (cableResolution == Integer.MAX_VALUE) {
@@ -240,7 +240,7 @@ public class NeuronMorphologyView extends TangibleView{
 		  //reload(); //uncomment this and highlighting will work again
 	  }
 	
-	  public void reload()
+	  protected void reload()
 	  {
 		  super.update();
 		  this.detachAllChildren();
@@ -312,30 +312,18 @@ public class NeuronMorphologyView extends TangibleView{
 		}
 	}
 
-	
-	public void updateSelected(boolean selected) {
-		if (selected) {
-			for (SegmentView sv : this.segViews) {
-				sv.highlight();
-			}
-		} else {
-			for (SegmentView sv: this.segViews) {
-				sv.unhighlight();
-			}
+
+	public void doHighlight() {
+		for (SegmentView sv: this.segViews) {
+			sv.highlight();
 		}
 	}
 
-
-	@Override
-	public void doHighlight() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
+	
 	public void doUnhighlight() {
-		// TODO Auto-generated method stub
-		
+		for (SegmentView sv: this.segViews) {
+			sv.unhighlight();
+		}
 	}
 
 }

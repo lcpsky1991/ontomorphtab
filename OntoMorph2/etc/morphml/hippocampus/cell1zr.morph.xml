@@ -7730,7 +7730,9 @@ SCALE 1.0 1.0 1.0
             </mml:cable>
         </mml:cables>
         <!--Adding the biophysical parameters-->
+        <!--
         <biophysics units="Physiological Units">
+
             <bio:specificCapacitance>
                 <bio:parameter value="1.0">
                     <bio:group>all</bio:group>
@@ -7747,5 +7749,6 @@ SCALE 1.0 1.0 1.0
                 </bio:parameter>
             </bio:initialMembPotential>
         </biophysics>
+        -->
     </cell>
 </cells></neuroml>

@@ -13,7 +13,6 @@
 
     <property file = "local.properties"/>  
 
-
     <property name = "src" value = "./src"/>
     <property name = "lib" value = "./lib"/>
     <property name = "build" value = "./build"/>
@@ -29,7 +28,7 @@
     <property name = "deprecation" value = "off"/>
 
     <!-- <property name = "junit" value = "./junit"/>-->
-	
+
 	<path id = "project.classpath">    
 		
 		<!-- *********************************************  -->
@@ -111,20 +110,14 @@
 		
 		<!-- CCDB Connection Libraries -->
         <pathelement path="${lib}/ccdb-plugin/BrainCatalogCCDBClientReader.jar"/>
-        <pathelement path="${lib}/ccdb-plugin/ext-lib/activation.jar"/>
+
         <pathelement path="${lib}/ccdb-plugin/ext-lib/BrainCatalogCCDB_datamodel.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/FastInfoset.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/http.jar"/>
-		<!--<pathelement path="${lib}/ccdb-plugin/ext-lib/JAXB2_20061211.jar"/>-->
-		<pathelement path="${lib}/ccdb-plugin/ext-lib/jaxb-xjc.jar"/>
-		<pathelement path="${lib}/ccdb-plugin/ext-lib/jaxb-impl.jar"/>
-		<pathelement path="${lib}/ccdb-plugin/ext-lib/jaxb1-impl.jar"/>
-		<pathelement path="${lib}/ccdb-plugin/ext-lib/jaxb-api.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/jaxws-api.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/jaxws-rt.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/jaxws-tools.jar"/>
-        <!--<pathelement path="${lib}/ccdb-plugin/ext-lib/jsr173_api.jar"/>-->
-		<pathelement path="${lib}/ccdb-plugin/ext-lib/jsr173_1.0_api.jar"/>
+        <pathelement path="${lib}/ccdb-plugin/ext-lib/jsr173_api.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/jsr181-api.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/jsr250-api.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/saaj-impl.jar"/>
@@ -132,6 +125,9 @@
         <pathelement path="${lib}/ccdb-plugin/ext-lib/sjsxp.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/stax-ex.jar"/>
         <pathelement path="${lib}/ccdb-plugin/ext-lib/streambuffer.jar"/>
+
+		
+		
 		
 		<!-- Smart Atlas server connection Libraries -->
 
@@ -140,10 +136,149 @@
         <pathelement path="${lib}/axis-1_4/jaxrpc.jar"/>
         <pathelement path="${lib}/axis-1_4/commons-discovery-0.2.jar"/>
         <pathelement path="${lib}/axis-1_4/commons-logging-1.0.4.jar"/>
+		
+		<!-- HyperJaxb2 Libraries -->
+
+        <pathelement path="${lib}/hyperjaxb2/hyperjaxb2-core-0.6.2.jar"/>
+        <pathelement path="${lib}/hyperjaxb2/hyperjaxb2-hibernate-configuration-0.6.2.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/hyperjaxb2-hibernate-customizations-0.6.2.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/hyperjaxb2-hibernate-mapping-0.6.2.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/hyperjaxb2-shared-0.6.2.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/hyperjaxb2-testing-0.6.2.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/asm-2.2.1.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/asm-attrs-2.2.1.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/cglib-2.2_beta1.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/commons-beanutils-1.7.0.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/commons-io-1.2.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/commons-lang-2.1.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/commons-logging-1.1.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/dom4j-1.6.1.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/ehcache-1.2.3.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/hibernate-3.2.2.ga.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/hsqldb-1.7.3.3.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/isorelax-20030108.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/jax-qname-1.1.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/jaxb-api-1.0.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/jaxb-impl-1.0.6.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/jaxb-libs-1.0.6.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/jaxb-xjc-1.0.6.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/jaxbcommons-core-1.0.3.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/jaxbcommons-shared-1.0.3.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/jaxbcommons-testing-1.0.3.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/jaxp-api-1.4.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/jaxp-ri-1.4.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/jta-1.0.1B.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/namespace-1.0.1.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/relaxngDatatype-20020414.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/saxon-8.7.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/saxon-dom-8.7.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/spring-2.0.2.jar"/>
+	    <pathelement path="${lib}/hyperjaxb2/lib/xsdlib-20060615.jar"/>
+		
+		<!-- JAXB Libraries -->
+				
+				<pathelement path="etc/lib/jaxb/activation.jar"/>
+				<pathelement path="etc/lib/jaxb/jaxb-xjc.jar"/>
+				<pathelement path="etc/lib/jaxb/jaxb-impl.jar"/>
+				<pathelement path="etc/lib/jaxb/jaxb1-impl.jar"/>
+				<pathelement path="etc/lib/jaxb/jaxb-api.jar"/>
+				<pathelement path="etc/lib/jaxb/jsr173_1.0_api.jar"/>
+		
+		<!-- Hibernate 2.1 Libraries -->
+				
+		<pathelement path="etc/lib/hibernate-2.1/hibernate2.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/c3p0-0.8.4.5.jar"/>
+			    <!--<pathelement path="etc/lib/hibernate-2.1/lib/cglib-full-2.0.2.jar"/>-->
+			    <pathelement path="etc/lib/hibernate-2.1/lib/commons-collections-2.1.1.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/commons-dbcp-1.2.1.jar"/>
+			    <!--<pathelement path="etc/lib/hibernate-2.1/lib/commons-lang-1.0.1.jar"/>-->
+			    <pathelement path="etc/lib/hibernate-2.1/lib/commons-pool-1.2.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/connector.jar"/>
+			    <!--<pathelement path="etc/lib/hibernate-2.1/lib/ehcache-0.9.jar"/>-->
+			    <pathelement path="etc/lib/hibernate-2.1/lib/jaas.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/jboss-cache.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/jboss-common.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/jboss-jmx.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/jboss-system.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/jcs-1.0-dev.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/jdbc2_0-stdext.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/jgroups-2.2.7.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/jta.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/odmg.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/oscache.jar"/>
+			    <pathelement path="etc/lib/hibernate-2.1/lib/proxool-0.8.3.jar"/>
+				<pathelement path="etc/lib/hibernate-2.1/lib/swarmcache-1.0rc2.jar"/>
+				
+		
+		<!-- compiled NeuroML libraries for HyperJaxb2 -->
+		<pathelement path="${lib}/HyperJaxb2NeuroML-1.7.2.jar"/>
 
 	</path>  
-
-
+	
+	<path id="hyperjaxb2.compile.path">
+				<fileset dir="${lib}/hyperjaxb2/lib">
+					<include name="jaxb-xjc-*.jar"/>
+					<include name="jaxb-impl-*.jar"/>
+					<include name="isorelax-*.jar"/>
+					<include name="jaxb-api-*.jar"/>
+					<include name="jaxb-libs-*.jar"/>
+					<include name="jaxp-api-*.jar"/>
+					<include name="jaxp-ri-*.jar"/>
+					<include name="relaxngDatatype-*.jar"/>
+					<include name="xsdlib-*.jar"/>
+					<include name="jaxbcommons-core-*.jar"/>
+					<include name="jaxbcommons-shared-*.jar"/>
+					<include name="jaxbcommons-testing-*.jar"/>
+					<include name="spring-*.jar"/>
+					<include name="hyperjaxb2-core-*.jar"/>
+					<include name="hyperjaxb2-hibernate-configuration-*.jar"/>
+					<include name="hyperjaxb2-hibernate-customizations-*.jar"/>
+					<include name="hyperjaxb2-hibernate-mapping-*.jar"/>
+					<include name="hyperjaxb2-shared-*.jar"/>
+					<include name="hyperjaxb2-testing-*.jar"/>
+					<include name="commons-lang-*.jar"/>
+					<include name="commons-logging-*.jar"/>
+					<include name="commons-beanutils-*.jar"/>
+					<include name="log4j-*.jar"/>
+					<include name="saxon-*.jar"/>
+					<include name="saxon-dom-*.jar"/>
+					<include name="hibernate-*.jar"/>
+					<include name="junit-*.jar"/>
+				</fileset>
+			</path>
+		<path id="hyperjaxb2.runtime.path">
+			<path refid="hyperjaxb2.compile.path"/>
+				<fileset dir="${basedir}/lib">
+					<include name="antlr-*.jar"/>
+					<include name="asm-*.jar"/>
+					<include name="asm-attrs-*.jar"/>
+					<include name="cglib-*.jar"/>
+					<include name="ehcache-*.jar"/>
+					<include name="jta-*.jar"/>
+					<include name="hibernate-*.jar"/>
+					<include name="dom4j-*.jar"/>
+					<include name="commons-collections-*.jar"/>
+					<include name="commons-io-*.jar"/>
+					<include name="commons-lang-*.jar"/>
+					<include name="jaxb-api-*.jar"/>
+					<include name="jaxb-impl-*.jar"/>
+					<include name="jaxp-api-*.jar"/>
+					<include name="jaxp-ri-*.jar"/>
+					<include name="isorelax-*.jar"/>
+					<include name="jaxb-libs-*.jar"/>
+					<include name="relaxngDatatype-*.jar"/>
+					<include name="xsdlib-*.jar"/>
+					<include name="jaxbcommons-shared-*.jar"/>
+					<include name="jaxbcommons-testing-*.jar"/>
+					<include name="hyperjaxb2-shared-*.jar"/>
+					<include name="hyperjaxb2-testing-*.jar"/>
+					<include name="commons-logging-*.jar"/>
+					<include name="log4j-*.jar"/>
+					<include name="hsqldb-*.jar"/>
+					<include name="junit-*.jar"/>
+				</fileset>
+			</path>
+	
 
 	<!-- =================================================================== -->
 	<!-- USAGE -->		
@@ -341,60 +476,6 @@
       </fail>
    </target>
 	
-	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
-		<classpath refid="project.classpath"/>
-	</taskdef>
-	
-	<!-- hyper jaxb target
-	<target name="generate.sources">
-	  <taskdef name="xjc"
-	    classname="com.sun.tools.xjc.XJCTask"
-	    classpathref="xjc.lib.path"/>
-	  <mkdir dir="${generated.sources}"/>
-	  <xjc target="${generated.sources}">
-	    <arg line="-nv"/>
-	    <arg line="-extension"/>
-	    <arg line="-Xhibernate-xdoclets"/>
-	    <binding dir="${basedir}">
-	      <include name="binding/*.xml"/>
-	    </binding>
-	    <schema dir="${basedir}">
-	      <include name="schema/*.xsd"/>
-	    </schema>
-	  </xjc>
-	</target>
-	-->
-<!-- hybernate mapping	
-	<target name="generate.hibernate.mapping" depends="jar">
-
-	  <taskdef name="hibernatedoclet"
-	    classname="xdoclet.modules.hibernate.HibernateDocletTask"
-	    classpathref="hibernatedoclet.lib.path"/>
-
-	  <tstamp>
-	    <format property="TODAY" pattern="dd-MM-yy"/>
-	  </tstamp>
-
-	  <mkdir dir="${hibernate.mapping}"/>
-
-	  <hibernatedoclet
-	    destdir="${hibernate.mapping}"
-	    mergedir="${generated.sources}"
-	    excludedtags="@version,@author,@todo,@see,@throws"
-	    addedtags="@xdoclet-generated at ${TODAY},@copyright The XDoclet Team,@author XDoclet"
-	    force="false"
-	    verbose="false">
-
-	    <fileset dir="${generated.sources}">
-	      <include name="**/*.java"/>
-	      <exclude name="**/runtime/*.java"/>
-	    </fileset>
-
-	    <hibernate version="2.0"/>
-	  </hibernatedoclet>
-	</target>
-	-->
-	
 	<!-- exporting the database schema from the hibernate mapping
 	<target name="export.database.schema" depends="generate.hibernate.mapping">
 
@@ -419,6 +500,65 @@
 	</target>
 	-->
 	
+	<target name="exportDatabaseSchema" depends="compileGeneratedNeuroMLClasses-1.7.2-hyperjaxb2">
+		<!-- Hibernate Tools import -->
+		<taskdef name="schemaexport"
+			classname="org.hibernate.tool.hbm2ddl.SchemaExportTask"
+			classpathref="project.classpath"/>
+		
+		<mkdir dir="db"/>
+
+	    <schemaexport
+			    properties="target/classes/hibernate.properties"
+			    quiet="yes"
+			    text="no"
+			    drop="no"
+			    delimiter=";"
+			    output="db/schema.sql">
+			    <fileset dir="target/classes">
+			      <include name="**/*.hbm.xml"/>
+			    </fileset>
+		</schemaexport>
+	</target>
+	
+	<!-- Start the HSQL DB server -->
+	<target name="startCleanDB" description="Run HSQL database server with clean DB">
+	<!-- Delete database files -->
+	<delete dir="db"/>
+	<java classname="org.hsqldb.Server"
+	fork="yes"
+	classpathref="project.classpath"
+	failonerror="true">
+	<arg value="-database.0"/>
+	<arg value="file:db/db"/>
+	</java>
+	</target>
+	
+	<!-- Start the HSQL DB server -->
+	<target name="startDB" description="Run HSQL database server">
+		<java classname="org.hsqldb.Server"
+		fork="yes"
+		classpathref="project.classpath"
+		failonerror="true">
+		<arg value="-database.0"/>
+		<arg value="file:db/db"/>
+		</java>
+	</target>
+	
+	<!-- Start the HSQL DB browser tool -->
+	<target name="dbmanager" description="Start HSQL DB manager">
+	<java
+	classname="org.hsqldb.util.DatabaseManagerSwing"
+	fork="yes"
+	classpathref="project.classpath"
+	failonerror="true">
+	<arg value="-url"/>
+	<arg value="jdbc:hsqldb:hsql://localhost/"/>
+	<arg value="-driver"/>
+	<arg value="org.hsqldb.jdbcDriver"/>
+	</java>
+	</target>
+	
 	<target name="generateNeuroMLClasses-1.7-modified" >
 		<!-- http://java.sun.com/webservices/docs/1.6/jaxb/ant.html -->
 		<xjc destdir="src/" package="neuroml.generated" removeOldOutput="yes">
@@ -436,6 +576,44 @@
 				  
 			</xjc>
 	</target>
+	
+		<target name="generateNeuroMLClasses-1.7.2-hyperjaxb2">
+			<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="hyperjaxb2.compile.path"/>
+			<mkdir dir="target/generated-sources/xjc"/>
+			<xjc target="target/generated-sources/xjc" extension="true">
+				<arg line="
+					-Xequals
+					-XhashCode
+					-Xhyperjaxb2
+					-Xhyperjaxb2-rt=RoundtripTest"/>
+				<binding dir="etc/neuroml-schemas/1.7.2">
+				 	<include name="neuroml-bindings.xjb"/>
+				</binding>
+				<schema dir="etc/neuroml-schemas/1.7.2/Level3">
+				 	<include name="NeuroML_Level3_v1.7.2.xsd"/>
+				</schema>
+			</xjc>
+		</target>
+	
+	<target name="compileGeneratedNeuroMLClasses-1.7.2-hyperjaxb2" depends="generateNeuroMLClasses-1.7.2-hyperjaxb2">
+			<mkdir dir="target/classes"/>
+			<javac
+				destdir="target/classes" 
+				srcdir="target/generated-sources/xjc"
+				classpathref="hyperjaxb2.compile.path">
+			</javac>
+			<copy todir="target/classes">
+				<fileset dir="etc/neuroml-schemas/1.7.2"/>
+				<fileset dir="target/generated-sources/xjc">
+					<exclude name="**/*.java" />
+				</fileset>
+			</copy>
+		</target>
+		
+		<target name="packageGeneratedNeuroMLClasses-1.7.2-hyperjaxb2" depends="compileGeneratedNeuroMLClasses-1.7.2-hyperjaxb2">
+			<jar destfile="lib/HyperJaxb2NeuroML-1.7.2.jar"
+				basedir="target/classes"/> 
+		</target>
 	
 	<target name="generateNeurolucidaClasses" >
 			<!-- http://java.sun.com/webservices/docs/1.6/jaxb/ant.html -->

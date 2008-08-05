@@ -17,9 +17,6 @@ import javax.xml.bind.Unmarshaller;
 import neurolucida.generated.NeurolucidaData;
 import neurolucida.generated.Tree;
 import neurolucida.generated.Point;
-import neuroml.generated.Segment;
-import neuroml.generated.Cell.Cables;
-import neuroml.generated.Cell.Segments;
 
 import com.jme.math.Vector3f;
 
