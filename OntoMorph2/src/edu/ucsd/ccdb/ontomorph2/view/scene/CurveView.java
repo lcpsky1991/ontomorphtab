@@ -1,12 +1,17 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jme.bounding.*;
 import com.jme.curve.BezierCurve;
 import com.jme.intersection.BoundingPickResults;
 import com.jme.intersection.PickResults;
 import com.jme.math.Ray;
+import com.jme.scene.Geometry;
 import com.jme.scene.Node;
+import com.jme.scene.batch.GeomBatch;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
@@ -20,7 +25,8 @@ public class CurveView extends TangibleView {
 	Node anchors = null;
 	BezierCurve b = null;
 	
-	public CurveView(Curve3D curve) {
+	public CurveView(Curve3D curve) 
+	{
 		super(curve);
 		super.setName("Curve3DView");
 		update();
@@ -47,6 +53,12 @@ public class CurveView extends TangibleView {
 			this.detachChild(anchors);
 			anchors = null;
 		}
+		
+		//update the geometries registry, this is neccessary to enable picking, which is based on geomtry key maps
+		List<Geometry> ll = new ArrayList<Geometry>();
+		ll.add(this.b);
+		this.registerGeometries(ll);
+		
 		//no need to remove anchor points because this is done 
 		//automatically already
 		if (this.getModel().isSelected()) 
@@ -106,21 +118,34 @@ public class CurveView extends TangibleView {
 	
 	/**
 	 * @author caprea
-	 * overwrites findPick in so that it can be picked (JME doesnt support this)
+	 * overwrites findPick in so that it can be picked (JME doesnt support picking curves)
      */
-	/*
     public void findPick(Ray ray, PickResults results) 
     {
-        if (getWorldBound() == null || !isCollidable) {
-            return;
-        }
-        if (getWorldBound().intersects(ray)) {
-            // find the triangle that is being hit.
-            // add this node and the triangle to the PickResults list.
-            //results.addPick(ray, this.b.getBatch(0));
-            System.out.println("interescts " + this.b.getBatch(0));
+        if (getWorldBound() == null || !isCollidable) return;
+       
+    	//because JME does not have a findPick for Bezier curves, we do what the superclass does (Node)
+    	//which is to loop through all the children and call pick results on the children
+    	//but in addition, also check the curve
+    
+        super.findPick(ray, results);
+        
+        if (getWorldBound().intersects(ray)) 
+        {
+        	for (int i=0; i < this.b.getBatchCount(); i++)
+        	{
+        		//results.addPick(ray, this.b.getBatch(i)); //good idea to look through all the batches and call their findPicks than to jump into adding the result 
+        		//ca: I dont know why there is multiple Batchs so I just add them all
+        		//ca: I expect it will usually be only one so getBatch(0) will work in most cases
+        		GeomBatch gb = this.b.getBatch(i); 
+                if ( gb.isEnabled() )
+                {
+                	gb.findPick(ray, results);
+                	//System.out.println("intersects " + gb);
+                }
+        	}
         }
     }
-    */
+    
 	
 }

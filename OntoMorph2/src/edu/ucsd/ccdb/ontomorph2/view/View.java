@@ -421,7 +421,7 @@ public class View extends BaseSimpleGame {
 			for (int i = 0; i < results.getNumber(); i++)
 			{
 				GeomBatch obj = results.getPickData(i).getTargetMesh();
-				System.out.println("result: " + obj);
+				System.out.println("result" + i + ": " + obj.getName() + " part " + obj.getParentGeom().getName());
 			}
 			
 			doSelection(currentPick.getTargetMesh());			

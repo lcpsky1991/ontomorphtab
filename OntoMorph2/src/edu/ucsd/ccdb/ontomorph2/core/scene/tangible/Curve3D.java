@@ -254,9 +254,7 @@ public class Curve3D extends Tangible{
 	 */
 	public void addControlPoint(int index, OMTVector pos)
 	{
-		//TODO: impliment the index parameter, currently only appends
 		OMTVector modlist[] = new OMTVector[controlPoints.length+1]; //make the new list one element larger 
-		
 		
 		//if no index supplied append a new control point
 		if ( index < 0 )
