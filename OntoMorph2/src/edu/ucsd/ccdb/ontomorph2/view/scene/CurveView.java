@@ -76,6 +76,7 @@ public class CurveView extends TangibleView {
 		this.b.updateRenderState(); 
 		this.b.updateGeometricState(5f, true);
 		
+		
 		if (anchors != null) {
 			this.anchors.updateModelBound();
 			this.anchors.updateRenderState();

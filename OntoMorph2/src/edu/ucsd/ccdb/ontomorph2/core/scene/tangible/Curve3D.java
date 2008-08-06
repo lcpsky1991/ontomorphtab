@@ -302,5 +302,31 @@ public class Curve3D extends Tangible{
 		this.theCurve = null;
 		super.changed();
 	}
+
+	
+	public void select()
+	{
+		boolean ms = TangibleManager.getInstance().getMultiSelect(); //get previous state of multiselect
+		
+		super.select();
+		TangibleManager.getInstance().setMultiSelect(true);
+		anchors = getAnchorPoints();
+		
+		for (int i=0; i < anchors.size(); i++)
+		{
+			anchors.get(i).select();
+		}
+		TangibleManager.getInstance().setMultiSelect(ms);	//restore multiselect to however it was befpre
+	}
+	
+	public void unselect()
+	{
+		super.unselect();
+		for (int i=0; i < anchors.size(); i++)
+		{
+			anchors.get(i).unselect();
+		}
+	}
 	
 }
+
