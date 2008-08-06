@@ -66,6 +66,11 @@ public class SceneObserver implements Observer {
 				msg = "reloading slides";
 				redoScene = true;
 			}
+			else if (arg.equals(Scene.CHANGED_CELL))
+			{
+				msg = "reloading cells";
+				redoScene = true;
+			}
 			else if (arg.equals(Scene.CHANGED_TEST))
 			{
 				_view.getView3D().setCurves(scene.getCurves());
@@ -98,7 +103,7 @@ public class SceneObserver implements Observer {
 				_view.getView3D().setCurves(scene.getCurves());
 				_view.getView3D().setSurfaces(scene.getSurfaces());
 
-				msg += "\nreloading entire scene";				
+				msg += "\nPerformance Mesg: reloading entire scene";				
 			}			
 			System.out.println("Performance Mesg: " + msg);
 		}
@@ -140,6 +145,7 @@ public class SceneObserver implements Observer {
 		
 		else if (o instanceof CurveAnchorPoint)
 		{
+			//TODO: Curve3D now has a getChildrenCells, use that to query cells instead of this
 			CurveAnchorPoint point = (CurveAnchorPoint) o;	
 			Curve3D changed = point.getParentCurve();
 			TangibleView tv = null; //used for updating 

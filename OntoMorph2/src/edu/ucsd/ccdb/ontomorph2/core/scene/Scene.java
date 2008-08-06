@@ -66,7 +66,7 @@ public class Scene extends Observable{
 	URL cell5URL = null;
 	URL cell6URL = null;
 	URL cell7URL = null;
-	URL cell11URL = null;
+	public URL cell11URL = null;	//made public for test-case with context menu to create new cells
 	URL mitoObjURL = null;
 	URL mito2ObjURL = null;
 	URL astroObjURL = null;

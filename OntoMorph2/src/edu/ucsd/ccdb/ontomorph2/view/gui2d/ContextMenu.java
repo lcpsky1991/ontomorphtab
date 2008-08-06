@@ -16,11 +16,15 @@ import org.fenggui.menu.MenuItem;
 import org.fenggui.util.Color; //conflict with other import
 import org.fenggui.util.Point;
 
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -43,13 +47,17 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	
 	static final String NEW = "New...";
-	static final String CURVE = "Curve";
+	static final String N_CURVE = "Curve";
 	static final String ANNOTATE = "Annotate";
 	static final String ANIMATE = "Animate";
 	static final String PROPERTIES = "Display Properties";
-	static final String ANCHOR = "Anchor Point";
+	static final String N_ANCHOR = "Anchor Point";
+	static final String N_CELL = "Cell";
 	static ContextMenu instance = null;
 	TitledBorder border = null;
+	
+	
+	private static final DemoCoordinateSystem dcoords =  new DemoCoordinateSystem();	//coordinates for test-case new objects
 	
 	public static ContextMenu getInstance() {
 		if (instance == null) {
@@ -76,8 +84,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		  
         Menu newMenu = new Menu();
         mnuContext.registerSubMenu(newMenu, NEW);
-		makeMenuItem(CURVE, newMenu);
-		makeMenuItem(ANCHOR, newMenu);
+		makeMenuItem(N_CURVE, newMenu);
+		makeMenuItem(N_ANCHOR, newMenu);
+		makeMenuItem(N_CELL, newMenu);
         makeMenuItem(ANNOTATE, mnuContext);
         makeMenuItem(ANIMATE, mnuContext);
         makeMenuItem(PROPERTIES, mnuContext);
@@ -190,7 +199,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			System.out.println("do animation");
 		} else if (PROPERTIES.equals(opt)) {
 			System.out.println("show properties");
-		} else if (CURVE.equals(opt)) 
+		} else if (N_CURVE.equals(opt)) 
 		{
 			//make a new bezier curve right here
 			if (orig instanceof Tangible)
@@ -198,12 +207,16 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				testCreateCurve(orig);
 			}
 		}
-		else if (ANCHOR.equals(opt))
+		else if (N_ANCHOR.equals(opt))
 		{
 			if (orig instanceof CurveAnchorPoint)
 			{
 				testCreatePoint(orig);
 			}
+		}
+		else if (N_CELL.equals(opt))
+		{
+			testCreateCell(orig);
 		}
 		View2D.getInstance().removePopup();
 	}
@@ -230,7 +243,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		a = new OMTVector(src.getRelativePosition().add(-5f,-5f,0f));
 		
 		OMTVector[] pts = {a, b, c};
-		Curve3D cap = new Curve3D("capreas new deal", pts, new DemoCoordinateSystem());
+		Curve3D cap = new Curve3D("capreas new deal", pts, dcoords);
 		cap.setColor(java.awt.Color.orange);
 		cap.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.01f);		
 		
@@ -246,4 +259,54 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
             DisplaySystem.getDisplaySystem().getWorldCoordinates( mousePos, 0.3f, pickRay.direction ).subtractLocal( pickRay.origin ).normalizeLocal()
 	 */
 	
+	public void testCreateCell(Tangible src)
+	{
+		/*NeuronMorphology cell11 = new MorphMLNeuronMorphology(cell11URL, curve1, ((float)i)/20f-0.01f, 
+				NeuronMorphology.RENDER_AS_LOD, d);
+		cell11.setRelativeScale(0.01f);
+		cell11.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
+		addSceneObject(cell11);
+		*/
+		NeuronMorphology nc = null;
+		Curve3D ocurve = null;
+		float t = 0.5f;	//default is middle
+		if ( src instanceof Curve3D)
+		{
+			//if going fromt he curve take the previous two cells and get their difference in time
+			ocurve = (Curve3D) src;
+		}
+		else if ( src instanceof CurveAnchorPoint)
+		{
+			CurveAnchorPoint ocp = (CurveAnchorPoint) src;
+			ocurve = ocp.getParentCurve();
+		}
+		else
+		{
+			//exit early without updating the scene
+			return;
+		}
+		
+		List<NeuronMorphology> cells = ocurve.getChildrenCells();
+		
+		if (cells.size() > 0)
+		{
+			float ta = 0;
+			float tb = 1;
+			
+			//take the t of the first one, the t of the last one, find the difference, divide it by number of cells = new delta
+			ta = cells.get(0).getTime();	//the last cell in the list
+			tb = cells.get(cells.size() - 1).getTime();
+			t = tb + ((tb - ta) / (cells.size()));
+		}
+		
+		//do the rest of the actions
+		nc = new MorphMLNeuronMorphology(View.getInstance().getScene().cell11URL, ocurve, t, NeuronMorphology.RENDER_AS_LOD, dcoords);
+		nc.setRelativeScale(0.01f);
+		nc.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
+		nc.setVisible(true);
+		View.getInstance().getScene().changed(Scene.CHANGED_CELL);
+		nc.select();
+	}
 }
+
+

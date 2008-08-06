@@ -2,6 +2,9 @@ package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import java.util.List;
 
@@ -19,6 +22,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
 
 
@@ -64,6 +68,32 @@ public class Curve3D extends Tangible{
 		return anchors;
 	}
 	
+	/**
+	 * Returns a list of cells that are associated with this curve
+	 * @author caprea
+	 * @return array list of {@link NeuronMorphology}s that 'belong' to this curve.
+	 * 
+	 */
+	public List<NeuronMorphology> getChildrenCells()
+	{
+		 Set<NeuronMorphology> all = TangibleManager.getInstance().getCells();
+		 List<NeuronMorphology> kids = new ArrayList<NeuronMorphology>();
+		 kids.clear();
+		 
+		 Iterator i = all.iterator();
+		 
+		 //loops through all possible cells, if they are part of this curve then add those cells to the list to return
+		 while ( i.hasNext() )
+		 {
+			 NeuronMorphology consider = (NeuronMorphology)i.next();
+			 if (consider.getCurve().equals(this))
+			 {
+				 kids.add(consider);
+			 }
+		 }
+		 
+		 return kids;
+	}
 	/**
 	 * Counts the number of controlpoints that define this curve
 	 * @return the number of points defining this curve
@@ -316,6 +346,7 @@ public class Curve3D extends Tangible{
 		{
 			anchors.get(i).select();
 		}
+		//puts the curve as the most recently selected item		
 		TangibleManager.getInstance().setMultiSelect(ms);	//restore multiselect to however it was befpre
 	}
 	
