@@ -64,18 +64,22 @@ public class SceneObserver implements Observer {
 			{
 				_view.getView3D().setSlides(scene.getSlides());
 				msg = "reloading slides";
-				redoScene = true;
+				reloadAll(scene);
 			}
 			else if (arg.equals(Scene.CHANGED_CELL))
 			{
 				msg = "reloading cells";
-				redoScene = true;
+				reloadCells(scene);
+			}
+			else if (arg.equals(Scene.CHANGED_PART))
+			{
+				msg = "reloading part";
+				reloadAll(scene);
 			}
 			else if (arg.equals(Scene.CHANGED_TEST))
 			{
 				_view.getView3D().setCurves(scene.getCurves());
-				_view.getView3D().setCells(scene.getCells());
-				
+				reloadCells(scene);
 				msg = "reloading test";
 			}
 			
@@ -84,27 +88,9 @@ public class SceneObserver implements Observer {
 			{
 				//Default case for reloading entire scene 
 				System.err.println("Warning in WBC SceneObserver: argument supplied for update scene not accounted for (" + arg +")");
-				redoScene = true;
-			}
-			
-			//	RELOAD most things
-			//(this is used for load in prototype)
-			if ( redoScene )
-			{
-				_view.getView3D().setVolumes(scene.getVolumes());
 				
-				_view.getView3D().setCells(scene.getCells());
-				for (NeuronMorphology c : scene.getCells())
-				{
-					
-					NeuronMorphology mi = (NeuronMorphology) c;
-					mi.addObserver(this);
-				}
-				_view.getView3D().setCurves(scene.getCurves());
-				_view.getView3D().setSurfaces(scene.getSurfaces());
-
-				msg += "\nPerformance Mesg: reloading entire scene";				
-			}			
+			}
+		
 			System.out.println("Performance Mesg: " + msg);
 		}
 
@@ -154,6 +140,16 @@ public class SceneObserver implements Observer {
 			tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
 			if ( tv != null) tv.update();	//update the anchorpoint
 			
+			
+			for ( NeuronMorphology c: changed.getChildrenCells())
+			{
+				c.positionAlongCurve(c.getCurve(), c.getTime());
+				tv = TangibleViewManager.getInstance().getTangibleViewFor(c);
+				if (tv != null)	tv.update();
+			}
+			
+			
+			/*
 			for ( NeuronMorphology c : _view.getScene().getCells())
 			{
 				if ( c.getCurve().equals(changed) )	//if this cell is a part of the curve that has been modified
@@ -164,6 +160,7 @@ public class SceneObserver implements Observer {
 					if (tv != null)	tv.update();
 				}
 			}
+			*/
 		}
 		
 		
@@ -205,4 +202,24 @@ public class SceneObserver implements Observer {
 		_view = view;
 	}
 
+	
+	private void reloadCells(Scene s)
+	{
+		_view.getView3D().setCells(s.getCells());
+		for (NeuronMorphology c : s.getCells())
+		{
+			NeuronMorphology mi = (NeuronMorphology) c;
+			//mi.addObserver(this);
+		}
+	}
+	public void reloadAll(Scene s)
+	{
+		 	_view.getView3D().setVolumes(s.getVolumes());
+			_view.getView3D().setCells(s.getCells());
+			_view.getView3D().setCurves(s.getCurves());
+			_view.getView3D().setSurfaces(s.getSurfaces());
+			reloadCells(s);
+			System.out.println("Performance Mesg: reloading entire scene");
+	}
+	
 }

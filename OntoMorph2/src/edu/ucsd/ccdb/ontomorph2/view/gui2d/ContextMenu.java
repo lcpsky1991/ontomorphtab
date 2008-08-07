@@ -229,6 +229,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		OMTVector place = new OMTVector(src.getRelativePosition().add(1f,1f,0f));
 		
 		cp.getParentCurve().addControlPoint(time, place);
+		
 	}
 	
 	//TODO: MOVE this function and replace its signature with something appropriate
@@ -245,6 +246,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		OMTVector[] pts = {a, b, c};
 		Curve3D cap = new Curve3D("capreas new deal", pts, dcoords);
 		cap.setColor(java.awt.Color.orange);
+		cap.setVisible(true);
 		cap.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.01f);		
 		
 		//redraw the scene, but not the whole scene, let observer know the curves have changed
@@ -288,24 +290,26 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		List<NeuronMorphology> cells = ocurve.getChildrenCells();
 		
-		if (cells.size() > 0)
+		float high=0;
+		//get information about the distribution of the cells along the curve
+		for (int c=0; c < cells.size(); c++)
 		{
-			float ta = 0;
-			float tb = 1;
-			
-			//take the t of the first one, the t of the last one, find the difference, divide it by number of cells = new delta
-			ta = cells.get(0).getTime();	//the last cell in the list
-			tb = cells.get(cells.size() - 1).getTime();
-			t = tb + ((tb - ta) / (cells.size()));
+			float num=cells.get(c).getTime();
+			if (num > high) high = num;
 		}
 		
+		
+		t = (high / cells.size()) + high;
+		
+		TangibleManager.getInstance().unselectAll();
 		//do the rest of the actions
 		nc = new MorphMLNeuronMorphology(View.getInstance().getScene().cell11URL, ocurve, t, NeuronMorphology.RENDER_AS_LOD, dcoords);
 		nc.setRelativeScale(0.01f);
 		nc.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
 		nc.setVisible(true);
-		View.getInstance().getScene().changed(Scene.CHANGED_CELL);
 		nc.select();
+		View.getInstance().getScene().changed(Scene.CHANGED_PART);
+		
 	}
 }
 

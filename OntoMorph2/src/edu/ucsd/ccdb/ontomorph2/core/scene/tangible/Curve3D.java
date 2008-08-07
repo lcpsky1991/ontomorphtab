@@ -317,6 +317,7 @@ public class Curve3D extends Tangible{
 		CurveAnchorPoint prev = anchors.get(index-1);
 		CurveAnchorPoint curr = anchors.get(index);
 		prev.unselect();
+		curr.setVisible(true);
 		curr.select();
 		
 		//update the scene

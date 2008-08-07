@@ -237,9 +237,20 @@ public class NeuronMorphologyView extends TangibleView{
 	  {
 		  super.update();
 		  updateModelBound();
-		  //reload(); //uncomment this and highlighting will work again
+		  //reload(); //uncomment this and highlighting will work again - but this is resolved by adding update() to doHightlight()
 	  }
 	
+	  /**
+	   * Not meant to be a function released or stuck in the SVN. If it shows up, 
+	   * chances are it probably is supposed to go in the update() method
+	   *
+	   */  
+	  private void debug()
+	  {
+
+	  }
+	  
+	  
 	  protected void reload()
 	  {
 		  super.update();
@@ -316,6 +327,7 @@ public class NeuronMorphologyView extends TangibleView{
 	public void doHighlight() {
 		for (SegmentView sv: this.segViews) {
 			sv.highlight();
+			sv.update();
 		}
 	}
 
@@ -323,6 +335,7 @@ public class NeuronMorphologyView extends TangibleView{
 	public void doUnhighlight() {
 		for (SegmentView sv: this.segViews) {
 			sv.unhighlight();
+			sv.update();
 		}
 	}
 

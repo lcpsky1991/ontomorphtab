@@ -77,6 +77,10 @@ public class View3D extends Node{
 		}
 	}
 	
+	/**
+	 * Detaches all children and then re-adds them fromt he paramter
+	 * @param cells the {@link NeuronMorphology}s that will be added
+	 */
 	public void setCells(Set<NeuronMorphology> cells) {
 		cellsNode.detachAllChildren();
 		for(NeuronMorphology cell : cells) {

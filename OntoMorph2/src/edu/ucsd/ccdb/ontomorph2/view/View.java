@@ -13,6 +13,7 @@ import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
+import com.jme.curve.BezierCurve;
 import com.jme.image.Texture;
 import com.jme.input.FirstPersonHandler;
 import com.jme.input.InputHandler;
@@ -61,6 +62,7 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SegmentView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 //=========
@@ -314,10 +316,12 @@ public class View extends BaseSimpleGame {
 				//====================================
 				if (MouseInput.get().isButtonDown(0)) //left 
 				{
-					if (MouseInput.get().getXDelta() == 0 && MouseInput.get().getYDelta() == 0) {
+					if (MouseInput.get().getXDelta() == 0 && MouseInput.get().getYDelta() == 0) 
+					{
 						//not dragging, just clicking
 						doPick();
-					} else {
+					} else 
+					{
 						//dragging
 						manipulateCurrentSelection();
 					}
@@ -411,20 +415,29 @@ public class View extends BaseSimpleGame {
 		//get stuff we are trying to pick/select
 		PickResults results = getPickResults();
 		
-		PickData currentPick;	//stores information for mouse picking					
+		PickData currentPick = null;	//stores information for mouse picking					
 		
 		if ( results.getNumber() > 0)
 		{
-			currentPick = results.getPickData(0);	//take the closest pick and set
-			
-			
-			for (int i = 0; i < results.getNumber(); i++)
+			//in debug mode do not select curves or slides
+			if ( debugMode)
 			{
-				GeomBatch obj = results.getPickData(i).getTargetMesh();
-				//System.out.println("result" + i + ": " + obj.getName() + " part " + obj.getParentGeom().getName());
+				for (int i = 0; currentPick == null && i < results.getNumber(); i++)
+				{
+					GeomBatch obj = results.getPickData(i).getTargetMesh();
+					if ( !(obj.getParentGeom() instanceof BezierCurve || obj.getParentGeom() instanceof SlideView))
+					{
+						currentPick = results.getPickData(i);
+					}
+					System.out.println("result" + i + ": " + obj.getName() + " part " + obj.getParentGeom().getName());
+				}
+			}
+			else
+			{
+				currentPick = results.getPickData(0);	//take the closest pick and set
 			}
 			
-			doSelection(currentPick.getTargetMesh());			
+			if (currentPick != null) doSelection(currentPick.getTargetMesh());			
 		} 
 		else 
 		{
