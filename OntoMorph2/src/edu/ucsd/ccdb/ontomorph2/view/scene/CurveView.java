@@ -17,13 +17,15 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 
 public class CurveView extends TangibleView {
 
 	Node anchors = null;
-	BezierCurve b = null;
+	//BezierCurve b = null;
+	CatmullRomCurve b = null;
 	
 	public CurveView(Curve3D curve) 
 	{
@@ -42,7 +44,8 @@ public class CurveView extends TangibleView {
 		this.detachChild(this.b);
 		
 		Curve3D curve = ((Curve3D)getModel());
-		this.b = (BezierCurve)curve.getCurve();
+		//this.b = (BezierCurve)curve.getCurve();
+		this.b = (CatmullRomCurve)curve.getCurve();
 		
 		
 		this.attachChild(this.b);

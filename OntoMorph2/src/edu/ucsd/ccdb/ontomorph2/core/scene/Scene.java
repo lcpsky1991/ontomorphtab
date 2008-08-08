@@ -278,10 +278,9 @@ public class Scene extends Observable{
 		addSceneObject(cell10); */
 		
 
-		int numCells = 3;
+		int numCells = 15;
 		for (int i = 1; i < numCells; i++) {
-			NeuronMorphology cell11 = new MorphMLNeuronMorphology(cell11URL, curve1, ((float)i)/numCells-0.01f, 
-					NeuronMorphology.RENDER_AS_LOD, d);
+			NeuronMorphology cell11 = new MorphMLNeuronMorphology(cell11URL, curve1, ((float)i)/numCells-0.01f, NeuronMorphology.RENDER_AS_LOD, d);
 			cell11.setRelativeScale(0.01f);
 			cell11.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
 			addSceneObject(cell11);

@@ -36,6 +36,7 @@ import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
  * Need to implement selection handlers.  One click should select a segment, while a double-click
  * should select the whole cell
  * 
+ * @author caprea
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @see NeuronMorphology
  *
@@ -237,6 +238,7 @@ public class NeuronMorphologyView extends TangibleView{
 	  {
 		  super.update();
 		  updateModelBound();
+		  debug();
 		  //reload(); //uncomment this and highlighting will work again - but this is resolved by adding update() to doHightlight()
 	  }
 	
@@ -247,7 +249,12 @@ public class NeuronMorphologyView extends TangibleView{
 	   */  
 	  private void debug()
 	  {
-
+		  
+		  	Node sceneRoot = this.getNode();
+			LightState lightState = null;
+			lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
+		    lightState.setEnabled(true);	
+		    sceneRoot.setRenderState(lightState);
 	  }
 	  
 	  

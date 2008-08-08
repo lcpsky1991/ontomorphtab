@@ -60,7 +60,8 @@ public class CurveAnchorPoint extends Tangible {
 	 * Null implementation overriding super class functionality 
 	 * to prevent rotation
 	 */
-	public void rotate(float dx, float dy, OMTVector constraint){
+	public void rotate(float dx, float dy, OMTVector constraint)
+	{
 		//CurveAnchorPoints shouldn't rotate
 	}
 	

@@ -308,6 +308,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		nc.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
 		nc.setVisible(true);
 		nc.select();
+		
 		View.getInstance().getScene().changed(Scene.CHANGED_PART);
 		
 	}

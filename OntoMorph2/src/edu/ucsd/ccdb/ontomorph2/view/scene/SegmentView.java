@@ -391,7 +391,7 @@ public class SegmentView extends TangibleView{
 		}
 		else 
 		{
-			this.setToDefaultColor(g);	
+			this.setToDefaultColor(g);
 		}
 	}
 	

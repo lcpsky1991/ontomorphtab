@@ -32,7 +32,7 @@ public class CurveAnchorPointView extends TangibleView {
 		super(capt);
 		super.setName("CurveAnchorPointView");
 		this.s =  new Sphere("curve anchor point", new OMTVector(0,0,0), 6, 6, 0.5f);
-		s.setModelBound(new BoundingSphere());
+		s.setModelBound(new BoundingBox());
 		s.updateModelBound();	
 		
 		List<Geometry> ll = new ArrayList<Geometry>();

@@ -92,15 +92,14 @@ public class View extends BaseSimpleGame {
 	private static int manipulation = METHOD_PICK; //use accesor
 	
 	private static View instance = null;
+	private Scene _scene = null;
 	
 //	The trimesh that i will change
-	TriMesh square;
+	//TriMesh square;
 	
 	// a scale of my current texture values
-	float coordDelta;
-	private Scene _scene = null;
+	//float coordDelta;
 
-	
 	//=================================
 	// Global Interface-Objects
 	//=================================
@@ -611,7 +610,10 @@ public class View extends BaseSimpleGame {
 			
 			if ( isAction("info"))
 			{
+				Vector3f unit = new Vector3f(0f,0f,1f);
+				
 				Log.warn( 
+						"\nAngle Between Cam and Origin: " + unit.angleBetween(cam.getDirection()) +
 						"\nAxes: " + "" +
 						"\nLoc Rotation: " + camNode.getLocalRotation() +
 						"\nWorld Rot: "+ camNode.getWorldRotation() + 

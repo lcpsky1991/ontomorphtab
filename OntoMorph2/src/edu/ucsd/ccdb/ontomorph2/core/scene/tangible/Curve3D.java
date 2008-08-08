@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.List;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingSphere;
 import com.jme.curve.BezierCurve;
 import com.jme.curve.Curve;
 import com.jme.math.FastMath;
@@ -21,6 +20,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
@@ -36,7 +36,8 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
  */
 public class Curve3D extends Tangible{
 
-	BezierCurve theCurve = null;
+	CatmullRomCurve theCurve = null;
+	//BezierCurve theCurve = null;
 	float delta = 0.1f;
 	private Vector3f _modelBinormal = null;
 	OMTVector[] controlPoints = null;
@@ -71,7 +72,7 @@ public class Curve3D extends Tangible{
 	/**
 	 * Returns a list of cells that are associated with this curve
 	 * @author caprea
-	 * @return array list of {@link NeuronMorphology}s that 'belong' to this curve.
+	 * @return array list of {@link NeuronMorphology}s that 'belong' to this curve. This list is not ordered by anything reasonable (such as time along curve)
 	 * 
 	 */
 	public List<NeuronMorphology> getChildrenCells()
@@ -160,9 +161,12 @@ public class Curve3D extends Tangible{
 	
 	//have to copy the curve because JME BezierCurve class 
 	//does not allow modification of the control points
-	private BezierCurve copyBezierCurve() {
-		BezierCurve copy = new BezierCurve(this.getName(), this.controlPoints);
-		
+	//private BezierCurve copyBezierCurve()
+	private CatmullRomCurve copyBezierCurve()
+	{
+		//BezierCurve copy = new BezierCurve(this.getName(), this.controlPoints);
+		CatmullRomCurve copy = new CatmullRomCurve(this.getName(), this.controlPoints);
+
 		//apply coordinate system to this curve.
 		if (this.getCoordinateSystem() != null) 
 		{

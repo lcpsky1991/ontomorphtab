@@ -100,7 +100,7 @@ public class SlideView extends TriMesh {
 				0,1,2,1,3,2
 		};
 		//create the square
-		this.setName("my mesh");
+		this.setName("omt slide trimesh");
 		this.setVertexBuffer(0, BufferUtils.createFloatBuffer(vertexes));
 		this.setTextureBuffer(0, BufferUtils.createFloatBuffer(texCoords));
 		this.setIndexBuffer(0, BufferUtils.createIntBuffer(indexes));
