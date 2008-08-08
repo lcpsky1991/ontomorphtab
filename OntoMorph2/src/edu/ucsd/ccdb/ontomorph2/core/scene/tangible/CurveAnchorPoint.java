@@ -57,6 +57,16 @@ public class CurveAnchorPoint extends Tangible {
 	}
 	
 	/**
+	 * Approximate 'time' of this point along the parentCurve
+	 * At the time of writing this comment, not functional
+	 * @return (0-1) the time, as a float between 0 and 1 that represents the position along the curve.
+	 */
+	public float aproxTime()
+	{
+		float count = parentCurve.controlPoints.length;
+		return ((float) i / count);
+	}
+	/**
 	 * Null implementation overriding super class functionality 
 	 * to prevent rotation
 	 */

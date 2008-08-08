@@ -224,12 +224,19 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public void testCreatePoint(Tangible src)
 	{
 		CurveAnchorPoint cp = (CurveAnchorPoint) src;
-		int time = cp.getIndex() + 1;
+		int i = cp.getIndex() + 1;
+		float t = cp.aproxTime();
+		float delta = 0.05f;
+		OMTVector place = null;
 		
-		OMTVector place = new OMTVector(src.getRelativePosition().add(1f,1f,0f));
 		
-		cp.getParentCurve().addControlPoint(time, place);
-		
+		//place = new OMTVector(src.getRelativePosition()); //original
+		//find out what 'time' the current point is at, incriment that ammount a small ammount
+		//find out the tangent of the current point, then add the tangent unit to the position
+		//DOes not work well with the end points
+		place = new OMTVector(cp.getParentCurve().getPoint(t+delta));
+
+		cp.getParentCurve().addControlPoint(i, place);
 	}
 	
 	//TODO: MOVE this function and replace its signature with something appropriate

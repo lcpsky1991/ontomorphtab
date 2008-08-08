@@ -293,7 +293,11 @@ public class Curve3D extends Tangible{
 		//if no index supplied append a new control point
 		if ( index < 0 )
 		{
-			index = controlPoints.length;	//length is a conveiniant way to get the [ (last element index)+1 ]
+			index = 0;	
+		}
+		else if (index >= controlPoints.length)
+		{
+			index = controlPoints.length - 1; //length is a conveiniant way to get the [ (last element index)+1 ]
 		}
 		
 		//copy over the control points for points before index
@@ -363,6 +367,6 @@ public class Curve3D extends Tangible{
 			anchors.get(i).unselect();
 		}
 	}
-	
+
 }
 
