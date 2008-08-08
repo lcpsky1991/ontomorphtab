@@ -36,7 +36,7 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
  */
 public class BasicSearchWidget implements ITextChangedListener{
     
-	InputHandler input = new InputHandler();
+	FengJMEInputHandler input;
 	KeyBindingManager keyboard;	
 	
 	public BasicSearchWidget(Display d) {
@@ -76,7 +76,7 @@ public class BasicSearchWidget implements ITextChangedListener{
 		window.setPosition(new Point(0,100));
         textArea.setPosition(new Point(30,220));
         window.layout();
-        //MouseInput.get().setCursorVisible(true);
+        MouseInput.get().setCursorVisible(true);
 	}
 
 	public void textChanged(TextChangedEvent arg0) {
