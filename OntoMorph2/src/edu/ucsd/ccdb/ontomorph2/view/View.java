@@ -58,6 +58,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
@@ -424,7 +425,7 @@ public class View extends BaseSimpleGame {
 				for (int i = 0; currentPick == null && i < results.getNumber(); i++)
 				{
 					GeomBatch obj = results.getPickData(i).getTargetMesh();
-					if ( !(obj.getParentGeom() instanceof BezierCurve || obj.getParentGeom() instanceof SlideView))
+					if ( !(obj.getParentGeom() instanceof CatmullRomCurve || obj.getParentGeom() instanceof SlideView))
 					{
 						currentPick = results.getPickData(i);
 					}

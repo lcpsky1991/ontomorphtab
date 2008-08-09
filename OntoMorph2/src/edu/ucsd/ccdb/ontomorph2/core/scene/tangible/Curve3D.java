@@ -345,9 +345,10 @@ public class Curve3D extends Tangible{
 	
 	public void select()
 	{
+		//setAnchorPointsVisibility(true);
 		boolean ms = TangibleManager.getInstance().getMultiSelect(); //get previous state of multiselect
-		
 		super.select();
+		
 		TangibleManager.getInstance().setMultiSelect(true);
 		anchors = getAnchorPoints();
 		
@@ -361,11 +362,13 @@ public class Curve3D extends Tangible{
 	
 	public void unselect()
 	{
+		//setAnchorPointsVisibility(false);
 		super.unselect();
 		for (int i=0; i < anchors.size(); i++)
 		{
 			anchors.get(i).unselect();
 		}
+		
 	}
 
 }

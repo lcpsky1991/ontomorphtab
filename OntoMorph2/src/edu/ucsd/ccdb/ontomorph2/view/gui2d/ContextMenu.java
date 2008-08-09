@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.fenggui.FengGUI;
 import org.fenggui.background.PlainBackground;
 import org.fenggui.border.Border;
 import org.fenggui.border.PlainBorder;
@@ -27,6 +28,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.misc.FengJME;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
@@ -46,32 +48,92 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
  */
 public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	
-	static final String NEW = "New...";
-	static final String N_CURVE = "Curve";
-	static final String ANNOTATE = "Annotate";
-	static final String ANIMATE = "Animate";
-	static final String PROPERTIES = "Display Properties";
-	static final String N_ANCHOR = "Anchor Point";
-	static final String N_CELL = "Cell";
+	//ms stands for Menu String
+	static final String msNEW = "New ...";
+	static final String msN_CURVE = "Curve";
+	static final String msANNOTATE = "Annotate";
+	static final String msANIMATE = "Animate";
+	static final String msPROPERTIES = "Display Properties";
+	static final String msN_ANCHOR = "Anchor Point";
+	static final String msN_CELL = "Cell ...";
+	static final String msN_CELL_DG = "DG Granule";
+	static final String msN_CELL_CA3Pyr = "CA3 Pyramidal";
+	static final String msN_CELL_CA1Pyr = "CA1 Pyramidal";
+	static final String msSELECT = "Select ...";
+	static final String msManipulate = "Manipulate ...";
 	static ContextMenu instance = null;
 	TitledBorder border = null;
 	
 	
+	
+	//========================================
+	// MENU ITEMS 
+	//========================================
+	//want to have 'persistent' objects that can be added and removed from the context menu
+	Menu mnuNew = null;
+	Menu mnuSelect = null;
+	Menu mnuNew_Cell = null;
+	Menu mnuManipulate = null;
+	
+	ContextMenuItem mniNew_curve = null;
+	ContextMenuItem mniNew_point = null;
+	ContextMenuItem mniNew_Cell_CA3Pyr = null;
+	ContextMenuItem mniNew_Cell_CA1Pyr = null;
+	ContextMenuItem mniNew_Cell_DG = null;
+	ContextMenuItem mniSelectTangible = null;
+	ContextMenuItem mniAnnotate = null;
+	ContextMenuItem mniSimulate = null;
+	ContextMenuItem mniProperties = null;
+	ContextMenuItem mniSeperator = null;
+	
+	
 	private static final DemoCoordinateSystem dcoords =  new DemoCoordinateSystem();	//coordinates for test-case new objects
 	
-	public static ContextMenu getInstance() {
-		if (instance == null) {
+	public static ContextMenu getInstance()	{
+		if (instance == null) 
+		{
 			instance = new ContextMenu();
 		}
 		return instance;
 	}
 	
-	private ContextMenu() {
-		
-        Menu mnuContext = this;
-    
-        
-        this.setShrinkable(false);
+	/**
+	 * Root
+	 * 		New		(dynamic)
+	 * 			Cell	(dynamic)
+	 * 				DG
+	 * 				CA1
+	 * 				CA3
+	 * 			Curve
+	 * 			Anchor Point
+	 * 		Select (dynamic)
+	 * 			A
+	 * 			B
+	 * 			C 
+	 * 			......
+	 * 		Manipulate
+	 * 			Rotate X
+	 * 			Rotate Y
+	 * 			Move
+	 * 			Move
+	 * 
+	 * 		------
+	 * 		Annotate
+	 * 		Display Properties
+	 * @author caprea
+	 *
+	 */
+	
+	
+	private ContextMenu() 
+	{        
+		//in anticipation of not-recreating the contextmenu, much of initialization is now in create()
+		//create menuItem objects
+	}
+	
+	private void decorate()
+	{
+		this.setShrinkable(false);
         this.setSize(200,200);
         this.getAppearance().removeAll();
 		this.getAppearance().add(new PlainBackground(new Color(0.5f, 0.5f, 0.5f, 5.0f)));
@@ -80,23 +142,64 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		this.getAppearance().add(border);
 		this.getAppearance().setTextColor(Color.WHITE);
 		this.getAppearance().setTextSelectionColor(Color.YELLOW);
-        
-		  
-        Menu newMenu = new Menu();
-        mnuContext.registerSubMenu(newMenu, NEW);
-		makeMenuItem(N_CURVE, newMenu);
-		makeMenuItem(N_ANCHOR, newMenu);
-		makeMenuItem(N_CELL, newMenu);
-        makeMenuItem(ANNOTATE, mnuContext);
-        makeMenuItem(ANIMATE, mnuContext);
-        makeMenuItem(PROPERTIES, mnuContext);
-      
-        this.setSizeToMinSize();
-        this.layout();
 	}
+	
+	
+	private void removeAllItems()
+	{
+		Iterator i = this.getMenuItems().iterator();
+		while ( i.hasNext() )
+		{
+			MenuItem m = (MenuItem) i.next();
+			m.removeMenuItemPressedListener(this);
+			m = null;
+			i.remove();
+		}
+	
+	}
+	
+	private void create()
+	{
+		removeAllItems();
+		
+		mnuNew = new Menu();
+		mnuNew_Cell = new Menu();
+		mnuSelect = new Menu();
+		mnuManipulate = new Menu();
+		
+		decorate();
+		
+		
+		
+        menuItemFactory(mniNew_curve, mnuNew, msN_CURVE);
+        menuItemFactory(mniNew_point, mnuNew, msN_ANCHOR);
+        menuItemFactory(mniNew_Cell_DG, mnuNew_Cell, msN_CELL_DG);
+        menuItemFactory(mniNew_Cell_DG, mnuNew_Cell, msN_CELL_DG);
+        menuItemFactory(mniAnnotate , this, msANNOTATE);
+        menuItemFactory(mniProperties, this, msPROPERTIES);
+        
+        
+        for (int i = 0; i < 5; i++)
+        {
+        	menuItemFactory(mniSelectTangible, mnuSelect, "Cell " + i);	
+        }
+        
+		this.registerSubMenu(mnuNew, msNEW);
+		this.registerSubMenu(mnuSelect,msSELECT);
+		this.registerSubMenu(mnuManipulate, msManipulate);
+		mnuNew.registerSubMenu(mnuNew_Cell, msN_CELL);
+        
+
+		
+        
+        this.setSizeToMinSize();
+        this.layout();			
+	}
+	
 	
 	public void displayMenuFor(int xCoord, int yCoord, List<Tangible> t) 
 	{
+		create();
 		int x = xCoord;
 		int y = yCoord;
 		this.setXY(x, y);
@@ -119,6 +222,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				{
 					int c = (Integer) types.get(check) + 1;
 					types.put(check, c);
+					
 				} //otherwise create it and flag that its a multiset
 			}
 			
@@ -158,16 +262,16 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	/**
 	 * Conveiniance method that wraps the creation of menus
 	 * @author caprea
-	 * @param name
+	 * @param title
 	 * @param parent If null, will create a new parent menu
 	 */
-	private void makeMenuItem(String name, Menu mparent)
+	private void menuItemFactory(MenuItem mitem, Menu mparent, String title)
 	{
 		try
 		{
-			if (name.equals(""))
+			if (title.equals(""))
 			{
-				name = "____________";
+				title = "____________";
 			}
 			if (null == mparent )
 			{
@@ -175,10 +279,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			}
 			else if ( mparent instanceof Menu)
 			{
-				MenuItem mnuToAdd = new MenuItem(name);
-				mnuToAdd.addMenuItemPressedListener(this);
-		        mparent.addItem(mnuToAdd);	
-
+				mitem = new MenuItem(title);
+				mitem.addMenuItemPressedListener(this);
+				mparent.addItem(mitem);	
 			}
 		}
 		catch (Exception e)
@@ -190,39 +293,43 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public void menuItemPressed(MenuItemPressedEvent arg0) {
 		
 		String opt = arg0.getItem().getText();
-	
+		MenuItem trigger = arg0.getItem();
 		Tangible orig = TangibleManager.getInstance().getSelectedRecent();
 		
-		if (ANNOTATE.equals(opt)) {
-			System.out.println("do annotation");
-		} else if (ANIMATE.equals(opt)) {
-			System.out.println("do animation");
-		} else if (PROPERTIES.equals(opt)) {
-			System.out.println("show properties");
-		} else if (N_CURVE.equals(opt)) 
+		if (orig instanceof Tangible)
 		{
-			//make a new bezier curve right here
-			if (orig instanceof Tangible)
-			{
-				testCreateCurve(orig);
+			if (msANNOTATE.equals(opt)) {
+				System.out.println("do annotation");
+			} else if (msANIMATE.equals(opt)) {
+				System.out.println("do animation");
+			} else if (msPROPERTIES.equals(opt)) {
+				System.out.println("show properties");
 			}
-		}
-		else if (N_ANCHOR.equals(opt))
-		{
-			if (orig instanceof CurveAnchorPoint)
+			else if (msN_CURVE.equals(opt)) testCreateCurve(orig);
+			
+			else if (trigger.equals(mniSelectTangible))
 			{
-				testCreatePoint(orig);
+				System.out.println("Select");
 			}
+			
+			else if (msN_ANCHOR.equals(opt)) CreatePoint(orig);
+			
+			else if (msN_CELL.equals(opt))	testCreateCell(orig);
+			
+			
 		}
-		else if (N_CELL.equals(opt))
+		else if ( opt != null)
 		{
-			testCreateCell(orig);
+			System.out.println("Warning: There was no tangible do to this action on (" + opt + ")");
 		}
-		View2D.getInstance().removePopup();
+		
+		this.closeBackward();
 	}
 	
-	public void testCreatePoint(Tangible src)
+	public void CreatePoint(Tangible src)
 	{
+		//if source is not an anchorpoint then dont do anything
+		if (!(src instanceof CurveAnchorPoint)) return;	
 		CurveAnchorPoint cp = (CurveAnchorPoint) src;
 		int i = cp.getIndex() + 1;
 		float t = cp.aproxTime();
@@ -242,9 +349,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	//TODO: MOVE this function and replace its signature with something appropriate
 	public void testCreateCurve(Tangible src)
 	{
-		OMTVector a = new OMTVector(16,13,20);
-		OMTVector b = new OMTVector(-5,35,20);
-		OMTVector c = new OMTVector(0,0,20);
+		OMTVector a = null;
+		OMTVector b = null;
+		OMTVector c = null;
 		
 		b = new OMTVector(src.getRelativePosition().add(3f,3f,0f));
 		c = new OMTVector(src.getRelativePosition().add(10f,10f,0f));
@@ -270,18 +377,14 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	
 	public void testCreateCell(Tangible src)
 	{
-		/*NeuronMorphology cell11 = new MorphMLNeuronMorphology(cell11URL, curve1, ((float)i)/20f-0.01f, 
-				NeuronMorphology.RENDER_AS_LOD, d);
-		cell11.setRelativeScale(0.01f);
-		cell11.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
-		addSceneObject(cell11);
-		*/
 		NeuronMorphology nc = null;
 		Curve3D ocurve = null;
+		
+		//INITIAL
+		//first, set things up and get the Reference Curve
 		float t = 0.5f;	//default is middle
 		if ( src instanceof Curve3D)
 		{
-			//if going fromt he curve take the previous two cells and get their difference in time
 			ocurve = (Curve3D) src;
 		}
 		else if ( src instanceof CurveAnchorPoint)
@@ -295,8 +398,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			return;
 		}
 		
+		//SET
+		//Find out where to put it
 		List<NeuronMorphology> cells = ocurve.getChildrenCells();
-		
 		float high=0;
 		//get information about the distribution of the cells along the curve
 		for (int c=0; c < cells.size(); c++)
@@ -304,10 +408,10 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			float num=cells.get(c).getTime();
 			if (num > high) high = num;
 		}
-		
-		
 		t = (high / cells.size()) + high;
 		
+		
+		//CREATE
 		TangibleManager.getInstance().unselectAll();
 		//do the rest of the actions
 		nc = new MorphMLNeuronMorphology(View.getInstance().getScene().cell11URL, ocurve, t, NeuronMorphology.RENDER_AS_LOD, dcoords);

@@ -104,7 +104,7 @@ public class CurveView extends TangibleView {
 		}
 	}
 
-
+	
 	@Override
 	public void doHighlight() 
 	{

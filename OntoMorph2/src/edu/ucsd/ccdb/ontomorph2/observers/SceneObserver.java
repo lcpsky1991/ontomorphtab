@@ -55,8 +55,7 @@ public class SceneObserver implements Observer {
 				//========= CURVES	=======================
 			if ( arg.equals(Scene.CHANGED_CURVE))
 			{
-				Scene origscene = (Scene) o;
-				_view.getView3D().setCurves(origscene.getCurves());
+				_view.getView3D().setCurves(scene.getCurves());
 				msg = "reloading curves";
 			}
 				//============ LOAD ==============
@@ -139,8 +138,7 @@ public class SceneObserver implements Observer {
 			//now update the anchorpoint itself
 			tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
 			if ( tv != null) tv.update();	//update the anchorpoint
-			
-			
+				
 			for ( NeuronMorphology c: changed.getChildrenCells())
 			{
 				c.positionAlongCurve(c.getCurve(), c.getTime());
