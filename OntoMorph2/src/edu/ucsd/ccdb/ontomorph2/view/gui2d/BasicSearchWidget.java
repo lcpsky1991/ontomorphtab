@@ -28,6 +28,7 @@ import com.jme.input.MouseInput;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
+import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 
 /**
@@ -36,43 +37,46 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
  */
 public class BasicSearchWidget implements ITextChangedListener{
     
-	FengJMEInputHandler input;
-	KeyBindingManager keyboard;	
+	FengJMEInputHandler input = null;
+	float tpf = 0;
 	
 	public BasicSearchWidget(Display d) {
 		
 		input = new FengJMEInputHandler(d);
-		keyboard = KeyBindingManager.getKeyBindingManager();
-			
+		//keyboard = KeyBindingManager.getKeyBindingManager();
+        //input.addToAttachedHandlers( this.input );	
 		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
 				
-		Window window = FengGUI.createWindow(d, true, false, false, true);
+		Window window = new Window(true, false, false, true);
+		d.addWidget(window);
 		window.setSize(200, 300);
 		//window.getContentContainer().setLayoutManager( new RowLayout(false) );
         window.getContentContainer().setLayoutManager(new BorderLayout());
 		window.setTitle("Search");       
-
+	    //window.addMouseEnteredListener(FocusManager.focusManager);
+	     //   button.addMouseExitedListener(FocusManager.focusManager);
         TextEditor textArea = FengGUI.createTextField(window.getContentContainer());
         textArea.setText("Enter Keyword");
         textArea.setSize(100, 20);
 		//window.getContentContainer().addWidget(textArea);
-        textArea.addTextChangedListener(this);        
         System.out.println("writing state " + textArea.isInWritingState());
         
         Button button = new Button( "Start Search" );
         button.setSize(80, 30);
         button.setPosition(new Point(45, 180));
         button.addButtonPressedListener( new IButtonPressedListener() {
- 
+
+        	
         public void buttonPressed( ButtonPressedEvent arg0 ) {
             		//search();
         			System.out.println("Button Pressed");
             }
         } );
 
+        button.addMouseEnteredListener(FocusManager.focusManager);
+        button.addMouseExitedListener(FocusManager.focusManager);
         window.getContentContainer().addWidget( button );
-        //window.pack();
-        
+        //window.pack();        
 		window.setPosition(new Point(0,100));
         textArea.setPosition(new Point(30,220));
         window.layout();
@@ -84,3 +88,5 @@ public class BasicSearchWidget implements ITextChangedListener{
 		
 	}
 }
+
+

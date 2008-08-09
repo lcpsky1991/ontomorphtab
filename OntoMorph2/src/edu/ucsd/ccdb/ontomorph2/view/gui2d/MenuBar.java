@@ -128,6 +128,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         Menu mnuDebug = new Menu();
         mB.registerSubMenu(mnuDebug, "Debug");
         makeMenuItem(SHOW_SCENE_MONITOR, mnuDebug);
+        
 	}
 	
 	/**

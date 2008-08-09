@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import org.fenggui.ComboBox;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
+import org.fenggui.ObservableWidget;
 import org.fenggui.ScrollContainer;
 import org.fenggui.TextEditor;
 import org.fenggui.background.PlainBackground;
@@ -28,6 +29,7 @@ import com.jme.input.MouseInput;
 import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
+import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.AtlasBrowser;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.BasicSearchWidget;
@@ -46,7 +48,7 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyTreeModel;
 public class View2D extends Display  {
 	
 		
-	FengJMEInputHandler input;
+	FengJMEInputHandler input = null;
 	/**
 	 * Holds singleton instance
 	 */
@@ -109,6 +111,8 @@ public class View2D extends Display  {
 	 */
 	protected void cleanup()
 	{
+		MouseInput.destroyIfInitalized();
+		KeyInput.destroyIfInitalized();
 		//TODO: Clear Keyboard and Mouse Listeners if mouse is within a popup, textfield or FengGui app
 	}
 
@@ -129,8 +133,7 @@ public class View2D extends Display  {
  
 		input = new FengJMEInputHandler(this);
  
-		this.addWidget(new MenuBar());
-        
+		this.addWidget(new MenuBar());        
         this.getInfoText();
 		// Update the display with the newly added components
 		this.layout();
@@ -185,7 +188,7 @@ public class View2D extends Display  {
 		
 		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
 		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
-		
+		//addMouseExitedListener(FocusManager.focusManager);
 		Tree<MyNode> tree = MyTreeModel.<MyNode>createTree(sc);
 		
 		window.setSize(200, 300);

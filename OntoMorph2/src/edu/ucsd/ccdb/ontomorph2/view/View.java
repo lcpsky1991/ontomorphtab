@@ -864,7 +864,6 @@ public class View extends BaseSimpleGame {
 	public ViewCamera getCamera() {
 		return this.camNode;
 	}
-
 }
 
 

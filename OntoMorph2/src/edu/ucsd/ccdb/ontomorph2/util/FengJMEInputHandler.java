@@ -54,6 +54,7 @@ public class FengJMEInputHandler extends InputHandler
 	}
 	
 	public boolean isMouseOverGui() {
+        System.out.println("mouse over gui");
         return mouseOverGui;
     }
 	
@@ -65,7 +66,11 @@ public class FengJMEInputHandler extends InputHandler
         keyHandled = false;
         mouseHandled = false;
     }
-	
+	//@override
+	public void mouseMoved(int displayX, int displayY)
+	{
+		System.out.println("mouse moved");
+	}
 	private class KeyAction extends KeyInputAction implements Runnable
 	{
         private static final int MAX_DELAY = 8;
@@ -146,6 +151,7 @@ public class FengJMEInputHandler extends InputHandler
 		        	keyClass = Key.ENTER;
 		            break;
 		        case Keyboard.KEY_DELETE: 
+		        	System.out.println("delete");
 		        	keyClass = Key.DELETE;
 		            break;
 		        case Keyboard.KEY_UP:
@@ -161,6 +167,7 @@ public class FengJMEInputHandler extends InputHandler
 		        	keyClass = Key.DOWN;
 		            break;
 		        case Keyboard.KEY_SCROLL:
+		        	System.out.println("shift");
 		        	keyClass = Key.SHIFT;
 		            break;
 		        case Keyboard.KEY_LMENU:
