@@ -41,7 +41,7 @@ public class Curve3D extends Tangible{
 	float delta = 0.1f;
 	private Vector3f _modelBinormal = null;
 	OMTVector[] controlPoints = null;
-	boolean seeAnchorPoints = true;
+	boolean seeAnchorPoints = false;
 	List<CurveAnchorPoint> anchors = null;
 	
 	
@@ -338,6 +338,7 @@ public class Curve3D extends Tangible{
 	public void changed() {
 		//null theCurve to force a getCurve to recreate the 
 		// underlying curve instance
+		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);
 		this.theCurve = null;
 		super.changed();
 	}
@@ -345,7 +346,7 @@ public class Curve3D extends Tangible{
 	
 	public void select()
 	{
-		//setAnchorPointsVisibility(true);
+		setAnchorPointsVisibility(true);
 		boolean ms = TangibleManager.getInstance().getMultiSelect(); //get previous state of multiselect
 		super.select();
 		
@@ -362,13 +363,12 @@ public class Curve3D extends Tangible{
 	
 	public void unselect()
 	{
-		//setAnchorPointsVisibility(false);
 		super.unselect();
 		for (int i=0; i < anchors.size(); i++)
 		{
 			anchors.get(i).unselect();
 		}
-		
+		setAnchorPointsVisibility(false);
 	}
 
 }

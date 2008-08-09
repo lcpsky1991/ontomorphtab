@@ -126,7 +126,6 @@ public class SceneObserver implements Observer {
 				brv.update();
 			}
 		}
-
 		
 		else if (o instanceof CurveAnchorPoint)
 		{
@@ -146,21 +145,7 @@ public class SceneObserver implements Observer {
 				if (tv != null)	tv.update();
 			}
 			
-			
-			/*
-			for ( NeuronMorphology c : _view.getScene().getCells())
-			{
-				if ( c.getCurve().equals(changed) )	//if this cell is a part of the curve that has been modified
-				{
-					//then update the cell
-					c.positionAlongCurve(c.getCurve(), c.getTime());
-					tv = TangibleViewManager.getInstance().getTangibleViewFor(c);
-					if (tv != null)	tv.update();
-				}
-			}
-			*/
 		}
-		
 		
 		else if (o instanceof Tangible)
 		{
