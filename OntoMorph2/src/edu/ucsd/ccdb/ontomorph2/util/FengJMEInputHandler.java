@@ -243,7 +243,6 @@ public class FengJMEInputHandler extends InputHandler
 		/**
 		 * Run method
 		 */
-		@Override
 		public void run() {
             while(true)
             {

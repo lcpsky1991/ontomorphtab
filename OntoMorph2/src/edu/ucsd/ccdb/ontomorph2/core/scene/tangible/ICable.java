@@ -1,8 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
+
+import org.morphml.morphml.schema.Cable;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 
@@ -14,21 +17,11 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
  * @see INeuronMorphology
  *
  */
-public interface ICable extends ISemanticsAware{
+public interface ICable extends INeuronMorphologyPart{
 
-	/**
-	 * @link aggregation
-	 * @associates Segment
-	 * @directed directed
-	 * @supplierCardinality 0..*
-	 */
-	java.util.Set lnkSegment = null;
-	
-	public BigInteger getId();
-	public List<ISegment> getSegments();
 	public List<String> getTags();
-	public void setColor(Color color);
-	public Color getColor();
-	public NeuronMorphology getParentCell();
+
+	public void setMorphMLCable(Cable cable);
+
 
 }

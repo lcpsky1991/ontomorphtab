@@ -2,8 +2,9 @@
 <!DOCTYPE hibernate-mapping
   PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
-   <class discriminator-value="[org.morphml.morphml.schema.Cable]"
+   <class discriminator-value="[org.morphml.morphml.schema.Cable]" lazy="true"
           name="org.morphml.morphml.schema.Cable"
+          proxy="org.morphml.morphml.schema.Cable"
           table="Cable">
       <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
           name="Hjid"
@@ -62,7 +63,8 @@
       <many-to-one class="org.morphml.metadata.schema.Properties" name="Properties">
          <column name="Properties"/>
       </many-to-one>
-      <subclass discriminator-value="org.morphml.morphml.schema.Cable"
-                name="org.morphml.morphml.schema.impl.CableImpl"/>
+      <subclass discriminator-value="org.morphml.morphml.schema.Cable" lazy="true"
+                name="org.morphml.morphml.schema.impl.CableImpl"
+                proxy="org.morphml.morphml.schema.Cable"/>
    </class>
 </hibernate-mapping>

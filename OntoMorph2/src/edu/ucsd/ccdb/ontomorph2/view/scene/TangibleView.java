@@ -89,9 +89,20 @@ public abstract class TangibleView extends Node {
 			
 	}
 	
+	/**
+	 * Take any Geometry instance and associate it with this instance
+	 * of TangibleView.  This allows this TangibleView to be retrieved
+	 * from the TangibleViewManager when the Geometry is picked.
+	 * @param g
+	 * @see TangibleViewManager#getTangibleView(Geometry)
+	 */
+	public void registerGeometry(Geometry g) {
+		TangibleViewManager.getInstance().addToGeometryTangibleViewMap(g, this);
+	}
+	
 	public void registerGeometries(List<Geometry> b) {
 		for (Geometry gb : b) {
-			TangibleViewManager.getInstance().addToGeometryTangibleViewMap(gb, this);
+			this.registerGeometry(gb);
 		}
 	}
 	

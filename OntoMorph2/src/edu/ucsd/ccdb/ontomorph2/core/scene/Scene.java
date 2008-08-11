@@ -150,11 +150,11 @@ public class Scene extends Observable{
 		
 		addSceneObject(new Slide(hippo2URL, new PositionVector(-55,-30, 22), 
 				new RotationVector(d.getRotationFromAbsolute()), 62, 1.34f));
-		addSceneObject(new Slide(hippo3aURL, new PositionVector(-45,-13,21.5f), 
+		addSceneObject(new Slide(hippo3aURL, new PositionVector(-45,-13,21.4f), 
 				new RotationVector(d.getRotationFromAbsolute()), 15, 1.33f));
 		addSceneObject(new Slide(hippo3bURL, new PositionVector(-24,-9,21.5f), 
 				new RotationVector(d.getRotationFromAbsolute()), 15,1.31f));
-		addSceneObject(new Slide(hippo3cURL, new PositionVector(-5,-8.5f,21.5f), 
+		addSceneObject(new Slide(hippo3cURL, new PositionVector(-5,-8.5f,21.3f), 
 				new RotationVector(d.getRotationFromAbsolute()), 15,1.33f));
 
 
@@ -195,45 +195,47 @@ public class Scene extends Observable{
 		*/
 		
 		OMTVector p1 = new OMTVector(-5,2,20);
-		OMTVector p2 = new OMTVector(-16,10,20);
+		OMTVector p2 = new OMTVector(-16,3,20);
 		OMTVector p2a = new OMTVector(-40, -12,20);
-		OMTVector p3 = new OMTVector(-50,-8,20);
+		OMTVector p3 = new OMTVector(-36,-5,20);
 		OMTVector p4 = new OMTVector(-30,-3,20);
 		OMTVector p5 = new OMTVector(-10,-4,20);
 				
-		OMTVector[] array = {p1, p2, p2a, p3, p4, p5};
+		//OMTVector[] array = {p1, p2, p2a, p3, p4, p5};
+		OMTVector[] array = {p1, p2, p3, p5};
 		Curve3D curve1 = new Curve3D("Dentate Gyrus", array, d);
 		curve1.setColor(Color.BLUE);
 		curve1.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.01f);
 		addSceneObject(curve1);
 
 		OMTVector c2v1 = new OMTVector(-5,-3,20);
-		OMTVector c2v2 = new OMTVector(45,-10,20);
+		OMTVector c2v2 = new OMTVector(18,-4,20);
 		OMTVector c2v3 = new OMTVector(12,10,20);
-		OMTVector c2v4 = new OMTVector(-9,30,20);
-		OMTVector c2v5 = new OMTVector(-23,25,20);
+		OMTVector c2v4 = new OMTVector(-9,23,20);
+		OMTVector c2v5 = new OMTVector(-23,23,20);
 		
 		OMTVector[] array2 = {c2v1, c2v2, c2v3, c2v4, c2v5};
+		//OMTVector[] array2 = {c2v1, c2v2, c2v3, c2v5};
 		Curve3D c2 = new Curve3D("CA",array2, d);
 		c2.setColor(Color.BLUE);
 		c2.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.1f);
 		addSceneObject(c2);
 		
-		NeuronMorphology cell3 = new MorphMLNeuronMorphology(cell3URL, c2, 0.03f, 
+		NeuronMorphology cell3 = new MorphMLNeuronMorphology("cell1zr", c2, 0.03f, 
 				NeuronMorphology.RENDER_AS_LOD_2, d);
 		cell3.setRelativeScale(0.01f);
 		//semantic thing for hippocampal CA3 neuron
 		cell3.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
 		addSceneObject(cell3);
 		
-		NeuronMorphology cell4 = new MorphMLNeuronMorphology(cell4URL, c2, 0.2f, 
+		NeuronMorphology cell4 = new MorphMLNeuronMorphology("cell2zr", c2, 0.2f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell4.setRelativeScale(0.01f);
 		cell4.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
 		addSceneObject(cell4);
 		
 		
-		NeuronMorphology cell5 = new MorphMLNeuronMorphology(cell5URL, c2, 0.35f, 
+		NeuronMorphology cell5 = new MorphMLNeuronMorphology("cell6zr", c2, 0.35f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell5.setRelativeScale(0.01f);
 		cell5.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
@@ -278,9 +280,11 @@ public class Scene extends Observable{
 		addSceneObject(cell10); */
 		
 
+
 		int numCells = 15;
 		for (int i = 1; i < numCells; i++) {
-			NeuronMorphology cell11 = new MorphMLNeuronMorphology(cell11URL, curve1, ((float)i)/numCells-0.01f, NeuronMorphology.RENDER_AS_LOD, d);
+			NeuronMorphology cell11 = new MorphMLNeuronMorphology("5199202a", curve1, ((float)i)/numCells-0.01f, NeuronMorphology.RENDER_AS_LOD, d);
+
 			cell11.setRelativeScale(0.01f);
 			cell11.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
 			addSceneObject(cell11);

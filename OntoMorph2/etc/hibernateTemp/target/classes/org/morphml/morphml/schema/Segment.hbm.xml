@@ -2,8 +2,9 @@
 <!DOCTYPE hibernate-mapping
   PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
-   <class discriminator-value="[org.morphml.morphml.schema.Segment]"
+   <class discriminator-value="[org.morphml.morphml.schema.Segment]" lazy="true"
           name="org.morphml.morphml.schema.Segment"
+          proxy="org.morphml.morphml.schema.Segment"
           table="Segment">
       <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
           name="Hjid"
@@ -42,7 +43,8 @@
       <many-to-one class="org.morphml.metadata.schema.Point" name="Distal">
          <column name="Distal"/>
       </many-to-one>
-      <subclass discriminator-value="org.morphml.morphml.schema.Segment"
-                name="org.morphml.morphml.schema.impl.SegmentImpl"/>
+      <subclass discriminator-value="org.morphml.morphml.schema.Segment" lazy="true"
+                name="org.morphml.morphml.schema.impl.SegmentImpl"
+                proxy="org.morphml.morphml.schema.Segment"/>
    </class>
 </hibernate-mapping>

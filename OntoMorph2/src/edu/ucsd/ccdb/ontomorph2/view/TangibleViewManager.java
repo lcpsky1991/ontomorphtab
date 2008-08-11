@@ -34,7 +34,7 @@ public class TangibleViewManager {
 	}
 	
 	/**
-	 * Add a tangible to this manager
+	 * Add a tangibleView to this manager
 	 * @param tv
 	 */
 	public void addTangibleView(TangibleView tv) {

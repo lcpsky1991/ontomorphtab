@@ -3,15 +3,10 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.fenggui.event.mouse.MouseButton;
+import java.math.BigInteger;
 
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
-import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.curve.BezierCurve;
 import com.jme.image.Texture;
@@ -20,49 +15,41 @@ import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
-import com.jme.input.RelativeMouse;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
 import com.jme.input.action.MouseInputAction;
-import com.jme.input.action.MouseLook;
 import com.jme.intersection.PickData;
 import com.jme.intersection.PickResults;
 import com.jme.intersection.TrianglePickResults;
-import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.scene.Geometry;
 import com.jme.scene.Line;
-import com.jme.scene.SceneElement;
 import com.jme.scene.TriMesh;
-import com.jme.scene.VBOInfo;
 import com.jme.scene.batch.GeomBatch;
-import com.jme.scene.batch.LineBatch;
 import com.jme.scene.shape.Cone;
-import com.jme.scene.shape.Cylinder;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
-import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
+import com.jme.system.PropertiesIO;
 import com.jme.util.geom.Debugger;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.INeuronMorphologyPart;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.SegmentView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
@@ -490,21 +477,34 @@ public class View extends BaseSimpleGame {
 	 */
 	private void doSelection(GeomBatch geo) 
 	{
+		//get a tangible view instance that is mapped to the selected geo
 		TangibleView tv = TangibleViewManager.getInstance().getTangibleView(geo.getParentGeom());
 	
 		if ( KeyInput.get().isShiftDown() )
 		{
-			//turn on multiselection
+			//turn on multiselection if shift is pressed
 			TangibleManager.getInstance().setMultiSelect(true);
 		}
 		
-		//if user selected a segment, assume they wanted to select the parent cell instead if control is down
-		if ( tv instanceof SegmentView && KeyInput.get().isControlDown())
-		{
-			SegmentView pickSeg = (SegmentView) tv;
+		//special case NeuronMorphologyView because it has subcomponents that
+		//are not themselves tangibles.
+		//should probably bring this piece of code inside NeuronMorphologyView via 
+		//some kind of action handler because this is kind of a hack
+		if ( tv instanceof NeuronMorphologyView) {
 			
-			pickSeg.getCorrespondingSegmentGroup().getParentCell().select();
-			
+			NeuronMorphologyView nmv = (NeuronMorphologyView)tv;
+
+			if (KeyInput.get().isControlDown()) {
+				//if user selected a segment, assume they wanted to select the parent cell 
+				//instead if control is down
+				nmv.getModel().select();
+			} else {
+				//otherwise just select the part itself
+				BigInteger id = nmv.getCableIdFromGeometry(geo.getParentGeom());
+				ICable c = ((NeuronMorphology)nmv.getModel()).getCable(id);
+				((Tangible)c).select();
+	
+			}
 		}
 		else if (tv != null) 
 		{
@@ -751,6 +751,9 @@ public class View extends BaseSimpleGame {
 	 * @see DisplaySystem
 	 */
 	public DisplaySystem getDisplaySystem(){
+		if (display == null) {
+			return DisplaySystem.getDisplaySystem( new PropertiesIO("properties.cfg").getRenderer() );
+		}
 		return display;
 	}
 
@@ -854,7 +857,7 @@ public class View extends BaseSimpleGame {
 	}
 
 	public Renderer getRenderer() {
-		return display.getRenderer();
+		return getDisplaySystem().getRenderer();
 	}
 	
 	/**

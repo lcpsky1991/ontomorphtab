@@ -414,7 +414,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		//CREATE
 		TangibleManager.getInstance().unselectAll();
 		//do the rest of the actions
-		nc = new MorphMLNeuronMorphology(View.getInstance().getScene().cell11URL, ocurve, t, NeuronMorphology.RENDER_AS_LOD, dcoords);
+		nc = new MorphMLNeuronMorphology("5199202a", ocurve, t, NeuronMorphology.RENDER_AS_LOD, dcoords);
 		nc.setRelativeScale(0.01f);
 		nc.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
 		nc.setVisible(true);

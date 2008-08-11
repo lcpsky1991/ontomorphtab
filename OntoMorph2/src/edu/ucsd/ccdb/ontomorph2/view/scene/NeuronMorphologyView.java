@@ -3,31 +3,59 @@ package edu.ucsd.ccdb.ontomorph2.view.scene;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.Serializable;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.logging.Logger;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.curve.CurveController;
+import com.jme.math.Matrix3f;
+import com.jme.math.Quaternion;
+import com.jme.math.Ray;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.Geometry;
+import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
+import com.jme.scene.TriMesh;
 import com.jme.scene.batch.GeomBatch;
+import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.geometryinstancing.GeometryBatchInstance;
+import com.jme.scene.geometryinstancing.GeometryBatchInstanceAttributes;
+import com.jme.scene.geometryinstancing.instance.GeometryBatchCreator;
 import com.jme.scene.lod.AreaClodMesh;
+import com.jme.scene.shape.Box;
+import com.jme.scene.shape.Cylinder;
+import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.AreaUtils;
+import com.jme.util.geom.BufferUtils;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.INeuronMorphologyPart;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLCableImpl;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
 import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
+import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
  * Visualizes a neuron morphology.  Describes the 3D structure 
@@ -36,22 +64,17 @@ import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
  * Need to implement selection handlers.  One click should select a segment, while a double-click
  * should select the whole cell
  * 
- * @author caprea
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @see NeuronMorphology
  *
  */
 public class NeuronMorphologyView extends TangibleView{
-
-	List<SegmentView> segViews;
 	
-    private static final Logger logger = Logger.getLogger(AreaClodMesh.class
-            .getName());
-
-	private float trisPerPixel = 1f;
-
+	private static final Logger logger = Logger.getLogger(AreaClodMesh.class
+			.getName());
+	
 	private float distTolerance = 1f;
-
+	
 	private float lastDistance = 0f;
 	
 	int cableResolution = 1;
@@ -60,34 +83,20 @@ public class NeuronMorphologyView extends TangibleView{
 	
 	CurveController _cc = null;
 	
+	Map<BigInteger, Geometry> subPartMap = null;
+	Map<Geometry, BigInteger> subPartReverseMap = null;
+	
 	public NeuronMorphologyView(NeuronMorphology morph) {
 		super(morph);
 		super.setName("Neuron Morphology View");
-		segViews = new ArrayList<SegmentView>();
 		currentMorph = morph;
+		subPartMap = new HashMap<BigInteger, Geometry>();
+		subPartReverseMap = new HashMap<Geometry, BigInteger>();
 		this.setMorphMLNeuron(this.loadscene(morph), morph);
 	}
-
+	
 	public Node getNode() {
 		return this;
-	}
-	
-	/**
-	 * Return any SegmentView that is represented by this GeomBatch
-	 * 
-	 * @param gb
-	 * @return a SegmentView, if this is what gb represents.  return null if it does not.
-	 */
-	public SegmentView getSegmentFromGeomBatch(GeomBatch gb) {
-		Geometry g = gb.getParentGeom();
-		SegmentView pick = null;
-		for (SegmentView sv : this.segViews) {
-			
-			if (sv.containsCurrentGeometry(g)) {
-				pick = sv;
-			}
-		}
-		return pick;
 	}
 	
 	public void setMorphMLNeuron(Node n, NeuronMorphology morph) {
@@ -116,234 +125,538 @@ public class NeuronMorphologyView extends TangibleView{
 		
 	}
 	
-	public void setX3DNeuron(InputStream input, PositionVector _position, RotationVector _rotation, float _scale) {
-		try {
-			X3DLoader converter = new X3DLoader();
-			Spatial scene = converter.loadScene(input, null, null);
+	/* keep this code around for later
+	 public void setX3DNeuron(InputStream input, PositionVector _position, RotationVector _rotation, float _scale) {
+	 try {
+	 X3DLoader converter = new X3DLoader();
+	 Spatial scene = converter.loadScene(input, null, null);
+	 
+	 this.detachAllChildren();
+	 this.attachChild(scene);
+	 
+	 if (_position != null) 
+	 {
+	 this.setLocalTranslation(_position.asVector3f());
+	 }
+	 if (_rotation != null) {
+	 this.setLocalRotation(_rotation.asMatrix3f());
+	 }
+	 if (_scale != 1) {
+	 this.setLocalScale(_scale);
+	 }
+	 } catch (Exception e) {
+	 //logger.logp(Level.SEVERE, this.getClass().toString(), "simpleInitGame()", "Exception", e);
+	  System.exit(0);
+	  }
+	  }
+	  
+	  public void setX3DNeuron(URL structureLoc) {
+	  try {
+	  this.setX3DNeuron(new FileInputStream(structureLoc.getFile()), null, null, 1);
+	  } catch (FileNotFoundException e) {
+	  // TODO Auto-generated catch block
+	   e.printStackTrace();
+	   }
+	   }*/
+	
+	private Node loadscene(NeuronMorphology morph) {
+		long tick = Log.tick();
+		Node sceneRoot = new Node("Neuron Morphology Root");
+		/* 
+		 * Check the LightState. If none has been passed, create a new one and
+		 * attach it to the scene root
+		 */ 
+		LightState lightState = null;
+		lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
+		lightState.setEnabled(true);	
+		sceneRoot.setRenderState(lightState);
+		
+		
+		
+		Node node = new Node("morphology");
+		String renderOption = morph.getRenderOption();
+		
+		if (renderOption.equals(NeuronMorphology.RENDER_AS_LOD) || 
+				renderOption.equals(NeuronMorphology.RENDER_AS_LOD_2)) {
+			 node = new OMTDiscreteLodNode(new DistanceSwitchModel(10));
+		}
+		
+		if (renderOption.equals(NeuronMorphology.RENDER_AS_DETAILED_BOXES)) {
+			node.attachChild(this.getGeometryInstancedBoxes(morph));
+		} else {
 			
-			this.detachAllChildren();
-			this.attachChild(scene);
+//			loop over all cables, and depending on the render option, 
+			//attach the appropriate rendering to the node
+			//map all the geometries to this NeuronMorphologyView
+			for (int i = 0; i < morph.getCableCount(); i++) {
+				ICable part = morph.getCable(i);
+				
+				renderParts(node, part, renderOption);
+			}
+		}
+	
+		node.setModelBound(new BoundingBox());
+		node.updateModelBound();
+		node.updateGeometricState(5f, false);
+		node.updateRenderState();
+		
+		sceneRoot.attachChild(node);	
+		sceneRoot.setModelBound(new BoundingBox());
+		sceneRoot.updateModelBound();
+		sceneRoot.updateGeometricState(5f, false);
+		sceneRoot.updateRenderState();
+		Log.tock("NeuronMorphology.loadScene() took", tick);
+		return sceneRoot;
+	}
+	
+	private void renderParts(Node node, ICable part, String renderOption) {
+		if (renderOption.equals(NeuronMorphology.RENDER_AS_LINES)) {
 			
-			if (_position != null) 
-			{
-				this.setLocalTranslation(_position.asVector3f());
+			
+			Geometry g = this.getLine(part);
+			this.registerGeometry(g);
+			this.registerGeometryToCable(g, part);
+			node.attachChild(g);
+			
+		} else if (renderOption.equals(NeuronMorphology.RENDER_AS_CYLINDERS)) {
+
+			Geometry g = this.getCylinder(part);
+			
+			this.registerGeometry(g);
+			this.registerGeometryToCable(g, part);
+			node.attachChild(g);
+			
+		} else if (renderOption.equals(NeuronMorphology.RENDER_AS_DETAILED_BOXES)) {
+			
+			List<Geometry> subCylinders = this.getSubCylinders(part);
+			for (Geometry g: subCylinders) {
+				this.registerGeometries(subCylinders);
+				this.registerGeometryToCable(g, part);
+				node.attachChild(g);
 			}
-			if (_rotation != null) {
-				this.setLocalRotation(_rotation.asMatrix3f());
+			
+		}
+		else if (renderOption.equals(NeuronMorphology.RENDER_AS_LOD)) {
+			
+			Geometry g = this.getCylinder(part);
+			
+			this.registerGeometry(g);
+			this.registerGeometryToCable(g, part);
+			List<Geometry> l = new ArrayList<Geometry>();
+			l.add(g);
+			((OMTDiscreteLodNode)node).addDiscreteLodNodeChild(0, l, 0, 1000);
+			
+			g = this.getLine(part);
+			
+			this.registerGeometry(g);
+			this.registerGeometryToCable(g, part);
+			l = new ArrayList<Geometry>();
+			l.add(g);
+			((OMTDiscreteLodNode)node).addDiscreteLodNodeChild(1, l, 1000, 10000);
+			
+		} else if (renderOption.equals(NeuronMorphology.RENDER_AS_LOD_2)){
+			
+			List<Geometry> subCylinders = this.getSubCylinders(part);
+			for (Geometry g: subCylinders) {
+				this.registerGeometries(subCylinders);
+				this.registerGeometryToCable(g, part);
 			}
-			if (_scale != 1) {
-				this.setLocalScale(_scale);
-			}
-		} catch (Exception e) {
-			//logger.logp(Level.SEVERE, this.getClass().toString(), "simpleInitGame()", "Exception", e);
-			System.exit(0);
+			((OMTDiscreteLodNode)node).addDiscreteLodNodeChild(0, subCylinders, 0, 800);
+			
+			Geometry g = this.getLine(part);
+			this.registerGeometry(g);
+			this.registerGeometryToCable(g, part);
+			List<Geometry> l = new ArrayList<Geometry>();
+			l.add(g);
+			((OMTDiscreteLodNode)node).addDiscreteLodNodeChild(1, l, 800, 10000);
 		}
 	}
 	
-	public void setX3DNeuron(URL structureLoc) {
-		try {
-			this.setX3DNeuron(new FileInputStream(structureLoc.getFile()), null, null, 1);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	//maps and reverse maps a geometry with an ICable
+	private void registerGeometryToCable(Geometry g, ICable part) {
+		this.subPartMap.put(part.getId(), g);
+		this.subPartReverseMap.put(g, part.getId());
+	}
+	
+	public BigInteger getCableIdFromGeometry(Geometry parentGeom) {
+		return this.subPartReverseMap.get(parentGeom);
+	}
+	
+	protected void selectLevelOfDetail(Renderer r) {
+		int target = chooseCableResolution(r);
+		if (target == 0) {
+			if (cableResolution == Integer.MAX_VALUE) {
+				reload();
+			}
+		} else if (target == Integer.MAX_VALUE){
+			if (cableResolution == 1) {
+				reload();
+			}
 		}
+	}
+	
+	
+	public void update() 
+	{
+		super.update();
+		updateModelBound();
+		//reload(); //uncomment this and highlighting will work again
+	}
+	
+	protected void reload()
+	{
+		super.update();
+		this.detachAllChildren();
+		this.attachChild(loadscene(currentMorph));
+		updateModelBound();
+	}
+	
+	public NeuronMorphology getMorphology() {
+		return currentMorph;
 	}
 	
 	/**
-	 * Provides segments with an arbitrary degradation.
-	 * Don't use for values other than 1 or Integer.MAX_VALUE
-	 * 
-	 * @param morph - Morphology file you want segments from
-	 * @param numberOfSegsPerGroup - number of desired segments.  For full resolution, use Integer.MAX_VALUE
-	 * @return
+	 * This function is used during rendering to choose the correct target record for the
+	 * AreaClodMesh acording to the information in the renderer.  This should not be called
+	 * manually.  Instead, allow it to be called automatically during rendering.
+	 * @param r The Renderer to use.
+	 * @return the target record this AreaClodMesh will use to collapse vertexes.
 	 */
-	private List<SegmentView> getSegments(NeuronMorphology morph, int numberOfSegsPerGroup) {
-		assert (numberOfSegsPerGroup == 1 || numberOfSegsPerGroup == Integer.MAX_VALUE);
-		List<SegmentView> segmentView = new ArrayList<SegmentView>();
-//		if (numberOfSegsPerGroup == Integer.MAX_VALUE) {
-//			for (ISegment s : morph.getSegments()) {
-//				segmentView.add(new SegmentView(s));
-//			}
-//			
-//		} else {
-			for (ICable sg: morph.getSegmentGroups()) {
-				segmentView.add(new SegmentView(sg));
-			}
-//		}
-		return segmentView;
-	}
-	
-
-	
-	public Node loadscene(NeuronMorphology morph) {
-		long tick = Log.tick();
-		Node sceneRoot = new Node("Neuron Morphology Root");
-		 /* 
-         * Check the LightState. If none has been passed, create a new one and
-         * attach it to the scene root
-         */ 
-		LightState lightState = null;
-		lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
-        lightState.setEnabled(true);	
-        sceneRoot.setRenderState(lightState);
-        
-        for (SegmentView seg : this.getSegments(morph, cableResolution)) {
-        	
-        	/*
-        	 Sphere s1 = new Sphere("my sphere", 10, 10, 0.5f);
-        	 s1.setLocalTranslation(base);
-        	 s1.setRandomColors();
-        	 Sphere s2 = new Sphere("my 2nd sphere", 10, 10, 0.5f);
-        	 s2.setLocalTranslation(apex);
-        	 s2.setRandomColors();
-        	 sceneRoot.attachChild(s1);
-        	 sceneRoot.attachChild(s2);
-        	 */
-           
-        	Node node = seg.getViewNode(morph.getRenderOption());
-           	        	
-        	this.segViews.add(seg);
-        	    		
-    		sceneRoot.attachChild(node);	
-
-        }
-        Log.tock("NeuronMorphology.loadScene() took", tick);
-    	return sceneRoot;
-	}
-	
-	 /**
-	   * Called during rendering.  Should not be called directly.
-	   * @param r The renderer to draw this TriMesh with.
-	   */
-	/*
-	  public void draw(Renderer r) {
-	    selectLevelOfDetail(r);
-	    super.draw(r);
-	  }*/
-	  
-	  protected void selectLevelOfDetail(Renderer r) {
-		  int target = chooseCableResolution(r);
-		  if (target == 0) {
-			  if (cableResolution == Integer.MAX_VALUE) {
-				  reload();
-			  }
-		  } else if (target == Integer.MAX_VALUE){
-			 if (cableResolution == 1) {
-				 reload();
-			 }
-		  }
-	  }
-	  
-	  public void update() 
-	  {
-		  super.update();
-		  updateModelBound();
-		  debug();
-		  //reload(); //uncomment this and highlighting will work again - but this is resolved by adding update() to doHightlight()
-	  }
-	
-	  /**
-	   * Not meant to be a function released or stuck in the SVN. If it shows up, 
-	   * chances are it probably is supposed to go in the update() method
-	   *
-	   */  
-	  private void debug()
-	  {
-		  
-		  	Node sceneRoot = this.getNode();
-			LightState lightState = null;
-			lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
-		    lightState.setEnabled(true);	
-		    sceneRoot.setRenderState(lightState);
-	  }
-	  
-	  
-	  protected void reload()
-	  {
-		  super.update();
-		  this.detachAllChildren();
-		  this.attachChild(loadscene(currentMorph));
-		  updateModelBound();
-	  }
-	  
-	  public NeuronMorphology getMorphology() {
-		  return currentMorph;
-	  }
-	  
-	  /**
-		 * This function is used during rendering to choose the correct target record for the
-		 * AreaClodMesh acording to the information in the renderer.  This should not be called
-		 * manually.  Instead, allow it to be called automatically during rendering.
-		 * @param r The Renderer to use.
-		 * @return the target record this AreaClodMesh will use to collapse vertexes.
-		 */
-		private int chooseCableResolution(Renderer r) {
-			if (this.getWorldBound() == null) {
-				logger.warning("NeuronMorphologyView found with no Bounds.");
-				return 0;
-			}
-
-			float newDistance = getWorldBound().distanceTo(
-					r.getCamera().getLocation());
-			if (Math.abs(newDistance - lastDistance) <= distTolerance)
-				return cableResolution; // we haven't moved relative to the model, send the old measurement back.
-			if (lastDistance > newDistance && cableResolution == 1)
-				return cableResolution; // we're already at the lowest setting and we just got closer to the model, no need to keep trying.
-			if (lastDistance < newDistance && cableResolution == Integer.MAX_VALUE)
-				return cableResolution; // we're already at the highest setting and we just got further from the model, no need to keep trying.
-
-			lastDistance = newDistance;
-
-			// estimate area of polygon via bounding volume
-			float area = AreaUtils.calcScreenArea(getWorldBound(), lastDistance, r
-					.getWidth());
-			if (area > (640*480/2)) {
-				cableResolution = Integer.MAX_VALUE;
-			} else {
-				cableResolution = 1;
-			}
-			return cableResolution;
+	private int chooseCableResolution(Renderer r) {
+		if (this.getWorldBound() == null) {
+			logger.warning("NeuronMorphologyView found with no Bounds.");
+			return 0;
 		}
-
-//	needs to be updated by a controller
-	public void updateSelectedSegments(Set<ISegment> segments) {
-		for (ISegment seg : segments) {
-			for (SegmentView sv : this.segViews) {
-				if (seg.equals(sv.getCorrespondingSegment())) {
-					sv.highlight();
-				} else { // or set to the default color of the segment 
-					sv.unhighlight();
-				}
-			}
+		
+		float newDistance = getWorldBound().distanceTo(
+				r.getCamera().getLocation());
+		if (Math.abs(newDistance - lastDistance) <= distTolerance)
+			return cableResolution; // we haven't moved relative to the model, send the old measurement back.
+		if (lastDistance > newDistance && cableResolution == 1)
+			return cableResolution; // we're already at the lowest setting and we just got closer to the model, no need to keep trying.
+		if (lastDistance < newDistance && cableResolution == Integer.MAX_VALUE)
+			return cableResolution; // we're already at the highest setting and we just got further from the model, no need to keep trying.
+		
+		lastDistance = newDistance;
+		
+		// estimate area of polygon via bounding volume
+		float area = AreaUtils.calcScreenArea(getWorldBound(), lastDistance, r
+				.getWidth());
+		if (area > (640*480/2)) {
+			cableResolution = Integer.MAX_VALUE;
+		} else {
+			cableResolution = 1;
 		}
+		return cableResolution;
 	}
-
-	public void updateSelectedSegmentGroups(Set<ICable> sgs) {
-		for (ICable seg : sgs) {
-			for (SegmentView sv : this.segViews) {
-				if (seg.equals(sv.getCorrespondingSegmentGroup())) {
-					sv.highlight();
-				} else {
-					sv.unhighlight();
-				}
-			}
-		}
-	}
-
-
+	
+	
+	
 	public void doHighlight() {
-		for (SegmentView sv: this.segViews) {
-			sv.highlight();
-			sv.update();
+		Stack<Spatial> queue = new Stack<Spatial>();
+		
+		queue.addAll(this.getChildren());
+		while(!queue.isEmpty()) {
+			Spatial s = queue.pop();
+			if (s instanceof Geometry) {
+				((Geometry)s).setSolidColor(ColorRGBA.yellow);
+			} else if (s instanceof Node) {
+				for (Spatial ns : ((Node)s).getChildren())
+					queue.push(ns);
+			}
 		}
 	}
-
+	
 	
 	public void doUnhighlight() {
-		for (SegmentView sv: this.segViews) {
-			sv.unhighlight();
-			sv.update();
+		Stack<Spatial> queue = new Stack<Spatial>();
+		
+		queue.addAll(this.getChildren());
+		while(!queue.isEmpty()) {
+			Spatial s = queue.pop();
+			if (s instanceof Geometry) {
+				BigInteger id = getCableIdFromGeometry((Geometry)s);
+				ColorRGBA c = ColorUtil.convertColorToColorRGBA(getMorphology().getCable(id).getColor());
+				((Geometry)s).setSolidColor(c);
+			} else if (s instanceof Node) {
+				for (Spatial ns : ((Node)s).getChildren())
+					queue.push(ns);
+			}
 		}
 	}
+	
+	private Vector3f getSegmentCenter(INeuronMorphologyPart part) {
+		Vector3f base = part.getBase();
+		Vector3f apex = part.getApex();
+		
+//		calculate new center
+		float xCenter = (float)((apex.x - base.x)/2 + base.x);
+		float yCenter = (float)((apex.y - base.y)/2 + base.y);
+		float zCenter = (float)((apex.z - base.z)/2 + base.z);
+		
+		return new Vector3f(xCenter, yCenter, zCenter);
+	}
+	
+	private Vector3f getSegmentDirection(INeuronMorphologyPart part) {
+		Vector3f base = part.getBase();
+		Vector3f apex = part.getApex();
+		
+		Vector3f unit = new Vector3f();
+		unit = apex.subtract(base); // unit = apex - base;
 
+		return unit;
+	}
+	
+	//returns a cylinder of the position, size, and radius of
+	//the given INeuronMorphologyPart
+	private Cylinder getCylinder(INeuronMorphologyPart part) {
+		
+		Vector3f center = this.getSegmentCenter(part);
+		
+		
+		Vector3f direction = getSegmentDirection(part);
+		float height = direction.length();
+		Vector3f unit = direction.normalize();
+		
+		Cylinder cyl = new Cylinder("neuron_cyl", 2, 4, 0.5f, height);
+		cyl.setRadius1(part.getBaseRadius());
+		cyl.setRadius2(part.getApexRadius());
+		//cyl.setColorBuffer(2, colorBuffer);
+		
+		
+		AlphaState as = View.getInstance().getRenderer().createAlphaState();
+		as.setBlendEnabled(true);
+		as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+		as.setDstFunction(AlphaState.DB_ONE);
+		as.setTestEnabled(true);
+		as.setTestFunction(AlphaState.TF_GREATER);
+		as.setEnabled(true);
+		cyl.setRenderState(as);
+		cyl.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+		
+		
+		Quaternion q = new Quaternion();
+		q.lookAt(unit, Vector3f.UNIT_Y);
+
+		cyl.setLocalRotation(q);
+		
+		cyl.setLocalTranslation(center);
+		
+		cyl.setSolidColor(ColorUtil.convertColorToColorRGBA(part.getColor()));
+		cyl.updateRenderState();
+		cyl.updateGeometricState(5f, false);
+		return cyl;
+	}
+	
+	
+	//Render this INeuronMorphologyPart as a series of cylinders corresponding to the underlying
+	//individual segments of this segment group
+	private List<Geometry> getSubCylinders(INeuronMorphologyPart part) {
+		List<Geometry> l = new ArrayList<Geometry>();
+		
+		for (int i = 0; i < part.getSubPartCount(); i++) {
+			INeuronMorphologyPart seg = part.getSubPart(i);
+			Cylinder c = this.getCylinder(seg);
+			l.add(c);
+		}	
+		return l;
+	}
+	
+	
+	// render this INeuronMorphologyPart as a Line
+	private Line getLine(INeuronMorphologyPart part) {
+		
+		Vector3f base = part.getBase();
+		Vector3f apex = part.getApex();
+		
+		float[] vertices = {apex.x, apex.y, apex.z, base.x, base.y, base.z};
+		
+		//Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, colorBuffer, null);
+		Line l = new Line("my Line", BufferUtils.createFloatBuffer(vertices), null, null, null);
+
+
+		l.setSolidColor(ColorUtil.convertColorToColorRGBA(part.getColor()));
+		l.updateRenderState();
+		l.updateGeometricState(5f, false);
+		
+		return l;
+		
+	}
+	
+	/**
+     * Make a neuron tree a Geometry Batch to make it more efficient
+     * 
+     * experimental code.. doesn't work correctly yet.
+     */
+    private TriMesh getGeometryBatchedCylinders(NeuronMorphology morph) {
+
+        // The batch geometry creator
+        GeometryBatchCreator geometryBatchCreator = new GeometryBatchCreator();
+
+        // Loop that creates instances for each cable.. could loop over all segments too.
+        for (int i = 0; i < morph.getCableCount(); i++) {
+			ICable part = morph.getCable(i);
+			GeometryBatchInstanceAttributes attributes = new GeometryBatchInstanceAttributes(new Vector3f(), 
+					new Vector3f(), new Vector3f(), ColorRGBA.white);
+			
+                // Cylinder instance (batch and attributes)
+                GeometryBatchInstance instance =
+                        new GeometryBatchInstance(this.getCylinder(part).getBatch(0), attributes);
+
+                // Add the instance
+                geometryBatchCreator.addInstance(instance);
+        }
+
+        // Create a TriMesh
+        TriMesh mesh = new TriMesh();
+        TriangleBatch batch = mesh.getBatch(0);
+        batch.setModelBound(new BoundingBox());
+
+        // Create the batch's buffers
+        batch.setIndexBuffer(BufferUtils.createIntBuffer(
+                geometryBatchCreator.getNumIndices()));
+        batch.setVertexBuffer(BufferUtils.createVector3Buffer(
+                geometryBatchCreator.getNumVertices()));
+        batch.setNormalBuffer(BufferUtils.createVector3Buffer(
+                geometryBatchCreator.getNumVertices()));
+        batch.setTextureBuffer(BufferUtils.createVector2Buffer(
+                geometryBatchCreator.getNumVertices()), 0);
+        batch.setColorBuffer(BufferUtils.createFloatBuffer(
+                geometryBatchCreator.getNumVertices() * 4));
+
+        // Commit the instances to the mesh batch
+        geometryBatchCreator.commit(batch);
+
+        // Return the mesh
+        return mesh;
+    }
+	
+	/**
+     * Use geometry instancing to create a mesh containing a number of cylinder
+     * instances
+     * 
+     * experimental code.. doesn't work correctly yet.
+     */
+    private TriMesh getGeometryInstancedCylinders(NeuronMorphology morph) {
+        // A cylinder that will be instantiated
+    	// currently these values are pretty random starting points.
+    	Cylinder cyl = new Cylinder("neuron_cyl", 2, 4, 0.5f, 10f);
+
+        // The batch geometry creator
+        GeometryBatchCreator geometryBatchCreator = new GeometryBatchCreator();
+
+        // Loop that creates instances for each cable.. could loop over all segments too.
+        for (int i = 0; i < morph.getCableCount(); i++) {
+			ICable part = morph.getCable(i);
+                // Box instance attributes
+                GeometryBatchInstanceAttributes attributes =
+                        new GeometryBatchInstanceAttributes(
+                        		// Translation
+                                this.getSegmentCenter(part),
+                                // Scale
+                                /* scale doesn't really accomplish we want since 
+                                 * cylinders have radius1 and radius2 ... we want to tune these
+                                 * separately.  I posted about this here:
+                                 * http://www.jmonkeyengine.com/jmeforum/index.php?topic=8799.msg68203
+                                 */ 
+                                new Vector3f(1,1,1),  
+                               
+                                // Rotation
+                                this.getSegmentDirection(part).normalize(),
+                                /* This doesn't seem to be working correctly either.*/
+                                //Color
+                                ColorUtil.convertColorToColorRGBA(part.getColor()));    
+
+                // Cylinder instance (batch and attributes)
+                GeometryBatchInstance instance =
+                        new GeometryBatchInstance(cyl.getBatch(0), attributes);
+
+                // Add the instance
+                geometryBatchCreator.addInstance(instance);
+        }
+
+        // Create a TriMesh
+        TriMesh mesh = new TriMesh();
+        TriangleBatch batch = mesh.getBatch(0);
+        batch.setModelBound(new BoundingBox());
+
+        // Create the batch's buffers
+        batch.setIndexBuffer(BufferUtils.createIntBuffer(
+                geometryBatchCreator.getNumIndices()));
+        batch.setVertexBuffer(BufferUtils.createVector3Buffer(
+                geometryBatchCreator.getNumVertices()));
+        batch.setNormalBuffer(BufferUtils.createVector3Buffer(
+                geometryBatchCreator.getNumVertices()));
+        batch.setTextureBuffer(BufferUtils.createVector2Buffer(
+                geometryBatchCreator.getNumVertices()), 0);
+        batch.setColorBuffer(BufferUtils.createFloatBuffer(
+                geometryBatchCreator.getNumVertices() * 4));
+
+        // Commit the instances to the mesh batch
+        geometryBatchCreator.commit(batch);
+
+        // Return the mesh
+        return mesh;
+    }
+    
+    /**
+     * Use geometry instancing to create a mesh containing a number of box
+     * instances
+     */
+    private TriMesh getGeometryInstancedBoxes(NeuronMorphology morph) {
+        // A box that will be instantiated
+        Box box = new Box("Box", new Vector3f(-0.5f, -0.5f, -0.5f),
+                          new Vector3f(0.5f, 0.5f, 0.5f));
+
+        // The batch geometry creator
+        GeometryBatchCreator geometryBatchCreator = new GeometryBatchCreator();
+
+        // Loop that creates instances for each cable.. could loop over all segments too.
+        for (int i = 0; i < morph.getCableCount(); i++) {
+        	ICable part = morph.getCable(i);
+        	// Box instance attributes
+        	GeometryBatchInstanceAttributes attributes =
+        		new GeometryBatchInstanceAttributes(
+        				this.getSegmentCenter(part),
+        				// Translation
+        				new Vector3f(1, this.getSegmentCenter(part).length(), 1),
+        				// Scale
+        				this.getSegmentDirection(part).normalize(), /**THIS ROTATION IS WRONG>> HOW DO WE FIX IT??!**/
+        				// Rotation
+        				ColorUtil.convertColorToColorRGBA(part.getColor()));    // Color
+        	
+        	// Box instance (batch and attributes)
+        	GeometryBatchInstance instance =
+        		new GeometryBatchInstance(box.getBatch(0), attributes);
+        	
+        	// Add the instance
+        	geometryBatchCreator.addInstance(instance);
+        }
+ 
+
+        // Create a TriMesh
+        TriMesh mesh = new TriMesh();
+        TriangleBatch batch = mesh.getBatch(0);
+        batch.setModelBound(new BoundingBox());
+
+        // Create the batch's buffers
+        batch.setIndexBuffer(BufferUtils.createIntBuffer(
+                geometryBatchCreator.getNumIndices()));
+        batch.setVertexBuffer(BufferUtils.createVector3Buffer(
+                geometryBatchCreator.getNumVertices()));
+        batch.setNormalBuffer(BufferUtils.createVector3Buffer(
+                geometryBatchCreator.getNumVertices()));
+        batch.setTextureBuffer(BufferUtils.createVector2Buffer(
+                geometryBatchCreator.getNumVertices()), 0);
+        batch.setColorBuffer(BufferUtils.createFloatBuffer(
+                geometryBatchCreator.getNumVertices() * 4));
+
+        
+        // Commit the instances to the mesh batch
+        geometryBatchCreator.commit(batch);
+
+        // Return the mesh
+        return mesh;
+    }
+	
 }

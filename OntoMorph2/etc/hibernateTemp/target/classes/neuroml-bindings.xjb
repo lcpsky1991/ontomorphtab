@@ -1,6 +1,8 @@
 <jxb:bindings version="1.0"
       xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
-      xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xmlns:hj="http://hyperjaxb2.jvnet.org/customizations"
+      jxb:extensionBindingPrefixes="hj">
       <!-- this file is supposed to help resove conflicts between NeuroML level1 and level2 and level3-->
   <jxb:bindings schemaLocation="file:/C:/Documents%20and%20Settings/stephen/workspace2/OntoMorph2-2/etc/neuroml-schemas/1.7.2/Level1/MorphML_v1.7.2.xsd" node="/xs:schema">
     <jxb:bindings node="//xs:attribute[@name='fractAlongParent']">
@@ -13,6 +15,30 @@
       <jxb:property name="cellsType"/>
     </jxb:bindings>
   </jxb:bindings>
+  
+  <!-- Sets lazy intialization for these data members on -->
+  <jxb:bindings schemaLocation="file:/C:/Documents%20and%20Settings/stephen/workspace2/OntoMorph2-2/etc/neuroml-schemas/1.7.2/Level1/MorphML_v1.7.2.xsd" node="//xs:complexType[@name='Segment']">
+    <hj:class lazy="true" proxy="org.morphml.morphml.schema.Segment">
+    </hj:class>
+  </jxb:bindings>
+  
+  <!-- Sets lazy intialization for these data members on -->
+  <jxb:bindings schemaLocation="file:/C:/Documents%20and%20Settings/stephen/workspace2/OntoMorph2-2/etc/neuroml-schemas/1.7.2/Level1/MorphML_v1.7.2.xsd" node="//xs:complexType[@name='Cell']">
+    <hj:class lazy="true" proxy="org.morphml.morphml.schema.Cell">
+    </hj:class>
+  </jxb:bindings>
+  
+   <!-- Sets lazy intialization for these data members on -->
+  <jxb:bindings schemaLocation="file:/C:/Documents%20and%20Settings/stephen/workspace2/OntoMorph2-2/etc/neuroml-schemas/1.7.2/Level1/MorphML_v1.7.2.xsd" node="//xs:complexType[@name='Cable']">
+    <hj:class lazy="true" proxy="org.morphml.morphml.schema.Cable">
+    </hj:class>
+  </jxb:bindings>
+  
+  <!-- Sets lazy intialization for these data members on 
+  <jxb:bindings schemaLocation="file:/C:/Documents%20and%20Settings/stephen/workspace2/OntoMorph2-2/etc/neuroml-schemas/1.7.2/Level3/NeuroML_Level3_v1.7.2.xsd" node="//xs:complexType[@name='Level3Cell']">
+    <hj:class lazy="true" proxy="org.morphml.neuroml.schema.Level3Cell">
+    </hj:class>
+  </jxb:bindings>-->
   
   <!-- Metadata bindings -->
   <jxb:bindings schemaLocation="file:/C:/Documents%20and%20Settings/stephen/workspace2/OntoMorph2-2/etc/neuroml-schemas/1.7.2/Level1/Metadata_v1.7.2.xsd" node="/xs:schema">

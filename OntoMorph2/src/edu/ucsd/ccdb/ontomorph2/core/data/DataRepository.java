@@ -5,11 +5,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Expression;
+import org.morphml.neuroml.schema.Level3Cell;
+
+
 
 /**
  * Wraps a database that stores all the information about current position/rotation/scale of objects.
@@ -21,7 +30,7 @@ public class DataRepository {
 
 	static DataRepository repo = null;
 	SessionFactory sFact = null;
-	Map<String, Serializable> cache = new HashMap<String, Serializable>();
+	Map<String, Object> cache = new HashMap<String, Object>();
 	
 	public static DataRepository getInstance() {
 		if (repo == null) {
@@ -44,26 +53,29 @@ public class DataRepository {
 		 
 	}
 	
-	public boolean isFileCached(String url, Class c) {
-		return getCachedFile(url, c) != null;
+	public boolean isFileCached(String url) {
+		return getCachedFile(url) != null;
 	}
 	
-	public void cacheFile(String url, Object o){
+	public void saveFileToDB(Object o){
 //		 Open the session
 		final Session saveSession = sFact.openSession();
+		final Transaction transaction = saveSession.beginTransaction();
+
+		
 //		 Save the unmarshalled object into the database
 		saveSession.saveOrUpdate(o);
 //		 Get the id
 		final Serializable id = saveSession.getIdentifier(o);
-//      Cache the id
-		cache.put(url, id);
-		
+
+		transaction.commit();
 //		 Flush and close the session
 		saveSession.flush();
 		saveSession.close();	
 	}
 	
-	public Object getCachedFile(String url, Class c) {
+	/*
+	public Object loadFileFromDB(String url, Class c) {
 //		 Open the session
 		final Session loadSession = sFact.openSession();
 //		 Load the object
@@ -74,7 +86,46 @@ public class DataRepository {
 //		 Close the session
 		loadSession.close();
 		return loadedObject;
+	}*/
+	
+	public Object getCachedFile(String url) {
+		return cache.get(url);
 	}
 	
+	public void cacheFile(String url, Object o) {
+//      Cache the file
+		cache.put(url, o);
+	}
 	
+	public Object findMorphMLByName(String name) {
+//		 Open the session
+		final Session loadSession = sFact.openSession();
+
+		Object o = null;
+		/*
+		final Object loadedObject = 
+			((org.hibernate.classic.Session) loadSession).find("from Cell as cell where cell.name = ?", 
+					name, Hibernate.STRING);
+					*/
+		/*
+		Query q = loadSession.createQuery("from Cell as cell where cell.name = " + name);
+		Object o = q.list().get(0);
+		*/
+		
+		Criteria crit = loadSession.createCriteria(Level3Cell.class);//.add(Expression.eq("name", name));
+		List l = crit.list();
+		for (int i = 0; i < l.size(); i++) {
+			Level3Cell c = (Level3Cell)l.get(i);
+			if (c.getName() != null && c.getName().equals(name)) {
+				o = c;
+			}
+		}
+		
+//		 Close the session
+		loadSession.close();
+		
+		return o;
+		//return loadedObject;
+
+	}
 }

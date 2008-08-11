@@ -476,7 +476,7 @@
       </fail>
    </target>
 	
-	<target name="exportDatabaseSchema">
+	<target name="exportDatabaseSchema" depends="cleanDB">
 		<!-- Hibernate Tools import -->
 		<taskdef name="schemaexport"
 			classname="org.hibernate.tool.hbm2ddl.SchemaExportTask"
@@ -498,9 +498,8 @@
 	</target>
 	
 	<!-- Start the HSQL DB server -->
-	<target name="startCleanDB" description="Run HSQL database server with clean DB">
-	<!-- Delete database files -->
-	<delete dir="db"/>
+	<target name="startCleanDB" description="Run HSQL database server with clean DB" depends="cleanDB">
+
 	<java classname="org.hsqldb.Server"
 	fork="yes"
 	classpathref="project.classpath"
@@ -508,6 +507,11 @@
 	<arg value="-database.0"/>
 	<arg value="file:db/db"/>
 	</java>
+	</target>
+	
+	<target name="cleanDB" description="blows away the current DB">
+		<!-- Delete database files -->
+		<delete dir="db"/>
 	</target>
 	
 	<!-- Start the HSQL DB server -->

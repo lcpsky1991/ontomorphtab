@@ -161,7 +161,7 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getSegmentGroups()
 	 */
-	public Set<ICable> getSegmentGroups() {
+	public Set<ICable> getCables() {
 		if (segmentGroupList == null) {
 			segmentGroupList = new HashSet<ICable>();
 			/*
@@ -215,6 +215,24 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	public String getName() {
 		int len = _morphLoc.getFile().length();
 		return _morphLoc.getFile().substring(len-14, len);
+	}
+
+	@Override
+	public int getCableCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public ICable getCable(int i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ICable getCable(BigInteger id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
