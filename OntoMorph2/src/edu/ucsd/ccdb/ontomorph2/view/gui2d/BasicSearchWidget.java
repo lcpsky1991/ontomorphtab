@@ -38,27 +38,21 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
 public class BasicSearchWidget implements ITextChangedListener{
     
 	FengJMEInputHandler input = null;
-	float tpf = 0;
-	
+	InputHandler in = new InputHandler(); 
 	public BasicSearchWidget(Display d) {
 		
 		input = new FengJMEInputHandler(d);
-		//keyboard = KeyBindingManager.getKeyBindingManager();
-        //input.addToAttachedHandlers( this.input );	
 		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
-				
+		input.setEnabled(true);
 		Window window = new Window(true, false, false, true);
 		d.addWidget(window);
 		window.setSize(200, 300);
-		//window.getContentContainer().setLayoutManager( new RowLayout(false) );
         window.getContentContainer().setLayoutManager(new BorderLayout());
 		window.setTitle("Search");       
-	    //window.addMouseEnteredListener(FocusManager.focusManager);
-	     //   button.addMouseExitedListener(FocusManager.focusManager);
         TextEditor textArea = FengGUI.createTextField(window.getContentContainer());
         textArea.setText("Enter Keyword");
         textArea.setSize(100, 20);
-		//window.getContentContainer().addWidget(textArea);
+        in.addToAttachedHandlers(input);
         System.out.println("writing state " + textArea.isInWritingState());
         
         Button button = new Button( "Start Search" );
@@ -74,13 +68,12 @@ public class BasicSearchWidget implements ITextChangedListener{
         } );
 
         button.addMouseEnteredListener(FocusManager.focusManager);
-        button.addMouseExitedListener(FocusManager.focusManager);
+        //button.addMouseExitedListener(FocusManager.focusManager);
         window.getContentContainer().addWidget( button );
-        //window.pack();        
 		window.setPosition(new Point(0,100));
         textArea.setPosition(new Point(30,220));
-        window.layout();
-        MouseInput.get().setCursorVisible(true);
+        d.layout();
+        //MouseInput.get().setCursorVisible(true);
 	}
 
 	public void textChanged(TextChangedEvent arg0) {

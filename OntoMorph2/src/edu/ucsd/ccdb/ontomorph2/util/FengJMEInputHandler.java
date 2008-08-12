@@ -308,9 +308,9 @@ public class FengJMEInputHandler extends InputHandler
 			if(down)
 				mouseHandled = disp.fireMouseDraggedEvent(newX, newY, getMouseButton(lastButton));
 			else
-				mouseHandled = disp.fireMouseMovedEvent(newX, newY);
-		}
- 
+			     mouseHandled = disp.fireMouseMovedEvent(newX, newY);
+		}	
+			
 		public void onWheel(int wheelDelta, int x, int y)
 		{
 			//System.out.println("onWheel");
