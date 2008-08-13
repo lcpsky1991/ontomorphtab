@@ -83,14 +83,14 @@ public class NeuronMorphologyView extends TangibleView{
 	
 	CurveController _cc = null;
 	
-	Map<BigInteger, Geometry> subPartMap = null;
+	Map<BigInteger, List<Geometry>> subPartMap = null;
 	Map<Geometry, BigInteger> subPartReverseMap = null;
 	
 	public NeuronMorphologyView(NeuronMorphology morph) {
 		super(morph);
 		super.setName("Neuron Morphology View");
 		currentMorph = morph;
-		subPartMap = new HashMap<BigInteger, Geometry>();
+		subPartMap = new HashMap<BigInteger, List<Geometry>>();
 		subPartReverseMap = new HashMap<Geometry, BigInteger>();
 		this.setMorphMLNeuron(this.loadscene(morph), morph);
 	}
@@ -274,7 +274,12 @@ public class NeuronMorphologyView extends TangibleView{
 	
 	//maps and reverse maps a geometry with an ICable
 	private void registerGeometryToCable(Geometry g, ICable part) {
-		this.subPartMap.put(part.getId(), g);
+		List<Geometry> l = this.subPartMap.get(part.getId());
+		if (l == null) {
+			l = new ArrayList<Geometry>();
+			this.subPartMap.put(part.getId(), l);
+		} 
+		l.add(g);
 		this.subPartReverseMap.put(g, part.getId());
 	}
 	
@@ -657,6 +662,25 @@ public class NeuronMorphologyView extends TangibleView{
 
         // Return the mesh
         return mesh;
+    }
+
+    protected List<Geometry> getGeometryFromCableId(BigInteger id) {
+    	return this.subPartMap.get(id);
+    }
+    
+    public void highlightCable(BigInteger id) {
+    	for (Geometry g : this.getGeometryFromCableId(id)) {
+    		g.setSolidColor(ColorRGBA.yellow);
+    		g.updateGeometricState(0.5f, false);
+    	}
+    }
+
+    public void unhighlightCable(BigInteger id) {
+    	ColorRGBA color = ColorUtil.convertColorToColorRGBA(this.getMorphology().getCable(id).getColor());
+    	for (Geometry g : this.getGeometryFromCableId(id)) {
+    		g.setSolidColor(color);
+    		g.updateGeometricState(0.5f, false);
+    	}
     }
 	
 }

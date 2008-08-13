@@ -135,6 +135,7 @@ public class MorphMLCableImpl extends Tangible implements ICable{
 	
 	public void select() 
 	{
+		
 		//set the selection in the MorphML model
 		//does this persist behind the scenes automatically to the db?
 		Properties p = this.c.getProperties();
@@ -142,7 +143,7 @@ public class MorphMLCableImpl extends Tangible implements ICable{
 		pr.setTag("selected");
 		pr.setValue("true");
 		if (p != null) {
-		p.getProperty().add(pr);
+			p.getProperty().add(pr);
 		} else {
 			Properties p2 = new PropertiesImpl();
 			p2.getProperty().add(pr);
@@ -150,10 +151,10 @@ public class MorphMLCableImpl extends Tangible implements ICable{
 		}
 		
 		//call select on a copy of this instance, rather than this instance itself.
-		TangibleManager.getInstance().select(new MorphMLCableImpl(this.getParent(), this.c));
+		MorphMLCableImpl copy = new MorphMLCableImpl(this.getParent(), this.c);
+		TangibleManager.getInstance().select(copy);
+		copy.changed(CHANGED_SELECT);
 		
-		changed(CHANGED_SELECT);
-
 		setInfoText();
 	}
 	
@@ -162,10 +163,12 @@ public class MorphMLCableImpl extends Tangible implements ICable{
 		//determine isSelected on the basis of the underlying
 		// cable instance, rather than on the selected list.
 		Properties p = this.c.getProperties();
-		for (int i = 0; i < p.getProperty().size(); i++) {
-			Property pr = (Property)p.getProperty().get(i);
-			if ("selected".equals(pr.getTag())) {
-				return true;
+		if (p != null) {
+			for (int i = 0; i < p.getProperty().size(); i++) {
+				Property pr = (Property)p.getProperty().get(i);
+				if ("selected".equals(pr.getTag())) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -174,11 +177,13 @@ public class MorphMLCableImpl extends Tangible implements ICable{
 	public void unselect() 
 	{
 		//have to find the tangible that shares the same underlying cable instance
+		//and call unselect on it
 		for (Tangible t : TangibleManager.getInstance().getSelected()) {
 			if (t instanceof MorphMLCableImpl) {
 				MorphMLCableImpl m = (MorphMLCableImpl)t;
 				if (m.getMorphMLCable().equals(this.c)) {
-					TangibleManager.getInstance().unselect(t);			
+					TangibleManager.getInstance().unselect(t);
+					t.changed(CHANGED_UNSELECT);
 				}
 			}
 		}

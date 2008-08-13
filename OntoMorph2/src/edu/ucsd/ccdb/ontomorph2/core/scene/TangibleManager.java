@@ -171,8 +171,8 @@ public class TangibleManager {
 		if (!getMultiSelect()) { 
 			this.unselectAll();
 		}
-//		only add if not already selected
-		if ( !thing.isSelected() )
+//		only add if not already on selected list
+		if ( !selectedThings.contains(thing) )
 		{
 			selectedThings.add(thing);	
 		}

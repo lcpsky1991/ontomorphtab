@@ -145,8 +145,24 @@ public class SceneObserver implements Observer {
 				if (tv != null)	tv.update();
 			}
 			
+		} else if (o instanceof ICable) {
+
+			if (arg.equals(Tangible.CHANGED_SELECT)) {
+				ICable cable = (ICable)o;
+				NeuronMorphology parent = ((ICable)o).getParent();
+				NeuronMorphologyView nmv = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor(parent);
+				if (nmv != null) {
+					nmv.highlightCable(cable.getId());
+				}
+			} else if (arg.equals(Tangible.CHANGED_UNSELECT)) {
+				ICable cable = (ICable)o;
+				NeuronMorphology parent = ((ICable)o).getParent();
+				NeuronMorphologyView nmv = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor(parent);
+				if (nmv != null) {
+					nmv.unhighlightCable(cable.getId());
+				}
+			}
 		}
-		
 		else if (o instanceof Tangible)
 		{
 			// catch all method for any leftover tangibles

@@ -41,6 +41,7 @@ public class TangibleViewManager {
 		tangibleToTangibleView.put(tv.getModel(), tv);
 	}
 	
+
 	/**
 	 * Returns the TangibleView that has this Tangible as a model if one exists.
 	 * @param t - the Tangible to search for.
