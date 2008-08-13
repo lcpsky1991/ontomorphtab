@@ -31,6 +31,7 @@ public class CurveView extends TangibleView {
 	{
 		super(curve);
 		super.setName("Curve3DView");
+		this.pickPriority = P_LOW;
 		update();
 	}
 

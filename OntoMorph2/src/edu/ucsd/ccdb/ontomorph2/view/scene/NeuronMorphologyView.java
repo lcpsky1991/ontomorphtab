@@ -93,6 +93,7 @@ public class NeuronMorphologyView extends TangibleView{
 		subPartMap = new HashMap<BigInteger, List<Geometry>>();
 		subPartReverseMap = new HashMap<Geometry, BigInteger>();
 		this.setMorphMLNeuron(this.loadscene(morph), morph);
+		this.pickPriority = P_HIGH;
 	}
 	
 	public Node getNode() {
