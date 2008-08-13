@@ -53,6 +53,7 @@ public abstract class NeuronMorphology extends Tangible{
 		return _curve;
 	}
 	
+	
 	/**
 	 * Retrieves the "time" along the curve that this INeuronMorphology is positioned at
 	 * @return

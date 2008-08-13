@@ -52,16 +52,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public static final String CHANGED_NAME = "name";
 	public static final String CHANGED_ADD_PART = "add part";
 	
-	//==============================
-	// Picking Constants
-	//==============================
-	public static final int P_UNKNOWN = -1;
-	public static final int P_BACKGROUND = 0; //Lowest
-	public static final int P_LOW = 1;
-	public static final int P_MEDIUM = 2;
-	public static final int P_HIGH = 3;
-	public static final int P_HIGHEST = 4;
-	
 	
 	private PositionVector _position = new PositionVector();
 	private RotationVector _rotation = new RotationVector();
@@ -74,6 +64,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	private Color highlightedColor = Color.yellow;
 	
 	private String name;
+	
 	
 	public Tangible() {
 		TangibleManager.getInstance().addTangible(this);

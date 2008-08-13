@@ -4,6 +4,8 @@ package edu.ucsd.ccdb.ontomorph2.view;
 
 
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Set;
 
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
@@ -41,6 +43,7 @@ import com.jme.util.geom.Debugger;
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.INeuronMorphologyPart;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
@@ -49,6 +52,8 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
+import edu.ucsd.ccdb.ontomorph2.view.scene.CurveAnchorPointView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
@@ -401,30 +406,16 @@ public class View extends BaseSimpleGame {
 	private void doPick() {
 		//get stuff we are trying to pick/select
 		PickResults results = getPickResults();
+		PickData chosenOne = null;
+							
+		//if ANY results are found, then sort them by priority
+		if ( results.getNumber() > 0) results = reorderPickPriority(results);
 		
-		PickData currentPick = null;	//stores information for mouse picking					
 		
 		if ( results.getNumber() > 0)
 		{
-			//in debug mode do not select curves or slides
-			if ( debugMode)
-			{
-				for (int i = 0; currentPick == null && i < results.getNumber(); i++)
-				{
-					GeomBatch obj = results.getPickData(i).getTargetMesh();
-					if ( !(obj.getParentGeom() instanceof CatmullRomCurve || obj.getParentGeom() instanceof SlideView))
-					{
-						currentPick = results.getPickData(i);
-					}
-					System.out.println("result" + i + ": " + obj.getName() + " part " + obj.getParentGeom().getName());
-				}
-			}
-			else
-			{
-				currentPick = results.getPickData(0);	//take the closest pick and set
-			}
-			
-			if (currentPick != null) doSelection(currentPick.getTargetMesh());			
+			chosenOne = results.getPickData(0);	//take the closest pick and set
+			if (chosenOne != null) doSelection(chosenOne.getTargetMesh());		
 		} 
 		else 
 		{
@@ -432,6 +423,50 @@ public class View extends BaseSimpleGame {
 			TangibleManager.getInstance().unselectAll();
 		}
 	}
+	
+	
+	private PickResults reorderPickPriority(PickResults results)
+	{
+		PickData decision = null;
+		PickResults reorder = new TrianglePickResults();
+		
+		//setup
+		int cnt = results.getNumber();
+		int highP = TangibleView.P_UNKNOWN;
+		reorder.clear();
+		reorder.setCheckDistance(true);
+		
+		//===== loop through all the item in results
+		//===== find the highest priority item
+		for (int i=0; i < cnt; i++)
+		{
+			GeomBatch obj = results.getPickData(i).getTargetMesh();
+			TangibleView tv = TangibleViewManager.getInstance().getTangibleView(obj.getParentGeom());
+			if ( tv != null)
+			{
+				int p = new Integer(tv.pickPriority);
+				if ( p > highP ) highP = p;	
+			}
+		}
+		
+		//===== get all instances of THAT item
+			//copy all of those that belong to highP to reorder
+		for (int i =0; i < cnt; i++)
+		{
+			GeomBatch obj = results.getPickData(i).getTargetMesh();
+			TangibleView tv = TangibleViewManager.getInstance().getTangibleView(obj.getParentGeom());
+			if ( tv != null)
+			{
+				int p = tv.pickPriority;
+				if ( highP == p )
+				{
+					reorder.addPickData(results.getPickData(i));
+				}	
+			}
+		}
+		
+		return reorder;
+	} 
 	
 	/**
 	 * Give the PickResults object for the object the mouse is trying to select on the screen

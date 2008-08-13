@@ -8,6 +8,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 public class TangibleViewManager {
@@ -17,7 +18,6 @@ public class TangibleViewManager {
 
 	HashMap<Geometry, TangibleView> geometryToTangibleView = null;
 	HashMap<Tangible, TangibleView> tangibleToTangibleView = null;
-	
 	
 	
 	public static TangibleViewManager getInstance() {
@@ -73,4 +73,5 @@ public class TangibleViewManager {
 		tv = this.geometryToTangibleView.get(gb);
 		return tv;
 	}
+	
 }

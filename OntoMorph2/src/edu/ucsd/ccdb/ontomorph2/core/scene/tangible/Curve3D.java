@@ -44,7 +44,6 @@ public class Curve3D extends Tangible{
 	boolean seeAnchorPoints = false;
 	List<CurveAnchorPoint> anchors = null;
 	
-	
 	public Curve3D(String arg0, OMTVector[] arg1) {
 		setName(arg0);
 		controlPoints = arg1;

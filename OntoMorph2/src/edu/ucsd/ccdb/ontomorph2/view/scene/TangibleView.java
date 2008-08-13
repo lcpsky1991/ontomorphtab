@@ -27,9 +27,27 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
 public abstract class TangibleView extends Node {
 	private Tangible model = null;
 	
-	public TangibleView(Tangible model) {
+	
+
+
+//	==============================
+//	 Picking Constants
+//	==============================
+	public static final int P_UNPICKABLE = -1;
+	public static final int P_UNKNOWN = 0;
+	public static final int P_BACKGROUND = 1; //Lowest
+	public static final int P_LOW = 2;
+	public static final int P_MEDIUM = 3;
+	public static final int P_HIGH = 4;
+	public static final int P_HIGHEST = 5;
+	
+	public int pickPriority = P_UNKNOWN;
+	
+	public TangibleView(Tangible model) 
+	{
 		super("Tangible View for " + model.getName());
-		this.setModel(model);	
+		this.setModel(model);
+		pickPriority = P_UNKNOWN;
 		//register this instance with the TangibleViewManager
 		TangibleViewManager.getInstance().addTangibleView(this);
 	}
