@@ -374,8 +374,8 @@ public class View extends BaseSimpleGame {
 //		======================================
 		//======================================
 		
-		//float mx = MouseInput.get().getXDelta();
-		//float my = MouseInput.get().getYDelta();
+		float mx = MouseInput.get().getXDelta();
+		float my = MouseInput.get().getYDelta();
 		//TODO: replace unity vectors with ones based on camera axis
 		switch ( manipulation )
 		{
