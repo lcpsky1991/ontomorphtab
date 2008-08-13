@@ -94,4 +94,5 @@ public class CurveAnchorPoint extends Tangible {
 		}
 		return info;	//if it has a name return it
 	}
+	
 }

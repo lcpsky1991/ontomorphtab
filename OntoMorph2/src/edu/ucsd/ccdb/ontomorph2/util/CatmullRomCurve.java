@@ -47,7 +47,7 @@ import com.jme.util.geom.BufferUtils;
  * <code>CatmullRomCurve</code>
  * 
  * @see <a href="http://www.mvps.org/directx/articles/catmull/">Catmull-Rom Splines</a>
- * @author Frederik Bülthoff
+ * @author Frederik Blthoff
  */
 public class CatmullRomCurve extends Curve {
 	
@@ -137,7 +137,7 @@ public class CatmullRomCurve extends Curve {
 		rotation.setColumn(1, binormal);
 		rotation.setColumn(2, tangent);
 		
-		System.out.println("matrix rotation" + rotation);
+		//System.out.println("matrix rotation" + rotation);
 		return rotation;
 	}
 
@@ -180,7 +180,7 @@ public class CatmullRomCurve extends Curve {
 		rotation.setColumn(1, normal);
 		rotation.setColumn(2, tangent);
 
-		System.out.println("rotation" + rotation);
+		//System.out.println("rotation" + rotation);
 		return rotation;
 	
 	}

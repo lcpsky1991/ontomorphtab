@@ -330,15 +330,14 @@ public class Curve3D extends Tangible{
 		
 		//update the scene
 		changed();
-		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);	//FIXME: possible site of tension with model/view/controller
-		
 	}
 	
 	
-	public void changed() {
+	public void changed() 
+	{
 		//null theCurve to force a getCurve to recreate the 
 		// underlying curve instance
-		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);
+		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);  //FIXME: possible site of tension with model/view/controller
 		this.theCurve = null;
 		super.changed();
 	}
@@ -346,7 +345,7 @@ public class Curve3D extends Tangible{
 	
 	public void select()
 	{
-		setAnchorPointsVisibility(true);
+		
 		boolean ms = TangibleManager.getInstance().getMultiSelect(); //get previous state of multiselect
 		super.select();
 		
@@ -361,6 +360,7 @@ public class Curve3D extends Tangible{
 		TangibleManager.getInstance().setMultiSelect(ms);	//restore multiselect to however it was befpre
 	}
 	
+	
 	public void unselect()
 	{
 		super.unselect();
@@ -368,7 +368,7 @@ public class Curve3D extends Tangible{
 		{
 			anchors.get(i).unselect();
 		}
-		setAnchorPointsVisibility(false);
+		
 	}
 
 }

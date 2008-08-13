@@ -72,7 +72,7 @@ public class SceneObserver implements Observer {
 			}
 			else if (arg.equals(Scene.CHANGED_PART))
 			{
-				msg = "reloading part";
+				msg = "reloading part (all)";
 				reloadAll(scene);
 			}
 			else if (arg.equals(Scene.CHANGED_TEST))

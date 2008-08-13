@@ -60,6 +60,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	static final String msN_CELL_CA3Pyr = "CA3 Pyramidal";
 	static final String msN_CELL_CA1Pyr = "CA1 Pyramidal";
 	static final String msSELECT = "Select ...";
+	static final String msEDIT = "Toggle Edit";
 	static final String msManipulate = "Manipulate ...";
 	static ContextMenu instance = null;
 	TitledBorder border = null;
@@ -85,6 +86,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	ContextMenuItem mniSimulate = null;
 	ContextMenuItem mniProperties = null;
 	ContextMenuItem mniSeperator = null;
+	ContextMenuItem mniEdit = null;
 	
 	
 	private static final DemoCoordinateSystem dcoords =  new DemoCoordinateSystem();	//coordinates for test-case new objects
@@ -158,7 +160,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	
 	}
 	
-	private void create()
+	private void create(List<Tangible> tans)
 	{
 		removeAllItems();
 		
@@ -176,7 +178,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
         menuItemFactory(mniNew_Cell_DG, mnuNew_Cell, msN_CELL_DG);
         menuItemFactory(mniNew_Cell_DG, mnuNew_Cell, msN_CELL_DG);
         menuItemFactory(mniAnnotate , this, msANNOTATE);
+        menuItemFactory(mniProperties, this, msEDIT);
         menuItemFactory(mniProperties, this, msPROPERTIES);
+        
         
         
         for (int i = 0; i < 5; i++)
@@ -199,58 +203,14 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	
 	public void displayMenuFor(int xCoord, int yCoord, List<Tangible> t) 
 	{
-		create();
+		
 		int x = xCoord;
 		int y = yCoord;
 		this.setXY(x, y);
 		
-		//handles the case of a SINGLE selection
-		if (t != null & t.size() == 1) {
-			border.setTitle(t.iterator().next().getName());
-		}	//handles the case of multiselection
-		else if ( t != null & t.size() > 1)
-		{
-			String check="";
-			HashMap types = new HashMap();
-			
-			//loop through and see if they are all the same types			
-			for (int i =0; i < t.size(); i++) //dont exit quick because we need the info later anyways
-			{
-				check = t.get(i).getName();
-				//if map contains the word incriment it
-				if ( types.containsKey(check) )
-				{
-					int c = (Integer) types.get(check) + 1;
-					types.put(check, c);
-					
-				} //otherwise create it and flag that its a multiset
-			}
-			
-			//if they are the same then just call it that
-			if ( types.size() > 1)
-			{
-				border.setTitle("Many [" + types.keySet().iterator().next() + "]");
-			}
-			//otherwise we may be smart about it and figure out what we've got
-			else
-			{
-				String title = "Set";
-				Set possible = types.keySet();
-				
-				while (possible.iterator().hasNext()  )
-				{
-					title += " [" + possible.iterator().next() + "]";
-				}
-				
-				//but the title can't be too long
-				if (title.length() > 20)
-				{
-					title = title.substring(0, 20) + "] ...";
-				}
-				
-				border.setTitle(title);
-			}
-		}
+		create(t);
+		
+		border.setTitle(dynamicTitle(t));
 		
 		if(this.equals(View2D.getInstance().getDisplay().getPopupWidget())) // popupmenu is already visible!
 		{
@@ -259,6 +219,27 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		View2D.getInstance().displayPopUp(this);
 	}
+	
+	
+	private String dynamicTitle(List<Tangible> t)
+	{
+		String ntitle = "";
+		
+//		handles the case of a SINGLE selection
+		if (t != null & t.size() == 1) {
+			ntitle = (t.iterator().next().getName());
+		}	//handles the case of multiselection
+		else if ( t != null & t.size() > 1)
+		{
+			ntitle = " Many ";
+		}	
+		else 
+		{
+			ntitle = " (none) ";
+		}
+		return ntitle;
+	}
+	
 	/**
 	 * Conveiniance method that wraps the creation of menus
 	 * @author caprea
@@ -294,34 +275,46 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		String opt = arg0.getItem().getText();
 		MenuItem trigger = arg0.getItem();
-		Tangible orig = TangibleManager.getInstance().getSelectedRecent();
+		//Tangible orig = TangibleManager.getInstance().getSelectedRecent();
 		
-		if (orig instanceof Tangible)
+		for ( Tangible orig : TangibleManager.getInstance().getSelected())
 		{
-			if (msANNOTATE.equals(opt)) {
-				System.out.println("do annotation");
-			} else if (msANIMATE.equals(opt)) {
-				System.out.println("do animation");
-			} else if (msPROPERTIES.equals(opt)) {
-				System.out.println("show properties");
-			}
-			else if (msN_CURVE.equals(opt)) testCreateCurve(orig);
-			
-			else if (trigger.equals(mniSelectTangible))
+			if (orig instanceof Tangible)
 			{
-				System.out.println("Select");
+				if (msANNOTATE.equals(opt)) {
+					System.out.println("do annotation");
+				} else if (msANIMATE.equals(opt)) {
+					System.out.println("do animation");
+				} else if (msPROPERTIES.equals(opt)) {
+					System.out.println("show properties");
+				}
+				else if (msN_CURVE.equals(opt)) testCreateCurve(orig);
+				
+				else if (trigger.equals(mniSelectTangible))
+				{
+					System.out.println("Select");
+				}
+				
+				else if (msN_ANCHOR.equals(opt)) CreatePoint(orig);
+				
+				else if (msN_CELL.equals(opt))	testCreateCell(orig);
+				
+				else if (msEDIT.equals(opt))
+				{
+					Curve3D ec = null;
+					//get the curve that corresponds to the originating curve
+					if ( orig instanceof Curve3D) ec = (Curve3D) orig;
+					//else if ( orig instanceof CurveAnchorPoint)	ec = ((CurveAnchorPoint)orig).getParentCurve();
+					
+					if ( ec != null) ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
+				}
 			}
-			
-			else if (msN_ANCHOR.equals(opt)) CreatePoint(orig);
-			
-			else if (msN_CELL.equals(opt))	testCreateCell(orig);
-			
-			
+			else if ( opt != null)
+			{
+				System.out.println("Warning: There was no tangible do to this action on (" + opt + ")");
+			}	
 		}
-		else if ( opt != null)
-		{
-			System.out.println("Warning: There was no tangible do to this action on (" + opt + ")");
-		}
+		
 		
 		this.closeBackward();
 	}
