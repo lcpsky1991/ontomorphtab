@@ -35,7 +35,6 @@ public class CurveView extends TangibleView {
 		update();
 	}
 
-	
 	public void update() {
 		
 	

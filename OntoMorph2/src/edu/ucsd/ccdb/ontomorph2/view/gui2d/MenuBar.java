@@ -51,6 +51,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String strMNU_MANI_ROTATEC = "Rotate (Z - Axis)";
 	public static final String strMNU_MANI_MOVE = "Move";
 	public static final String strMNU_MANI_LOOK = "Focus Camera";
+	public static final String strMNU_MANI_NONE = "None (Pick)";
 	public static final String strMNU_MANI_SCALE = "Re-Scale";
 	public static final String BASIC_SEARCH = "Basic Search...";
 	public static final String SHOW_SCENE_MONITOR = "Show Scene Monitor...";
@@ -123,6 +124,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         makeMenuItem(strMNU_MANI_ROTATEB, mnuManip);
         makeMenuItem(strMNU_MANI_ROTATEC, mnuManip);
         makeMenuItem(strMNU_MANI_LOOK, mnuManip);
+        makeMenuItem(strMNU_MANI_NONE, mnuManip);
         
         //=[ DEBUG ]=
         Menu mnuDebug = new Menu();
@@ -240,6 +242,10 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		else if (ATLAS_MEDIAL_VIEW_SMOOTH.equals(act)) 
 		{
 			View.getInstance().getCamera().smoothlyZoomToAtlasMedialView();
+		}
+		else if ( strMNU_MANI_NONE.equals(act) )
+		{
+			View.getInstance().setManipulation(View.METHOD_PICK);
 		}
 		else if ( strMNU_MANI_MOVE.equals(act) )
 		{

@@ -7,6 +7,8 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Set;
 
+import sun.security.acl.WorldGroupImpl;
+
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
 import com.jme.bounding.BoundingSphere;
@@ -48,6 +50,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.INeuronMorphologyPart;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -337,16 +340,42 @@ public class View extends BaseSimpleGame {
 		}
 	}
 	
+	
 	/**
 	 * Apply manipulations to the tangible that is currently selected
 	 * Called during mouse handling
 	 */
 	private void manipulateCurrentSelection() 
 	{		
+	
+		//CA: new movement code experiment
+		//======================================
+//		======================================
+		/*
+		float mx = 0;
+		float my = 0;
+		Vector2f mPos = new Vector2f();
+		int x = MouseInput.get().getXDelta();
+		int y = MouseInput.get().getYAbsolute();
+		double angle = 0;
+		mPos.set(x ,y );
 		
+		Vector3f dir = new Vector3f();
 		
-		float mx = MouseInput.get().getXDelta();
-		float my = MouseInput.get().getYDelta();
+		dir = cam.getDirection();
+		Vector3f dunit = new Vector3f(1,1,1);
+		angle = dir.angleBetween(dunit);
+		DemoCoordinateSystem d = new DemoCoordinateSystem();
+		dunit = d.getOriginVector();
+		mx = (float) (1 * Math.cos( angle ));
+		my = 0;
+		System.out.println("X:" + mx + " angle: " + angle);
+		*/
+//		======================================
+		//======================================
+		
+		//float mx = MouseInput.get().getXDelta();
+		//float my = MouseInput.get().getYDelta();
 		//TODO: replace unity vectors with ones based on camera axis
 		switch ( manipulation )
 		{
@@ -444,7 +473,7 @@ public class View extends BaseSimpleGame {
 			TangibleView tv = TangibleViewManager.getInstance().getTangibleView(obj.getParentGeom());
 			if ( tv != null)
 			{
-				int p = new Integer(tv.pickPriority);
+				int p = tv.pickPriority;
 				if ( p > highP ) highP = p;	
 			}
 		}
