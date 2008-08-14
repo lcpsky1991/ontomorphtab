@@ -115,7 +115,7 @@ public class View extends BaseSimpleGame {
 	//For dealing with Mouse Events, track previous time and dragging
 	boolean dragMode = false;
 	long prevPressTime = 0;
-	long dblClickDelay = 500;//in milliseconds
+	long dblClickDelay = 300;//in milliseconds (1000 = 1 sec)
 	
 	float keyPressActionRate = 1.0f; //the rate of rotation by a single key press
 	org.fenggui.Display disp; // FengGUI's display
@@ -311,6 +311,11 @@ public class View extends BaseSimpleGame {
 		}
 	}
 	
+	private void onMouseDouble()
+	{
+		Log.warn("Double click @ " + System.currentTimeMillis());
+	}
+	
 	/**
 	 * Exists only for possible future expansion
 	 * 
@@ -359,11 +364,20 @@ public class View extends BaseSimpleGame {
 	 */
 	private void handleMouseInput(boolean m_move, boolean m_pressed, boolean m_drag)
 	{
+		//check for double click
+		long timenow = System.currentTimeMillis();
+		boolean dbl = false;
+		
+		//check double click
+		if (timenow < prevPressTime + dblClickDelay) dbl = true;
+		prevPressTime = timenow;
+		
 		//you can't drag AND press at the same time, (elseif)
 		if (m_drag) onMouseDrag();
 		else if (m_pressed) onMousePress();
 		
 		//all others should be independant
+		if (dbl && m_pressed) onMouseDouble();
 		onMouseWheel();
 		onMouseMove();
 	}
