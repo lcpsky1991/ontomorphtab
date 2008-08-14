@@ -34,6 +34,7 @@ import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.scene.CurveAnchorPointView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
@@ -297,7 +298,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				
 				else if (msN_ANCHOR.equals(opt)) CreatePoint(orig);
 				
-				else if (msN_CELL.equals(opt))	testCreateCell(orig);
+				else if (msN_CELL_DG.equals(opt))	testCreateCell(orig);
 				
 				else if (msEDIT.equals(opt))
 				{
@@ -415,6 +416,14 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		View.getInstance().getScene().changed(Scene.CHANGED_PART);
 		
+		/*
+		View.getInstance().getView3D().addCell(nc);
+		TangibleView cv = TangibleViewManager.getInstance().getTangibleViewFor(nc);
+		if ( cv != null)
+		{
+			cv.update();
+		}
+		*/
 	}
 }
 
