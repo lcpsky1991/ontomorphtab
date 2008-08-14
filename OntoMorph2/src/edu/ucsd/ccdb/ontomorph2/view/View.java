@@ -19,6 +19,7 @@ import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
+import com.jme.input.MouseInputListener;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
 import com.jme.input.action.MouseInputAction;
@@ -110,6 +111,11 @@ public class View extends BaseSimpleGame {
 	private boolean debugMode = false;
 	Line debugRay = null;	//used for mouse picking debugging mode
 	Cone wand = null;
+	
+	//For dealing with Mouse Events, track previous time and dragging
+	boolean dragMode = false;
+	long prevPressTime = 0;
+	long dblClickDelay = 500;//in milliseconds
 	
 	float keyPressActionRate = 1.0f; //the rate of rotation by a single key press
 	org.fenggui.Display disp; // FengGUI's display
@@ -237,107 +243,129 @@ public class View extends BaseSimpleGame {
         input.addAction( mouseAction, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, false );
 	}
 	
-	
-	private void handleMouseInput()
+	/**
+	 * Child method from handleMouseInput
+	 */ 
+	private void onMouseDrag()
 	{
-		//handle mouse input
-		//NOTE:there is a more sophisticated way of dealing with mouse input than this (pickresults has handler)
-		try
+		
+		boolean mouseLook = false;
+		int numMouseBut = MouseInput.get().getButtonCount();
+		
+		//====================================
+		//	MIDDLE MOUSE
+		//====================================
+		//mouse look trumps all other actions
+    	
+    	//middle click manipulates camera OR leftANDright mouse button
+		//mouselook is true if there is a middle mouse button and it's pressed down
+		if ( numMouseBut >= 2 ) if (MouseInput.get().isButtonDown(2)) mouseLook = true;
+		 
+		//mouselook is also true if left mouse and right mouse are pressed
+		if ( MouseInput.get().isButtonDown(0) && MouseInput.get().isButtonDown(1) ) mouseLook = true;
+		
+		if (mouseLook)
 		{
-			
-			boolean mouseLook = false;
-			int numMouseBut = MouseInput.get().getButtonCount();
-			
-        	
-        	//====================================
-        	//	WHEEL
-        	//====================================
-			
-			float dx=MouseInput.get().getWheelDelta() / (keyPressActionRate * 20); //scale it by some factor so it's less jumpy
-			if (dx != 0)	
-			{
-				//zoom camera if Z press
-				if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
-				{
-					camNode.zoomIn(dx);	
-				}
-				//move camera if Z NOT pressed
-				else
-				{
-					camNode.moveForward(dx);
-				}
-			}
-			
-			//====================================
-			//	MIDDLE MOUSE
-			//====================================
-			//mouse look trumps all other actions
-        	
-        	//middle click manipulates camera OR leftANDright mouse button
-			//mouselook is true if there is a middle mouse button and it's pressed down
-			if ( numMouseBut >= 2 ) if (MouseInput.get().isButtonDown(2)) mouseLook = true;
-			 
-			//mouselook is also true if left mouse and right mouse are pressed
-			if ( MouseInput.get().isButtonDown(0) && MouseInput.get().isButtonDown(1) ) mouseLook = true;
-			
-			if (mouseLook)
-			{
-				//find mouse change
-				float mx = MouseInput.get().getXDelta() / 100.0f;
-				float my = MouseInput.get().getYDelta() / 100.0f;
+			//find mouse change
+			float mx = MouseInput.get().getXDelta() / 100.0f;
+			float my = MouseInput.get().getYDelta() / 100.0f;
 
-				camNode.turnClockwise(mx);
-				camNode.turnUp(my);
+			camNode.turnClockwise(mx);
+			camNode.turnUp(my);
+		}
+		else if (MouseInput.get().isButtonDown(0)) //left 
+		{
+			//dragging
+			manipulateCurrentSelection();
+		}
+	}
+	
+	/**
+	 * Child method from handleMouseInput
+	 * still need to check which buttons are pressed
+	 */ 
+	private void onMousePress()
+	{
+		//====================================
+		//	RIGHT CLICK
+		//====================================
+		if (MouseInput.get().isButtonDown(1)) //right
+		{	
+			//MouseInput.get().setCursorVisible(false); //hide mouse cursor
+			doPick();
+			ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
+					MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
+		}
+		else
+		{
+			//MouseInput.get().setCursorVisible(true); //show mouse cursor
+		}
+		
+		//====================================
+		//	LEFT CLICK
+		//====================================
+		if (MouseInput.get().isButtonDown(0)) //left 
+		{
+			//not dragging, just clicking
+				doPick(); 
+		}
+	}
+	
+	/**
+	 * Exists only for possible future expansion
+	 * 
+	 */
+	private void onMouseMove()
+	{		
+		/*
+		 * ca: I can't think of anything that would be appripriate here, except a poem
+		 * 
+			Presently my soul grew stronger; hesitating then no longer,
+ 			`Sir,' said I, `or Madam, truly your forgiveness I implore;
+ 			But the fact is I was napping, and so gently you came rapping,
+ 			And so faintly you came tapping, tapping at my chamber door,
+ 			That I scarce was sure I heard you' - here I opened wide the door; -
+ 			Darkness there, and nothing more.
+		 */
+	}
+	
+	/**
+	 * Child method from handleMouseInput
+	 */ 
+	private void onMouseWheel()
+	{
+		//====================================
+    	//	WHEEL
+    	//====================================
+		
+		float dx=MouseInput.get().getWheelDelta() / (keyPressActionRate * 20); //scale it by some factor so it's less jumpy
+		if (dx != 0)	
+		{
+			//zoom camera if Z press
+			if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
+			{
+				camNode.zoomIn(dx);	
 			}
+			//move camera if Z NOT pressed
 			else
 			{
-				//====================================
-				//	RIGHT CLICK
-				//====================================
-				if (MouseInput.get().isButtonDown(1)) //right
-				{	
-					//MouseInput.get().setCursorVisible(false); //hide mouse cursor
-					doPick();
-					ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
-							MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
-				}
-				else
-				{
-					//MouseInput.get().setCursorVisible(true); //show mouse cursor
-				}
-				
-				//====================================
-				//	LEFT CLICK
-				//====================================
-				if (MouseInput.get().isButtonDown(0)) //left 
-				{
-					if (MouseInput.get().getXDelta() == 0 && MouseInput.get().getYDelta() == 0) 
-					{
-						//not dragging, just clicking
-						doPick();
-					} else 
-					{
-						//dragging
-						manipulateCurrentSelection();
-					}
-					/*
-					if (drag){
-						//move, rotate, scale whatever is currently selected.. 
-						//don't do new selections until mouse comes back up
-					} else if (doubleClick){
-						//do new selections
-					} else if (singleClick) {
-						
-					}*/
-
-				} //end if mouse button down
-			} //end one-button mouse handling
-		} //end try
-		catch (Exception e)
-		{
-			Log.warn("Exception caught in View.handleMouseInput(): " + e.getMessage());
-			e.printStackTrace();
+				camNode.moveForward(dx);
+			}
 		}
+	}
+	
+	/**
+	 * Gets its parameters from smart event method
+	 */
+	private void handleMouseInput(boolean m_move, boolean m_pressed, boolean m_drag)
+	{
+		//you can't drag AND press at the same time, (elseif)
+		if (m_drag) onMouseDrag();
+		else if (m_pressed) onMousePress();
+		
+		//all others should be independant
+		onMouseWheel();
+		onMouseMove();
 	}
 	
 	
@@ -367,8 +395,8 @@ public class View extends BaseSimpleGame {
 		angle = dir.angleBetween(dunit);
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
 		dunit = d.getOriginVector();
-		mx = (float) (1 * Math.cos( angle ));
-		my = 0;
+		mx = (float) (x * Math.cos( angle ));
+		my = 0;  
 		System.out.println("X:" + mx + " angle: " + angle);
 		*/
 //		======================================
@@ -377,6 +405,7 @@ public class View extends BaseSimpleGame {
 		float mx = MouseInput.get().getXDelta();
 		float my = MouseInput.get().getYDelta();
 		//TODO: replace unity vectors with ones based on camera axis
+		
 		switch ( manipulation )
 		{
 		case METHOD_PICK:
@@ -451,6 +480,16 @@ public class View extends BaseSimpleGame {
 			//if there are no results, unselect everything
 			TangibleManager.getInstance().unselectAll();
 		}
+	}
+	
+	public Tangible pseudoPick()
+	{
+		Tangible chosenOne= null;
+		
+		
+		
+		
+		return chosenOne;
 	}
 	
 	
@@ -714,10 +753,54 @@ public class View extends BaseSimpleGame {
 	 */
 	MouseInputAction mouseAction = new MouseInputAction() 
 	{
-	        public void performAction( InputActionEvent evt ) 
+		
+	    	public void performAction( InputActionEvent evt ) 
 	        {
-	        	//by putting mouse handler here, the calls are not every frame and do not 'repeat'	        	
-	        	handleMouseInput();
+	        	//by putting mouse handler here, the calls are not every frame and do not 'repeat'
+	    		
+	        	if (evt.getTriggerPressed()) //
+	        	{
+	        		//+++++ BUTTON PRESSED  ++++++
+	        		//=========== MOUSE DOWN ========================
+	        		//double-click versus single-click belongs in child method
+	        		dragMode = true;	//begin assuming drag (deactive drag in upMouse event)
+        			handleMouseInput(false,true,false);	        		
+	        	}
+	        	else
+	        	{
+	        		//+++++ BUTTON RELEASED (not pressed) ++++++
+	        		/*
+	        		 (enjoy a drink now and then), 
+	        		 will frequently check credit at 
+	        		 (moral) bank (hole in the wall), 
+	        		 */
+	        		//check if any of the buttons are pressed (still), if so then its in drag mode
+	        		//loop through all buttons to see if they are pressed, if one is pressed exit loop early
+	        		boolean pushed = false;
+	        		for (int b=0; !pushed && b < MouseInput.get().getButtonCount(); b++)
+	        		{
+	        			if (MouseInput.get().isButtonDown(b)) pushed = true;
+	        		}
+	        		//============ DRAG =========================
+	        		if (pushed && dragMode)
+	        		{
+	        			//Log.warn("mouse drag");
+	        			handleMouseInput(false,false,true);
+	        		}
+	        		//============ MOUSE UP/RELEASE =============
+	        		else if (!pushed && dragMode)	
+	        		{
+	        			dragMode = false;
+	        			//Log.warn("mouse release @ " + evt.getTriggerDelta());
+	        			handleMouseInput(false,false,false);
+	        		}
+	        		//============ MOVE - MOUSE EVENT DEFAULT =======
+	        		else	
+	        		{
+	        			//System.out.println("mouse move");
+	        			handleMouseInput(true, false, false);
+	        		}
+	        	}
 	        }	        
 	 };	
 	 
