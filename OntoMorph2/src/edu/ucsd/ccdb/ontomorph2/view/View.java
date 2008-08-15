@@ -532,32 +532,64 @@ public class View extends BaseSimpleGame {
 	}
 		
 	
-	private void doPick() {
-		//get stuff we are trying to pick/select
-		PickResults results = getPickResults();
-		PickData chosenOne = null;
-							
-		//if ANY results are found, then sort them by priority
-		if ( results.getNumber() > 0) results = reorderPickPriority(results);
+	private void doPick() 
+	{
+		Tangible picked = null;
+		picked = psuedoPick(KeyInput.get().isControlDown()); //get the tangible picked
 		
+		//enable multiselect if shift is down
+		if ( KeyInput.get().isShiftDown() ) TangibleManager.getInstance().setMultiSelect(true);
 		
-		if ( results.getNumber() > 0)
-		{
-			chosenOne = results.getPickData(0);	//take the closest pick and set
-			if (chosenOne != null) doSelection(chosenOne.getTargetMesh());		
-		} 
-		else 
+		//decide how to select it, is this multi select, deselect, etc?
+		if (picked == null) //nothing was picked so do deselect
 		{
 			//if there are no results, unselect everything
 			TangibleManager.getInstance().unselectAll();
 		}
+		else 
+		{			
+			picked.select();
+		}
+		
+		//turn off multiselection
+		TangibleManager.getInstance().setMultiSelect(false);
 	}
 	
-	public Tangible pseudoPick()
+	/**
+	 * Facilitates mouse picking, but does NOT actually select the object, that must be done elsewhere.
+	 * Example: selecting the Tangible that is returned from this function
+	 * @return the closest {@link Tangible}, that is of the highest priority of all camera-ray-intersected Tangibles 
+	 */
+	public Tangible psuedoPick(boolean modifyControl)
 	{
 		Tangible chosenOne= null;
+		PickResults rawresults = getPickResults();
+		PickData decision = null;
+		if ( rawresults.getNumber() > 0 ) rawresults = reorderPickPriority(rawresults);
 		
-		
+//		Find out the tangible for the geometry that was decided on
+		if ( rawresults.getNumber() > 0) 
+		{
+			TangibleView tv = null;
+			decision = rawresults.getPickData(0);	//find the geomtry
+			tv = TangibleViewManager.getInstance().getTangibleView(decision.getTargetMesh().getParentGeom()); //get a tanview instance that is mapped to the selected geomtry
+			
+			//special case for NeuronMorphologies because they have subcomponents
+			if (tv instanceof NeuronMorphologyView && !modifyControl) //if control down proceed to the default case selection, otherwise return the part
+			{
+				NeuronMorphologyView nmv = (NeuronMorphologyView) tv;
+				{
+					//otherwise just select the part itself
+					BigInteger id = nmv.getCableIdFromGeometry(decision.getTargetMesh().getParentGeom());
+					ICable c = ((NeuronMorphology)nmv.getModel()).getCable(id);
+					chosenOne = (Tangible) c;
+				}
+			}
+			else if ( tv != null)
+			{//CATCH ALL case for all other TangibleViews
+				chosenOne = tv.getModel();
+			}
+		}
 		
 		
 		return chosenOne;
@@ -633,7 +665,7 @@ public class View extends BaseSimpleGame {
 		//Ray mouseRay = new Ray(closePoint, farPoint.subtractLocal(closePoint).normalizeLocal());
 		Ray mouseRay = new Ray(closePoint, dir);
 		
-		createDebugRay(closePoint, farPoint);
+		createDebugRay(closePoint, farPoint); //draws a picking ray and possibly a picking cone
 		
 		// Does the mouse's ray intersect the box's world bounds?
 		pr.clear();
