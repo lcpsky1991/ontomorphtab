@@ -16,6 +16,7 @@ import com.jme.curve.BezierCurve;
 import com.jme.image.Texture;
 import com.jme.input.FirstPersonHandler;
 import com.jme.input.InputHandler;
+import com.jme.input.InputHandlerDevice;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
@@ -244,6 +245,74 @@ public class View extends BaseSimpleGame {
 	}
 	
 	/**
+	 * Listener to take care of events
+	 */
+	MouseInputAction mouseAction = new MouseInputAction() 
+	{
+		
+	    	public void performAction( InputActionEvent evt ) 
+	        {
+	        	//by putting mouse handler here, the calls are not every frame and do not 'repeat'
+	        	if (evt.getTriggerPressed()) //
+	        	{
+	        		//+++++ BUTTON PRESSED  ++++++
+	        		//=========== MOUSE DOWN ========================
+	        		//double-click versus single-click belongs in child method
+	        		dragMode = true;	//begin assuming drag (deactive drag in upMouse event)
+	        		if (debugMode) Log.warn("mouse press");
+	        		
+	        		//pafind the index of which button pressed
+	        		for (int b = 0; b < MouseInput.get().getButtonCount(); b++)
+	        		{
+	        			if (MouseInput.get().isButtonDown(b))
+	        			{
+	        				onMousePress(b);
+	        				b = MouseInput.get().getButtonCount()+1; //all done
+	        			}
+	        		}
+	        	}
+	        	else
+	        	{
+	        		//+++++ BUTTON RELEASED (not pressed) ++++++
+	        		/*
+	        		 (enjoy a drink now and then), 
+	        		 will frequently check credit at 
+	        		 (moral) bank (hole in the wall), 
+	        		 */
+	        		boolean pushed = false;
+	        		int b= 0;
+	        		for (b=0; !pushed && b < MouseInput.get().getButtonCount(); b++)
+	        		{
+	        			if ( MouseInput.get().isButtonDown(b))
+	        			{
+	        				pushed = true;
+	        			}
+	        		}
+	        		//============ DRAG =========================
+	        		if (pushed && dragMode)
+	        		{
+	        			if (debugMode) Log.warn("mouse drag");
+	        			onMouseDrag();
+	        		}
+	        		//============ MOUSE UP/RELEASE =============
+	        		else if (!pushed && dragMode)	
+	        		{
+	        			dragMode = false;
+	        			if (debugMode) Log.warn("mouse release");
+	        			onMouseRelease();
+	        		}
+	        		//============ MOVE - MOUSE EVENT DEFAULT =======
+	        		else	
+	        		{
+	        			//System.out.println("mouse move/wheel");
+	        			onMouseMove();
+	        			onMouseWheel();
+	        		}
+	        	}
+	        }	        
+	 };	
+	 
+	/**
 	 * Child method from handleMouseInput
 	 */ 
 	private void onMouseDrag()
@@ -284,40 +353,47 @@ public class View extends BaseSimpleGame {
 	 * Child method from handleMouseInput
 	 * still need to check which buttons are pressed
 	 */ 
-	private void onMousePress()
+	private void onMousePress(int buttonIndex)
 	{
-		//====================================
 		//	RIGHT CLICK
-		//====================================
-		if (MouseInput.get().isButtonDown(1)) //right
+		if (1 == buttonIndex) //right
 		{	
 			//MouseInput.get().setCursorVisible(false); //hide mouse cursor
 			doPick();
 			ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
 					MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
 		}
-		else
+		else if (0 == buttonIndex) //left
 		{
 			//MouseInput.get().setCursorVisible(true); //show mouse cursor
+			doPick();
 		}
 		
-		//====================================
-		//	LEFT CLICK
-		//====================================
-		if (MouseInput.get().isButtonDown(0)) //left 
+		
+		long timenow = System.currentTimeMillis();
+		
+		//+Double+
+		//check double click
+		if (timenow < prevPressTime + dblClickDelay) 
 		{
-				
+			onMouseDouble(buttonIndex);
 		}
+		prevPressTime = timenow;
 	}
 	
-	private void onMouseDouble()
+	private void onMouseRelease()
 	{
-		if (MouseInput.get().isButtonDown(0)) //left 
+
+	}
+	
+	private void onMouseDouble(int buttonIndex)
+	{
+		if (0 == buttonIndex) //left 
 		{
-			doPick();		
+			
 		}
 		 
-		Log.warn("Double click @ " + System.currentTimeMillis());
+		Log.warn("Double click (" + buttonIndex + ") @ " + System.currentTimeMillis());
 	}
 	
 	/**
@@ -362,36 +438,7 @@ public class View extends BaseSimpleGame {
 			}
 		}
 	}
-	
-	/**
-	 * Gets its parameters from smart event method
-	 */
-	private void handleMouseInput(boolean m_move, boolean m_pressed, boolean m_drag)
-	{
-		long timenow = System.currentTimeMillis();
-		
-		//CLICKS
-		if (m_pressed)
-		{
-			//+Single+
-			onMousePress();
-			
-			//+Double+
-			//check double click
-			if (timenow < prevPressTime + dblClickDelay) 
-			{
-				onMouseDouble();
-			}
-			prevPressTime = timenow;
-		}
-		
-		if (m_drag) onMouseDrag();
-		
-		//all others should be independant
-		onMouseWheel();
-		onMouseMove();
-	}
-	
+
 	
 	/**
 	 * Apply manipulations to the tangible that is currently selected
@@ -772,61 +819,6 @@ public class View extends BaseSimpleGame {
 		}//end key input
 	}
 	
-	/**
-	 * Listener to take care of events
-	 */
-	MouseInputAction mouseAction = new MouseInputAction() 
-	{
-		
-	    	public void performAction( InputActionEvent evt ) 
-	        {
-	        	//by putting mouse handler here, the calls are not every frame and do not 'repeat'
-	    		
-	        	if (evt.getTriggerPressed()) //
-	        	{
-	        		//+++++ BUTTON PRESSED  ++++++
-	        		//=========== MOUSE DOWN ========================
-	        		//double-click versus single-click belongs in child method
-	        		dragMode = true;	//begin assuming drag (deactive drag in upMouse event)
-        			handleMouseInput(false,true,false);	        		
-	        	}
-	        	else
-	        	{
-	        		//+++++ BUTTON RELEASED (not pressed) ++++++
-	        		/*
-	        		 (enjoy a drink now and then), 
-	        		 will frequently check credit at 
-	        		 (moral) bank (hole in the wall), 
-	        		 */
-	        		//check if any of the buttons are pressed (still), if so then its in drag mode
-	        		//loop through all buttons to see if they are pressed, if one is pressed exit loop early
-	        		boolean pushed = false;
-	        		for (int b=0; !pushed && b < MouseInput.get().getButtonCount(); b++)
-	        		{
-	        			if (MouseInput.get().isButtonDown(b)) pushed = true;
-	        		}
-	        		//============ DRAG =========================
-	        		if (pushed && dragMode)
-	        		{
-	        			//Log.warn("mouse drag");
-	        			handleMouseInput(false,false,true);
-	        		}
-	        		//============ MOUSE UP/RELEASE =============
-	        		else if (!pushed && dragMode)	
-	        		{
-	        			dragMode = false;
-	        			//Log.warn("mouse release @ " + evt.getTriggerDelta());
-	        			handleMouseInput(false,false,false);
-	        		}
-	        		//============ MOVE - MOUSE EVENT DEFAULT =======
-	        		else	
-	        		{
-	        			//System.out.println("mouse move");
-	        			handleMouseInput(true, false, false);
-	        		}
-	        	}
-	        }	        
-	 };	
 	 
 	 /**
 	  * Key input listener to handle events, so that it need not be accounted for every frame
@@ -912,7 +904,7 @@ public class View extends BaseSimpleGame {
 	    wand.updateRenderState();
 	    
     	rootNode.attachChild(debugRay);
-    	rootNode.attachChild(wand);
+    	//rootNode.attachChild(wand);
     	
      }
      
