@@ -54,7 +54,6 @@ public class FengJMEInputHandler extends InputHandler
 	}
 	
 	public boolean isMouseOverGui() {
-        System.out.println("mouse over gui");
         return mouseOverGui;
     }
 	

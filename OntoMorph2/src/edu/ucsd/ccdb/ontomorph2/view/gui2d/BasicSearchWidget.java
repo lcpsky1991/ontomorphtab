@@ -25,6 +25,7 @@ import com.jme.input.Input;
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.MouseInput;
+import com.jme.input.action.KeyInputAction;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
@@ -38,22 +39,26 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
 public class BasicSearchWidget implements ITextChangedListener{
     
 	FengJMEInputHandler input = null;
-	InputHandler in = new InputHandler(); 
+	InputHandler in = new InputHandler();
+	
+	private float displayX, displayY;
+	private KeyInputAction keyAction;
 	public BasicSearchWidget(Display d) {
 		
+		displayX = d.getDisplayX();
+		displayY = d.getDisplayY();
 		input = new FengJMEInputHandler(d);
+		input.addToAttachedHandlers(in);
 		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
-		input.setEnabled(true);
 		Window window = new Window(true, false, false, true);
-		d.addWidget(window);
+		//d.addWidget(window);
 		window.setSize(200, 300);
         window.getContentContainer().setLayoutManager(new BorderLayout());
 		window.setTitle("Search");       
         TextEditor textArea = FengGUI.createTextField(window.getContentContainer());
         textArea.setText("Enter Keyword");
         textArea.setSize(100, 20);
-        in.addToAttachedHandlers(input);
-        System.out.println("writing state " + textArea.isInWritingState());
+        //System.out.println("writing state " + textArea.isInWritingState());
         
         Button button = new Button( "Start Search" );
         button.setSize(80, 30);
@@ -67,13 +72,19 @@ public class BasicSearchWidget implements ITextChangedListener{
             }
         } );
 
-        button.addMouseEnteredListener(FocusManager.focusManager);
+        //button.addMouseEnteredListener(FocusManager.focusManager);
         //button.addMouseExitedListener(FocusManager.focusManager);
         window.getContentContainer().addWidget( button );
 		window.setPosition(new Point(0,100));
         textArea.setPosition(new Point(30,220));
         d.layout();
-        //MouseInput.get().setCursorVisible(true);
+        MouseInput.get().setCursorVisible(true);
+        /*if(d.fireMousePressed() == true){
+        	System.out.println("it comes from the gui");
+        }*/
+        d.addWidget(window);
+        
+       //d.mouseMoved(, );
 	}
 
 	public void textChanged(TextChangedEvent arg0) {
