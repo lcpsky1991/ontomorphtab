@@ -174,20 +174,23 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		
 		
-        menuItemFactory(mniNew_curve, mnuNew, msN_CURVE);
-        menuItemFactory(mniNew_point, mnuNew, msN_ANCHOR);
-        menuItemFactory(mniNew_Cell_DG, mnuNew_Cell, msN_CELL_DG);
-        menuItemFactory(mniNew_Cell_DG, mnuNew_Cell, msN_CELL_DG);
-        menuItemFactory(mniAnnotate , this, msANNOTATE);
-        menuItemFactory(mniProperties, this, msEDIT);
-        menuItemFactory(mniProperties, this, msPROPERTIES);
+        menuItemFactory(mnuNew, msN_CURVE);
+        menuItemFactory(mnuNew, msN_ANCHOR);
+        menuItemFactory(mnuNew_Cell, msN_CELL_DG);
+        menuItemFactory(mnuNew_Cell, msN_CELL_DG);
+        menuItemFactory(this, msANNOTATE);
+        menuItemFactory(this, msEDIT);
+        menuItemFactory(this, msPROPERTIES);
         
-        
-        
-        for (int i = 0; i < 5; i++)
+        for (int i=0; i < tans.size(); i++)
         {
-        	menuItemFactory(mniSelectTangible, mnuSelect, "Cell " + i);	
+        	Tangible single = tans.get(i);
+        	String name = single.getName();
+        	if ( name == null) name = "(NULL)".toUpperCase();
+        	menuItemFactory(mnuSelect, name);
         }
+        
+
         
 		this.registerSubMenu(mnuNew, msNEW);
 		this.registerSubMenu(mnuSelect,msSELECT);
@@ -247,7 +250,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	 * @param title
 	 * @param parent If null, will create a new parent menu
 	 */
-	private void menuItemFactory(MenuItem mitem, Menu mparent, String title)
+	private void menuItemFactory(Menu mparent, String title)
 	{
 		try
 		{
@@ -261,6 +264,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			}
 			else if ( mparent instanceof Menu)
 			{
+				MenuItem mitem;
 				mitem = new MenuItem(title);
 				mitem.addMenuItemPressedListener(this);
 				mparent.addItem(mitem);	
@@ -278,8 +282,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		MenuItem trigger = arg0.getItem();
 		//Tangible orig = TangibleManager.getInstance().getSelectedRecent();
 		
-		for ( Tangible orig : TangibleManager.getInstance().getSelected())
+		for (int t=0; t < TangibleManager.getInstance().getSelected().size(); t++)
 		{
+			Tangible orig = TangibleManager.getInstance().getSelected().get(t);	//find the originating tangible
 			if (orig instanceof Tangible)
 			{
 				if (msANNOTATE.equals(opt)) {

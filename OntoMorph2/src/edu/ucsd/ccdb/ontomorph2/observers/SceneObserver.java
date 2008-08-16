@@ -48,7 +48,7 @@ public class SceneObserver implements Observer {
 		{
 			String msg = "";
 			Scene scene = (Scene) o;
-			boolean redoScene = false;
+			
 //			setting arg to not be null simplifies error checking (dont need to check for null cases)
 			if (arg == null) arg = Scene.CHANGED_UNKNOWN;  
 			
@@ -163,9 +163,10 @@ public class SceneObserver implements Observer {
 				}
 			}
 		}
+		
+		//catch all method for any leftover tangibles
 		else if (o instanceof Tangible)
 		{
-			// catch all method for any leftover tangibles
 			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
 			if (tv != null)
 			{
@@ -207,8 +208,7 @@ public class SceneObserver implements Observer {
 		_view.getView3D().setCells(s.getCells());
 		for (NeuronMorphology c : s.getCells())
 		{
-			NeuronMorphology mi = (NeuronMorphology) c;
-			//mi.addObserver(this);
+			c.addObserver(this);
 		}
 	}
 	public void reloadAll(Scene s)

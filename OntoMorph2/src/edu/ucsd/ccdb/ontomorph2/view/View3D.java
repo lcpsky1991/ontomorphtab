@@ -22,6 +22,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
@@ -91,6 +92,17 @@ public class View3D extends Node{
 		}
 	}
 
+	/**
+	 * added for {@link ContextMenu}s New Cell command, because it is more efficient to add ONE than remake all
+	 * @param cell the ({@link NeuronMorphology}s to be added
+	 */
+	public void addOneCell(NeuronMorphology cell)
+	{
+		NeuronMorphologyView cv = new NeuronMorphologyView(cell);
+		Node n = cv.getNode();
+		cellsNode.attachChild(n);
+	}
+	
 	public void setCurves(Set<Curve3D> curves) {
 		curvesNode.detachAllChildren();
 		for(Curve3D curve : curves) {
