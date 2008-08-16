@@ -51,7 +51,7 @@ public class View3DMouseHandler extends MouseInputAction {
 	//For dealing with Mouse Events, track previous time and dragging
 	boolean dragMode = false;
 	long prevPressTime = 0;
-	long dblClickDelay = 1000;//in milliseconds (1000 = 1 sec)
+	long dblClickDelay = 600;//in milliseconds (1000 = 1 sec)
 	
 	public void performAction( InputActionEvent evt ) 
     {
@@ -186,7 +186,7 @@ public class View3DMouseHandler extends MouseInputAction {
 	
 	private void onMouseRelease()
 	{
-
+		//fugacious method
 	}
 	
 	private void onMouseDouble(int buttonIndex)
@@ -245,13 +245,15 @@ public class View3DMouseHandler extends MouseInputAction {
 	private void doPick() 
 	{
 		Tangible picked = null;
-		picked = psuedoPick(KeyInput.get().isControlDown()); //get the tangible picked
+		picked = psuedoPick(KeyInput.get().isControlDown(), true); //get the tangible picked
+		
+		boolean shift = KeyInput.get().isShiftDown();
 		
 		//enable multiselect if shift is down
-		if ( KeyInput.get().isShiftDown() ) TangibleManager.getInstance().setMultiSelect(true);
+		if ( shift ) TangibleManager.getInstance().setMultiSelect(true);
 		
 		//decide how to select it, is this multi select, deselect, etc?
-		if (picked == null) //nothing was picked so do deselect
+		if (picked == null && !shift) //nothing was picked so do deselect
 		{
 			//if there are no results, unselect everything
 			TangibleManager.getInstance().unselectAll();
@@ -266,18 +268,22 @@ public class View3DMouseHandler extends MouseInputAction {
 	}
 	
 
-	
 	/**
+	 * Mouse picking (selection) workhorse
 	 * Facilitates mouse picking, but does NOT actually select the object, that must be done elsewhere.
 	 * Example: selecting the Tangible that is returned from this function
-	 * @return the closest {@link Tangible}, that is of the highest priority of all camera-ray-intersected Tangibles 
+	 * @param modifyControl changes picking behavior (such as in the case of selecting subcomponents; false to select cables, true to select cells)
+	 * @param useRanking If true, omits lower-ranking {@link TangibleView}s from the pick results, such that a cell behind a curve would be selected instead of curve. False for unintelligent pickResults 
+	 * @return the closest {@link Tangible}, of all camera-ray-intersected Tangibles 
 	 */
-	protected Tangible psuedoPick(boolean modifyControl)
+	public Tangible psuedoPick(boolean modifyControl, boolean useRanking)
 	{
 		Tangible chosenOne= null;
 		PickResults rawresults = getPickResults();
 		PickData decision = null;
-		if ( rawresults.getNumber() > 0 ) rawresults = reorderPickPriority(rawresults);
+		
+		//omit lower-ranked items if using ranking
+		if ( rawresults.getNumber() > 0 && useRanking) rawresults = reorderPickPriority(rawresults);
 		
 //		Find out the tangible for the geometry that was decided on
 		if ( rawresults.getNumber() > 0) 
@@ -287,6 +293,8 @@ public class View3DMouseHandler extends MouseInputAction {
 			tv = TangibleViewManager.getInstance().getTangibleView(decision.getTargetMesh().getParentGeom()); //get a tanview instance that is mapped to the selected geomtry
 			
 			//special case for NeuronMorphologies because they have subcomponents
+			//TODO: should probably bring this piece of code inside NeuronMorphologyView via 
+			//some kind of action handler because this is kind of a hack
 			if (tv instanceof NeuronMorphologyView && !modifyControl) //if control down proceed to the default case selection, otherwise return the part
 			{
 				NeuronMorphologyView nmv = (NeuronMorphologyView) tv;
@@ -306,7 +314,6 @@ public class View3DMouseHandler extends MouseInputAction {
 		
 		return chosenOne;
 	}
-	
 
 	private PickResults reorderPickPriority(PickResults results)
 	{
@@ -389,49 +396,7 @@ public class View3DMouseHandler extends MouseInputAction {
 	
 	
 	
-	/**
-	 * Select the currently chosen object
-	 * Called during mouse handling
-	 */
-	private void doSelection(GeomBatch geo) 
-	{
-		//get a tangible view instance that is mapped to the selected geo
-		TangibleView tv = TangibleViewManager.getInstance().getTangibleView(geo.getParentGeom());
 	
-		if ( KeyInput.get().isShiftDown() )
-		{
-			//turn on multiselection if shift is pressed
-			TangibleManager.getInstance().setMultiSelect(true);
-		}
-		
-		//special case NeuronMorphologyView because it has subcomponents that
-		//are not themselves tangibles.
-		//should probably bring this piece of code inside NeuronMorphologyView via 
-		//some kind of action handler because this is kind of a hack
-		if ( tv instanceof NeuronMorphologyView) {
-			
-			NeuronMorphologyView nmv = (NeuronMorphologyView)tv;
-
-			if (KeyInput.get().isControlDown()) {
-				//if user selected a segment, assume they wanted to select the parent cell 
-				//instead if control is down
-				nmv.getModel().select();
-			} else {
-				//otherwise just select the part itself
-				BigInteger id = nmv.getCableIdFromGeometry(geo.getParentGeom());
-				ICable c = ((NeuronMorphology)nmv.getModel()).getCable(id);
-				((Tangible)c).select();
-	
-			}
-		}
-		else if (tv != null) 
-		{
-			tv.getModel().select();
-		}
-		
-		//turn off multiselection
-		TangibleManager.getInstance().setMultiSelect(false);
-	}
 	
 	/**
 	 * Apply manipulations to the tangible that is currently selected
