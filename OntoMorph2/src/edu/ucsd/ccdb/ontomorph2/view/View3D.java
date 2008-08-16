@@ -74,7 +74,7 @@ public class View3D extends Node{
 	public void setSlides(Set<Slide> slides) {
 		slidesNode.detachAllChildren();
 		for(Slide slide : slides){
-			slidesNode.attachChild(new QuadSlideView(slide));
+			slidesNode.attachChild(new SlideView(slide));
 		}
 	}
 	
