@@ -31,15 +31,17 @@ import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.view.View3DMouseHandler;
 
 /**
  * 2D widget that allows a user to type in keywords and issue a keyword search
  *
  */
-public class BasicSearchWidget implements ITextChangedListener{
+public class BasicSearchWidget extends InputHandler{
     
-	FengJMEInputHandler input = null;
-	InputHandler in = new InputHandler();
+	FengJMEInputHandler guiInput = null;
+	//MouseManager mouse;
+	KeyBindingManager keyboard; 
 	
 	private float displayX, displayY;
 	private KeyInputAction keyAction;
@@ -47,8 +49,10 @@ public class BasicSearchWidget implements ITextChangedListener{
 		
 		displayX = d.getDisplayX();
 		displayY = d.getDisplayY();
-		input = new FengJMEInputHandler(d);
-		input.addToAttachedHandlers(in);
+		guiInput = new FengJMEInputHandler(d);
+		keyboard = KeyBindingManager.getKeyBindingManager();
+		View3DMouseHandler view3DMouseHandler = new View3DMouseHandler();
+        guiInput.addAction(view3DMouseHandler , InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, true );
 		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
 		Window window = new Window(true, false, false, true);
 		//d.addWidget(window);
@@ -72,8 +76,8 @@ public class BasicSearchWidget implements ITextChangedListener{
             }
         } );
 
-        //button.addMouseEnteredListener(FocusManager.focusManager);
-        //button.addMouseExitedListener(FocusManager.focusManager);
+        button.addMouseEnteredListener(FocusManager.focusManager);
+        button.addMouseExitedListener(FocusManager.focusManager);
         window.getContentContainer().addWidget( button );
 		window.setPosition(new Point(0,100));
         textArea.setPosition(new Point(30,220));
