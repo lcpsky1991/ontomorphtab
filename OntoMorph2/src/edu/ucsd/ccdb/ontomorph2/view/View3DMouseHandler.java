@@ -1,6 +1,8 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 import java.math.BigInteger;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
@@ -193,10 +195,35 @@ public class View3DMouseHandler extends MouseInputAction {
 	{
 		if (0 == buttonIndex) //left 
 		{
-			
+			testFindSpot(); //debug
 		}
 		 
 		Log.warn("Double click (" + buttonIndex + ") @ " + System.currentTimeMillis());
+	}
+	
+	/**
+	 * for debugging, remove this function
+	 * ca: still working on it as of 08/15/08
+	 *
+	 */
+	private void testFindSpot()
+	{
+		PickResults pr = getPickResults();
+		
+		for (int r=0; r < pr.getNumber(); r++)
+		{
+			PickData hit = pr.getPickData(r);
+			GeomBatch mesh = hit.getTargetMesh();
+			ArrayList<Integer> tris = hit.getTargetTris();
+
+			System.out.println(mesh.getVertexCount());
+			FloatBuffer verts = mesh.getVertexBuffer();
+			
+			for (int v=0; v < verts.limit(); v++)
+			{
+				System.out.println("v" + v + ": " + verts.get(v));
+			}
+		}
 	}
 	
 	/**
