@@ -14,6 +14,7 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.View3D;
+import edu.ucsd.ccdb.ontomorph2.view.View3DMouseHandler;
 
 /**
  * Implements the main menu bar at the top of the application.  Also processes the events when
@@ -245,31 +246,31 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if ( strMNU_MANI_NONE.equals(act) )
 		{
-			View.getInstance().setManipulation(View.METHOD_PICK);
+			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_PICK);
 		}
 		else if ( strMNU_MANI_MOVE.equals(act) )
 		{
-			View.getInstance().setManipulation(View.METHOD_MOVE);
+			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_MOVE);
 		}
 		else if ( strMNU_MANI_ROTATEA.equals(act) )
 		{
-			View.getInstance().setManipulation(View.METHOD_ROTATEX);
+			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_ROTATEX);
 		}
 		else if ( strMNU_MANI_ROTATEB.equals(act) )
 		{
-			View.getInstance().setManipulation(View.METHOD_ROTATEY);
+			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_ROTATEY);
 		}
 		else if ( strMNU_MANI_ROTATEC.equals(act) )
 		{
-			View.getInstance().setManipulation(View.METHOD_ROTATEZ);
+			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_ROTATEZ);
 		}
 		else if ( strMNU_MANI_LOOK.equals(act) )
 		{
-			View.getInstance().setManipulation(View.METHOD_LOOKAT);
+			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_LOOKAT);
 		}
 		else if ( strMNU_MANI_SCALE.equals(act) )
 		{
-			View.getInstance().setManipulation(View.METHOD_SCALE);
+			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_SCALE);
 		}
 		else if (BASIC_SEARCH.equals(act)) {
 			View2D.getInstance().loadBasicSearchBox();

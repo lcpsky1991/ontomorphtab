@@ -26,6 +26,7 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.MeshViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.scene.QuadSlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.VolumeView;
 
@@ -73,7 +74,7 @@ public class View3D extends Node{
 	public void setSlides(Set<Slide> slides) {
 		slidesNode.detachAllChildren();
 		for(Slide slide : slides){
-			slidesNode.attachChild(new SlideView(slide));
+			slidesNode.attachChild(new QuadSlideView(slide));
 		}
 	}
 	

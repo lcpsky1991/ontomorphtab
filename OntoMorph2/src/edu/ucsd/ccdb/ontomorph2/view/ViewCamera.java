@@ -152,6 +152,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		//find the vector of the direction pointing towards
 		Vector3f dir = this.getCamera().getDirection().normalize().mult(amount);
 		this.setLocalTranslation( this.getLocalTranslation().add(dir));
+
 	}
 
 	/**
@@ -222,7 +223,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		q.fromAxes(Vector3f.UNIT_X, Vector3f.UNIT_Y,Vector3f.UNIT_Z);
 		invZoom = 1.0f;
 		this.getCamera().setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
-		this.getCamera().update();
+		//this.getCamera().update();
 		this.setLocalRotation(q);
 	}
 
@@ -236,7 +237,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		//float aspect = (float) display.getWidth() / (float) display.getHeight();
 		this.getCamera().setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
 		//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
-		this.getCamera().update();
+		//this.getCamera().update();
 	}
 
 	/**
@@ -249,7 +250,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		//float aspect = (float) display.getWidth() / (float) display.getHeight();
 		this.getCamera().setFrustum(1.0f, 1000.0f, -0.55f * invZoom, 0.55f * invZoom, 0.4125f*invZoom, -0.4125f*invZoom);
 		//cam.setFrustum( 0, 150, -invZoom * aspect, invZoom * aspect, -invZoom, invZoom );
-		this.getCamera().update();
+		//this.getCamera().update();
 	}
 	
 	/**
