@@ -10,6 +10,7 @@ import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
@@ -57,6 +58,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String BASIC_SEARCH = "Basic Search...";
 	public static final String SHOW_SCENE_MONITOR = "Show Scene Monitor...";
 	
+	FocusManager focusManager = new FocusManager();
 	
 	public MenuBar() {
 //		generate the menu
@@ -77,12 +79,16 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         mB.registerSubMenu(mnuFile, "File");
         makeMenuItem(LOAD_SCENE, mnuFile);
         makeMenuItem(SAVE_SCENE, mnuFile);
-        
+
         //=[ SEARCH ]=
         Menu mnuSearch = new Menu();
         mB.registerSubMenu(mnuSearch, "Search");
         makeMenuItem(BASIC_SEARCH, mnuSearch);
-	
+        mnuSearch.addMouseEnteredListener(focusManager);
+        mnuSearch.addMouseExitedListener(focusManager);
+        if(focusManager.guiInFocus == false){
+        	System.out.println("jesus");
+        }
         //=[  VIEW  ]=
         Menu mnuView = new Menu();
         mB.registerSubMenu(mnuView, "View");

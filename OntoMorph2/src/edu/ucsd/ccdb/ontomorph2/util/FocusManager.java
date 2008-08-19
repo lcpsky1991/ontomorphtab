@@ -17,11 +17,13 @@ public class FocusManager implements IMouseEnteredListener, IMouseExitedListener
 	
 	public void mouseEntered(MouseEnteredEvent mouseEnteredEvent) 
 	{
+		System.out.println("Inside Gui Entered");
 		guiInFocus = true;
 	}
 	
 	public void mouseExited(MouseExitedEvent mouseExitedEvent) 
 	{
+		System.out.println("Gui Exited");
 		guiInFocus = false;
 	}
 }

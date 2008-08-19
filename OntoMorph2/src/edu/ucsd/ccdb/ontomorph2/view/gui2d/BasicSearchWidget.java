@@ -62,6 +62,12 @@ public class BasicSearchWidget extends InputHandler{
         TextEditor textArea = FengGUI.createTextField(window.getContentContainer());
         textArea.setText("Enter Keyword");
         textArea.setSize(100, 20);
+        
+        textArea.addTextChangedListener( new ITextChangedListener() {
+			public void textChanged( TextChangedEvent textChangedEvent ) {
+				System.out.println( "hello world" );
+			}                        
+		} );
         //System.out.println("writing state " + textArea.isInWritingState());
         
         Button button = new Button( "Start Search" );
@@ -87,7 +93,7 @@ public class BasicSearchWidget extends InputHandler{
         	System.out.println("it comes from the gui");
         }*/
         d.addWidget(window);
-        
+       
        //d.mouseMoved(, );
 	}
 
