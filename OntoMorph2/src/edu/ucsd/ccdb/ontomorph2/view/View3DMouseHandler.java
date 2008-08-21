@@ -14,12 +14,15 @@ import com.jme.intersection.TrianglePickResults;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.batch.GeomBatch;
+import com.jme.scene.shape.Sphere;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
@@ -46,6 +49,8 @@ public class View3DMouseHandler extends MouseInputAction {
 	public static final int METHOD_ROTATEY = 16;
 	public static final int METHOD_ROTATEZ = 32;
 	public static final int METHOD_LOOKAT = 64;
+
+	
 
 	private static int manipulation = METHOD_PICK; //use accesor
 	
@@ -195,7 +200,7 @@ public class View3DMouseHandler extends MouseInputAction {
 	{
 		if (0 == buttonIndex) //left 
 		{
-			testFindSpot(); //debug
+			
 		}
 		 
 		Log.warn("Double click (" + buttonIndex + ") @ " + System.currentTimeMillis());
@@ -203,27 +208,97 @@ public class View3DMouseHandler extends MouseInputAction {
 	
 	/**
 	 * for debugging, remove this function
-	 * ca: still working on it as of 08/15/08
+	 * ca: still working on it as of 08/20/08
 	 *
 	 */
-	private void testFindSpot()
+	private OMTVector findCenter(GeomBatch queryMesh)
 	{
-		PickResults pr = getPickResults();
+		//This function is just a guesstimate, for a more accurate approach rewrite this to follow 
+		//Calculating Properties of Polyhedra from Mathemetics for Comptuer Graphics (Hearn baker), pg817
+		ArrayList<OMTVector> ovs = findVertices(queryMesh);
 		
-		for (int r=0; r < pr.getNumber(); r++)
+		//variables for the sums
+		float sx = 0;
+		float sy = 0;
+		float sz = 0;
+		long count = 0;
+		
+		DemoCoordinateSystem d = new DemoCoordinateSystem();
+		
+		OMTVector average = null;
+		count = 0;
+		for (int i=0; i < ovs.size(); i++)
 		{
-			PickData hit = pr.getPickData(r);
-			GeomBatch mesh = hit.getTargetMesh();
-			ArrayList<Integer> tris = hit.getTargetTris();
-
-			System.out.println(mesh.getVertexCount());
-			FloatBuffer verts = mesh.getVertexBuffer();
+			OMTVector v = ovs.get(i);
+			sx += v.getX();
+			sy += v.getY();
+			sz += v.getZ();
 			
-			for (int v=0; v < verts.limit(); v++)
+			System.out.println("batch pnt:" + v);
+			Sphere s = View.getInstance().createSphere(v);
+			if ( i == 1 ) 
 			{
-				System.out.println("v" + v + ": " + verts.get(v));
+				d.applyToSpatial(s);
+				s.setLocalTranslation(v);
+				s.setSolidColor(ColorRGBA.red);
+				
+			}
+			else if ( i == 2)
+			{
+				s.setLocalTranslation(v);
+				d.applyToSpatial(s);
+				s.setSolidColor(ColorRGBA.blue);
+				
+			}
+			
+			
+			System.out.println(v + " A " + s.getLocalTranslation() + " B " + s.getWorldTranslation() + " C " + s.getCenter());
+			count++;		//incriment number of vertexs
+		}
+		
+		//only create the vector if something useful will come of it (if center exists)
+		//avoids 1/0 as an added bonus :)
+		if (count > 0)
+		{
+			average = new OMTVector(sx/count,sy/count,sz/count);
+		}
+		
+		return average;
+	}
+	
+	
+	/**
+	 * Generates a list of OMTVectors that represent the points of the GeometryBatch's vertices
+	 * @param jmeMesh the {@link GeomBatch} which has 3Dvertices
+	 * @return an ArrayLIst of {@link OMTVector}s, or null if there was an error calculating them
+	 * @author caprea
+	 */
+	private ArrayList<OMTVector> findVertices(GeomBatch jmeMesh)
+	{
+//		note: GeomMesh.gettris() is useless (ca)
+		FloatBuffer fbVerts = jmeMesh.getVertexBuffer();
+		ArrayList<OMTVector> omtPoints = new ArrayList<OMTVector>();
+		
+		//Early exit for erroneous calls to this function
+		if (jmeMesh == null) return null;
+		
+		try
+		{
+			//Loop through the FloatBuffer vertices, taking 3 elements at a time for each new OMT Vector
+			for (int i=0; i < ((fbVerts.limit() + 1) / 3); i++)	//to get accurate size incriment by one then divide by three to get: # of vects
+			{
+				//take three elements from the buffer to make a 3D vector
+				OMTVector n = new OMTVector(fbVerts.get(3*i), fbVerts.get(3*i+1), fbVerts.get(3*i+2));
+				omtPoints.add(n);
 			}
 		}
+		catch(Exception e)
+		{
+			System.err.println("Error: Exception calculating vertices for JME Mesh (invalid number of vertices?)");
+			omtPoints = null;	//clear the list if there was a problem
+		}
+		
+		return omtPoints;
 	}
 	
 	/**
@@ -233,7 +308,7 @@ public class View3DMouseHandler extends MouseInputAction {
 	private void onMouseMove()
 	{		
 		/*
-		 * ca: I can't think of anything that would be appripriate here, except a poem
+		 * ca: I can't think of anything that would be appropriate here, except a poem
 		 * 
 			Presently my soul grew stronger; hesitating then no longer,
  			`Sir,' said I, `or Madam, truly your forgiveness I implore;
@@ -271,8 +346,9 @@ public class View3DMouseHandler extends MouseInputAction {
 
 	private void doPick() 
 	{
-		Tangible picked = null;
-		picked = psuedoPick(KeyInput.get().isControlDown(), true); //get the tangible picked
+		
+//		get the tangible picked
+		ArrayList<Tangible> pickedlist = psuedoPick(KeyInput.get().isControlDown(), true);   
 		
 		boolean shift = KeyInput.get().isShiftDown();
 		
@@ -280,14 +356,14 @@ public class View3DMouseHandler extends MouseInputAction {
 		if ( shift ) TangibleManager.getInstance().setMultiSelect(true);
 		
 		//decide how to select it, is this multi select, deselect, etc?
-		if (picked == null && !shift) //nothing was picked so do deselect
+		if (pickedlist.size() == 0 && !shift) //nothing was picked so do deselect
 		{
 			//if there are no results, unselect everything
 			TangibleManager.getInstance().unselectAll();
 		}
-		else 
+		else if (pickedlist.size() > 0)
 		{			
-			picked.select();
+			pickedlist.get(0).select();	//select the closest one
 		}
 		
 		//turn off multiselection
@@ -301,23 +377,26 @@ public class View3DMouseHandler extends MouseInputAction {
 	 * Example: selecting the Tangible that is returned from this function
 	 * @param modifyControl changes picking behavior (such as in the case of selecting subcomponents; false to select cables, true to select cells)
 	 * @param useRanking If true, omits lower-ranking {@link TangibleView}s from the pick results, such that a cell behind a curve would be selected instead of curve. False for unintelligent pickResults 
-	 * @return the closest {@link Tangible}, of all camera-ray-intersected Tangibles 
+	 * @return an ArrayList {@link Tangible}, of all camera-ray-intersected Tangibles where element (0) is the closest to the camera 
 	 */
-	public Tangible psuedoPick(boolean modifyControl, boolean useRanking)
+	public ArrayList<Tangible> psuedoPick(boolean modifyControl, boolean useRanking)
 	{
 		Tangible chosenOne= null;
 		PickResults rawresults = getPickResults();
-		PickData decision = null;
+		PickData singleResult = null;
+		ArrayList<Tangible> possible = new ArrayList<Tangible>();
 		
 		//omit lower-ranked items if using ranking
 		if ( rawresults.getNumber() > 0 && useRanking) rawresults = reorderPickPriority(rawresults);
 		
 //		Find out the tangible for the geometry that was decided on
-		if ( rawresults.getNumber() > 0) 
+		
+		//if ( rawresults.getNumber() > 0)
+		for ( int r=0; r < rawresults.getNumber(); r++)
 		{
 			TangibleView tv = null;
-			decision = rawresults.getPickData(0);	//find the geomtry
-			tv = TangibleViewManager.getInstance().getTangibleView(decision.getTargetMesh().getParentGeom()); //get a tanview instance that is mapped to the selected geomtry
+			singleResult = rawresults.getPickData(r);	//find the geomtry
+			tv = TangibleViewManager.getInstance().getTangibleView(singleResult.getTargetMesh().getParentGeom()); //get a tanview instance that is mapped to the selected geomtry
 			
 			//special case for NeuronMorphologies because they have subcomponents
 			//TODO: should probably bring this piece of code inside NeuronMorphologyView via 
@@ -327,7 +406,7 @@ public class View3DMouseHandler extends MouseInputAction {
 				NeuronMorphologyView nmv = (NeuronMorphologyView) tv;
 				{
 					//otherwise just select the part itself
-					BigInteger id = nmv.getCableIdFromGeometry(decision.getTargetMesh().getParentGeom());
+					BigInteger id = nmv.getCableIdFromGeometry(singleResult.getTargetMesh().getParentGeom());
 					ICable c = ((NeuronMorphology)nmv.getModel()).getCable(id);
 					chosenOne = (Tangible) c;
 				}
@@ -336,12 +415,34 @@ public class View3DMouseHandler extends MouseInputAction {
 			{//CATCH ALL case for all other TangibleViews
 				chosenOne = tv.getModel();
 			}
+			
+			possible.add(chosenOne);	//add to the list of possible picks
 		}
-		
-		
-		return chosenOne;
+	
+		possible = removeDuplicates(possible);
+	
+		return possible;
 	}
 
+	
+	public ArrayList<Tangible> removeDuplicates(ArrayList<Tangible> list)
+	{
+		ArrayList<Tangible> edited = new ArrayList<Tangible>();
+		Tangible single = null;
+		
+		//loop through and copy over the elements in list only if they do not already exist
+		for (int i = 0; i < list.size(); i++)
+		{
+			single = list.get(i);
+		
+			//if the new list already contains the object don't add it
+			if ( !edited.contains(single) ) edited.add(single);
+		}
+		
+		return edited;
+	}
+	
+	
 	private PickResults reorderPickPriority(PickResults results)
 	{
 		PickData decision = null;

@@ -367,21 +367,23 @@ public class View extends BaseSimpleGame {
 		 public void performAction(InputActionEvent evt)
 		 {
 			 //TODO: move keyhandler here
-		 }
+		 } 
 	 };
 	  
 //	this ismostly for debugging
-     private void createSphere(Vector3f p1)
+     public Sphere createSphere(Vector3f p1)
      {
              //Cylinder(java.lang.String name, int axisSamples, int radialSamples, float radius, float height, boolean closed)
              
-              Sphere s=new Sphere("My sphere",10,10,1f); //last number is radius
+              Sphere s=new Sphere("My sphere",10,10,10f); //last number is radius
               s.setModelBound(new BoundingSphere());
               s.updateModelBound();
               s.setRandomColors();
               s.setLocalTranslation(p1);
               
               rootNode.attachChild(s);
+              
+              return s;
      }
 
      /**

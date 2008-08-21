@@ -1,5 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +18,9 @@ import org.fenggui.menu.MenuItem;
 import org.fenggui.util.Color; //conflict with other import
 import org.fenggui.util.Point;
 
+import com.jme.input.KeyInput;
+import com.sun.tools.ws.processor.modeler.wsdl.PseudoSchemaBuilder;
+
 import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
@@ -33,6 +37,7 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
+import edu.ucsd.ccdb.ontomorph2.view.View3DMouseHandler;
 import edu.ucsd.ccdb.ontomorph2.view.scene.CurveAnchorPointView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
@@ -49,6 +54,20 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
  */
 public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	
+	
+	//METHODS that Menu buttons take
+	public static final int CTX_ACTION_ANNOTATE = 100;
+	public static final int CTX_ACTION_DISPROP = 101;
+	public static final int CTX_ACTION_DESELECT = 103;
+	public static final int CTX_ACTION_NEW_CELL = 104;
+	public static final int CTX_ACTION_NEW_CURVE = 105;
+	public static final int CTX_ACTION_NEW_ANCHOR = 106;
+	public static final int CTX_ACTION_SELECT = 107;
+	public static final int CTX_ACTION_MODE = 108;
+	public static final int CTX_ACTION_NONE = 0;
+	
+	
+	
 	//ms stands for Menu String
 	static final String msNEW = "New ...";
 	static final String msN_CURVE = "Curve";
@@ -61,33 +80,20 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	static final String msN_CELL_CA3Pyr = "CA3 Pyramidal";
 	static final String msN_CELL_CA1Pyr = "CA1 Pyramidal";
 	static final String msSELECT = "Select ...";
+	static final String msDESELECT = "De-Select ...";
+	static final String msSELECTPART = "Select Part ...";
 	static final String msEDIT = "Toggle Edit";
 	static final String msManipulate = "Manipulate ...";
+	static final String msNone = "(Nothing Selected)";
 	static ContextMenu instance = null;
+	
+	static final String mFIELD_ACTION = "action";
+	static final String mFIELD_REFERENCE = "reference tangible";
+	
 	TitledBorder border = null;
 	
-	
-	
-	//========================================
-	// MENU ITEMS 
-	//========================================
 	//want to have 'persistent' objects that can be added and removed from the context menu
-	Menu mnuNew = null;
-	Menu mnuSelect = null;
-	Menu mnuNew_Cell = null;
-	Menu mnuManipulate = null;
-	
-	ContextMenuItem mniNew_curve = null;
-	ContextMenuItem mniNew_point = null;
-	ContextMenuItem mniNew_Cell_CA3Pyr = null;
-	ContextMenuItem mniNew_Cell_CA1Pyr = null;
-	ContextMenuItem mniNew_Cell_DG = null;
-	ContextMenuItem mniSelectTangible = null;
-	ContextMenuItem mniAnnotate = null;
-	ContextMenuItem mniSimulate = null;
-	ContextMenuItem mniProperties = null;
-	ContextMenuItem mniSeperator = null;
-	ContextMenuItem mniEdit = null;
+
 	
 	
 	private static final DemoCoordinateSystem dcoords =  new DemoCoordinateSystem();	//coordinates for test-case new objects
@@ -161,45 +167,97 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	
 	}
 	
+	/**
+	 * loops through all elements in the array to tell if theya re the same class or not
+	 * @param consider
+	 * @return True if all elements have the same Class type
+	 */
+	private boolean isSameClass(ArrayList<Tangible> consider)
+	{
+		Tangible firstElement = consider.get(0);
+		
+		for (int i = 0; i < consider.size(); i++)
+		{
+			Tangible single = consider.get(i);
+			
+			if (!single.getClass().equals(firstElement.getClass()))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	private void create(List<Tangible> tans)
 	{
+		//"If you build it, they will come"
 		removeAllItems();
 		
-		mnuNew = new Menu();
-		mnuNew_Cell = new Menu();
-		mnuSelect = new Menu();
-		mnuManipulate = new Menu();
+		//submenus
+		Menu mnuNew = new Menu();
+		Menu mnuNew_Cell = new Menu();
+		Menu mnuSelect = new Menu();
+		Menu mnuDeselect = new Menu();
+		Menu mnuManipulate = new Menu();
+		Menu mnuPart = new Menu();
 		
+		
+		//apply formatting
 		decorate();
 		
-		
-		
-        menuItemFactory(mnuNew, msN_CURVE);
-        menuItemFactory(mnuNew, msN_ANCHOR);
-        menuItemFactory(mnuNew_Cell, msN_CELL_DG);
-        menuItemFactory(mnuNew_Cell, msN_CELL_DG);
-        menuItemFactory(this, msANNOTATE);
-        menuItemFactory(this, msEDIT);
-        menuItemFactory(this, msPROPERTIES);
-        
-        for (int i=0; i < tans.size(); i++)
-        {
-        	Tangible single = tans.get(i);
-        	String name = single.getName();
-        	if ( name == null) name = "(NULL)".toUpperCase();
-        	menuItemFactory(mnuSelect, name);
-        }
-        
-
-        
-		this.registerSubMenu(mnuNew, msNEW);
-		this.registerSubMenu(mnuSelect,msSELECT);
-		this.registerSubMenu(mnuManipulate, msManipulate);
-		mnuNew.registerSubMenu(mnuNew_Cell, msN_CELL);
-        
-
-		
-        
+		//
+		if ( tans.size() > 0 )
+		{
+			//==================================
+			//	SECONDARY MENU ITEMS
+			// secondary must be built before primary in order to attach them as non-empty
+			
+			
+			//===================================
+			menuItemFactory(mnuNew, msN_CURVE, CTX_ACTION_NEW_CURVE, null);
+	        menuItemFactory(mnuNew, msN_ANCHOR, CTX_ACTION_NEW_ANCHOR, null);
+	        menuItemFactory(mnuNew_Cell, msN_CELL_DG, CTX_ACTION_NEW_CELL, null);
+	        menuItemFactory(this, msANNOTATE, CTX_ACTION_ANNOTATE, null);
+	        menuItemFactory(this, msEDIT, CTX_ACTION_MODE, null);
+	        menuItemFactory(this, msPROPERTIES, CTX_ACTION_DISPROP, null);
+	        
+	        //DYNAMIC SELECT
+	        {	//find all thing a user MIGHT want to select and puts them in the select submenu
+	        	ArrayList<Tangible> others = View.getInstance().getView3DMouseHandler().psuedoPick(KeyInput.get().isControlDown(), false);
+		        for (int i=0; i < others.size(); i++)
+		        {
+		        	Tangible single = others.get(i);
+		        	String name = single.getName();
+		        	menuItemFactory(mnuSelect, name, CTX_ACTION_SELECT, single);
+		        }
+	        }
+	        
+	        //DYNAMIC RE-SELECT
+	        {
+		        for (int i=0; i < tans.size(); i++)
+		        {
+		        	Tangible single = tans.get(i);
+		        	String name = single.getName();
+		        	menuItemFactory(mnuPart, name, CTX_ACTION_SELECT, single);
+		        }
+	        }
+	
+	        //========================================
+			// PRIMARY MENU ITEMS 
+			//========================================
+	        
+			this.registerSubMenu(mnuNew, msNEW);
+			this.registerSubMenu(mnuManipulate, msManipulate);
+			mnuNew.registerSubMenu(mnuNew_Cell, msN_CELL);
+			this.registerSubMenu(mnuPart,msSELECTPART);
+			this.registerSubMenu(mnuSelect,msSELECT);
+		}
+		else
+		{
+			//If nothing was selected make the 'default' menu
+			menuItemFactory(this, msNone, View3DMouseHandler.METHOD_NONE, null);
+		}
+			
         this.setSizeToMinSize();
         this.layout();			
 	}
@@ -246,17 +304,21 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	
 	/**
 	 * Conveiniance method that wraps the creation of menus
+	 * Each menu item will potentially have an 'action' tied to it as well as an originating {@link Tangible} to perform that action upon
 	 * @author caprea
 	 * @param title
+	 * @param action the action to perform on the Tangible, which is paramaterized by tangChange 
+	 * @param tangChange the {@link Tangible} within the world to perform action upon
 	 * @param parent If null, will create a new parent menu
+	 * @see View3DMouseHandler 
 	 */
-	private void menuItemFactory(Menu mparent, String title)
+	private void menuItemFactory(Menu mparent, String title, int action, Tangible tangChange)
 	{
 		try
 		{
-			if (title.equals(""))
+			if (title == null || "".equals(title))
 			{
-				title = "____________";
+				title = "(null)";
 			}
 			if (null == mparent )
 			{
@@ -267,7 +329,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				MenuItem mitem;
 				mitem = new MenuItem(title);
 				mitem.addMenuItemPressedListener(this);
-				mparent.addItem(mitem);	
+				mparent.addItem(mitem); 
+				mitem.addUserData(mFIELD_REFERENCE, tangChange); 	//tie a Tangible to the menu button
+				mitem.addUserData(mFIELD_ACTION, action);			//tie an associated action to the menu button
 			}
 		}
 		catch (Exception e)
@@ -280,8 +344,52 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		String opt = arg0.getItem().getText();
 		MenuItem trigger = arg0.getItem();
-		//Tangible orig = TangibleManager.getInstance().getSelectedRecent();
 		
+		//====== SETUP ==============
+		//get all of the fields form the MenuItem
+		int fieldAct = (Integer)trigger.getUserData(mFIELD_ACTION); //find out what action we should do on the tangible
+		Tangible fieldOrig = (Tangible)trigger.getUserData(mFIELD_REFERENCE);
+		
+		//===========================
+		//SINGLE - ACTION CODE (this code does not iterate over all, only concerned with reference object)
+		if (CTX_ACTION_SELECT == fieldAct)
+		{
+				if (fieldOrig != null) fieldOrig.select();
+		}
+		else if (CTX_ACTION_DESELECT == fieldAct) 
+		{
+				if (fieldOrig != null) fieldOrig.unselect();
+		}
+		else
+		{
+//		===========================
+		//MULTIPLE - ACTION CODE
+//		most things wont care about the 'reference' object so we concern ourselves with whats currently selected
+			List<Tangible> selected = TangibleManager.getInstance().getSelected();
+			for (int t = 0; t < selected.size(); t++)
+			{
+				Tangible single = selected.get(t);
+				switch (fieldAct)
+				{
+					case CTX_ACTION_DISPROP:
+						System.out.println("show properties for: " + single);
+						break;
+					case CTX_ACTION_MODE:
+					{
+						Curve3D ec = null;
+						//get the curve that corresponds to the originating curve
+						if ( single instanceof Curve3D) ec = (Curve3D) single;
+						
+						if ( ec != null) ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
+						break;
+					}
+				}
+			}
+		}
+
+		//===========================
+		//OLD ACTION CODE
+		/*
 		for (int t=0; t < TangibleManager.getInstance().getSelected().size(); t++)
 		{
 			Tangible orig = TangibleManager.getInstance().getSelected().get(t);	//find the originating tangible
@@ -294,14 +402,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				} else if (msPROPERTIES.equals(opt)) {
 					System.out.println("show properties");
 				}
-				else if (msN_CURVE.equals(opt)) testCreateCurve(orig);
+				else if (msN_CURVE.equals(opt)) createCurve(orig);
 				
-				else if (trigger.equals(mniSelectTangible))
-				{
-					System.out.println("Select");
-				}
-				
-				else if (msN_ANCHOR.equals(opt)) CreatePoint(orig);
+				else if (msN_ANCHOR.equals(opt)) createPoint(orig);
 				
 				else if (msN_CELL_DG.equals(opt))	testCreateCell(orig);
 				
@@ -319,13 +422,13 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			{
 				System.out.println("Warning: There was no tangible do to this action on (" + opt + ")");
 			}	
-		}
+		}*/
 		
 		
 		this.closeBackward();
 	}
 	
-	public void CreatePoint(Tangible src)
+	public void createPoint(Tangible src)
 	{
 		//if source is not an anchorpoint then dont do anything
 		if (!(src instanceof CurveAnchorPoint)) return;	
@@ -346,7 +449,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	}
 	
 	//TODO: MOVE this function and replace its signature with something appropriate
-	public void testCreateCurve(Tangible src)
+	public void createCurve(Tangible src)
 	{
 		OMTVector a = null;
 		OMTVector b = null;
