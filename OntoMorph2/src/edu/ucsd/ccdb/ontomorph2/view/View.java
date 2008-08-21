@@ -44,6 +44,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
@@ -65,7 +66,8 @@ public class View extends BaseSimpleGame {
 	
 	private static View instance = null;
 	private Scene _scene = null;
-	
+    FocusManager focusManager = new FocusManager();
+
 //	The trimesh that i will change
 	//TriMesh square;
 	
@@ -142,6 +144,11 @@ public class View extends BaseSimpleGame {
 		//as a hack, calling the main application class to do initialization
 		//this is because model loading needs to have the view running in order to work
 		
+        FocusManager focusManager = new FocusManager();
+        if(focusManager.guiInFocus == false)
+        {
+        	System.out.println("Inside the Gui");
+        }        
 		OntoMorph2.initialization();
 		display.getRenderer().setBackgroundColor(ColorRGBA.black); //Set a black background.
 		display.setTitle("Whole Brain Catalog");
@@ -164,7 +171,6 @@ public class View extends BaseSimpleGame {
     	
 	private void configureControls()
 	{
-		
 		fpHandler = new FirstPersonHandler(cam, 50, camNode.getRotationRate()); //(cam, moveSpeed, turnSpeed)
 		
 		//This is where we disable the FPShooter controls that are created by default by JME	
@@ -209,8 +215,9 @@ public class View extends BaseSimpleGame {
 		MouseInput.get().setCursorVisible(true);
 		
 		//(InputActionInterface action, java.lang.String deviceName, int button, int axis, boolean allowRepeats)
-		this.view3DMouseHandler = new View3DMouseHandler();
+    	this.view3DMouseHandler = new View3DMouseHandler();
         input.addAction(this.view3DMouseHandler , InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, false );
+
 	}
 			
 	
@@ -224,8 +231,7 @@ public class View extends BaseSimpleGame {
 		{
 			//exit the program cleanly on ESC
 			if (isAction("quit")) finish();
-			
-			
+			   
 			if (isAction("mem_report"))
 			{
 				 long totMem = Runtime.getRuntime().totalMemory();
@@ -354,6 +360,7 @@ public class View extends BaseSimpleGame {
 	 {
 		 public void performAction(InputActionEvent evt)
 		 {
+			 System.out.println("keyinputaction");
 			 //TODO: move keyhandler here
 		 }
 	 };
@@ -366,6 +373,7 @@ public class View extends BaseSimpleGame {
 	 {
 		 public void performAction(InputActionEvent evt)
 		 {
+			 System.out.println("key input repetition non repeated");
 			 //TODO: move keyhandler here
 		 } 
 	 };
@@ -457,9 +465,12 @@ public class View extends BaseSimpleGame {
 		//the coordsDown and coordsUp code used to go here. It's gone now.
 		//handle mouse input has been moved to listener so there is no 'repeatables'
 		//this is more efficient as well, saves processing time
-		handleKeyInput();	//should be mvoed to some other handler
-		
-	}
+		//handleKeyInput();	//should be mvoed to some other handler
+        if(FocusManager.focusManager.guiInFocus==false){
+        	handleKeyInput();
+        }
+
+    }
 	
 	/** 
 	 * isAction(String command)
@@ -486,6 +497,7 @@ public class View extends BaseSimpleGame {
      * @see AbstractGame#render(float interpolation)
      */
     protected final void render(float interpolation) {
+    	//System.out.println("render");
         super.render(interpolation);
        
         this.getCamera().getCamera().update();
@@ -520,6 +532,7 @@ public class View extends BaseSimpleGame {
         super.update(interpolation);
 
         if ( !pause ) {
+        	//System.out.println("update interpolation");
             /** Call simpleUpdate in any derived classes of SimpleGame. */
             simpleUpdate();
 

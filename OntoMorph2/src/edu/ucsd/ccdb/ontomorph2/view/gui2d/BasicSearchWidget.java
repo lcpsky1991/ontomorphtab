@@ -4,7 +4,10 @@ import org.fenggui.Button;
 import org.fenggui.Container;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
+import org.fenggui.IAppearance;
+import org.fenggui.ObservableWidget;
 import org.fenggui.TextEditor;
+import org.fenggui.Widget;
 import org.fenggui.composites.TextArea;
 import org.fenggui.composites.Window;
 import org.fenggui.event.ActivationEvent;
@@ -15,6 +18,9 @@ import org.fenggui.event.IKeyPressedListener;
 import org.fenggui.event.ITextChangedListener;
 import org.fenggui.event.KeyPressedEvent;
 import org.fenggui.event.TextChangedEvent;
+import org.fenggui.event.mouse.MouseEnteredEvent;
+import org.fenggui.event.mouse.MouseEvent;
+import org.fenggui.event.mouse.MouseExitedEvent;
 import org.fenggui.layout.BorderLayout;
 import org.fenggui.layout.BorderLayoutData;
 import org.fenggui.layout.FormLayout;
@@ -37,11 +43,10 @@ import edu.ucsd.ccdb.ontomorph2.view.View3DMouseHandler;
  * 2D widget that allows a user to type in keywords and issue a keyword search
  *
  */
-public class BasicSearchWidget extends InputHandler{
+public class BasicSearchWidget extends Widget{
     
-	FengJMEInputHandler guiInput = null;
+	InputHandler input = null;
 	//MouseManager mouse;
-	KeyBindingManager keyboard; 
 	
 	private float displayX, displayY;
 	private KeyInputAction keyAction;
@@ -49,25 +54,21 @@ public class BasicSearchWidget extends InputHandler{
 		
 		displayX = d.getDisplayX();
 		displayY = d.getDisplayY();
-		guiInput = new FengJMEInputHandler(d);
-		keyboard = KeyBindingManager.getKeyBindingManager();
-		View3DMouseHandler view3DMouseHandler = new View3DMouseHandler();
-        guiInput.addAction(view3DMouseHandler , InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, true );
+		input = new FengJMEInputHandler(d);
 		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
 		Window window = new Window(true, false, false, true);
 		//d.addWidget(window);
 		window.setSize(200, 300);
         window.getContentContainer().setLayoutManager(new BorderLayout());
-		window.setTitle("Search");       
-        TextEditor textArea = FengGUI.createTextField(window.getContentContainer());
+		window.setTitle("Search");      
+		
+		//window.addMouseExitedListener(FocusManager.focusManager);
+        TextEditor textArea = FengGUI.createTextArea(window.getContentContainer());
         textArea.setText("Enter Keyword");
         textArea.setSize(100, 20);
         
-        textArea.addTextChangedListener( new ITextChangedListener() {
-			public void textChanged( TextChangedEvent textChangedEvent ) {
-				System.out.println( "hello world" );
-			}                        
-		} );
+        textArea.addMouseEnteredListener(FocusManager.focusManager);
+        textArea.addMouseExitedListener(FocusManager.focusManager);
         //System.out.println("writing state " + textArea.isInWritingState());
         
         Button button = new Button( "Start Search" );
@@ -88,18 +89,9 @@ public class BasicSearchWidget extends InputHandler{
 		window.setPosition(new Point(0,100));
         textArea.setPosition(new Point(30,220));
         d.layout();
-        MouseInput.get().setCursorVisible(true);
-        /*if(d.fireMousePressed() == true){
-        	System.out.println("it comes from the gui");
-        }*/
+
         d.addWidget(window);
        
-       //d.mouseMoved(, );
-	}
-
-	public void textChanged(TextChangedEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 }
 

@@ -25,6 +25,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 
+import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
@@ -51,7 +52,7 @@ public class View3DMouseHandler extends MouseInputAction {
 	public static final int METHOD_ROTATEY = 16;
 	public static final int METHOD_ROTATEZ = 32;
 	public static final int METHOD_LOOKAT = 64;
-
+	public boolean guiInFocus = false;
 	
 
 	private static int manipulation = METHOD_PICK; //use accesor
@@ -167,30 +168,32 @@ public class View3DMouseHandler extends MouseInputAction {
 	 */ 
 	private void onMousePress(int buttonIndex)
 	{
-		//	RIGHT CLICK
-		if (1 == buttonIndex) //right
-		{	
-			//MouseInput.get().setCursorVisible(false); //hide mouse cursor
-			doPick();
-			ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
-					MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
-		}
-		else if (0 == buttonIndex) //left
-		{
-			//MouseInput.get().setCursorVisible(true); //show mouse cursor
-			doPick();
-		}
+		if(guiInFocus == false){
+			//	RIGHT CLICK
+			if (1 == buttonIndex) //right
+			{	
+				//MouseInput.get().setCursorVisible(false); //hide mouse cursor
+				doPick();
+				ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
+						MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
+			}
+			else if (0 == buttonIndex) //left
+			{
+				//MouseInput.get().setCursorVisible(true); //show mouse cursor
+				doPick();
+			}
 		
 		
-		long timenow = System.currentTimeMillis();
+			long timenow = System.currentTimeMillis();
 		
-		//+Double+
-		//check double click
-		if (timenow < prevPressTime + dblClickDelay) 
-		{
-			onMouseDouble(buttonIndex);
-		}
-		prevPressTime = timenow;
+			//+Double+
+			//check double click
+			if (timenow < prevPressTime + dblClickDelay) 
+			{
+				onMouseDouble(buttonIndex);
+			}
+			prevPressTime = timenow;
+		}	
 	}
 	
 	private void onMouseRelease()
@@ -308,7 +311,20 @@ public class View3DMouseHandler extends MouseInputAction {
 	 * 
 	 */
 	private void onMouseMove()
-	{		
+	{	
+		//flag set to true for case in which mouse is on top of GUI, used to deactivate Mouse Controls at that point
+		if(FocusManager.focusManager.guiInFocus == true)
+		{
+			guiInFocus = true;
+		}
+		else{
+			guiInFocus = false;
+			//Special case for MenuBar location, assuming it's location will keep static 
+			if(MouseInput.get().getYAbsolute()>= 460){
+				guiInFocus = true;
+			}
+				
+		}
 		/*
 		 * ca: I can't think of anything that would be appropriate here, except a poem
 		 * 
@@ -329,19 +345,20 @@ public class View3DMouseHandler extends MouseInputAction {
 		//====================================
     	//	WHEEL
     	//====================================
-		
-		float dx=MouseInput.get().getWheelDelta() / (View.getInstance().getKeyPressActionRate() * 20); //scale it by some factor so it's less jumpy
-		if (dx != 0)	
-		{
-			//zoom camera if Z press
-			if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
+		if(guiInFocus ==false){
+			float dx=MouseInput.get().getWheelDelta() / (View.getInstance().getKeyPressActionRate() * 20); //scale it by some factor so it's less jumpy
+			if (dx != 0)	
 			{
-				View.getInstance().getCamera().zoomIn(dx);	
-			}
-			//move camera if Z NOT pressed
-			else
-			{
-				View.getInstance().getCamera().moveForward(dx);
+				//zoom camera if Z press
+				if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
+				{
+					View.getInstance().getCamera().zoomIn(dx);	
+				}
+				//move camera if Z NOT pressed
+				else
+				{
+					View.getInstance().getCamera().moveForward(dx);
+				}
 			}
 		}
 	}

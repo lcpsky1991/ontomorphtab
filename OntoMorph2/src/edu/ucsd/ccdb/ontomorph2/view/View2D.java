@@ -45,7 +45,7 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyTreeModel;
  * @author caprea
  *
  */
-public class View2D extends Display  {
+public class View2D extends Display{
 	
 		
 	FengJMEInputHandler input = null;
@@ -190,10 +190,11 @@ public class View2D extends Display  {
 		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
 		//addMouseExitedListener(FocusManager.focusManager);
 		Tree<MyNode> tree = MyTreeModel.<MyNode>createTree(sc);
-		
+	
 		window.setSize(200, 300);
 		window.setPosition(new Point(0,100));
 		window.layout();
+		
 		tree.setModel(new MyTreeModel(root));
 
 		tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {

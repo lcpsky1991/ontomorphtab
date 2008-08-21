@@ -4,6 +4,7 @@ import org.fenggui.background.PlainBackground;
 import org.fenggui.border.PlainBorder;
 import org.fenggui.event.IMenuItemPressedListener;
 import org.fenggui.event.MenuItemPressedEvent;
+import org.fenggui.event.mouse.MouseExitedEvent;
 import org.fenggui.menu.Menu;
 import org.fenggui.menu.MenuItem;
 import org.fenggui.util.Color;
@@ -57,9 +58,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String strMNU_MANI_SCALE = "Re-Scale";
 	public static final String BASIC_SEARCH = "Basic Search...";
 	public static final String SHOW_SCENE_MONITOR = "Show Scene Monitor...";
-	
-	FocusManager focusManager = new FocusManager();
-	
+		
 	public MenuBar() {
 //		generate the menu
         MenuBar mB = this;
@@ -72,23 +71,23 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		mB.getAppearance().setSelectionTextColor(Color.YELLOW);
 		//mB.getAppearance().add(new PlainBorder(Color.WHITE_HALF_OPAQUE));
         mB.setVisible(true);
-       
+        //mB.addMouseEnteredListener(FocusManager.focusManager);
+        //mB.addMouseExitedListener(FocusManager.focusManager);
         
         //=[  FILE  ]=
         Menu mnuFile = new Menu();
         mB.registerSubMenu(mnuFile, "File");
         makeMenuItem(LOAD_SCENE, mnuFile);
         makeMenuItem(SAVE_SCENE, mnuFile);
-
+        mnuFile.addMouseEnteredListener(FocusManager.focusManager);
+        mnuFile.addMouseExitedListener(FocusManager.focusManager);
         //=[ SEARCH ]=
         Menu mnuSearch = new Menu();
         mB.registerSubMenu(mnuSearch, "Search");
         makeMenuItem(BASIC_SEARCH, mnuSearch);
-        mnuSearch.addMouseEnteredListener(focusManager);
-        mnuSearch.addMouseExitedListener(focusManager);
-        if(focusManager.guiInFocus == false){
-        	System.out.println("jesus");
-        }
+        mnuSearch.addMouseEnteredListener(FocusManager.focusManager);
+        mnuSearch.addMouseExitedListener(FocusManager.focusManager);
+
         //=[  VIEW  ]=
         Menu mnuView = new Menu();
         mB.registerSubMenu(mnuView, "View");
@@ -101,12 +100,15 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         makeMenuItem(ATLAS_SUBCELL_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_LATERAL_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_MEDIAL_VIEW_SMOOTH, mnuView);
+        mnuView.addMouseEnteredListener(FocusManager.focusManager);
+        mnuView.addMouseExitedListener(FocusManager.focusManager);
         
         //=[  OBJ  ]=
         Menu mnuObjects = new Menu();
         mB.registerSubMenu(mnuObjects, "Objects");
-        
         makeMenuItem(CELLS, mnuObjects);
+        mnuObjects.addMouseEnteredListener(FocusManager.focusManager);
+        mnuObjects.addMouseExitedListener(FocusManager.focusManager);
         //makeMenuItem(VOLUMES, mnuObjects);
         //makeMenuItem(SEMANTICS, mnuObjects);
         
@@ -121,6 +123,8 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         makeMenuItem(SHOW_ATLAS, mnuAtlas);
         makeMenuItem(DISPLAY_BASIC_ATLAS, mnuAtlas);
         makeMenuItem(HIDE_BASIC_ATLAS, mnuAtlas);
+        mnuAtlas.addMouseEnteredListener(FocusManager.focusManager);
+        mnuAtlas.addMouseExitedListener(FocusManager.focusManager);
         
         //=[ MANIPULATE  ]= 
         Menu mnuManip = new Menu();
@@ -132,11 +136,15 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         makeMenuItem(strMNU_MANI_ROTATEC, mnuManip);
         makeMenuItem(strMNU_MANI_LOOK, mnuManip);
         makeMenuItem(strMNU_MANI_NONE, mnuManip);
+        mnuManip.addMouseEnteredListener(FocusManager.focusManager);
+        mnuManip.addMouseExitedListener(FocusManager.focusManager);
         
         //=[ DEBUG ]=
         Menu mnuDebug = new Menu();
         mB.registerSubMenu(mnuDebug, "Debug");
         makeMenuItem(SHOW_SCENE_MONITOR, mnuDebug);
+        mnuDebug.addMouseEnteredListener(FocusManager.focusManager);
+        mnuDebug.addMouseExitedListener(FocusManager.focusManager);
         
 	}
 	
