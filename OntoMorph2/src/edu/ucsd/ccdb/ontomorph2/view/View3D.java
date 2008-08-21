@@ -1,18 +1,13 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.acarter.scenemonitor.SceneMonitor;
-import com.jme.bounding.BoundingBox;
-import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
-import com.jme.scene.TriMesh;
-import com.jme.scene.VBOInfo;
 import com.jme.scene.state.LightState;
-import com.jme.system.DisplaySystem;
+import com.jme.scene.state.TextureState;
+import com.jme.scene.state.ZBufferState;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
@@ -20,19 +15,17 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.MeshViewImpl;
-import edu.ucsd.ccdb.ontomorph2.view.scene.QuadSlideView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.VolumeView;
 
 /**
- * Stands in for the Root Node of the 3D Scene Graph.
+ * Wraps the Root Node of the 3D Scene Graph.
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
 public class View3D extends Node{
@@ -77,6 +70,16 @@ public class View3D extends Node{
 		for(Slide slide : slides){
 			slidesNode.attachChild(new SlideView(slide));
 		}
+		slidesNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
+		
+		ZBufferState zb = View.getInstance().getRenderer().createZBufferState();
+		zb.setWritable(false);
+		zb.setFunction(ZBufferState.CF_LEQUAL);
+		zb.setEnabled(true);
+		slidesNode.setRenderState(zb);
+		
+		slidesNode.setTextureCombineMode(TextureState.COMBINE_CLOSEST);
+		slidesNode.updateRenderState();
 	}
 	
 	/**

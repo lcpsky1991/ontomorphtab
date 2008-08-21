@@ -4,6 +4,8 @@ import com.jme.math.Quaternion;
 import com.jme.math.TransformMatrix;
 import com.jme.math.Vector3f;
 
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
+
 /**
  * Defines a coordinate system with an origin, rotation, and scale.  A scene object can be associated with 
  * a coordinate system, and this determines how its relative position, rotation, and scale will be

@@ -21,7 +21,7 @@ import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**

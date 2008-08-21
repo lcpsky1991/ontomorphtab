@@ -1,153 +1,107 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
-import java.net.URL;
-
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
-import com.jme.math.Vector2f;
-import com.jme.math.Vector3f;
-import com.jme.scene.TriMesh;
+import com.jme.scene.shape.Quad;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
-import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
-import edu.ucsd.ccdb.ontomorph2.util.OMTException;
-import edu.ucsd.ccdb.ontomorph2.view.View;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.TiledSlide;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.URISlide;
 
 /**
  * Defines a slide, which is a plane in space that has the image of a slice of brain on it.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
-public class SlideView extends TriMesh {
+public class SlideView extends TangibleView {
 	
-	URL imageURL = null;
+	Quad quad;
 	Slide _slide = null;
 	private DisplaySystem display = null;
 	
 	public SlideView(Slide slide) {
-		super.setName("Slide View");
+		super(slide);
+		quad = new Quad("Slide View");
 		_slide = slide;
-		setImageURL(slide.getImageURL());
 		init();
 	}
 	
 	public SlideView(Slide slide, DisplaySystem disp) {
-		super.setName("Slide View");
+		super(slide);
+		quad = new Quad("Slide View");
 		_slide = slide;
-		setImageURL(slide.getImageURL());
 		setDisplay(disp);
 		init();
 	}
-
-	private void init() {
-		
-		float ratio = _slide.getRatio();
-		float scale = _slide.getAbsoluteScale().x;
-		float x = _slide.getAbsolutePosition().x;
-		float y = _slide.getAbsolutePosition().y;
-		float z = _slide.getAbsolutePosition().z;
-		
-		y-=113;
-		x-=180;
-		z-=305;
-		
-		
-		Vector3f v1 = new Vector3f(x,y,z);
-		Vector3f v2 = new Vector3f(ratio*scale+x,y,z);
-		Vector3f v3 = new Vector3f(x,scale+y,z);
-		Vector3f v4 = new Vector3f(ratio*scale+x,scale+y,z);
-		
-		/*
-		Vector3f v1 = new Vector3f(0,0,0);
-		Vector3f v2 = new Vector3f(ratio*scale,0,0);
-		Vector3f v3 = new Vector3f(0,scale,0);
-		Vector3f v4 = new Vector3f(ratio*scale,scale,0);
-		*/
-		/*
-		CoordinateSystem d = _slide.getCoordinateSystem();
-		v1 = d.multPoint(v1);
-		v2 = d.multPoint(v2);
-		v3 = d.multPoint(v3);
-		v4 = d.multPoint(v4);
-		*/
-//		Vertex positions for the mesh
-		
-		/*
-		float xFact = -300;
-		v1.x = xFact;
-		v2.x = xFact;
-		v3.x = xFact;
-		v4.x = xFact;
-		*/
-		
-		
-		Vector3f[] vertexes={ v1,v2,v3,v4 };
-		
-		//texture coordinates for each position
-		int coordDelta=1;
-		Vector2f[] texCoords ={
-				new Vector2f(0,0),
-				new Vector2f(coordDelta,0),
-				new Vector2f(0,coordDelta),
-				new Vector2f(coordDelta,coordDelta),
-		};
-		//The indexes of Vertex/Normal/Color/TexCoord sets.  Every 3
-		//makes a triangle.
-		int[] indexes={
-				0,1,2,1,3,2
-		};
-		//create the square
-		this.setName("omt slide trimesh");
-		this.setVertexBuffer(0, BufferUtils.createFloatBuffer(vertexes));
-		this.setTextureBuffer(0, BufferUtils.createFloatBuffer(texCoords));
-		this.setIndexBuffer(0, BufferUtils.createIntBuffer(indexes));
-		/*
-		square = new TriMesh("my mesh", BufferUtils.createFloatBuffer(vertexes),
-				null,null, BufferUtils.createFloatBuffer(texCoords), 
-				BufferUtils.createIntBuffer(indexes));
-		*/
-		//get my texturestate
-		TextureState ts = null;
-		if (this.display == null) {
-			ts = View.getInstance().getDisplaySystem().getRenderer().createTextureState();
-		} else {
-			ts = this.display.getRenderer().createTextureState();
-		}
-		//get my texture
-		
-		Texture t= TextureManager.loadTexture(imageURL,
-				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		//set a wrap for my texture so it repeats
-		t.setWrap(Texture.WM_WRAP_S_WRAP_T);
-		//set the texture to the texturestate
-		ts.setTexture(t);
-		//assign the texturestate to the square
-		this.setRenderState(ts);
-		//scale my square 10x larger
-		if (_slide.getAbsoluteScale() != null) {
-			//this.setLocalTranslation(0,0,0);
-			//this.setLocalScale(_slide.getAbsoluteScale());
-		}
-			
-		if (_slide.getAbsolutePosition() != null) {
-			//this.setLocalTranslation(_slide.getAbsolutePosition());
-		}
-		if (_slide.getAbsoluteRotation() != null) {
-			this.setLocalRotation(_slide.getAbsoluteRotation());
+	
+	private TextureState getTextureState() {
+//		create texture state for graph
+		TextureState textureState = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
+		Texture t = null;
+		if (_slide instanceof URISlide) {
+			t = TextureManager.loadTexture(((URISlide)_slide).getBufferedImage(), 
+						Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, 1, true);
+		} else if (_slide instanceof TiledSlide) {
+			t = new Texture();
+			t.setMipmapState(Texture.MM_LINEAR);
+			t.setImage(((TiledSlide)_slide).getImage());
 		}
 		
-		this.setModelBound(new BoundingBox());
-		this.updateModelBound();
+		textureState.setTexture(t);
+		textureState.setEnabled(true);
+		return textureState;
 	}
 	
-	private void setImageURL(URL imageURL) {
-		this.imageURL = imageURL;
+
+
+	private void init() {
+		quad.initialize(20f*_slide.getRatio(),20f);
+		
+		TextureState ts = getTextureState();
+		quad.setRenderState(ts);
+		quad.updateRenderState();
+		
+		//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+		quad.setLightCombineMode(LightState.OFF);
+		
+		/*
+		ZBufferState zb = View.getInstance().getRenderer().createZBufferState();
+		zb.setWritable(true);
+		zb.setFunction(ZBufferState.CF_LEQUAL);
+		zb.setEnabled(true);
+		quad.setRenderState(zb);
+		*/
+	
+		quad.setModelBound(new BoundingBox());
+		quad.updateModelBound();
+		quad.updateGeometricState(0.5f, false);
+		
+		if (_slide.isVisible()) {
+			this.attachChild(quad);
+		}
+		
+		this.updateRenderState();
+		
+		this.update();
 	}
 	
 	public void setDisplay(DisplaySystem disp) {
 		this.display = disp;
+	}
+
+	@Override
+	public void doHighlight() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void doUnhighlight() {
+		// TODO Auto-generated method stub
+		
 	}
 }

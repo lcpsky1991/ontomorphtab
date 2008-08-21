@@ -21,9 +21,9 @@ import com.jmex.awt.swingui.JMEDesktop;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 
 

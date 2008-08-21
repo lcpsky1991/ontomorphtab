@@ -16,9 +16,9 @@ import com.jme.scene.batch.GeomBatch;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 
 public class CurveView extends TangibleView {

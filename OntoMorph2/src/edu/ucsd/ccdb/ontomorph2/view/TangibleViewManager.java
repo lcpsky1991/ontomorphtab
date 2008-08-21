@@ -1,14 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 public class TangibleViewManager {

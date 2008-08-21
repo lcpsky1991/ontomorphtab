@@ -11,7 +11,7 @@ import org.morphml.morphml.schema.Cell.SegmentsType;
 import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
  * Implementation of ISegment.  

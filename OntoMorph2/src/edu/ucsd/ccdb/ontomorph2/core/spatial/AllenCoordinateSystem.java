@@ -4,6 +4,8 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
+
 /**
  * A coordinate system that defines the system used by the Allen Brain Atlas
  * 

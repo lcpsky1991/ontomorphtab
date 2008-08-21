@@ -10,9 +10,9 @@ import com.jme.math.Vector3f;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
  * Describes the morphology of the cell, independent of different ways of visualizing it.  

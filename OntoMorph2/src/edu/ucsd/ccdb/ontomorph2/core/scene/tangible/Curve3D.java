@@ -18,9 +18,9 @@ import com.jme.math.Vector3f;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
@@ -29,7 +29,7 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 //TODO: use setModelBound on spatial, maybe this will fix the problem 
 
 /**
- * Defines a Bezier curve in the framework that is manipulable by anchor points.
+ * Defines a CatmullRom curve in the framework that is manipulable by anchor points.
  * 
  * @author caprea
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
@@ -359,7 +359,7 @@ public class Curve3D extends Tangible{
 		TangibleManager.getInstance().setMultiSelect(ms);	//restore multiselect to however it was befpre
 	}
 	
-	
+
 	public void unselect()
 	{
 		super.unselect();

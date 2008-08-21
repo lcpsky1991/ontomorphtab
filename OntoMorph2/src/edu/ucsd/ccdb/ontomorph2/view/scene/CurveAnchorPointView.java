@@ -13,8 +13,8 @@ import com.jme.scene.Geometry;
 import com.jme.scene.shape.Sphere;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 
 /**

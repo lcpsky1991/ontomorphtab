@@ -22,9 +22,11 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
@@ -635,7 +637,6 @@ public class View3DMouseHandler extends MouseInputAction {
 	{
 		manipulation = m;
 		Log.warn("Manipulation method set to: " + m);
-		
 	}
 	
 }

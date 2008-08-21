@@ -1,4 +1,7 @@
-package edu.ucsd.ccdb.ontomorph2.core.spatial;
+package edu.ucsd.ccdb.ontomorph2.util;
+
+import org.morphml.metadata.schema.Point;
+import org.morphml.metadata.schema.impl.PointImpl;
 
 import com.jme.math.Vector3f;
 
@@ -23,4 +26,12 @@ public class OMTVector extends Vector3f {
 		this(v.x, v.y, v.z);
 	}
 
+	public Point asPoint() {
+		Point p = new PointImpl();
+		p.setX(this.x);
+		p.setY(this.y);
+		p.setZ(this.z);
+		return p;
+	}
+	
 }

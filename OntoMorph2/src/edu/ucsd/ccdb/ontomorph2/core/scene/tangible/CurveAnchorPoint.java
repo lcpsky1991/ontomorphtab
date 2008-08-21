@@ -3,8 +3,8 @@
  */
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
  * Represents a single point in a Bezier curve.  When it gets repositioned,

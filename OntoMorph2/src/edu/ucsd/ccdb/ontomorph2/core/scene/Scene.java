@@ -3,6 +3,7 @@ package edu.ucsd.ccdb.ontomorph2.core.scene;
 import java.awt.Color;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Observable;
@@ -15,6 +16,7 @@ import com.jme.scene.shape.Box;
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CCDBSlide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
@@ -22,13 +24,14 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.URISlide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
  * Defines the totality of the objects that can be viewed in the 3D world
@@ -72,10 +75,10 @@ public class Scene extends Observable{
 	URL astroObjURL = null;
 	URL plasmaObjURL = null;
 	URL hippo1URL = null;
-	URL hippo2URL = null;
-	URL hippo3aURL = null;
-	URL hippo3bURL = null;
-	URL hippo3cURL = null;
+	URI hippo2URL = null;
+	URI hippo3aURL = null;
+	URI hippo3bURL = null;
+	URI hippo3cURL = null;
 	
 	public Scene() {
 		manager = TangibleManager.getInstance();
@@ -94,10 +97,10 @@ public class Scene extends Observable{
 			plasmaObjURL = new File(objDir + "plasma membrane.obj").toURI().toURL();
 			
 			hippo1URL = new File(imgDir + "hippo_slice1.jpg").toURI().toURL();
-			hippo2URL = new File(imgDir + "hippo_slice2.jpg").toURI().toURL();
-			hippo3aURL = new File(imgDir + "hippo_slice3a.jpg").toURI().toURL();
-			hippo3bURL = new File(imgDir + "hippo_slice3b.jpg").toURI().toURL();
-			hippo3cURL = new File(imgDir + "hippo_slice3c.jpg").toURI().toURL();
+			hippo2URL = new File(imgDir + "hippo_slice2.jpg").toURI();
+			hippo3aURL = new File(imgDir + "hippo_slice3a.jpg").toURI();
+			hippo3bURL = new File(imgDir + "hippo_slice3b.jpg").toURI();
+			hippo3cURL = new File(imgDir + "hippo_slice3c.jpg").toURI();
 			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -144,25 +147,53 @@ public class Scene extends Observable{
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
 
 		CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(35);
-				
-        addSceneObject(new Slide(hippoImage, new PositionVector(-60,-100,22), 
-				new RotationVector(d.getRotationFromAbsolute()), 170, 0.87f));
 		
-		addSceneObject(new Slide(hippo2URL, new PositionVector(-55,-30, 22), 
-				new RotationVector(d.getRotationFromAbsolute()), 62, 1.34f));
-		addSceneObject(new Slide(hippo3aURL, new PositionVector(-45,-13,21.4f), 
-				new RotationVector(d.getRotationFromAbsolute()), 15, 1.33f));
-		addSceneObject(new Slide(hippo3bURL, new PositionVector(-24,-9,21.5f), 
-				new RotationVector(d.getRotationFromAbsolute()), 15,1.31f));
-		addSceneObject(new Slide(hippo3cURL, new PositionVector(-5,-8.5f,21.3f), 
-				new RotationVector(d.getRotationFromAbsolute()), 15,1.33f));
+		Slide a = new CCDBSlide(hippoImage, 0.87f);
+		a.setRelativePosition(new PositionVector(25,-32,17f));
+		a.setCoordinateSystem(d);
+		//a.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
+		a.setRelativeScale(10);
+		addSceneObject(a);
+		
+        Slide b = new URISlide(hippo2URL, 1.34f);
+        b.setRelativePosition(new PositionVector(-14,0, 18f));
+        b.setCoordinateSystem(d);
+        //b.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
+        b.setRelativeScale(3.2f);
+		addSceneObject(b);
+		
+		Slide c = new URISlide(hippo3aURL, 1.33f);
+		c.setRelativePosition(new PositionVector(-34,-5,19f));
+		c.setCoordinateSystem(d);
+		//c.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
+		c.setRelativeScale(0.75f);
+		addSceneObject(c);
+		
+		Slide ds = new URISlide(hippo3bURL, 1.31f);
+		ds.setRelativePosition(new PositionVector(-15f,-1.5f,19.1f));
+		ds.setCoordinateSystem(d);
+		//ds.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
+		ds.setRelativeScale(0.75f);
+		addSceneObject(ds);
+		
+		Slide e = new URISlide(hippo3cURL, 1.33f);
+		e.setRelativePosition(new PositionVector(4,-1f,19.2f));
+		e.setCoordinateSystem(d);
+		//e.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
+		e.setRelativeScale(0.75f);
+		addSceneObject(e);
 
 
 		CcdbMicroscopyData cerebImage = CCDBRepository.getInstance().getCCDBData(53);
 				
 		RotationVector rot = new RotationVector(
 						new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-20,OMTVector.UNIT_Z));
-		addSceneObject(new Slide(cerebImage, new PositionVector(610,110,100), rot, 110, 1.11f));
+		
+		Slide f = new CCDBSlide(cerebImage, 1.11f);
+		f.setRelativePosition(new PositionVector(440,-118,-250));
+		f.setRelativeRotation(rot);
+		f.setRelativeScale(4.5F); 
+		addSceneObject(f);
 		
 		
 		Volume v1 = new Volume(new Box("my box", new OMTVector(-21,-1,15), 20f, 10f, 20f), d);

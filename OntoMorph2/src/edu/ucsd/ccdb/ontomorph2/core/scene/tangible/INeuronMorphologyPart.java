@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
  * An interface that refers to a part of a neuron morphology

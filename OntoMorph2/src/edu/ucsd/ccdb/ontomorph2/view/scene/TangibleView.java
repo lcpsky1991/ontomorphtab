@@ -11,8 +11,8 @@ import com.jme.scene.batch.GeomBatch;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
@@ -101,8 +101,8 @@ public abstract class TangibleView extends Node {
 		
 		//FIXME: setlocals may need to be changed to setWorld
 	   
-		setLocalTranslation(this.getModel().getAbsolutePosition());
 		setLocalScale(this.getModel().getAbsoluteScale());
+		setLocalTranslation(this.getModel().getAbsolutePosition());
 		setLocalRotation(this.getModel().getAbsoluteRotation());
 			
 	}

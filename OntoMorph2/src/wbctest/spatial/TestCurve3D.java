@@ -9,8 +9,8 @@ import com.jme.curve.Curve;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import junit.framework.TestCase;
 
 public class TestCurve3D extends TestCase {

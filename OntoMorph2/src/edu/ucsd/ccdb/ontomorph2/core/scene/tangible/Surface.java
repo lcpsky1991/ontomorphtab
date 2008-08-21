@@ -3,7 +3,7 @@ package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 import com.jme.scene.BezierMesh;
 import com.jme.scene.BezierPatch;
 
-import edu.ucsd.ccdb.ontomorph2.core.spatial.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
  * Defines a Bezier Surface.

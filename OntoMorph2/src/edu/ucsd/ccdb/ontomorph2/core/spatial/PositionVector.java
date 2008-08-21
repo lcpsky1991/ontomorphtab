@@ -2,6 +2,8 @@ package edu.ucsd.ccdb.ontomorph2.core.spatial;
 
 import com.jme.math.Vector3f;
 
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
+
 
 /**
  * A 3D vector that defines the position of something.
