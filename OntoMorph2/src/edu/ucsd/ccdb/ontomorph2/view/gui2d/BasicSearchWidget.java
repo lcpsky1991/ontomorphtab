@@ -56,14 +56,10 @@ public class BasicSearchWidget extends Widget{
 		displayY = d.getDisplayY();
 		input = new FengJMEInputHandler(d);
 		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
-		Window window = new Window(true, false, false, true);
-		//d.addWidget(window);
-		window.setSize(200, 300);
-        window.getContentContainer().setLayoutManager(new BorderLayout());
-		window.setTitle("Search");      
+		CustomWidget window = new CustomWidget(new Point(0,100),new Point(200,300), "Search");
 		
 		//window.addMouseExitedListener(FocusManager.focusManager);
-        TextEditor textArea = FengGUI.createTextArea(window.getContentContainer());
+        TextEditor textArea = FengGUI.createTextArea(window.getContainer());
         textArea.setText("Enter Keyword");
         textArea.setSize(100, 20);
         
@@ -85,8 +81,7 @@ public class BasicSearchWidget extends Widget{
 
         button.addMouseEnteredListener(FocusManager.focusManager);
         button.addMouseExitedListener(FocusManager.focusManager);
-        window.getContentContainer().addWidget( button );
-		window.setPosition(new Point(0,100));
+        window.getContainer().addWidget( button );
         textArea.setPosition(new Point(30,220));
         d.layout();
 

@@ -267,11 +267,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         System.out.println("distance " + distance);
         Log.warn("current camera position" + points[0]);
         CatmullRomCurve curve = new CatmullRomCurve("Curve", points);
-        /*ColorRGBA[] colors = new ColorRGBA[2];
-        colors[0] = new ColorRGBA(0, 1, 0, 1);
-        colors[1] = new ColorRGBA(0, 0, 1, 1);
-        curve.setColorBuffer(0, BufferUtils.createFloatBuffer(colors));*/
-
+        
         Vector3f up = new Vector3f(0.0f,0.1f,0.0f).normalize();
         CurveOnceController cc = new CurveOnceController(curve, this, objectPosition);
         Log.warn("up" + up);
