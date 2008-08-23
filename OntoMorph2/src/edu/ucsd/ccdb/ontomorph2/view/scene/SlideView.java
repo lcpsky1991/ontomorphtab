@@ -90,7 +90,7 @@ public class SlideView extends TangibleView {
 		
 			
 		//this.setCullMode(SceneElement.CULL_INHERIT);
-		//this.setRenderQueueMode(Renderer.QUEUE_INHERIT);
+		this.setRenderQueueMode(Renderer.QUEUE_INHERIT);
 		
 		if (_slide.isVisible()) {
 			this.attachChild(quad);
