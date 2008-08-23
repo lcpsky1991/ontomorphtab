@@ -66,7 +66,6 @@ public class View extends BaseSimpleGame {
 	
 	private static View instance = null;
 	private Scene _scene = null;
-    FocusManager focusManager = new FocusManager();
 
 //	The trimesh that i will change
 	//TriMesh square;
@@ -143,12 +142,7 @@ public class View extends BaseSimpleGame {
 	protected void simpleInitGame() {
 		//as a hack, calling the main application class to do initialization
 		//this is because model loading needs to have the view running in order to work
-		
-        FocusManager focusManager = new FocusManager();
-        if(focusManager.guiInFocus == false)
-        {
-        	System.out.println("Inside the Gui");
-        }        
+		  
 		OntoMorph2.initialization();
 		display.getRenderer().setBackgroundColor(ColorRGBA.black); //Set a black background.
 		display.setTitle("Whole Brain Catalog");
@@ -383,7 +377,7 @@ public class View extends BaseSimpleGame {
      {
              //Cylinder(java.lang.String name, int axisSamples, int radialSamples, float radius, float height, boolean closed)
              
-              Sphere s=new Sphere("My sphere",10,10,10f); //last number is radius
+              Sphere s=new Sphere("My sphere",10,10,2f); //last number is radius
               s.setModelBound(new BoundingSphere());
               s.updateModelBound();
               s.setRandomColors();
@@ -439,7 +433,7 @@ public class View extends BaseSimpleGame {
 	    wand.updateRenderState();
 	    
     	rootNode.attachChild(debugRay);
-    	//rootNode.attachChild(wand);
+    	rootNode.attachChild(wand);
     	
      }
      
@@ -465,12 +459,8 @@ public class View extends BaseSimpleGame {
 		//the coordsDown and coordsUp code used to go here. It's gone now.
 		//handle mouse input has been moved to listener so there is no 'repeatables'
 		//this is more efficient as well, saves processing time
-		//handleKeyInput();	//should be mvoed to some other handler
-        if(FocusManager.focusManager.guiInFocus==false){
-        	handleKeyInput();
-        }
-
-    }
+		handleKeyInput();	//should be mvoed to some other handler
+	}
 	
 	/** 
 	 * isAction(String command)

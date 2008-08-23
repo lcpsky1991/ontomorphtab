@@ -19,6 +19,9 @@ import org.fenggui.util.Color; //conflict with other import
 import org.fenggui.util.Point;
 
 import com.jme.input.KeyInput;
+import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
+import com.jme.math.Vector3f;
 import com.sun.tools.ws.processor.modeler.wsdl.PseudoSchemaBuilder;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
@@ -30,6 +33,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.misc.FengJME;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -64,6 +68,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_NEW_ANCHOR = 106;
 	public static final int CTX_ACTION_SELECT = 107;
 	public static final int CTX_ACTION_MODE = 108;
+	public static final int CTX_ACTION_ANIMATE = 109;
 	public static final int CTX_ACTION_NONE = 0;
 	
 	
@@ -308,11 +313,11 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	 * @author caprea
 	 * @param title
 	 * @param action the action to perform on the Tangible, which is paramaterized by tangChange 
-	 * @param tangChange the {@link Tangible} within the world to perform action upon
+	 * @param effectedTangibles the {@link Tangible} within the world to perform action upon
 	 * @param parent If null, will create a new parent menu
 	 * @see View3DMouseHandler 
 	 */
-	private void menuItemFactory(Menu mparent, String title, int action, Tangible tangChange)
+	private void menuItemFactory(Menu mparent, String title, int action, Tangible effectedTangibles)
 	{
 		try
 		{
@@ -330,7 +335,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				mitem = new MenuItem(title);
 				mitem.addMenuItemPressedListener(this);
 				mparent.addItem(mitem); 
-				mitem.addUserData(mFIELD_REFERENCE, tangChange); 	//tie a Tangible to the menu button
+				mitem.addUserData(mFIELD_REFERENCE, effectedTangibles); 	//tie a Tangible to the menu button
 				mitem.addUserData(mFIELD_ACTION, action);			//tie an associated action to the menu button
 			}
 		}
@@ -345,13 +350,14 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		String opt = arg0.getItem().getText();
 		MenuItem trigger = arg0.getItem();
 		
+		
 		//====== SETUP ==============
 		//get all of the fields form the MenuItem
 		int fieldAct = (Integer)trigger.getUserData(mFIELD_ACTION); //find out what action we should do on the tangible
 		Tangible fieldOrig = (Tangible)trigger.getUserData(mFIELD_REFERENCE);
 		
 		//===========================
-		//SINGLE - ACTION CODE (this code does not iterate over all, only concerned with reference object)
+		//SINGLE - ACTION CODE (this code does not iterate over all, only concerned with menu-referenced object)
 		if (CTX_ACTION_SELECT == fieldAct)
 		{
 				if (fieldOrig != null) fieldOrig.select();
@@ -361,32 +367,15 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				if (fieldOrig != null) fieldOrig.unselect();
 		}
 		else
-		{
-//		===========================
-		//MULTIPLE - ACTION CODE
-//		most things wont care about the 'reference' object so we concern ourselves with whats currently selected
-			List<Tangible> selected = TangibleManager.getInstance().getSelected();
-			for (int t = 0; t < selected.size(); t++)
-			{
-				Tangible single = selected.get(t);
-				switch (fieldAct)
-				{
-					case CTX_ACTION_DISPROP:
-						System.out.println("show properties for: " + single);
-						break;
-					case CTX_ACTION_MODE:
-					{
-						Curve3D ec = null;
-						//get the curve that corresponds to the originating curve
-						if ( single instanceof Curve3D) ec = (Curve3D) single;
-						
-						if ( ec != null) ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
-						break;
-					}
-				}
-			}
+		{//MULTIPLE - ACTION CODE
+			doActionOnSelected(fieldAct); //most things wont care about the 'reference' object so we concern ourselves with whats currently selected
 		}
 
+		this.closeBackward();
+		
+	}
+	
+	
 		//===========================
 		//OLD ACTION CODE
 		/*
@@ -424,8 +413,46 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			}	
 		}*/
 		
-		
-		this.closeBackward();
+	
+	
+	public void doActionOnSelected(int action)
+	{
+		List<Tangible> selected = TangibleManager.getInstance().getSelected();
+		for (int t = 0; t < selected.size(); t++)
+		{
+			Tangible single = selected.get(t);
+			switch (action)
+			{
+				case CTX_ACTION_DISPROP:
+					System.out.println("show properties for: " + single);
+					break;
+				case CTX_ACTION_ANNOTATE:
+					System.out.println("annotate: " + single);
+					break;
+				case CTX_ACTION_ANIMATE:
+					System.out.println("animate: " + single);
+					break;
+				case CTX_ACTION_NEW_CURVE:
+					createCurve(single);
+					break;
+				case CTX_ACTION_NEW_ANCHOR:
+					createPoint(single);
+				case CTX_ACTION_MODE:
+				{
+					Curve3D ec = null;
+					//get the curve that corresponds to the originating curve
+					if ( single instanceof Curve3D) ec = (Curve3D) single;
+					
+					if ( ec != null) ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
+					break;
+				}
+				default:
+				{
+					System.out.println("menu pressed but not handled " + single);
+					break;	
+				}
+			}
+		}
 	}
 	
 	public void createPoint(Tangible src)
@@ -448,22 +475,74 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		cp.getParentCurve().addControlPoint(i, place);
 	}
 	
-	//TODO: MOVE this function and replace its signature with something appropriate
+	/**
+	 * This function intends to create a curve in the view based on some originating Tangible.
+	 * If the originating Tangible has a CoordinateSystem then the curve is supposed to be created in parallel to that Coords
+	 * If the originating Tangible has no CoordinateSystem then the curve will be parallel to the camera's plane and will also adop that plane to be its coordinatesystem
+	 * Regarding movement for movement of the newly created curve it will inherit movement based on global, or on the CoordinateSystem
+	 * 
+	 * @param src
+	 */
 	public void createCurve(Tangible src)
 	{
-		OMTVector a = null;
-		OMTVector b = null;
-		OMTVector c = null;
+		//TODO: rewrite this!
+		OMTVector cent = new OMTVector(src.getRelativePosition());
+		OMTVector up = null;
+		OMTVector left = null;
+		OMTVector posa = null;
+		OMTVector posb = null;
+		OMTVector towardcam = null;
+		float offset = 5f;	//the ammount of offset the new points from the originator
 		
-		b = new OMTVector(src.getRelativePosition().add(3f,3f,0f));
-		c = new OMTVector(src.getRelativePosition().add(10f,10f,0f));
-		a = new OMTVector(src.getRelativePosition().add(-5f,-5f,0f));
+		System.out.println("src " + src.getAbsolutePosition() + src.getRelativePosition());
+		//cent is the originating point, in some coordinate system
+		//create two side points not in that coordinate system
 		
-		OMTVector[] pts = {a, b, c};
-		Curve3D cap = new Curve3D("capreas new deal", pts, dcoords);
+		
+		//if there is a coordinate system, apply this curve to that coordinate system
+		//if no coordinate system make it aligned with the camera
+		CoordinateSystem system = src.getCoordinateSystem();
+		if (system != null)
+		{
+			//cent.subtractLocal(system.getOriginVector());
+			towardcam = new OMTVector(OMTVector.UNIT_Z);
+			up = new OMTVector(OMTVector.UNIT_Y);
+			left = new OMTVector(OMTVector.UNIT_X);
+		}
+		else
+		{
+			//find the coordinate system of the camera on which to draw the curve parallel to, to do this we need three vectors
+			towardcam = new OMTVector(View.getInstance().getCamera().getCamera().getDirection().normalize().negate().mult(5f)); 
+			left = new OMTVector(View.getInstance().getCamera().getCamera().getLeft()); //too keep units consistent multiply by -1 so positive is 'right' (a droite)
+			up = new OMTVector(View.getInstance().getCamera().getCamera().getUp());
+			
+			Vector3f combined = towardcam.normalize().add(left.normalize().add(up).normalize());
+			//adopt the plane of the camera to be the coordinate system
+			//TODO: apply coordinate system
+			
+		}
+		
+		//make two side points that are +/-X and +/-Y
+		posa = new OMTVector(left.add(up).mult(offset));
+		posb = new OMTVector(left.mult(-offset).add(up.mult(offset)));
+		
+		//align the side points to be near the center point
+		posa.addLocal(cent);	
+		posb.addLocal(cent);
+		
+		//adjust the curve so it appears ever-slightly in front of the background objects
+		cent.addLocal(towardcam); 
+		posa.addLocal(towardcam);
+		posb.addLocal(towardcam);
+
+		//System.out.println("sys " + system);
+		//System.out.println("new curve @ " + posa + cent + posb);
+		
+		OMTVector[] pts = {posa, cent, posb};
+		Curve3D cap = new Curve3D("capreas new deal", pts, system);	//FIXME: need to set demo coordinates on new curves
 		cap.setColor(java.awt.Color.orange);
 		cap.setVisible(true);
-		cap.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.01f);		
+		cap.setModelBinormalWithUpVector(towardcam, 0.01f);		
 		
 		//redraw the scene, but not the whole scene, let observer know the curves have changed
 		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);

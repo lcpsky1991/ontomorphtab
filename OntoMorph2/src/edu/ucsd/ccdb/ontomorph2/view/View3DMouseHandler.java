@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
+import com.jme.bounding.BoundingVolume;
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
 import com.jme.input.action.InputActionEvent;
@@ -15,6 +16,8 @@ import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Geometry;
+import com.jme.scene.Line;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.shape.Sphere;
 
@@ -24,8 +27,8 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 
-import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
@@ -52,7 +55,6 @@ public class View3DMouseHandler extends MouseInputAction {
 	public static final int METHOD_ROTATEY = 16;
 	public static final int METHOD_ROTATEZ = 32;
 	public static final int METHOD_LOOKAT = 64;
-	public boolean guiInFocus = false;
 	
 
 	private static int manipulation = METHOD_PICK; //use accesor
@@ -63,9 +65,14 @@ public class View3DMouseHandler extends MouseInputAction {
 	long prevPressTime = 0;
 	long dblClickDelay = 600;//in milliseconds (1000 = 1 sec)
 	
+	
 	public void performAction( InputActionEvent evt ) 
     {
     	//by putting mouse handler here, the calls are not every frame and do not 'repeat'
+		
+		//example code for jesus
+		//if FocusManager.getInstance().isWidgetActive() return;
+		
     	if (evt.getTriggerPressed()) //
     	{
     		//+++++ BUTTON PRESSED  ++++++
@@ -168,7 +175,7 @@ public class View3DMouseHandler extends MouseInputAction {
 	 */ 
 	private void onMousePress(int buttonIndex)
 	{
-		if(guiInFocus == false){
+		{
 			//	RIGHT CLICK
 			if (1 == buttonIndex) //right
 			{	
@@ -205,7 +212,8 @@ public class View3DMouseHandler extends MouseInputAction {
 	{
 		if (0 == buttonIndex) //left 
 		{
-			
+			PickResults pr = getPickResults();
+			//findCenter(pr.getPickData(0).getTargetMesh());
 		}
 		 
 		Log.warn("Double click (" + buttonIndex + ") @ " + System.currentTimeMillis());
@@ -213,7 +221,7 @@ public class View3DMouseHandler extends MouseInputAction {
 	
 	/**
 	 * for debugging, remove this function
-	 * ca: still working on it as of 08/20/08
+	 * ca: still working on it as of 08/22/08
 	 *
 	 */
 	private OMTVector findCenter(GeomBatch queryMesh)
@@ -230,6 +238,23 @@ public class View3DMouseHandler extends MouseInputAction {
 		
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
 		
+		
+		//print normals buffer
+		Geometry mother = queryMesh.getParentGeom();
+		FloatBuffer fbNorms = mother.getBinormalBuffer(0);
+
+		Tangible src = TangibleManager.getInstance().getSelectedRecent();
+		
+		OMTVector poscent = new OMTVector(queryMesh.getModelBound().getCenter());
+		
+		OMTVector left =  new OMTVector(View.getInstance().getCamera().getCamera().getLeft());
+		OMTVector up =  new OMTVector(View.getInstance().getCamera().getCamera().getUp());	//must also offset a point by second dimension such that it makes a plane
+		OMTVector dir = new OMTVector(View.getInstance().getCamera().getCamera().getDirection());
+		
+		OMTVector posa = new OMTVector(left.add(up).mult(-6f));
+		OMTVector posb = new OMTVector(left.mult(-5f));
+		
+		
 		OMTVector average = null;
 		count = 0;
 		for (int i=0; i < ovs.size(); i++)
@@ -239,23 +264,15 @@ public class View3DMouseHandler extends MouseInputAction {
 			sy += v.getY();
 			sz += v.getZ();
 			
-			System.out.println("batch pnt:" + v);
 			Sphere s = View.getInstance().createSphere(v);
 			if ( i == 1 ) 
 			{
+				//you must apply the coords then translate
 				d.applyToSpatial(s);
 				s.setLocalTranslation(v);
 				s.setSolidColor(ColorRGBA.red);
-				
 			}
-			else if ( i == 2)
-			{
-				s.setLocalTranslation(v);
-				d.applyToSpatial(s);
-				s.setSolidColor(ColorRGBA.blue);
-				
-			}
-			
+			View.getInstance().createDebugRay(posa, posb);
 			
 			System.out.println(v + " A " + s.getLocalTranslation() + " B " + s.getWorldTranslation() + " C " + s.getCenter());
 			count++;		//incriment number of vertexs
@@ -283,6 +300,7 @@ public class View3DMouseHandler extends MouseInputAction {
 //		note: GeomMesh.gettris() is useless (ca)
 		FloatBuffer fbVerts = jmeMesh.getVertexBuffer();
 		ArrayList<OMTVector> omtPoints = new ArrayList<OMTVector>();
+		DemoCoordinateSystem dcoords = new DemoCoordinateSystem();
 		
 		//Early exit for erroneous calls to this function
 		if (jmeMesh == null) return null;
@@ -294,6 +312,7 @@ public class View3DMouseHandler extends MouseInputAction {
 			{
 				//take three elements from the buffer to make a 3D vector
 				OMTVector n = new OMTVector(fbVerts.get(3*i), fbVerts.get(3*i+1), fbVerts.get(3*i+2));
+				n.addLocal(dcoords.getOriginVector());
 				omtPoints.add(n);
 			}
 		}
@@ -312,19 +331,6 @@ public class View3DMouseHandler extends MouseInputAction {
 	 */
 	private void onMouseMove()
 	{	
-		//flag set to true for case in which mouse is on top of GUI, used to deactivate Mouse Controls at that point
-		if(FocusManager.focusManager.guiInFocus == true)
-		{
-			guiInFocus = true;
-		}
-		else{
-			guiInFocus = false;
-			//Special case for MenuBar location, assuming it's location will keep static 
-			if(MouseInput.get().getYAbsolute()>= 460){
-				guiInFocus = true;
-			}
-				
-		}
 		/*
 		 * ca: I can't think of anything that would be appropriate here, except a poem
 		 * 
@@ -345,7 +351,7 @@ public class View3DMouseHandler extends MouseInputAction {
 		//====================================
     	//	WHEEL
     	//====================================
-		if(guiInFocus ==false){
+		{
 			float dx=MouseInput.get().getWheelDelta() / (View.getInstance().getKeyPressActionRate() * 20); //scale it by some factor so it's less jumpy
 			if (dx != 0)	
 			{

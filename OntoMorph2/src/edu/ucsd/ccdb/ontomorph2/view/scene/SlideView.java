@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Geometry;
+import com.jme.scene.SceneElement;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -17,6 +19,7 @@ import com.jme.util.TextureManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.TiledSlide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.URISlide;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
  * Defines a slide, which is a plane in space that has the image of a slice of brain on it.
@@ -85,8 +88,9 @@ public class SlideView extends TangibleView {
 		quad.updateModelBound();
 		quad.updateGeometricState(0.5f, false);
 		
+			
 		//this.setCullMode(SceneElement.CULL_INHERIT);
-		this.setRenderQueueMode(Renderer.QUEUE_INHERIT);
+		//this.setRenderQueueMode(Renderer.QUEUE_INHERIT);
 		
 		if (_slide.isVisible()) {
 			this.attachChild(quad);
@@ -102,6 +106,7 @@ public class SlideView extends TangibleView {
 		
 		this.update();
 	}
+	
 	
 	public void setDisplay(DisplaySystem disp) {
 		this.display = disp;

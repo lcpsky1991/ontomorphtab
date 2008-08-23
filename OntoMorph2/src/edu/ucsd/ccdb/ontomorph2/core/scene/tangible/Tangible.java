@@ -390,8 +390,19 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		return super.hashCode() + theSpatial.hashCode();
 	}
 	
-	public String getName() {
-		return this.name;
+	public String getName() 
+	{
+		String strName = "";
+		
+		if (this.name == null)
+		{
+			strName = "(" + this.getClass().getSimpleName() + ")";
+		}
+		else
+		{	
+			strName = this.name;
+		}
+		return strName;
 	}
 	
 	public void setName(String name) {
