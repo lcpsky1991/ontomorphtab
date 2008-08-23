@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Geometry;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
@@ -85,7 +86,7 @@ public class SlideView extends TangibleView {
 		quad.updateGeometricState(0.5f, false);
 		
 		//this.setCullMode(SceneElement.CULL_INHERIT);
-		//this.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
+		this.setRenderQueueMode(Renderer.QUEUE_INHERIT);
 		
 		if (_slide.isVisible()) {
 			this.attachChild(quad);
