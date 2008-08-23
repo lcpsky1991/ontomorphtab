@@ -1,7 +1,12 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
+import com.jme.scene.Geometry;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -57,7 +62,6 @@ public class SlideView extends TangibleView {
 	}
 	
 
-
 	private void init() {
 		quad.initialize(20f*_slide.getRatio(),20f);
 		
@@ -80,11 +84,20 @@ public class SlideView extends TangibleView {
 		quad.updateModelBound();
 		quad.updateGeometricState(0.5f, false);
 		
+		//this.setCullMode(SceneElement.CULL_INHERIT);
+		//this.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
+		
 		if (_slide.isVisible()) {
 			this.attachChild(quad);
 		}
 		
 		this.updateRenderState();
+		
+//		update the geometries registry, this is neccessary to enable picking, which is based on geomtry key maps
+		List<Geometry> ll = new ArrayList<Geometry>();
+		ll.add(quad);
+		this.registerGeometries(ll);	
+		
 		
 		this.update();
 	}
