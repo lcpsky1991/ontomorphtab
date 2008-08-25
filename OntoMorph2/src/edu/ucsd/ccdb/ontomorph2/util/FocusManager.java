@@ -6,16 +6,28 @@ import org.fenggui.event.mouse.IMouseEnteredListener;
 import org.fenggui.event.mouse.MouseEnteredEvent;
 import org.fenggui.event.mouse.MouseExitedEvent;
 
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
+
 public class FocusManager extends Widget implements IMouseEnteredListener, IMouseExitedListener {
 
-	public static FocusManager focusManager;
-	public static MouseEnteredEvent mouseEntered;
-	public static MouseExitedEvent mouseExited;
+	private static FocusManager instance;
+	private static MouseEnteredEvent mouseEntered;
+	private static MouseExitedEvent mouseExited;
 	
-	public boolean guiInFocus = false;
-	public FocusManager() {
-		focusManager = this;
+	private boolean guiInFocus = false;
+	public FocusManager() 
+	{
+		instance = this;	
 	}	
+	
+	public static FocusManager get()
+	{
+		if (instance == null)
+		{
+			instance = new FocusManager();
+		}
+		return instance;
+	}
 	
 	public void mouseEntered(MouseEnteredEvent mouseEnteredEvent) 
 	{
@@ -25,5 +37,10 @@ public class FocusManager extends Widget implements IMouseEnteredListener, IMous
 	public void mouseExited(MouseExitedEvent mouseExitedEvent) 
 	{
 		this.guiInFocus = false;
+	}
+	
+	public boolean isWidgetFocused()
+	{
+		return guiInFocus;
 	}
 }

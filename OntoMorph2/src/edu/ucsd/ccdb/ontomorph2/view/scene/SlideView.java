@@ -13,6 +13,7 @@ import com.jme.scene.SceneElement;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 
@@ -20,6 +21,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.TiledSlide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.URISlide;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
  * Defines a slide, which is a plane in space that has the image of a slice of brain on it.
@@ -76,6 +78,7 @@ public class SlideView extends TangibleView {
 		//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		quad.setLightCombineMode(LightState.OFF);
 		
+		
 		/*
 		ZBufferState zb = View.getInstance().getRenderer().createZBufferState();
 		zb.setWritable(true);
@@ -83,6 +86,7 @@ public class SlideView extends TangibleView {
 		zb.setEnabled(true);
 		quad.setRenderState(zb);
 		*/
+		
 	
 		quad.setModelBound(new BoundingBox());
 		quad.updateModelBound();
@@ -90,7 +94,7 @@ public class SlideView extends TangibleView {
 		
 			
 		//this.setCullMode(SceneElement.CULL_INHERIT);
-		this.setRenderQueueMode(Renderer.QUEUE_INHERIT);
+		//this.setRenderQueueMode(Renderer.QUEUE_INHERIT);
 		
 		if (_slide.isVisible()) {
 			this.attachChild(quad);

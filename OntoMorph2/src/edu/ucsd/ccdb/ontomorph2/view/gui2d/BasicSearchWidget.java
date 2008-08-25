@@ -63,8 +63,8 @@ public class BasicSearchWidget extends Widget{
         textArea.setText("Enter Keyword");
         textArea.setSize(100, 20);
         
-        textArea.addMouseEnteredListener(FocusManager.focusManager);
-        textArea.addMouseExitedListener(FocusManager.focusManager);
+        textArea.addMouseEnteredListener(FocusManager.get());
+        textArea.addMouseExitedListener(FocusManager.get());
         //System.out.println("writing state " + textArea.isInWritingState());
         
         Button button = new Button( "Start Search" );
@@ -79,8 +79,8 @@ public class BasicSearchWidget extends Widget{
             }
         } );
 
-        button.addMouseEnteredListener(FocusManager.focusManager);
-        button.addMouseExitedListener(FocusManager.focusManager);
+        button.addMouseEnteredListener(FocusManager.get());
+        button.addMouseExitedListener(FocusManager.get());
         window.getContainer().addWidget( button );
         textArea.setPosition(new Point(30,220));
         d.layout();

@@ -29,6 +29,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 
+import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
@@ -55,6 +56,8 @@ public class View3DMouseHandler extends MouseInputAction {
 	public static final int METHOD_ROTATEY = 16;
 	public static final int METHOD_ROTATEZ = 32;
 	public static final int METHOD_LOOKAT = 64;
+	public static final int METHOD_MOVE_FREE = 100;	//not constrained by the coordinate system
+	
 	
 
 	private static int manipulation = METHOD_PICK; //use accesor
@@ -68,10 +71,14 @@ public class View3DMouseHandler extends MouseInputAction {
 	
 	public void performAction( InputActionEvent evt ) 
     {
-    	//by putting mouse handler here, the calls are not every frame and do not 'repeat'
-		
 		//example code for jesus
 		//if FocusManager.getInstance().isWidgetActive() return;
+		if (FocusManager.get().isWidgetFocused())
+		{
+			System.out.println("trapped mouse event");
+			return;
+		}
+		
 		
     	if (evt.getTriggerPressed()) //
     	{
