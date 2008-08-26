@@ -368,6 +368,7 @@ public class Curve3D extends Tangible{
 			anchors.get(i).unselect();
 		}
 		
+		setAnchorPointsVisibility(false);
 	}
 
 }

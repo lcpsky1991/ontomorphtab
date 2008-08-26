@@ -71,8 +71,8 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		mB.getAppearance().setSelectionTextColor(Color.YELLOW);
 		//mB.getAppearance().add(new PlainBorder(Color.WHITE_HALF_OPAQUE));
         mB.setVisible(true);
-        //mB.addMouseEnteredListener(FocusManager.focusManager);
-        //mB.addMouseExitedListener(FocusManager.focusManager);
+        //mB.addMouseEnteredListener(FocusManager.get());
+        //mB.addMouseExitedListener(FocusManager.get());
         
         //=[  FILE  ]=
         Menu mnuFile = new Menu();

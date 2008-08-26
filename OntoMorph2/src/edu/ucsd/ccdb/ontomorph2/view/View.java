@@ -210,7 +210,7 @@ public class View extends BaseSimpleGame {
 		
 		//(InputActionInterface action, java.lang.String deviceName, int button, int axis, boolean allowRepeats)
     	this.view3DMouseHandler = new View3DMouseHandler();
-        input.addAction(this.view3DMouseHandler , InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, false );
+        input.addAction(this.view3DMouseHandler , InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, true );
 
 	}
 			
@@ -221,8 +221,10 @@ public class View extends BaseSimpleGame {
 	 */
 	private void handleKeyInput() 
 	{
-		//key input handle
-		{
+		
+		//if widget NOT focused then...
+		if (!FocusManager.get().isWidgetFocused())
+		{//key input handle
 			//exit the program cleanly on ESC
 			if (isAction("quit")) finish();
 			   
@@ -384,7 +386,6 @@ public class View extends BaseSimpleGame {
               s.setLocalTranslation(p1);
               
               rootNode.attachChild(s);
-              
               return s;
      }
 
@@ -409,8 +410,6 @@ public class View extends BaseSimpleGame {
     	wand.setLocalTranslation(begin);
     	wand.lookAt(end, begin);	//points the cone in the direction such that base is on object of interest and the apex is at camera
     	wand.setRandomColors();
-    	
-	    
     	
 //    	===== make wand transparent ====
     	// Transparency does not seem to work

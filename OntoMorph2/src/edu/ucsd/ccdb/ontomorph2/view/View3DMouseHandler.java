@@ -12,6 +12,7 @@ import com.jme.input.action.MouseInputAction;
 import com.jme.intersection.PickData;
 import com.jme.intersection.PickResults;
 import com.jme.intersection.TrianglePickResults;
+import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
@@ -75,7 +76,7 @@ public class View3DMouseHandler extends MouseInputAction {
 		//if FocusManager.getInstance().isWidgetActive() return;
 		if (FocusManager.get().isWidgetFocused())
 		{
-			System.out.println("trapped mouse event");
+			//exit the regular mouse handler if a widget is focused
 			return;
 		}
 		
@@ -226,111 +227,6 @@ public class View3DMouseHandler extends MouseInputAction {
 		Log.warn("Double click (" + buttonIndex + ") @ " + System.currentTimeMillis());
 	}
 	
-	/**
-	 * for debugging, remove this function
-	 * ca: still working on it as of 08/22/08
-	 *
-	 */
-	private OMTVector findCenter(GeomBatch queryMesh)
-	{
-		//This function is just a guesstimate, for a more accurate approach rewrite this to follow 
-		//Calculating Properties of Polyhedra from Mathemetics for Comptuer Graphics (Hearn baker), pg817
-		ArrayList<OMTVector> ovs = findVertices(queryMesh);
-		
-		//variables for the sums
-		float sx = 0;
-		float sy = 0;
-		float sz = 0;
-		long count = 0;
-		
-		DemoCoordinateSystem d = new DemoCoordinateSystem();
-		
-		
-		//print normals buffer
-		Geometry mother = queryMesh.getParentGeom();
-		FloatBuffer fbNorms = mother.getBinormalBuffer(0);
-
-		Tangible src = TangibleManager.getInstance().getSelectedRecent();
-		
-		OMTVector poscent = new OMTVector(queryMesh.getModelBound().getCenter());
-		
-		OMTVector left =  new OMTVector(View.getInstance().getCamera().getCamera().getLeft());
-		OMTVector up =  new OMTVector(View.getInstance().getCamera().getCamera().getUp());	//must also offset a point by second dimension such that it makes a plane
-		OMTVector dir = new OMTVector(View.getInstance().getCamera().getCamera().getDirection());
-		
-		OMTVector posa = new OMTVector(left.add(up).mult(-6f));
-		OMTVector posb = new OMTVector(left.mult(-5f));
-		
-		
-		OMTVector average = null;
-		count = 0;
-		for (int i=0; i < ovs.size(); i++)
-		{
-			OMTVector v = ovs.get(i);
-			sx += v.getX();
-			sy += v.getY();
-			sz += v.getZ();
-			
-			Sphere s = View.getInstance().createSphere(v);
-			if ( i == 1 ) 
-			{
-				//you must apply the coords then translate
-				d.applyToSpatial(s);
-				s.setLocalTranslation(v);
-				s.setSolidColor(ColorRGBA.red);
-			}
-			View.getInstance().createDebugRay(posa, posb);
-			
-			System.out.println(v + " A " + s.getLocalTranslation() + " B " + s.getWorldTranslation() + " C " + s.getCenter());
-			count++;		//incriment number of vertexs
-		}
-		
-		//only create the vector if something useful will come of it (if center exists)
-		//avoids 1/0 as an added bonus :)
-		if (count > 0)
-		{
-			average = new OMTVector(sx/count,sy/count,sz/count);
-		}
-		
-		return average;
-	}
-	
-	
-	/**
-	 * Generates a list of OMTVectors that represent the points of the GeometryBatch's vertices
-	 * @param jmeMesh the {@link GeomBatch} which has 3Dvertices
-	 * @return an ArrayLIst of {@link OMTVector}s, or null if there was an error calculating them
-	 * @author caprea
-	 */
-	private ArrayList<OMTVector> findVertices(GeomBatch jmeMesh)
-	{
-//		note: GeomMesh.gettris() is useless (ca)
-		FloatBuffer fbVerts = jmeMesh.getVertexBuffer();
-		ArrayList<OMTVector> omtPoints = new ArrayList<OMTVector>();
-		DemoCoordinateSystem dcoords = new DemoCoordinateSystem();
-		
-		//Early exit for erroneous calls to this function
-		if (jmeMesh == null) return null;
-		
-		try
-		{
-			//Loop through the FloatBuffer vertices, taking 3 elements at a time for each new OMT Vector
-			for (int i=0; i < ((fbVerts.limit() + 1) / 3); i++)	//to get accurate size incriment by one then divide by three to get: # of vects
-			{
-				//take three elements from the buffer to make a 3D vector
-				OMTVector n = new OMTVector(fbVerts.get(3*i), fbVerts.get(3*i+1), fbVerts.get(3*i+2));
-				n.addLocal(dcoords.getOriginVector());
-				omtPoints.add(n);
-			}
-		}
-		catch(Exception e)
-		{
-			System.err.println("Error: Exception calculating vertices for JME Mesh (invalid number of vertices?)");
-			omtPoints = null;	//clear the list if there was a problem
-		}
-		
-		return omtPoints;
-	}
 	
 	/**
 	 * Exists only for possible future expansion
@@ -433,7 +329,7 @@ public class View3DMouseHandler extends MouseInputAction {
 			//special case for NeuronMorphologies because they have subcomponents
 			//TODO: should probably bring this piece of code inside NeuronMorphologyView via 
 			//some kind of action handler because this is kind of a hack
-			if (tv instanceof NeuronMorphologyView && !modifyControl) //if control down proceed to the default case selection, otherwise return the part
+			if (tv instanceof NeuronMorphologyView && modifyControl) //if control down proceed to the default case selection, otherwise return the part
 			{
 				NeuronMorphologyView nmv = (NeuronMorphologyView) tv;
 				{
@@ -567,28 +463,33 @@ public class View3DMouseHandler extends MouseInputAction {
 	
 		//CA: new movement code experiment
 		//======================================
-//		======================================
-		/*
-		float mx = 0;
-		float my = 0;
-		Vector2f mPos = new Vector2f();
-		int x = MouseInput.get().getXDelta();
-		int y = MouseInput.get().getYAbsolute();
-		double angle = 0;
-		mPos.set(x ,y );
+		//======================================
 		
+		float cx = 0;
+		float cy = 0;
+		Vector2f mPos = new Vector2f();
+		cx = MouseInput.get().getXDelta();
+		cy = MouseInput.get().getYDelta();
+		
+		double angle = 0;
+		mPos.set(cx, cy);
+		DemoCoordinateSystem dcoords = new DemoCoordinateSystem();
 		Vector3f dir = new Vector3f();
 		
-		dir = cam.getDirection();
-		Vector3f dunit = new Vector3f(1,1,1);
+		Quaternion qc = View.getInstance().getCamera().getWorldRotation();
+		
+		dir = View.getInstance().getCamera().getCamera().getDirection();
+		Vector3f wunit = new Vector3f(1,1,0);
+		Vector3f dunit = (new DemoCoordinateSystem().getOriginVector());
 		angle = dir.angleBetween(dunit);
-		DemoCoordinateSystem d = new DemoCoordinateSystem();
-		dunit = d.getOriginVector();
-		mx = (float) (x * Math.cos( angle ));
-		my = 0;  
-		System.out.println("X:" + mx + " angle: " + angle);
-		*/
-//		======================================
+		System.out.println(wunit + "" + dir.normalize() + " " + dunit.normalize() + " angle between " + angle);
+		//System.out.println(new Quaternion().from)
+		System.out.println(dcoords.getOriginRotation());
+		
+		
+		
+		
+		//======================================
 		//======================================
 		
 		float mx = MouseInput.get().getXDelta();

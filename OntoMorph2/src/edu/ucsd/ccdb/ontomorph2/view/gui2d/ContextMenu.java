@@ -36,6 +36,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.misc.FengJME;
+import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
@@ -143,6 +144,10 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	{        
 		//in anticipation of not-recreating the contextmenu, much of initialization is now in create()
 		//create menuItem objects
+		
+	
+	    this.addMouseEnteredListener(FocusManager.get());
+	    this.addMouseExitedListener(FocusManager.get());
 	}
 	
 	private void decorate()

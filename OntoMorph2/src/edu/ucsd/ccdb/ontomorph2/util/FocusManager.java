@@ -22,6 +22,13 @@ public class FocusManager extends Widget implements IMouseEnteredListener, IMous
 	
 	public static FocusManager get()
 	{
+		//Daily moment of Zen:
+		//A manager's job is to focus its subordinates,
+		//if the subordinates are focused, 
+		//then what focus has the manager?
+		//
+	
+		
 		if (instance == null)
 		{
 			instance = new FocusManager();

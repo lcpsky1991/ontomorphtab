@@ -23,5 +23,10 @@ public class DemoCoordinateSystem extends CoordinateSystem {
 		float[] origin = {300f, -113f, -180f};
 		return origin;
 	}
+	
+	public Quaternion getOriginRotation()
+	{
+		return new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-90, Vector3f.UNIT_Y);	
+	}
 
 }
