@@ -1,14 +1,5 @@
 package edu.ucsd.ccdb.ontomorph2.core.data;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import edu.ucsd.ccdb.ontomorph2.core.data.reader.CCDBFile;
-import edu.ucsd.ccdb.ontomorph2.core.data.reader.CCDBModelReader;
-import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CCDBWSClient;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.GetCCDBMicroscopyDataService;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;

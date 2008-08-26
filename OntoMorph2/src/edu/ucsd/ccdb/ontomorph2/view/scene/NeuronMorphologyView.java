@@ -1,25 +1,16 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.Serializable;
 import java.math.BigInteger;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 import java.util.logging.Logger;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.curve.CurveController;
-import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
-import com.jme.math.Ray;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -29,7 +20,6 @@ import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
-import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.geometryinstancing.GeometryBatchInstance;
 import com.jme.scene.geometryinstancing.GeometryBatchInstanceAttributes;
@@ -43,18 +33,12 @@ import com.jme.system.DisplaySystem;
 import com.jme.util.AreaUtils;
 import com.jme.util.geom.BufferUtils;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.INeuronMorphologyPart;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLCableImpl;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.INeuronMorphologyPart;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
-import edu.ucsd.ccdb.ontomorph2.util.X3DLoader;
-import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**

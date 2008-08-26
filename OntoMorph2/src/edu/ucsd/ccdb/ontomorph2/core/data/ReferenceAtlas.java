@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,7 +21,6 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.util.BitMath;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 import edu.ucsd.ccdb.ontomorph2.view.View;
-import edu.ucsd.ccdb.ontomorph2.view.View3D;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
 

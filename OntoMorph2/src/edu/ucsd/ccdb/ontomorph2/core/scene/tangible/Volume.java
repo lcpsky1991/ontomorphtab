@@ -3,21 +3,12 @@
  */
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.jme.bounding.BoundingBox;
 import com.jme.scene.Geometry;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Box;
 
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.view.View;
-import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
 /**
  * Defines a volume of space, identified by the boundaries of a box or a sphere.

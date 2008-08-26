@@ -1,18 +1,11 @@
 package edu.ucsd.ccdb.tiff;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;

@@ -2,13 +2,11 @@ package wbctest.atlas;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
 
+import junit.framework.TestCase;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.util.BitMath;
-import junit.framework.TestCase;
 
 public class TestReferenceAtlas2 extends TestCase {
 

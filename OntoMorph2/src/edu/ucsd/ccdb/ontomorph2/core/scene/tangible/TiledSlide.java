@@ -1,11 +1,8 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 
 import com.jme.image.Image;
-import com.jme.image.Texture;
-import com.jme.scene.shape.Quad;
 
 import edu.ucsd.ccdb.tiff.jviewerBufferedImage;
 

@@ -1,20 +1,13 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.awt.Color;
-import java.util.List;
 
 import com.jme.scene.BatchMesh;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 
 /**

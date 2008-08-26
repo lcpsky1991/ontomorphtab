@@ -1,43 +1,20 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
 import org.fenggui.Button;
-import org.fenggui.Container;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
-import org.fenggui.IAppearance;
-import org.fenggui.ObservableWidget;
 import org.fenggui.TextEditor;
 import org.fenggui.Widget;
-import org.fenggui.composites.TextArea;
-import org.fenggui.composites.Window;
-import org.fenggui.event.ActivationEvent;
 import org.fenggui.event.ButtonPressedEvent;
-import org.fenggui.event.IActivationListener;
 import org.fenggui.event.IButtonPressedListener;
-import org.fenggui.event.IKeyPressedListener;
-import org.fenggui.event.ITextChangedListener;
-import org.fenggui.event.KeyPressedEvent;
-import org.fenggui.event.TextChangedEvent;
-import org.fenggui.event.mouse.MouseEnteredEvent;
-import org.fenggui.event.mouse.MouseEvent;
-import org.fenggui.event.mouse.MouseExitedEvent;
-import org.fenggui.layout.BorderLayout;
-import org.fenggui.layout.BorderLayoutData;
-import org.fenggui.layout.FormLayout;
 import org.fenggui.util.Point;
-import org.fenggui.util.Spacing;
 
-import com.jme.input.Input;
 import com.jme.input.InputHandler;
-import com.jme.input.KeyBindingManager;
-import com.jme.input.MouseInput;
 import com.jme.input.action.KeyInputAction;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
-import edu.ucsd.ccdb.ontomorph2.util.Log;
-import edu.ucsd.ccdb.ontomorph2.view.View3DMouseHandler;
 
 /**
  * 2D widget that allows a user to type in keywords and issue a keyword search

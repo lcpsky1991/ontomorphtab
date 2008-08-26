@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import edu.stanford.smi.protege.model.Cls;
-import edu.stanford.smi.protege.model.Instance;
-
 public abstract class SemanticThingImpl extends Observable implements ISemanticThing {
 
 	String URI = null;

@@ -1,21 +1,13 @@
 package edu.ucsd.ccdb.ontomorph2.core.data;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Expression;
 import org.morphml.neuroml.schema.Level3Cell;
 
 
@@ -26,20 +18,19 @@ import org.morphml.neuroml.schema.Level3Cell;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class DataRepository {
+public class GlobalDataRepository {
 
-	static DataRepository repo = null;
+	static GlobalDataRepository repo = null;
 	SessionFactory sFact = null;
-	Map<String, Object> cache = new HashMap<String, Object>();
 	
-	public static DataRepository getInstance() {
+	public static GlobalDataRepository getInstance() {
 		if (repo == null) {
-			repo = new DataRepository();
+			repo = new GlobalDataRepository();
 		}
 		return repo;
 	}
 	
-	protected DataRepository() {
+	protected GlobalDataRepository() {
 		/*
 		 try {
 			Connection c = DriverManager.getConnection("jdbc:hsqldb:file:db/db", "sa", "");
@@ -51,10 +42,6 @@ public class DataRepository {
 		 sFact = configuration.buildSessionFactory();
 		 
 		 
-	}
-	
-	public boolean isFileCached(String url) {
-		return getCachedFile(url) != null;
 	}
 	
 	public void saveFileToDB(Object o){
@@ -74,28 +61,6 @@ public class DataRepository {
 		saveSession.close();	
 	}
 	
-	/*
-	public Object loadFileFromDB(String url, Class c) {
-//		 Open the session
-		final Session loadSession = sFact.openSession();
-//		 Load the object
-		if (cache.get(url) == null) {
-			return null;
-		}
-		final Object loadedObject = loadSession.get(c, cache.get(url));
-//		 Close the session
-		loadSession.close();
-		return loadedObject;
-	}*/
-	
-	public Object getCachedFile(String url) {
-		return cache.get(url);
-	}
-	
-	public void cacheFile(String url, Object o) {
-//      Cache the file
-		cache.put(url, o);
-	}
 	
 	public Object findMorphMLByName(String name) {
 //		 Open the session

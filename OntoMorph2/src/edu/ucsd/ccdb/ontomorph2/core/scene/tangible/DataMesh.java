@@ -1,9 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.net.URL;
-import java.util.List;
 
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 
 /**
@@ -23,10 +21,12 @@ public class DataMesh extends Tangible{
 	
 	public void setMaxMeshURL(URL maxFilePath) {
 		this.maxFile = maxFilePath;
+		this.changed();
 	}
 	
 	public void setObjMeshURL(URL objFilePath) {
 		objFile = objFilePath;
+		this.changed();
 	}
 	
 	public URL getMaxMeshURL() {

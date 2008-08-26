@@ -1,37 +1,16 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
-import java.util.logging.Level;
-
-import org.fenggui.Display;
-
-import com.jme.app.SimpleGame;
-import com.jme.curve.BezierCurve;
-import com.jme.curve.Curve;
-import com.jme.curve.CurveController;
-import com.jme.input.action.MouseLook;
-import com.jme.input.MouseInput;
-import com.jme.input.RelativeMouse;
+import com.jme.bounding.BoundingSphere;
+import com.jme.input.InputHandler;
 import com.jme.math.FastMath;
-import com.jme.input.*;
-import com.jme.intersection.PickResults;
-import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
-import com.jme.math.Ray;
-import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
-import com.jme.renderer.ColorRGBA;
 import com.jme.scene.CameraNode;
 import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.util.Timer;
-import com.jme.util.geom.BufferUtils;
-import com.jme.app.BaseSimpleGame;
-import com.jme.bounding.BoundingSphere;
-import com.jme.bounding.OrientedBoundingBox;
 
-import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.CurveOnceController;
 import edu.ucsd.ccdb.ontomorph2.util.Log;

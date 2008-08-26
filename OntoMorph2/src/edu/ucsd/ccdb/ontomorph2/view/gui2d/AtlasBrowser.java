@@ -1,6 +1,5 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
-import org.fenggui.Button;
 import org.fenggui.Container;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;

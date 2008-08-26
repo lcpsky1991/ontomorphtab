@@ -1,8 +1,7 @@
 package wbctest.wbcdb;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import junit.framework.TestCase;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
 
 public class TestMorphMLNeuronMorphology extends TestCase {
 

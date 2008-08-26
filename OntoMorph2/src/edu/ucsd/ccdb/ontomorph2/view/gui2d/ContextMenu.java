@@ -1,30 +1,21 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import org.fenggui.FengGUI;
 import org.fenggui.background.PlainBackground;
-import org.fenggui.border.Border;
-import org.fenggui.border.PlainBorder;
 import org.fenggui.border.TitledBorder;
 import org.fenggui.event.IMenuItemPressedListener;
 import org.fenggui.event.MenuItemPressedEvent;
 import org.fenggui.menu.Menu;
 import org.fenggui.menu.MenuItem;
-import org.fenggui.util.Color; //conflict with other import
-import org.fenggui.util.Point;
+import org.fenggui.util.Color;
 
 import com.jme.input.KeyInput;
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import com.sun.tools.ws.processor.modeler.wsdl.PseudoSchemaBuilder;
 
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
@@ -35,17 +26,12 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.misc.FengJME;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
-import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.View3DMouseHandler;
-import edu.ucsd.ccdb.ontomorph2.view.scene.CurveAnchorPointView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
  * A dynamic context menu that pops up when you right click in the display.
@@ -602,7 +588,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		//do the rest of the actions
 		nc = new MorphMLNeuronMorphology("5199202a", ocurve, t, NeuronMorphology.RENDER_AS_LOD, dcoords);
 		nc.setRelativeScale(0.01f);
-		nc.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
+		nc.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
 		nc.setVisible(true);
 		nc.select();
 		

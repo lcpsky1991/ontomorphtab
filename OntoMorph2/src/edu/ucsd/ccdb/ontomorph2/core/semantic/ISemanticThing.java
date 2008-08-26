@@ -2,7 +2,6 @@ package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
 import java.util.List;
 
-import edu.stanford.smi.protege.model.Cls;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISelectable;
 
 

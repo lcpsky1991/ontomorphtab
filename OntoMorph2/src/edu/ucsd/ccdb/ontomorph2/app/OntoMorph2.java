@@ -1,6 +1,5 @@
 package edu.ucsd.ccdb.ontomorph2.app;
 
-import java.io.File;
 import java.util.logging.Level;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;

@@ -149,7 +149,7 @@ public class View3D extends Node{
 	public void showSceneMonitor() {
 		//for more on this:
 		//http://www.jmonkeyengine.com/jmeforum/index.php?topic=8159.msg64486#msg64486
-		SceneMonitor.getMonitor().registerNode(this, "Root Node");
+		SceneMonitor.getMonitor().registerNode(View.getInstance().getMainViewRootNode(), "Root Node");
 		SceneMonitor.getMonitor().showViewer(true);
 	}
 }

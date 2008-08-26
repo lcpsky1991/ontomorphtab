@@ -1,7 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Geometry;
-import com.jme.scene.SceneElement;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -20,7 +18,7 @@ import com.jme.util.TextureManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.TiledSlide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.URISlide;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
@@ -73,28 +71,30 @@ public class SlideView extends TangibleView {
 		
 		TextureState ts = getTextureState();
 		quad.setRenderState(ts);
-		quad.updateRenderState();
 		
-		//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+		
+		quad.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
 		quad.setLightCombineMode(LightState.OFF);
 		
-		
-		/*
 		ZBufferState zb = View.getInstance().getRenderer().createZBufferState();
 		zb.setWritable(true);
 		zb.setFunction(ZBufferState.CF_LEQUAL);
 		zb.setEnabled(true);
-		quad.setRenderState(zb);
-		*/
 		
-	
+		quad.setRenderState(zb);
+
+		quad.setZOrder(9);
+		
 		quad.setModelBound(new BoundingBox());
 		quad.updateModelBound();
+		quad.updateRenderState();
 		quad.updateGeometricState(0.5f, false);
 		
 			
 		//this.setCullMode(SceneElement.CULL_INHERIT);
-		//this.setRenderQueueMode(Renderer.QUEUE_INHERIT);
+
+		//this.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
+		//this.setZOrder(9);
 		
 		if (_slide.isVisible()) {
 			this.attachChild(quad);

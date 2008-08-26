@@ -3,8 +3,6 @@ package wbctest.view;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.net.MalformedURLException;
 
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
@@ -18,13 +16,6 @@ import com.jme.scene.SceneElement;
 import com.jme.scene.state.LightState;
 import com.jmex.awt.swingui.JMEAction;
 import com.jmex.awt.swingui.JMEDesktop;
-
-import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
-import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 
 
 public class TestJMEDesktop extends SimpleGame{

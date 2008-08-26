@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
-import com.jme.bounding.BoundingVolume;
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
 import com.jme.input.action.InputActionEvent;
@@ -18,7 +17,6 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
-import com.jme.scene.Line;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.shape.Sphere;
 
@@ -26,10 +24,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
-
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
-
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;

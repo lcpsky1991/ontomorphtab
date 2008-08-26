@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.birn.components.spatialatlas.spatialatlasclient.SpatialAtlasClientDataModel;
-
 import net.birn.components.spatialatlas.spatialatlasclient.SpatialAtlasWebserviceClient;
 
 

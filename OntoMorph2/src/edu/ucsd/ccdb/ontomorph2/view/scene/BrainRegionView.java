@@ -1,7 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;

@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Observable;
 
 import com.jme.math.Quaternion;
-import com.jme.math.TransformMatrix;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
@@ -22,8 +20,6 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
-import edu.ucsd.ccdb.ontomorph2.view.View3D;
-import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
 /**
  * Defines an object that can be viewed in the scene.  This object can be made relative
@@ -71,7 +67,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		this.addObserver(SceneObserver.getInstance());
 		//by default, all objects ought to be associated with an instance.
 		//the least specific instance that can be created is one of bfo:entity.
-		//addSemanticThing(SemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
+		//addSemanticThing(GlobalSemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
 	}
 	
 	/**
@@ -419,7 +415,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	}
 
 	public SemanticInstance getSemanticInstance() {
-		return null;//SemanticRepository.getInstance().getSemanticInstance("");
+		return null;//GlobalSemanticRepository.getInstance().getSemanticInstance("");
 	}
 
 }

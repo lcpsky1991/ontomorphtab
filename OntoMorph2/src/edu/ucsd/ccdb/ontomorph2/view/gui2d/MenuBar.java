@@ -1,10 +1,8 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
 import org.fenggui.background.PlainBackground;
-import org.fenggui.border.PlainBorder;
 import org.fenggui.event.IMenuItemPressedListener;
 import org.fenggui.event.MenuItemPressedEvent;
-import org.fenggui.event.mouse.MouseExitedEvent;
 import org.fenggui.menu.Menu;
 import org.fenggui.menu.MenuItem;
 import org.fenggui.util.Color;
@@ -15,7 +13,6 @@ import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
-import edu.ucsd.ccdb.ontomorph2.view.View3D;
 import edu.ucsd.ccdb.ontomorph2.view.View3DMouseHandler;
 
 /**

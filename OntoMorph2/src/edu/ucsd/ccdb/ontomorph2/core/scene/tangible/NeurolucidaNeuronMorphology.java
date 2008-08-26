@@ -1,6 +1,5 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
-import java.awt.Color;
 import java.io.File;
 import java.math.BigInteger;
 import java.net.URL;
@@ -15,18 +14,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import neurolucida.generated.NeurolucidaData;
-import neurolucida.generated.Tree;
 import neurolucida.generated.Point;
-
-import com.jme.math.Vector3f;
-
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import neurolucida.generated.Tree;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
-import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 /**
@@ -180,17 +172,17 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 				// This needs to be generalized
 				for (String s : cab.getGroup()) {
 					if ("dendrite_group".equals(s)) {
-						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("sao:sao1211023249"));
+						segGroup.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass("sao:sao1211023249"));
 					}
 					if ("soma_group".equals(s)) {
-						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("sao:sao1044911821"));
+						segGroup.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass("sao:sao1044911821"));
 					} 
 					if ("axon_group".equals(s)) {
-						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("sao:sao1770195789"));
+						segGroup.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass("sao:sao1770195789"));
 						//should be adding all these segGroups to the Axon class and treating them as a separate unit.
 					}
 					if ("apical_dendrite".equals(s)) {
-						segGroup.addSemanticThing(SemanticRepository.getInstance().getSemanticClass("sao:sao273773228"));
+						segGroup.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass("sao:sao273773228"));
 					}
 					if (s.startsWith("Colour_")) {
 						if (s.endsWith("Magenta")) {

@@ -1,9 +1,7 @@
 package edu.ucsd.ccdb.tiff;
 
-import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 
 
 public class jviewer {

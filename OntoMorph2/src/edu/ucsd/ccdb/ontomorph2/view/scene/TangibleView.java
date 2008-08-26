@@ -2,19 +2,11 @@ package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import java.util.List;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
-import com.jme.scene.batch.GeomBatch;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
-import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
  * A base class for the view classes that display Tangibles.

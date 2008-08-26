@@ -6,7 +6,6 @@ import java.util.List;
 import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
-import com.jme.scene.Spatial;
 import com.jme.scene.lod.DiscreteLodNode;
 
 /**

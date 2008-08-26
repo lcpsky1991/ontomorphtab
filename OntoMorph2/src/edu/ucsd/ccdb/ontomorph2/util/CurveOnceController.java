@@ -2,14 +2,9 @@ package edu.ucsd.ccdb.ontomorph2.util;
 
 import java.io.IOException;
 
-import com.jme.bounding.BoundingSphere;
 import com.jme.curve.Curve;
-import com.jme.intersection.CollisionResults;
-import com.jme.intersection.PickResults;
 import com.jme.math.FastMath;
-import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
-import com.jme.math.Ray;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.scene.CameraNode;
@@ -19,10 +14,6 @@ import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
-import com.jme.util.geom.BufferUtils;
-import edu.ucsd.ccdb.ontomorph2.util.MemPool;
-
-import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 
 public class CurveOnceController extends Controller {
     private static final long serialVersionUID = 1L;

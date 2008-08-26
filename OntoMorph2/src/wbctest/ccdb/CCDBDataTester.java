@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.List;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
-import edu.ucsd.ccdb.ontomorph2.core.data.reader.CCDBDataCatagory;
 import edu.ucsd.ccdb.ontomorph2.core.data.reader.CCDBFile;
 import edu.ucsd.ccdb.ontomorph2.core.data.reader.CCDBFileType;
 import edu.ucsd.ccdb.ontomorph2.core.data.reader.CCDBModelReader;

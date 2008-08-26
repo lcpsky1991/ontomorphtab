@@ -20,8 +20,11 @@
 
 */
 package wbctest.wbcdb;
-import java.io.*;
-import java.sql.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 public class WwdUtils {
 
 /*****************

@@ -3,32 +3,22 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 
-import java.math.BigInteger;
-
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
 import com.jme.input.FirstPersonHandler;
 import com.jme.input.InputHandler;
-import com.jme.input.InputHandlerDevice;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
-import com.jme.input.MouseInputListener;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
-import com.jme.input.action.MouseInputAction;
-import com.jme.intersection.PickData;
-import com.jme.intersection.PickResults;
-import com.jme.intersection.TrianglePickResults;
-import com.jme.math.Ray;
-import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Line;
-import com.jme.scene.batch.GeomBatch;
+import com.jme.scene.Node;
 import com.jme.scene.shape.Cone;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
@@ -41,15 +31,9 @@ import com.jme.util.geom.Debugger;
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
-import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
-import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 //=========
 
@@ -562,6 +546,10 @@ public class View extends BaseSimpleGame {
 	 */
 	public ViewCamera getCamera() {
 		return this.camNode;
+	}
+	
+	public Node getMainViewRootNode() {
+		return rootNode;
 	}
 }
 

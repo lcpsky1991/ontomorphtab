@@ -1,6 +1,5 @@
 package edu.ucsd.ccdb.ontomorph2.util;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**

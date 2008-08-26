@@ -8,7 +8,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.morphml.networkml.schema.CellInstance;
 import org.morphml.networkml.schema.NetworkmlType;
 import org.morphml.networkml.schema.Population;
 

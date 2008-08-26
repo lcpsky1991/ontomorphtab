@@ -1,19 +1,21 @@
 package edu.ucsd.ccdb.ontomorph2.misc;
 
-import com.jme.input.action.*;
-import com.jme.input.FirstPersonHandler;
 import com.jme.input.InputHandler;
 import com.jme.input.Mouse;
+import com.jme.input.MouseInput;
 import com.jme.input.RelativeMouse;
+import com.jme.input.action.InputActionEvent;
+import com.jme.input.action.KeyLookDownAction;
+import com.jme.input.action.KeyLookUpAction;
+import com.jme.input.action.KeyRotateLeftAction;
+import com.jme.input.action.KeyRotateRightAction;
+import com.jme.input.action.MouseInputAction;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
-import com.jme.input.*;
 
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
-
-import org.fenggui.event.mouse.MouseButton;
 
 /**
  * <code>MouseClickAndDrag</code> defines a mouse action that detects click and drag movement from

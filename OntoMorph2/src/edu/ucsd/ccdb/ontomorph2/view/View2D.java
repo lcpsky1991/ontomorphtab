@@ -5,10 +5,8 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
-import org.fenggui.ComboBox;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
-import org.fenggui.ObservableWidget;
 import org.fenggui.ScrollContainer;
 import org.fenggui.TextEditor;
 import org.fenggui.background.PlainBackground;
@@ -16,20 +14,16 @@ import org.fenggui.border.PlainBorder;
 import org.fenggui.composites.Window;
 import org.fenggui.event.ISelectionChangedListener;
 import org.fenggui.event.SelectionChangedEvent;
-import org.fenggui.event.mouse.MouseButton;
-import org.fenggui.layout.StaticLayout;
 import org.fenggui.tree.Tree;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
-import org.lwjgl.opengl.GL13;
 
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
 
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
-import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.AtlasBrowser;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.BasicSearchWidget;
@@ -290,7 +284,7 @@ public class View2D extends Display{
 	public void loadInstanceBrowser()
 	{
 		Display display = this;
-		MyNode root = SemanticRepository.getInstance().getInstanceTree();
+		MyNode root = GlobalSemanticRepository.getInstance().getInstanceTree();
 		
 		Window window = FengGUI.createWindow(display, true, false, false, true);
 		window.getAppearance().removeAll();

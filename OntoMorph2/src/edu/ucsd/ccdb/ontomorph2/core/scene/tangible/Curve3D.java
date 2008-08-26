@@ -1,15 +1,10 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
-import java.util.List;
-
-import com.jme.bounding.BoundingBox;
-import com.jme.curve.BezierCurve;
 import com.jme.curve.Curve;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
@@ -22,7 +17,6 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
-import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
 
 

@@ -1,17 +1,16 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.awt.Color;
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
- * An interface that refers to a part of a neuron morphology
+ * An interface that refers to a part of a NeuronMorphology
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- *
+ * @see NeuronMorphology
  */
 public interface INeuronMorphologyPart extends ISelectable{
 	
@@ -39,18 +38,39 @@ public interface INeuronMorphologyPart extends ISelectable{
 	 */
 	public float getDistalRadius();
 	
+	/**
+	 * @return the 3D point in space of the base of this NeuronMorphologyPart
+	 */
 	public OMTVector getBase();
 	
+	/**
+	 * @return the 3D point in space of the apex of this NeuronMorphologyPart
+	 */
 	public OMTVector getApex();
 	
+	/**
+	 * @return the color of this NeuronMorphologyPart
+	 */
 	public Color getColor();
 	
+	/**
+	 * @param c - the desired color of this NeuronMorphologyPart
+	 */
 	public void setColor(Color c);
 	
+	/**
+	 * @return The NeuronMorphology that this NeuronMorphologyPart is part of
+	 */
 	public NeuronMorphology getParent();
 
+	/**
+	 * @return The radius at the base of this NeuronMorphologyPart
+	 */
 	public float getBaseRadius();
 
+	/**
+	 * @return The radius at the apex of this NeuronMorphologyPart
+	 */
 	public float getApexRadius();
 	
 	/**
@@ -70,5 +90,21 @@ public interface INeuronMorphologyPart extends ISelectable{
 	 */
 	public INeuronMorphologyPart getSubPart(int i);
 
+	/**
+	 * @return A unique ID within the parent NeuronMorphology for this Part.
+	 */
 	public BigInteger getId();
+	
+	/**
+	 * Adds a Tangible to this NeuronMorphologyPart. By default its position is moved 
+	 * to the center of this NeuronMorphologyPart and it inherits its coordinate system
+	 * @param t - the tangible to add to it.. 
+	 */
+	public void addTangible(Tangible t);
+
+	/**
+	 * @return - a list of the Tangibles currently associated with this NeuronMorphologyPart
+	 */
+	public List<Tangible> getTangibles();
+	
 }

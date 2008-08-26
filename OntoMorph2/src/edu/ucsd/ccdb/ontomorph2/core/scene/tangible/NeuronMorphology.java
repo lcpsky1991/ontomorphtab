@@ -1,14 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
@@ -32,7 +29,7 @@ public abstract class NeuronMorphology extends Tangible{
 
 	public static final String RENDER_AS_DETAILED_BOXES = "detailed_boxes";
 
-	public static final String RENDER_AS_CYLINDER_BATCH = "cylinder_batch";
+	//public static final String RENDER_AS_CYLINDER_BATCH = "cylinder_batch";
 
 	
 	
@@ -89,7 +86,7 @@ public abstract class NeuronMorphology extends Tangible{
 	
 	/*
 	public void addSemanticClass(String classURI) {
-		semanticThings.add(SemanticRepository.getInstance().getSemanticClass(classURI));
+		semanticThings.add(GlobalSemanticRepository.getInstance().getSemanticClass(classURI));
 	}*/
 
 	/**

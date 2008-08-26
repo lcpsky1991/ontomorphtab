@@ -7,20 +7,18 @@ import java.util.List;
 import java.util.Map;
 
 import edu.stanford.smi.protege.model.Cls;
-import edu.stanford.smi.protege.model.Instance;
-import edu.stanford.smi.protege.model.KnowledgeBase;
+import edu.stanford.smi.protege.model.KnowledgeBaseFactory2;
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.model.SimpleInstance;
 import edu.stanford.smi.protege.model.Slot;
+import edu.stanford.smi.protege.model.framestore.MergingNarrowFrameStore;
+import edu.stanford.smi.protege.model.framestore.NarrowFrameStore;
 import edu.stanford.smi.protege.util.ApplicationProperties;
+import edu.stanford.smi.protegex.owl.database.OWLDatabaseKnowledgeBaseFactory;
 import edu.stanford.smi.protegex.owl.database.OWLDatabaseModel;
-import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
-import edu.stanford.smi.protegex.owl.model.RDFObject;
-import edu.stanford.smi.protegex.owl.model.RDFSLiteral;
-import edu.stanford.smi.protegex.owl.model.query.QueryResults;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
@@ -33,7 +31,7 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class SemanticRepository {
+public class LocalSemanticRepository {
 	
 	
 	OWLDatabaseModel owlModel = null;
@@ -41,9 +39,9 @@ public class SemanticRepository {
 	/**
 	 * Holds singleton instance
 	 */
-	private static SemanticRepository instance;
+	private static LocalSemanticRepository instance;
 	
-	private SemanticRepository() {
+	private LocalSemanticRepository() {
 		this.loadOntology();
 	}
 	
@@ -117,56 +115,29 @@ public class SemanticRepository {
 	//database and retriving a knowledge base object
 	private void loadOntology() {
     	try {
-    		    		
-    		ApplicationProperties.setUrlConnectTimeout(100000);
-			ApplicationProperties.setUrlConnectReadTimeout(100000);
-			System.getProperties().put("proxySet", "true");
-			System.getProperties().put("proxyPort", "8080");
-			System.getProperties().put("proxyHost", "http://webproxy.ucsd.edu/proxy.pl");
-//			JenaOWLModel owlModel = ProtegeOWL.createJenaOWLModelFromURI("http://ccdb.ucsd.edu/SAO/1.2.9/SAO.owl");
-			//JenaOWLModel owlModel = ProtegeOWL.createJenaOWLModelFromURI("http://purl.org/nbirn/birnlex/ontology/BIRNLex-Anatomy.owl");
-    		//JenaOWLModel owlModel = ProtegeOWL.createJenaOWLModelFromURI("http://purl.org/nif/ontology/nif.owl");
-			
-			//ProjectManager projectManager = ProjectManager.getProjectManager();
-			//URI uri = new URI("file://C:\/Documents\and\ Settings\/stephen\/Desktop\/nifSaved\/nif.pprj");
-						
-			//Project p = Project.loadProjectFromFile("etc/NIF/CKB_db.pprj", new ArrayList());
-			Project p = Project.loadProjectFromFile("etc/NIF/CKB_mega_db_v2.pprj", new ArrayList());
-						
-			//projectManager.loadProject(uri);
-			owlModel = (OWLDatabaseModel)p.getKnowledgeBase();
-					    			
-			/*
-			JenaOWLModel owlModel = ProtegeOWL.createJenaOWLModel();
-			RepositoryManager rp = new RepositoryManager(owlModel);
-			File dir = new File("C:/Documents and Settings/stephen/Desktop/nifSaved");
-			rp.addGlobalRepository(new LocalFolderRepository(dir));
-			FileReader reader = new FileReader("C:/Documents and Settings/stephen/Desktop/nifSaved/nif.owl");			
-			owlModel.load(reader, FileUtils.langXMLAbbrev);
-    		*/
-    		
-			/*
-    		//must be done before getLabel() is run!!!
-    		Slot rdfsLabel = owlModel.getSlot("rdfs:label");
-    		
-    		if (owlModel != null) {
 
-    			Cls root = owlModel.getRootCls();
-    			Cls entity = owlModel.getCls("bfo:Entity");
-    			System.out.println("The root class is: " + entity.getName());
-    			//Node rootNode = getTree().addRoot();
-    			rdfsLabel = owlModel.getSlot("rdfs:label");
-    			String label = (String)entity.getDirectOwnSlotValue(rdfsLabel);
-    			String prefix = owlModel.getPrefixForResourceName(entity.getName());
-    			if (prefix != null) {
-    				label =  prefix + ":" + label;
-    			}
-    			//rootNode.setString("label", label);
-    			//hm.put(label, entity);
-    			
-    		}*/
+    		OWLDatabaseKnowledgeBaseFactory factory = new OWLDatabaseKnowledgeBaseFactory();
+    		ArrayList errors = new ArrayList();
+    		owlModel = (OWLDatabaseModel)factory.createKnowledgeBase(errors);
+    		
+    		
+			String driver = "org.hsqldb.jdbcDriver";
+			String url = "jdbc:hsqldb:db/db";
+			String tableName = "nifontology";			
+			String userName = "sa";
+    		
+			/*
+            NarrowFrameStore nfs = ((KnowledgeBaseFactory2)factory).createNarrowFrameStore(driver);
+            MergingNarrowFrameStore mergingFrameStore = MergingNarrowFrameStore.get(owlModel);
+            
+            ArrayList uris = new ArrayList();
+            mergingFrameStore.addActiveFrameStore(nfs, uris);
+            */
+			
+    		factory.loadKnowledgeBase(owlModel, driver, tableName, url, userName, "", errors);
+    		
     	} catch (Exception e) {
-    		throw new OMTException("Cannot connect to OWL Database!", e);
+    		//throw new OMTException("Cannot connect to OWL Database!", e);
     	}	
     }
 
@@ -174,9 +145,9 @@ public class SemanticRepository {
 	 * Returns the singleton instance.
 	 @return	the singleton instance
 	 */
-	static public SemanticRepository getInstance() {
+	static public LocalSemanticRepository getInstance() {
 		if (instance == null) {
-			instance = new SemanticRepository();
+			instance = new LocalSemanticRepository();
 		}
 		return instance;
 	}

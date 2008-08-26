@@ -5,18 +5,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.hp.hpl.jena.ontology.OntModel;
-
-import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
-import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
-import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
-import edu.stanford.smi.protegex.owl.model.RDFProperty;
 import edu.stanford.smi.protegex.owl.model.impl.AbstractOWLProperty;
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 
 
 /**
@@ -55,7 +49,7 @@ public class SemanticInstance extends SemanticThingImpl {
 	public String getLabel() {
 
 //		must be done before getLabel() is run!!!
-		KnowledgeBase owlModel = SemanticRepository.getInstance().getOWLModel();
+		KnowledgeBase owlModel = GlobalSemanticRepository.getInstance().getOWLModel();
 		
 		String label = null;
 		
@@ -75,6 +69,10 @@ public class SemanticInstance extends SemanticThingImpl {
 	public void addRelationToInstance(SemanticProperty p, SemanticInstance i) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public String getId() {
+		return instance.getName();
 	}
 
 }

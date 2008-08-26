@@ -5,10 +5,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import edu.stanford.smi.protege.model.Cls;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 
 /** 
  * Represents an OWL class.
@@ -37,7 +36,7 @@ public class SemanticClass extends SemanticThingImpl {
 	 * Get the OWL label
 	 */
 	public String getLabel() {
-		return SemanticRepository.getInstance().getClassLabel(OWLClass, URI);
+		return GlobalSemanticRepository.getInstance().getClassLabel(OWLClass, URI);
 	}
 	
 	public String toString() {
@@ -56,6 +55,10 @@ public class SemanticClass extends SemanticThingImpl {
 			l.add(si);
 		}
 		return l;
+	}
+
+	public String getId() {
+		return OWLClass.getName();
 	}
 	
 }

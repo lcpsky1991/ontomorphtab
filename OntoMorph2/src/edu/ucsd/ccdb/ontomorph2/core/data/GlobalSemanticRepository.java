@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.semantic;
+package edu.ucsd.ccdb.ontomorph2.core.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,9 +15,10 @@ import edu.stanford.smi.protegex.owl.database.OWLDatabaseModel;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
 
@@ -26,7 +27,7 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class SemanticRepository {
+public class GlobalSemanticRepository {
 	
 	
 	OWLDatabaseModel owlModel = null;
@@ -34,9 +35,9 @@ public class SemanticRepository {
 	/**
 	 * Holds singleton instance
 	 */
-	private static SemanticRepository instance;
+	private static GlobalSemanticRepository instance;
 	
-	private SemanticRepository() {
+	private GlobalSemanticRepository() {
 		this.loadOntology();
 	}
 	
@@ -167,9 +168,9 @@ public class SemanticRepository {
 	 * Returns the singleton instance.
 	 @return	the singleton instance
 	 */
-	static public SemanticRepository getInstance() {
+	static public GlobalSemanticRepository getInstance() {
 		if (instance == null) {
-			instance = new SemanticRepository();
+			instance = new GlobalSemanticRepository();
 		}
 		return instance;
 	}
@@ -272,10 +273,6 @@ public class SemanticRepository {
 
 	public SemanticInstance getSemanticInstance(String uri) {
 		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public Map<String, OMTVector> executeSimpleQuery(SemanticQuery s) {
 		return null;
 	}
 }

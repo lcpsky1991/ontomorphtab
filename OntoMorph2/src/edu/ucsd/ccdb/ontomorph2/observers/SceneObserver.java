@@ -14,16 +14,10 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
-import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.CurveAnchorPointView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
@@ -218,6 +212,7 @@ public class SceneObserver implements Observer {
 			_view.getView3D().setCells(s.getCells());
 			_view.getView3D().setCurves(s.getCurves());
 			_view.getView3D().setSurfaces(s.getSurfaces());
+			_view.getView3D().setMeshes(s.getMeshes());
 			reloadCells(s);
 			System.out.println("Performance Mesg: reloading entire scene");
 	}

@@ -1,10 +1,15 @@
 
 package wbctest.wbcdb;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
- * The beginning of a test case that grows into the DataRepository
+ * The beginning of a test case that grows into the GlobalDataRepository
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *

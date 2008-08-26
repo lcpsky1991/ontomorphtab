@@ -1,14 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.morphml.morphml.schema.Segment;
 import org.morphml.morphml.schema.Cell.SegmentsType;
-
-import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
@@ -182,6 +179,16 @@ public class MorphMLSegmentImpl extends Tangible implements ISegment{
 			segs.addAll(((SegmentsType)segments.get(i)).getSegment());
 		}
 		return segs;
+	}
+
+	public void addTangible(Tangible t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public List<Tangible> getTangibles() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
