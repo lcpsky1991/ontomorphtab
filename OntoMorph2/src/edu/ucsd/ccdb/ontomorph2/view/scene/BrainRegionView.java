@@ -1,7 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jme.bounding.BoundingBox;
 import com.jme.renderer.Renderer;
+import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
 import com.jme.scene.TriMesh;
@@ -51,12 +55,24 @@ public class BrainRegionView extends TangibleView{
 		this.lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
         this.lightState.setEnabled(true);
         
+        //register the geometries
+		//update the geometries registry, this is neccessary to enable picking, which is based on geomtry key maps
+		List<Geometry> ll = new ArrayList<Geometry>();
+		ll.add(this.mesh);
+		this.registerGeometries(ll);
+        
+        
         this.defaultRenderQueueMode = this.getRenderQueueMode();
         
         this.setModelBound(new BoundingBox());
         this.updateModelBound();
            
 		this.parentNode.attachChild(this);
+		
+		
+		
+		
+		this.pickPriority = P_UNPICKABLE;
 		
 		this.update();
 		Log.tock("Loading BrainRegionView for " + br.getName() + "took ", tick);

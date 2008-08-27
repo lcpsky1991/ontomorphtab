@@ -22,12 +22,14 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
@@ -47,6 +49,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	
 	
 	//METHODS that Menu buttons take
+	//CTX is short for ConTeXt
 	public static final int CTX_ACTION_ANNOTATE = 100;
 	public static final int CTX_ACTION_DISPROP = 101;
 	public static final int CTX_ACTION_DESELECT = 103;
@@ -57,6 +60,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_MODE = 108;
 	public static final int CTX_ACTION_ANIMATE = 109;
 	public static final int CTX_ACTION_NONE = 0;
+	public static final int CTX_ACTION_DEBUG = 110;
 	
 	
 	
@@ -77,17 +81,16 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	static final String msEDIT = "Toggle Edit";
 	static final String msManipulate = "Manipulate ...";
 	static final String msNone = "(Nothing Selected)";
+	static final String msDebug = "Debug";
 	static ContextMenu instance = null;
 	
+	//These are the titles of the user-defined fields of the menu items
 	static final String mFIELD_ACTION = "action";
 	static final String mFIELD_REFERENCE = "reference tangible";
 	
 	TitledBorder border = null;
 	
 	//want to have 'persistent' objects that can be added and removed from the context menu
-
-	
-	
 	private static final DemoCoordinateSystem dcoords =  new DemoCoordinateSystem();	//coordinates for test-case new objects
 	
 	public static ContextMenu getInstance()	{
@@ -216,6 +219,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	        menuItemFactory(this, msANNOTATE, CTX_ACTION_ANNOTATE, null);
 	        menuItemFactory(this, msEDIT, CTX_ACTION_MODE, null);
 	        menuItemFactory(this, msPROPERTIES, CTX_ACTION_DISPROP, null);
+	        menuItemFactory(this, msDebug, CTX_ACTION_DEBUG, null);
 	        
 	        //DYNAMIC SELECT
 	        {	//find all thing a user MIGHT want to select and puts them in the select submenu
@@ -403,8 +407,21 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				System.out.println("Warning: There was no tangible do to this action on (" + opt + ")");
 			}	
 		}*/
-		
 	
+	
+	private void debug(Tangible src)
+	{
+		String info = "";
+		
+		OMTVector camDir = new OMTVector(View.getInstance().getCamera().getCamera().getDirection());
+		OMTVector plane = src.getWorldNormal();
+		
+		info += src.getWorldNormal() + "\n";
+		info += " above: " + OMTUtility.isLookingFromAbove(camDir, plane);
+		
+		
+		System.out.println(info);
+	}
 	
 	public void doActionOnSelected(int action)
 	{
@@ -416,6 +433,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			{
 				case CTX_ACTION_DISPROP:
 					System.out.println("show properties for: " + single);
+					{
+						debug(single);
+					}
 					break;
 				case CTX_ACTION_ANNOTATE:
 					System.out.println("annotate: " + single);
@@ -437,6 +457,12 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					if ( ec != null) ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
 					break;
 				}
+				case CTX_ACTION_DEBUG:
+					if (single instanceof Slide)
+					{
+						System.out.println(((Slide)single).getWorldNormal());
+					}
+					break;
 				default:
 				{
 					System.out.println("menu pressed but not handled " + single);

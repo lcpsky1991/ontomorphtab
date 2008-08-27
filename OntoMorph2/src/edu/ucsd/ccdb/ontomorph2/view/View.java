@@ -194,7 +194,7 @@ public class View extends BaseSimpleGame {
 		
 		//(InputActionInterface action, java.lang.String deviceName, int button, int axis, boolean allowRepeats)
     	this.view3DMouseHandler = new View3DMouseHandler();
-        input.addAction(this.view3DMouseHandler , InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, true );
+        input.addAction(this.view3DMouseHandler , InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, false );
 
 	}
 			

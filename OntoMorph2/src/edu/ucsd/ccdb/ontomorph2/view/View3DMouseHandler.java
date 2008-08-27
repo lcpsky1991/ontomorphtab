@@ -27,6 +27,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
@@ -459,7 +460,7 @@ public class View3DMouseHandler extends MouseInputAction {
 		//CA: new movement code experiment
 		//======================================
 		//======================================
-		
+		/*
 		float cx = 0;
 		float cy = 0;
 		Vector2f mPos = new Vector2f();
@@ -480,7 +481,7 @@ public class View3DMouseHandler extends MouseInputAction {
 		System.out.println(wunit + "" + dir.normalize() + " " + dunit.normalize() + " angle between " + angle);
 		//System.out.println(new Quaternion().from)
 		System.out.println(dcoords.getOriginRotation());
-		
+		*/
 		
 		
 		
@@ -489,40 +490,47 @@ public class View3DMouseHandler extends MouseInputAction {
 		
 		float mx = MouseInput.get().getXDelta();
 		float my = MouseInput.get().getYDelta();
-		//TODO: replace unity vectors with ones based on camera axis
 		
-		switch ( manipulation )
+		//do the maniupulation to all selected objects
+		for (Tangible manip : TangibleManager.getInstance().getSelected())
 		{
-		case METHOD_PICK:
-			//do nothing
-			break;
-		case METHOD_MOVE:
-			moveSelected(mx, my);
-			break;
-		case METHOD_ROTATEX:
-			rotateSelected(mx, my, new OMTVector(1,0,0));
-			break;
-		case METHOD_ROTATEY:
-			rotateSelected(mx, my,new OMTVector(0,1,0));
-			break;
-		case METHOD_ROTATEZ:
-			rotateSelected(mx, my,new OMTVector(0,0,1));
-			break;
-		case METHOD_LOOKAT:
-			//FIXME: /* needs to be re-engineered to deal with multiple selections */
-			Log.warn("LOOK AT is broken");
-			try
-			{
-				View.getInstance().getCamera().lookAt(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question	
-			}
-			catch(Exception e){};
-			break;
-		case METHOD_SCALE:
-			scaleSelected(mx, my);
-			break;
-		}
 			
-		
+			//check to see where the camera is position and compare it to the Tangible's plane
+			//if it is under, reverse the X direction so movement is intuitive
+			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().getCamera().getCamera().getDirection()), manip.getWorldNormal()); 
+			if (reverse) mx = -mx;	//switch X movement if it is on the opposite side of the plane
+
+			switch ( manipulation )
+			{
+			case METHOD_PICK:
+				//do nothing
+				break;
+			case METHOD_MOVE:
+				manip.move(mx, my, new OMTVector(1,1,0));
+				break;
+			case METHOD_ROTATEX:
+				manip.rotate(mx, my, new OMTVector(1,0,0));
+				break;
+			case METHOD_ROTATEY:
+				manip.rotate(mx, my, new OMTVector(0,1,0));
+				break;
+			case METHOD_ROTATEZ:
+				manip.rotate(mx, my, new OMTVector(0,0,1));
+				break;
+			case METHOD_LOOKAT:
+				//FIXME: /* needs to be re-engineered to deal with multiple selections */
+				Log.warn("LOOK AT is broken");
+				try
+				{
+					View.getInstance().getCamera().lookAt(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question	
+				}
+				catch(Exception e){};
+				break;
+			case METHOD_SCALE:
+				manip.rotate(mx, my, new OMTVector(1,1,1));
+				break;
+			}
+		}
 	}
 	
 	private void moveSelected(float mx, float my) {

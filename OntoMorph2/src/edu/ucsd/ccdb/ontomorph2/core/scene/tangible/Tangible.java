@@ -19,6 +19,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
+import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
@@ -149,6 +150,37 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	}
 	
 
+	/**
+	 * Returns a vector representing the normal of the XY plane of the parent tangible
+	 * Takes the cross of the X and Y and then rotates it about the {@link CoordinateSystem} of the source {@link Tangible}
+	 * The vector returned is in Absoltue World Coordinates
+	 * @return {@link OMTVector} represrnting the normal in JME world coordinates
+	 */
+	public OMTVector getWorldNormal()
+	{
+		OMTVector v = null;
+		
+		CoordinateSystem coords = this.getCoordinateSystem();	//get the coordinate system
+		Quaternion rotOrig = null;
+		
+		//find the rotation of the coordinate system
+		if (coords != null)
+		{
+			rotOrig = coords.getRotationFromAbsolute();	
+		}
+		else
+		{
+			rotOrig = new Quaternion().fromAngleAxis(0, new Vector3f(0,0,0)); //empty quaternion
+		}
+		
+		Vector3f xyplane = new Vector3f(0,0,1); //an apopgraph of X.cross(Y), Z is normal
+		
+		//now rotate that vector that is the normal to be aligned with the coordinates system
+		v = new OMTVector(OMTUtility.rotateVector(xyplane, rotOrig));
+		
+		return v;
+	}
+	
 	/**
 	 * 
 	 * @see CoordinateSystem

@@ -1,0 +1,5 @@
+
+edu.ucsd.ccdb.ontomorph2.util.OMTUtility.rotateVector(new com.jme.math.Vector3f(1,0,0), 90, new com.jme.math.Vector3f(0,0,1))
+(com.jme.math.Vector3f) com.jme.math.Vector3f [X=8.940697E-8, Y=1.0, Z=0.0]
+
+
