@@ -433,9 +433,6 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			{
 				case CTX_ACTION_DISPROP:
 					System.out.println("show properties for: " + single);
-					{
-						debug(single);
-					}
 					break;
 				case CTX_ACTION_ANNOTATE:
 					System.out.println("annotate: " + single);
@@ -458,11 +455,11 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					if ( ec != null) ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
 					break;
 				}
+				case CTX_ACTION_NEW_CELL:
+					testCreateCell(single);
+					break;
 				case CTX_ACTION_DEBUG:
-					if (single instanceof Slide)
-					{
-						System.out.println(((Slide)single).getWorldNormal());
-					}
+					debug(single);
 					break;
 				default:
 				{
