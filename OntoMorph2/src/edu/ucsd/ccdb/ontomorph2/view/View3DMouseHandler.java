@@ -88,27 +88,24 @@ public class View3DMouseHandler extends MouseInputAction {
     	{
 				//=========== MOUSE DOWN ========================
 				if (!dragMode) //if previously no button pressed
-				{	
-
-					//check double click
+				{
+//					check double click
 					if (timenow < prevPressTime + dblClickDelay) 
 		    		{
 		    			onMouseDouble(b);
 		    			System.out.println("double");
 		    		}
-					
 					onMousePress(b);
 					System.out.println("press");
 					prevPressTime = timenow;
 				}
-				
 				//============ DRAG =========================
 				else
 				{
 					onMouseDrag();
-					System.out.println("other drag " + b + evt.getTriggerPressed());
+					System.out.println("drag " + b + evt.getTriggerPressed());
 				}
-				
+					
 				prevButtonID = b;
 				dragMode = true;	//begin assuming drag (deactive drag in upMouse event)
     	}
@@ -124,7 +121,7 @@ public class View3DMouseHandler extends MouseInputAction {
     		pushed = MouseInput.get().isButtonDown(b);  		
     		
     		//============ MOUSE UP/RELEASE =============
-    		if (!pushed && dragMode && b == prevButtonID)	
+    		if (dragMode && b == prevButtonID)	
     		{  			
       			dragMode = false;
     			onMouseRelease(b);
