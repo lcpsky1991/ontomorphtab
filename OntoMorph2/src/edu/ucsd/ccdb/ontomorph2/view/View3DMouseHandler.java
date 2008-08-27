@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
+import com.jme.input.MouseInputListener;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.MouseInputAction;
 import com.jme.intersection.PickData;
@@ -63,11 +64,13 @@ public class View3DMouseHandler extends MouseInputAction {
 	//For dealing with Mouse Events, track previous time and dragging
 	boolean dragMode = false;
 	long prevPressTime = 0;
-	long dblClickDelay = 600;//in milliseconds (1000 = 1 sec)
-	
+	long dblClickDelay = 1500;//in milliseconds (1000 = 1 sec)
+	int prevButtonID = 0;
 	
 	public void performAction( InputActionEvent evt ) 
     {
+		//if (true) return;
+		
 		//example code for jesus
 		//if FocusManager.getInstance().isWidgetActive() return;
 		if (FocusManager.get().isWidgetFocused())
@@ -76,13 +79,11 @@ public class View3DMouseHandler extends MouseInputAction {
 			return;
 		}
 		
-		
     	if (evt.getTriggerPressed()) //
     	{
     		//+++++ BUTTON PRESSED  ++++++
     		//=========== MOUSE DOWN ========================
-    		//double-click versus single-click belongs in child method
-    		dragMode = true;	//begin assuming drag (deactive drag in upMouse event)
+    		
     		if (View.getInstance().getDebugMode()) Log.warn("mouse press");
     		
     		//pafind the index of which button pressed
@@ -90,10 +91,26 @@ public class View3DMouseHandler extends MouseInputAction {
     		{
     			if (MouseInput.get().isButtonDown(b))
     			{
-    				onMousePress(b);
+    				
+    				if (!dragMode) //if previously no button pressed
+    				{	
+    					//check double click
+    					if (System.currentTimeMillis() < prevPressTime + dblClickDelay) 
+        	    		{
+        	    			onMouseDouble(b);
+        	    			prevPressTime = 0; //reset the counter
+        	    		}
+    					
+    					onMousePress(b);
+    				}
+     				
+    				prevButtonID = b;
     				b = MouseInput.get().getButtonCount()+1; //all done
     			}
     		}
+    		
+    		dragMode = true;	//begin assuming drag (deactive drag in upMouse event)
+    		prevPressTime = System.currentTimeMillis();
     	}
     	else
     	{
@@ -123,7 +140,7 @@ public class View3DMouseHandler extends MouseInputAction {
     		{
     			dragMode = false;
     			if (View.getInstance().getDebugMode()) Log.warn("mouse release");
-    			onMouseRelease();
+    			onMouseRelease(prevButtonID);
     		}
     		//============ MOVE - MOUSE EVENT DEFAULT =======
     		else	
@@ -179,48 +196,38 @@ public class View3DMouseHandler extends MouseInputAction {
 	 */ 
 	private void onMousePress(int buttonIndex)
 	{
+		
+		System.out.println("press");
+		
+		//	RIGHT CLICK
+		if (1 == buttonIndex) //right
+		{	
+			//MouseInput.get().setCursorVisible(false); //hide mouse cursor
+			doPick();
+			ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
+					MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
+		}
+		else if (0 == buttonIndex) //left
 		{
-			//	RIGHT CLICK
-			if (1 == buttonIndex) //right
-			{	
-				//MouseInput.get().setCursorVisible(false); //hide mouse cursor
-				doPick();
-				ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
-						MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
-			}
-			else if (0 == buttonIndex) //left
-			{
-				//MouseInput.get().setCursorVisible(true); //show mouse cursor
-				doPick();
-			}
-		
-		
-			long timenow = System.currentTimeMillis();
-		
-			//+Double+
-			//check double click
-			if (timenow < prevPressTime + dblClickDelay) 
-			{
-				onMouseDouble(buttonIndex);
-			}
-			prevPressTime = timenow;
-		}	
+			//doPick();
+		}
 	}
 	
-	private void onMouseRelease()
-	{
-		//fugacious method
+	
+	//fugacious method
+	private void onMouseRelease(int buttonIndex)
+	{		
+
 	}
 	
 	private void onMouseDouble(int buttonIndex)
 	{
 		if (0 == buttonIndex) //left 
 		{
-			PickResults pr = getPickResults();
-			//findCenter(pr.getPickData(0).getTargetMesh());
+			doPick();
 		}
 		 
-		Log.warn("Double click (" + buttonIndex + ") @ " + System.currentTimeMillis());
+		//Log.warn("Double click (" + buttonIndex + ") @ " + System.currentTimeMillis());
 	}
 	
 	

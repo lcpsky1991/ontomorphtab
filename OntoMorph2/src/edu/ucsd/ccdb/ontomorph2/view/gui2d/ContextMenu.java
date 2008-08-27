@@ -228,7 +228,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		        {
 		        	Tangible single = others.get(i);
 		        	String name = single.getName();
-		        	menuItemFactory(mnuSelect, name, CTX_ACTION_SELECT, single);
+			        menuItemFactory(mnuSelect, name, CTX_ACTION_SELECT, single);	
 		        }
 	        }
 	        
@@ -448,6 +448,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					break;
 				case CTX_ACTION_NEW_ANCHOR:
 					createPoint(single);
+					break;
 				case CTX_ACTION_MODE:
 				{
 					Curve3D ec = null;
