@@ -64,7 +64,7 @@ public class View3DMouseHandler extends MouseInputAction {
 	//For dealing with Mouse Events, track previous time and dragging
 	boolean dragMode = false;
 	long prevPressTime = 0;
-	long dblClickDelay = 1500;//in milliseconds (1000 = 1 sec)
+	long dblClickDelay = 500;	//in milliseconds (1000 = 1 sec)
 	int prevButtonID = 0;
 	
 	public void performAction( InputActionEvent evt ) 
@@ -78,39 +78,39 @@ public class View3DMouseHandler extends MouseInputAction {
 			//exit the regular mouse handler if a widget is focused
 			return;
 		}
+
+		//pafind the index of which button pressed/released
+		int b = evt.getTriggerIndex();
+		long timenow = System.currentTimeMillis();
+		
 		
     	if (evt.getTriggerPressed()) //
     	{
-    		//+++++ BUTTON PRESSED  ++++++
-    		//=========== MOUSE DOWN ========================
-    		
-    		if (View.getInstance().getDebugMode()) Log.warn("mouse press");
-    		
-    		//pafind the index of which button pressed
-    		for (int b = 0; b < MouseInput.get().getButtonCount(); b++)
-    		{
-    			if (MouseInput.get().isButtonDown(b))
-    			{
-    				
-    				if (!dragMode) //if previously no button pressed
-    				{	
-    					//check double click
-    					if (System.currentTimeMillis() < prevPressTime + dblClickDelay) 
-        	    		{
-        	    			onMouseDouble(b);
-        	    			prevPressTime = 0; //reset the counter
-        	    		}
-    					
-    					onMousePress(b);
-    				}
-     				
-    				prevButtonID = b;
-    				b = MouseInput.get().getButtonCount()+1; //all done
-    			}
-    		}
-    		
-    		dragMode = true;	//begin assuming drag (deactive drag in upMouse event)
-    		prevPressTime = System.currentTimeMillis();
+				//=========== MOUSE DOWN ========================
+				if (!dragMode) //if previously no button pressed
+				{	
+
+					//check double click
+					if (timenow < prevPressTime + dblClickDelay) 
+		    		{
+		    			onMouseDouble(b);
+		    			System.out.println("double");
+		    		}
+					
+					onMousePress(b);
+					System.out.println("press");
+					prevPressTime = timenow;
+				}
+				
+				//============ DRAG =========================
+				else
+				{
+					onMouseDrag();
+					System.out.println("other drag " + b + evt.getTriggerPressed());
+				}
+				
+				prevButtonID = b;
+				dragMode = true;	//begin assuming drag (deactive drag in upMouse event)
     	}
     	else
     	{
@@ -121,26 +121,14 @@ public class View3DMouseHandler extends MouseInputAction {
     		 (moral) bank (hole in the wall), 
     		 */
     		boolean pushed = false;
-    		int b= 0;
-    		for (b=0; !pushed && b < MouseInput.get().getButtonCount(); b++)
-    		{
-    			if ( MouseInput.get().isButtonDown(b))
-    			{
-    				pushed = true;
-    			}
-    		}
-    		//============ DRAG =========================
-    		if (pushed && dragMode)
-    		{
-    			if (View.getInstance().getDebugMode()) Log.warn("mouse drag");
-    			onMouseDrag();
-    		}
+    		pushed = MouseInput.get().isButtonDown(b);  		
+    		
     		//============ MOUSE UP/RELEASE =============
-    		else if (!pushed && dragMode)	
-    		{
-    			dragMode = false;
-    			if (View.getInstance().getDebugMode()) Log.warn("mouse release");
-    			onMouseRelease(prevButtonID);
+    		if (!pushed && dragMode && b == prevButtonID)	
+    		{  			
+      			dragMode = false;
+    			onMouseRelease(b);
+    			System.out.println("release " + b);
     		}
     		//============ MOVE - MOUSE EVENT DEFAULT =======
     		else	
@@ -196,8 +184,6 @@ public class View3DMouseHandler extends MouseInputAction {
 	 */ 
 	private void onMousePress(int buttonIndex)
 	{
-		
-		System.out.println("press");
 		
 		//	RIGHT CLICK
 		if (1 == buttonIndex) //right
