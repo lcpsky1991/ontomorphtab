@@ -561,6 +561,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		cap.setColor(java.awt.Color.orange);
 		cap.setVisible(true);
 		cap.setModelBinormalWithUpVector(towardcam, 0.01f);		
+		cap.changed();
 		
 		//redraw the scene, but not the whole scene, let observer know the curves have changed
 		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);

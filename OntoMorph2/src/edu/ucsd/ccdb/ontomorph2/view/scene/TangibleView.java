@@ -82,6 +82,8 @@ public abstract class TangibleView extends Node {
 	
 	public void update() 
 	{
+
+		
 		if (this.getModel().isSelected()) 
 		{
 			this.highlight();
@@ -90,6 +92,8 @@ public abstract class TangibleView extends Node {
 		{
 			this.unhighlight();
 		}
+
+		this.updateRenderState();
 		
 		//FIXME: setlocals may need to be changed to setWorld
 	   

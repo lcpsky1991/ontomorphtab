@@ -95,11 +95,4 @@ public class CurveAnchorPoint extends Tangible {
 		return info;	//if it has a name return it
 	}
 	
-	
-	public void select()
-	{
-		//if this thing is selected, make it visible
-		super.select();
-		this.parentCurve.setAnchorPointsVisibility(true);	
-	}
 }

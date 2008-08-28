@@ -87,7 +87,7 @@ public class SceneObserver implements Observer {
 		
 			Log.warn("Performance Mesg: " + msg);
 		}
-
+		
 		else if (o instanceof ISemanticThing)
 		{
 			ISemanticThing st = (ISemanticThing) o;
@@ -140,7 +140,8 @@ public class SceneObserver implements Observer {
 				if (tv != null)	tv.update();
 			}
 			
-		} else if (o instanceof ICable) {
+		} 
+		else if (o instanceof ICable) {
 
 			if (arg.equals(Tangible.CHANGED_SELECT)) {
 				ICable cable = (ICable)o;
@@ -165,6 +166,7 @@ public class SceneObserver implements Observer {
 			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
 			if (tv != null)
 			{
+				tv.updateRenderState();
 				tv.update();
 			}
 		}
