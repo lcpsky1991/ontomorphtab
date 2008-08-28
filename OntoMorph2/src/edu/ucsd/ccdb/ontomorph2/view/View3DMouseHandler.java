@@ -64,7 +64,7 @@ public class View3DMouseHandler extends MouseInputAction {
 	//For dealing with Mouse Events, track previous time and dragging
 	boolean dragMode = false;
 	long prevPressTime = 0;
-	long dblClickDelay = 500;	//in milliseconds (1000 = 1 sec)
+	long dblClickDelay = 800;	//in milliseconds (1000 = 1 sec)
 	int prevButtonID = 0;
 	
 	public void performAction( InputActionEvent evt ) 
@@ -186,7 +186,7 @@ public class View3DMouseHandler extends MouseInputAction {
 		if (1 == buttonIndex) //right
 		{	
 			//MouseInput.get().setCursorVisible(false); //hide mouse cursor
-			doPick();
+			//doPick();
 			ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
 					MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
 		}
