@@ -62,8 +62,8 @@ public class SceneObserver implements Observer {
 			}
 			else if (arg.equals(Scene.CHANGED_CELL))
 			{
-				msg = "reloading cells";
-				reloadCells(scene);
+				msg = "adding cells";
+				
 			}
 			else if (arg.equals(Scene.CHANGED_PART))
 			{

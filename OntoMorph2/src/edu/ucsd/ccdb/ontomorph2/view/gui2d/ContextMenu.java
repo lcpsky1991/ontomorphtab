@@ -27,13 +27,16 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.View3DMouseHandler;
+import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
  * A dynamic context menu that pops up when you right click in the display.
@@ -616,16 +619,18 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		nc.setVisible(true);
 		nc.select();
 		
-		View.getInstance().getScene().changed(Scene.CHANGED_PART);
+		View.getInstance().getScene().changed(Scene.CHANGED_CELL);
 		
-		/*
-		View.getInstance().getView3D().addCell(nc);
+		View.getInstance().getView3D().addOneCell(nc);
+		nc.addObserver(SceneObserver.getInstance()); //add an observer to the new cell
+		
 		TangibleView cv = TangibleViewManager.getInstance().getTangibleViewFor(nc);
 		if ( cv != null)
 		{
+			cv.updateRenderState();
 			cv.update();
 		}
-		*/
+		
 	}
 }
 
