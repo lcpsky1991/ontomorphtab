@@ -121,7 +121,7 @@ public class View3DMouseHandler extends MouseInputAction {
     		pushed = MouseInput.get().isButtonDown(b);  		
     		
     		//============ MOUSE UP/RELEASE =============
-    		if (dragMode && b == prevButtonID)	
+    		if (!pushed && dragMode && b == prevButtonID)	
     		{  			
       			dragMode = false;
     			onMouseRelease(b);
