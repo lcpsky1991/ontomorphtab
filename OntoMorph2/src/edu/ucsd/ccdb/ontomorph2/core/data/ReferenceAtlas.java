@@ -37,7 +37,8 @@ public class ReferenceAtlas {
 	private static ReferenceAtlas instance;
 	private List<BrainRegion> brainRegions;
 	
-	private static final String[] basicAtlasAbbrevs = {"OLF", "HPF", "STRd", "STRv", "LSX", "sAMY", "PAL", "TH", "HY", "MBsen", "MBmot", "MBsta", "P", "MY", "CB"};
+	private static final String[] basicAtlasAbbrevs = {"OLF", "HPF", "STRd", "STRv", "LSX", 
+		"sAMY", "PAL", "TH", "HY", "MBsen", "MBmot", "MBsta", "P", "MY", "CB"};
 
 	/**
 	 * prevents instantiation
@@ -218,7 +219,7 @@ public class ReferenceAtlas {
 
 	public MyNode getBrainRegionTree() {
 		
-		MyNode root = new MyNode("Brain Regions", null);
+		MyNode root = new MyNode("Brain Regions", getBrainRegion("Brain"));
 		HashMap<String, MyNode> m = new HashMap<String, MyNode>();
 		
 		for (BrainRegion r : getBrainRegions()) {
@@ -280,5 +281,28 @@ public class ReferenceAtlas {
 			}
 		}
 		return leaves;
+	}
+
+	public void displayDemoAtlas() {
+		Set<BrainRegion> brs = new HashSet<BrainRegion>();
+		
+		
+		brs.add(this.getBrainRegion("HIP"));
+		this.getBrainRegion("HIP").setVisibility(BrainRegion.TRANSPARENT);
+		
+		brs.add(this.getBrainRegion("DG"));
+		this.getBrainRegion("DG").setVisibility(BrainRegion.VISIBLE);
+		
+		brs.add(this.getBrainRegion("CA"));
+		this.getBrainRegion("CA").setVisibility(BrainRegion.VISIBLE);
+		
+		
+		View.getInstance().getView3D().addBrainRegions(brs);
+	}
+
+	public void hideDemoAtlas() {
+		this.getBrainRegion("HIP").setVisibility(BrainRegion.INVISIBLE);
+		this.getBrainRegion("DG").setVisibility(BrainRegion.INVISIBLE);
+		this.getBrainRegion("CA").setVisibility(BrainRegion.INVISIBLE);
 	}
 }

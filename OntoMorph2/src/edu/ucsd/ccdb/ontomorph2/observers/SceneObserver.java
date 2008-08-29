@@ -17,6 +17,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
+import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
@@ -214,8 +215,35 @@ public class SceneObserver implements Observer {
 			_view.getView3D().setCurves(s.getCurves());
 			_view.getView3D().setSurfaces(s.getSurfaces());
 			_view.getView3D().setMeshes(s.getMeshes());
+
+			
 			reloadCells(s);
+			
+			setCamera(s);
 			System.out.println("Performance Mesg: reloading entire scene");
+	}
+	
+	private void setCamera(Scene s) {
+		switch(s.getCameraPosition()) {
+		case Scene.CAMERA_SLIDE_POSITION :
+			_view.getCamera().setToSlideView();
+			break;
+		case Scene.CAMERA_CELLS_POSITION :
+			_view.getCamera().smoothlyZoomToCellView();
+			break;
+		case Scene.CAMERA_SUBCELLULAR_POSITION :
+			_view.getCamera().smoothlyZoomToSubcellularView();
+			break;
+		case Scene.CAMERA_LATERAL_POSITION :
+			_view.getCamera().setToAtlasLateralView();
+			break;
+		case Scene.CAMERA_MEDIAL_POSITION :
+			_view.getCamera().setToAtlasMedialView();
+			break;
+		case Scene.CAMERA_CEREBELLUM_POSITION :
+			_view.getCamera().smoothlyZoomToSlideCerebellumView();
+		}
+		
 	}
 	
 }

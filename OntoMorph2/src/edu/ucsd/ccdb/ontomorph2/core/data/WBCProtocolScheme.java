@@ -2,6 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.core.data;
 
 import java.net.URI;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
@@ -11,7 +12,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 public class WBCProtocolScheme {
 
 	public URI getOntologyClassURI(SemanticClass s) {
-		return URI.create("ontology/nif/class#" + s.getId());
+		return URI.create("ontology/nif/class#" + s.getURI());
 	}
 	
 	public URI getOntologyInstanceURI(SemanticInstance i) {
@@ -19,7 +20,11 @@ public class WBCProtocolScheme {
 	}
 	
 	public URI getDataStructureURI(NeuronMorphology n) {
-		return URI.create("data/structure/" + n.getName());
+		return URI.create("data/morphml/" + n.getName());
+	}
+	
+	public URI getDataStructureURI(DataMesh d) {
+		return URI.create("data/mesh/" + d.getName());
 	}
 	
 	public URI getLocationURI(PositionVector p) {

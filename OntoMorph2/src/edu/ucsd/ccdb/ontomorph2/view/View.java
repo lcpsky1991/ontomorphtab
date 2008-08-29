@@ -124,6 +124,11 @@ public class View extends BaseSimpleGame {
 
 	
 	protected void simpleInitGame() {
+		this.camNode = new ViewCamera();
+		this.cam = camNode.getCamera();
+		
+		rootNode.attachChild(camNode);
+		
 		//as a hack, calling the main application class to do initialization
 		//this is because model loading needs to have the view running in order to work
 		  
@@ -133,10 +138,6 @@ public class View extends BaseSimpleGame {
 				
 		rootNode.attachChild(view3D);
 
-		this.camNode = new ViewCamera();
-		this.cam = camNode.getCamera();
-		
-		rootNode.attachChild(camNode);
 		
 		//Section for setting up the mouse and other input controls	
 		configureControls();
@@ -160,7 +161,6 @@ public class View extends BaseSimpleGame {
         fpHandler.getMouseLookHandler().setEnabled( false);
 		
         input.clearActions();	//removes all input actions not specifically programmed
-        
         
 		//Bind the Escape key to kill our test app
 		KeyBindingManager.getKeyBindingManager().set("quit", KeyInput.KEY_ESCAPE);

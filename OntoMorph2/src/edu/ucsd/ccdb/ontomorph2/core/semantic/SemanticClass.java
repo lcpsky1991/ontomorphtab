@@ -61,4 +61,8 @@ public class SemanticClass extends SemanticThingImpl {
 		return OWLClass.getName();
 	}
 	
+	public String getURI() {
+		return this.URI;
+	}
+	
 }

@@ -45,6 +45,7 @@ public class BrainRegionView extends TangibleView{
 		this.parentNode = parentNode;
 		
 		this.mesh = br.getTriMesh();
+		this.mesh.setName("Trimesh for brain region: " + br.getAbbreviation());
 		//mesh.setSolidColor(ColorRGBA.blue);
 		mesh.setModelBound(new BoundingBox());
 		mesh.updateModelBound();
@@ -119,10 +120,11 @@ public class BrainRegionView extends TangibleView{
 		this.updateModelBound();
 	    this.updateRenderState();
 	    this.updateGeometricState(5f, true);
-	    
+	    /*
 		this.parentNode.updateModelBound();
 	    this.parentNode.updateRenderState();
 	    this.parentNode.updateGeometricState(5f, true);
+	    */
 	}
 	
 	private void makeVisible() {

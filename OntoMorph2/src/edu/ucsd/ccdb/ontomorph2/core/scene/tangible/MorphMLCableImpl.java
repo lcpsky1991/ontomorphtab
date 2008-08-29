@@ -383,6 +383,7 @@ public class MorphMLCableImpl extends Tangible implements ICable{
 		//this should add that instance to this cable
 		//that instance should have a contains relationship to 
 		//the instance describing the tangible.
+		
 		t.setCoordinateSystem(this.getCoordinateSystem());
 		t.setRelativePosition(this.getRelativePosition());
 		this.containedItems.add(t);

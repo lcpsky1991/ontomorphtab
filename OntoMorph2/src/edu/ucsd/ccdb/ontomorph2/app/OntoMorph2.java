@@ -1,7 +1,12 @@
 package edu.ucsd.ccdb.ontomorph2.app;
 
+import java.io.File;
+import java.net.URL;
+import java.util.Properties;
 import java.util.logging.Level;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.DefaultScene;
+import edu.ucsd.ccdb.ontomorph2.core.scene.DemoScene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -27,15 +32,27 @@ public class OntoMorph2 {
 		//http://www.jmonkeyengine.com/jmeforum/index.php?topic=5864.0
 		Log.getLogger("").setLevel(Level.WARNING);
 		Log.getLogger("").getHandlers()[0].setLevel(Level.WARNING);
-		
-		System.setProperty("java.library.path", "lib");
+		Properties props = null;
+		try {
+			props = System.getProperties();
+			URL url = new File("wbc.properties").toURI().toURL();
+			System.getProperties().load(url.openStream());
+			//System.out.println(props);
+		} catch (Exception e) {
+			Log.error("Problem loading configuration file!");
+			e.printStackTrace();
+			System.exit(1);
+		}
 		
 		View view = View.getInstance();
 		
 		SceneObserver obs = SceneObserver.getInstance();
 		obs.setView(view);
-		_scene = new Scene();
-	
+		if ("demo".equals(props.getProperty("scene"))) {
+			_scene = new DemoScene();
+		} else {
+			_scene = new DefaultScene();
+		}
 		_scene.addObserver(obs);
 		
 		//since the view takes over the thread after it is started
@@ -55,15 +72,10 @@ public class OntoMorph2 {
 		try {
 			_scene.load();
 		} catch (Exception e) {
+			Log.error("SEVERE ERROR ATTEMPTING TO LOAD SCENE");
 			e.printStackTrace();
-			Log.error("SEVERE ERROR");
 		}
 		
-		View.getInstance().getView2D().addInfoText("This is an example of \nloading neuronal morphologies...");
+		//View.getInstance().getView2D().addInfoText("This is an example of \nloading neuronal morphologies...");
 	}
-	
-	
-	
-
-
 }

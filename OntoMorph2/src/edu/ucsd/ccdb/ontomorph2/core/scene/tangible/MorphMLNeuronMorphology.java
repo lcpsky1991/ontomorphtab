@@ -40,7 +40,8 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	}
 	
 
-	public MorphMLNeuronMorphology(String morphLoc, PositionVector position, RotationVector rotation) {
+	public MorphMLNeuronMorphology(String morphLoc, PositionVector position, 
+			RotationVector rotation) {
 		this(morphLoc);
 		setRelativePosition(position);
 		setRelativeRotation(rotation);
@@ -68,7 +69,8 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 		this.setCoordinateSystem(c);
 	}
 	
-	public MorphMLNeuronMorphology(String url, Curve3D ocurve, float t, String render_as_lod, DemoCoordinateSystem dcoords) {
+	public MorphMLNeuronMorphology(String url, Curve3D ocurve, float t, String render_as_lod, 
+			DemoCoordinateSystem dcoords) {
 		this(url, ocurve, t, render_as_lod);
 		this.setCoordinateSystem(dcoords);
 	}

@@ -84,8 +84,6 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		this.name = "camera node";
 		this.setCamera(cam);
 		
-		setToSlideView();
-		
 		//camNode.setLocalTranslation(loc);
 		Log.warn("Rotation: " + this.getLocalRotation() + "\nTranslation: " + 
 				this.getLocalTranslation());
@@ -363,7 +361,6 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		continuousZoomTo(loc, position, 0.21f);		
 		//BoundingSphere sphere = new BoundingSphere(20f, position);
 	}
-
 	
 	public void smoothlyZoomToSlideCerebellumView() {
 		Vector3f loc = new Vector3f(458.9234f, -118.0f, -356.11566f);
