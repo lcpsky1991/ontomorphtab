@@ -169,6 +169,9 @@ public class SceneObserver implements Observer {
 				tv.update();
 			}
 		}
+		
+		//probably good to do this on every change
+		_view.getView3D().updateRoot();
 	}
 
 	/**
@@ -209,6 +212,7 @@ public class SceneObserver implements Observer {
 		_view.getView3D().setMeshes(s.getMeshes());
 
 		setCamera(s);
+		_view.getView3D().updateRoot();
 	}
 	
 	private void setCamera(Scene s) {

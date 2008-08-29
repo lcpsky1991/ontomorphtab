@@ -89,7 +89,12 @@ public class View3D extends Node{
 	public void setCells(Set<NeuronMorphology> cells) {
 		cellsNode.detachAllChildren();
 		for(NeuronMorphology cell : cells) {
-			NeuronMorphologyView cellView = new NeuronMorphologyView(cell);
+			NeuronMorphologyView cellView = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor(cell);
+			if (cellView == null) {
+				//implicitly adds the new NeuronMorphologyView to the TangibleViewManager
+				cellView = new NeuronMorphologyView(cell);
+			}
+
 			Node n = cellView.getNode();
 			cellsNode.attachChild(n);
 		}
@@ -151,5 +156,10 @@ public class View3D extends Node{
 		//http://www.jmonkeyengine.com/jmeforum/index.php?topic=8159.msg64486#msg64486
 		SceneMonitor.getMonitor().registerNode(View.getInstance().getMainViewRootNode(), "Root Node");
 		SceneMonitor.getMonitor().showViewer(true);
+	}
+	
+	public void updateRoot() {
+		this.updateGeometricState(0.5f, false);
+		this.updateRenderState();
 	}
 }

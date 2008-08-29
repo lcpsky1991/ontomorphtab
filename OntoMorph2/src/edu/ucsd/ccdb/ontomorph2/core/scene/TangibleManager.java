@@ -258,6 +258,7 @@ public class TangibleManager {
 				String fileName = file.getName().split("\\.")[0];
 				
 				//for demo purposes, load in a default location with default settings
+				//for now can only load files in the /etc/hippocampus directory if they aren't already in the DB
 				NeuronMorphology cell3 = new MorphMLNeuronMorphology(fileName, 
 						new PositionVector(289f, -118f, -180f), null, 
 						NeuronMorphology.RENDER_AS_LOD_2);

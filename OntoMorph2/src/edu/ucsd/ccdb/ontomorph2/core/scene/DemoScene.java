@@ -137,9 +137,9 @@ public class DemoScene extends Scene{
 	
 		*/
 		
-		
+		/*
 		NeuronMorphology cell3 = new MorphMLNeuronMorphology("cell1zr", 
-				new PositionVector(250f, -118f, -180f), null, 
+				new PositionVector(289f, -118f, -180f), null, 
 				NeuronMorphology.RENDER_AS_LOD_2);
 		RotationVector v = new RotationVector(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-90, Vector3f.UNIT_Y));
 		cell3.setRelativeRotation(v);
@@ -148,10 +148,12 @@ public class DemoScene extends Scene{
 		//semantic thing for hippocampal CA3 neuron
 		cell3.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
 		addSceneObject(cell3);
+		*/
 		
 		
 		setCameraPosition(Scene.CAMERA_CELLS_POSITION);
 		
+		changed(CHANGED_LOAD);
 		changed(CHANGED_LOAD);
 	}
 
