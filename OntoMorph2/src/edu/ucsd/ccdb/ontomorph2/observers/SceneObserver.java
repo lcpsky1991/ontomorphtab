@@ -139,7 +139,6 @@ public class SceneObserver implements Observer {
 				tv = TangibleViewManager.getInstance().getTangibleViewFor(c);
 				if (tv != null)	tv.update();
 			}
-			
 		} 
 		else if (o instanceof ICable) {
 
@@ -159,14 +158,14 @@ public class SceneObserver implements Observer {
 				}
 			}
 		}
-		
+
 		//catch all method for any leftover tangibles
 		else if (o instanceof Tangible)
 		{
 			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
 			if (tv != null)
 			{
-				tv.updateRenderState();
+				//tv.updateRenderState();
 				tv.update();
 			}
 		}

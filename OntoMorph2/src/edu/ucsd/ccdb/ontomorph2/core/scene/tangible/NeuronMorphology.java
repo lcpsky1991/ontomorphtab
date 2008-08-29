@@ -89,6 +89,46 @@ public abstract class NeuronMorphology extends Tangible{
 		semanticThings.add(GlobalSemanticRepository.getInstance().getSemanticClass(classURI));
 	}*/
 
+	
+	/**
+	 * Tells whether this cell is attached to a parent curve
+	 * @return True if this cell has NO parent curve
+	 */
+	public boolean isFreeFloating()
+	{
+		if (_curve != null) return false;
+		return true;
+	}
+	
+	
+	/**
+	 * Overrides the general Tangible move() because most cells will be attached to a curve
+	 * therefore, in most cases cells only move along a curve's time
+	 */
+	public void move(float dx, float dy, OMTVector constraint)
+	{
+		//get changes in mouse movement
+		
+		//if this cell is a free-floating cell, then move it as normal
+		if (isFreeFloating())
+		{
+			super.move(dx,dy, constraint);
+		}
+		else 
+		{
+			//the cell is attached to a curve
+			//move the cell by changing it's time signature on the parent curve
+			this._time += 0.002f * dx;
+			if (_time <= 0 ) _time = 0.001f;
+			if (_time >= 1) _time = 0.999f;
+			this.positionAlongCurve(_curve,_time);
+		}
+		
+		//apply the movement
+		changed(CHANGED_MOVE);
+	}
+	
+	
 	/**
 	 * Set the position of this NeuronMorphology at point time
 	 * along curve c

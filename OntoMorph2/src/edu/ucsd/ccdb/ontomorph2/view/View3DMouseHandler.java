@@ -93,17 +93,17 @@ public class View3DMouseHandler extends MouseInputAction {
 					if (timenow < prevPressTime + dblClickDelay) 
 		    		{
 		    			onMouseDouble(b);
-		    			System.out.println("double");
+		    			//System.out.println("double");
 		    		}
 					onMousePress(b);
-					System.out.println("press");
+					//System.out.println("press");
 					prevPressTime = timenow;
 				}
 				//============ DRAG =========================
 				else
 				{
 					onMouseDrag();
-					System.out.println("drag " + b + evt.getTriggerPressed());
+					//System.out.println("drag " + b + evt.getTriggerPressed());
 				}
 					
 				prevButtonID = b;
@@ -125,7 +125,7 @@ public class View3DMouseHandler extends MouseInputAction {
     		{  			
       			dragMode = false;
     			onMouseRelease(b);
-    			System.out.println("release " + b);
+    			//System.out.println("release " + b);
     		}
     		//============ MOVE - MOUSE EVENT DEFAULT =======
     		else	
@@ -437,9 +437,6 @@ public class View3DMouseHandler extends MouseInputAction {
 	}
 	
 	
-	
-	
-	
 	/**
 	 * Apply manipulations to the tangible that is currently selected
 	 * Called during mouse handling
@@ -473,22 +470,21 @@ public class View3DMouseHandler extends MouseInputAction {
 		System.out.println(dcoords.getOriginRotation());
 		*/
 		
-		
-		
 		//======================================
 		//======================================
 		
 		float mx = MouseInput.get().getXDelta();
 		float my = MouseInput.get().getYDelta();
 		
+		float dx = mx;
+		
 		//do the maniupulation to all selected objects
 		for (Tangible manip : TangibleManager.getInstance().getSelected())
 		{
-			
 			//check to see where the camera is position and compare it to the Tangible's plane
 			//if it is under, reverse the X direction so movement is intuitive
 			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().getCamera().getCamera().getDirection()), manip.getWorldNormal()); 
-			if (reverse) mx = -mx;	//switch X movement if it is on the opposite side of the plane
+			if (reverse) dx = -mx;	//switch X movement if it is on the opposite side of the plane
 
 			switch ( manipulation )
 			{
@@ -496,16 +492,16 @@ public class View3DMouseHandler extends MouseInputAction {
 				//do nothing
 				break;
 			case METHOD_MOVE:
-				manip.move(mx, my, new OMTVector(1,1,0));
+				manip.move(dx, my, new OMTVector(1,1,0));
 				break;
 			case METHOD_ROTATEX:
-				manip.rotate(mx, my, new OMTVector(1,0,0));
+				manip.rotate(dx, my, new OMTVector(1,0,0));
 				break;
 			case METHOD_ROTATEY:
-				manip.rotate(mx, my, new OMTVector(0,1,0));
+				manip.rotate(dx, my, new OMTVector(0,1,0));
 				break;
 			case METHOD_ROTATEZ:
-				manip.rotate(mx, my, new OMTVector(0,0,1));
+				manip.rotate(dx, my, new OMTVector(0,0,1));
 				break;
 			case METHOD_LOOKAT:
 				//FIXME: /* needs to be re-engineered to deal with multiple selections */
@@ -517,7 +513,7 @@ public class View3DMouseHandler extends MouseInputAction {
 				catch(Exception e){};
 				break;
 			case METHOD_SCALE:
-				manip.rotate(mx, my, new OMTVector(1,1,1));
+				manip.rotate(dx, my, new OMTVector(1,1,1));
 				break;
 			}
 		}

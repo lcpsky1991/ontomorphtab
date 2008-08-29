@@ -174,7 +174,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	 * @param consider
 	 * @return True if all elements have the same Class type
 	 */
-	private boolean isSameClass(ArrayList<Tangible> consider)
+	private boolean isSameClass(List<Tangible> consider)
 	{
 		Tangible firstElement = consider.get(0);
 		
@@ -190,7 +190,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		return true;
 	}
 	
-	private void create(List<Tangible> tans)
+	private void buildMenu(List<Tangible> seltans)
 	{
 		//"If you build it, they will come"
 		removeAllItems();
@@ -206,61 +206,135 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		//apply formatting
 		decorate();
+
+		// ============= FIND CONTEXT ? ==========================
+		//decide on the 'TargetContext' for this menu
+		//the target context can either be the originating tangible, or a 'master' object (as with anchorpoints)
+		//if they are all the same, use first item as 'target context' from which to base the menus, and apply actions to all of them
+		//if they are not the same, limit the possibilities to the basic menu
+		boolean multiContext = false;	//true if context is more than one thing
+		boolean homog = false; 			//short for homogeneous, true if all of them are same type
+		Tangible baseContext = null;
 		
-		//
-		if ( tans.size() > 0 )
+		//set the flas on how to build the context menu
+		if ( seltans.size() < 1)
 		{
+			homog = false;
+			multiContext = false;
+		}
+		else if ( seltans.size() == 1) 
+		{
+			homog = true;
+			multiContext = false;
+			baseContext = seltans.get(0);
+		}
+		else if ( seltans.size() > 1)
+		{
+			homog = isSameClass(seltans);
+			multiContext = true;
+			
+			//Now it is know characteristics about the context list, figure out what the target context should be
+			if (homog)	//if the list is homogenous, then the choice is simple (best to take the most recent one, at the end of the list)
+			{
+				baseContext =  seltans.get(seltans.size() - 1); //get last one
+			}
+			else
+			{
+				//the selection is non-homogenous, so the programmer decides what the user meant
+				if ( seltans.get(0) instanceof Curve3D)
+				{
+					baseContext = seltans.get(0);
+				}
+				else
+				{
+					baseContext = null;
+				}
+			}
+		}
+		else
+		{
+			//All conditions about list size were already considered, this should never happen!
+			String wtf = "'How often have I said to you that when you have eliminated the impossible, whatever remains, however improbable, must be the truth?' - Sherlock";
+			System.out.println(wtf);
+		}
+		//===========================================
+		
+		
+		
+
+		
+		//TODO: build generic menu
+		
+		//Here is the shell for the basic context decision
+		if (baseContext != null)
+		{
+			//TODO: build the usual for tangibles
 			//==================================
 			//	SECONDARY MENU ITEMS
 			// secondary must be built before primary in order to attach them as non-empty
-			
-			
 			//===================================
-			menuItemFactory(mnuNew, msN_CURVE, CTX_ACTION_NEW_CURVE, null);
-	        menuItemFactory(mnuNew, msN_ANCHOR, CTX_ACTION_NEW_ANCHOR, null);
-	        menuItemFactory(mnuNew_Cell, msN_CELL_DG, CTX_ACTION_NEW_CELL, null);
+			
+			menuItemFactory(mnuNew, msN_CURVE, CTX_ACTION_NEW_CURVE, null); //new curves are a generic action
 	        menuItemFactory(this, msANNOTATE, CTX_ACTION_ANNOTATE, null);
-	        menuItemFactory(this, msEDIT, CTX_ACTION_MODE, null);
 	        menuItemFactory(this, msPROPERTIES, CTX_ACTION_DISPROP, null);
 	        menuItemFactory(this, msDebug, CTX_ACTION_DEBUG, null);
-	        
-	        //DYNAMIC SELECT
-	        {	//find all thing a user MIGHT want to select and puts them in the select submenu
-	        	ArrayList<Tangible> others = View.getInstance().getView3DMouseHandler().psuedoPick(KeyInput.get().isControlDown(), false);
-		        for (int i=0; i < others.size(); i++)
-		        {
-		        	Tangible single = others.get(i);
-		        	String name = single.getName();
-			        menuItemFactory(mnuSelect, name, CTX_ACTION_SELECT, single);	
-		        }
-	        }
-	        
+			
+			if (baseContext instanceof Curve3D)
+			{
+				//build curve special menu
+				menuItemFactory(mnuNew, msN_ANCHOR, CTX_ACTION_NEW_ANCHOR, null);
+				menuItemFactory(mnuNew_Cell, msN_CELL_DG, CTX_ACTION_NEW_CELL, null);
+				menuItemFactory(this, msEDIT, CTX_ACTION_MODE, null);
+				mnuNew.registerSubMenu(mnuNew_Cell, msN_CELL);
+			}
+			else if (baseContext instanceof NeuronMorphology)
+			{
+				//build morphology special menu
+				menuItemFactory(this, msEDIT, CTX_ACTION_MODE, null);
+			}
+			else if (baseContext instanceof CurveAnchorPoint)
+			{
+				//build curveanchorpoint special menu
+				menuItemFactory(this, msEDIT, CTX_ACTION_MODE, null);
+			}
+			else if (baseContext instanceof Slide)
+			{
+				//build slide special menu
+			}
+			
 	        //DYNAMIC RE-SELECT
 	        {
-		        for (int i=0; i < tans.size(); i++)
+		        for (int i=0; i < seltans.size(); i++)
 		        {
-		        	Tangible single = tans.get(i);
+		        	Tangible single = seltans.get(i);
 		        	String name = single.getName();
 		        	menuItemFactory(mnuPart, name, CTX_ACTION_SELECT, single);
 		        }
 	        }
-	
-	        //========================================
-			// PRIMARY MENU ITEMS 
-			//========================================
 	        
-			this.registerSubMenu(mnuNew, msNEW);
+	        this.registerSubMenu(mnuNew, msNEW);
 			this.registerSubMenu(mnuManipulate, msManipulate);
-			mnuNew.registerSubMenu(mnuNew_Cell, msN_CELL);
-			this.registerSubMenu(mnuPart,msSELECTPART);
-			this.registerSubMenu(mnuSelect,msSELECT);
-		}
-		else
-		{
-			//If nothing was selected make the 'default' menu
-			menuItemFactory(this, msNone, View3DMouseHandler.METHOD_NONE, null);
-		}
 			
+			this.registerSubMenu(mnuPart,msSELECTPART);
+			
+		}
+
+        //DYNAMIC SELECT
+        {	//find all thing a user MIGHT want to select and puts them in the select submenu
+        	ArrayList<Tangible> others = View.getInstance().getView3DMouseHandler().psuedoPick(KeyInput.get().isControlDown(), false);
+	        for (int i=0; i < others.size(); i++)
+	        {
+	        	Tangible single = others.get(i);
+	        	String name = single.getName();
+		        menuItemFactory(mnuSelect, name, CTX_ACTION_SELECT, single);	
+	        }
+        }
+		
+		//TODO: build the rest
+		  //========================================
+		// PRIMARY MENU ITEMS 
+		//========================================
+		this.registerSubMenu(mnuSelect,msSELECT);
         this.setSizeToMinSize();
         this.layout();			
 	}
@@ -273,7 +347,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		int y = yCoord;
 		this.setXY(x, y);
 		
-		create(t);
+		buildMenu(t);
 		
 		border.setTitle(dynamicTitle(t));
 		
@@ -296,11 +370,11 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		}	//handles the case of multiselection
 		else if ( t != null & t.size() > 1)
 		{
-			ntitle = " Many ";
+			ntitle = " Many (" + t.size() + ")";
 		}	
 		else 
 		{
-			ntitle = " (none) ";
+			ntitle = " (None) ";
 		}
 		return ntitle;
 	}
@@ -556,7 +630,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		//System.out.println("sys " + system);
 		//System.out.println("new curve @ " + posa + cent + posb);
 		
-		OMTVector[] pts = {posa, cent, posb};
+		OMTVector[] pts = {posb, cent, posa};
 		Curve3D cap = new Curve3D("new curve", pts, system);	//FIXME: need to set demo coordinates on new curves
 		cap.setColor(java.awt.Color.orange);
 		cap.setVisible(true);
@@ -603,19 +677,11 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		//Find out where to put it
 		List<NeuronMorphology> cells = ocurve.getChildrenCells();
 		float high=0;
-		//get information about the distribution of the cells along the curve
-		for (int c=0; c < cells.size(); c++)
-		{
-			float num=cells.get(c).getTime();
-			if (num > high) high = num;
-		}
-		t = (high / cells.size()) + high;
-		
 		
 		//CREATE
 		TangibleManager.getInstance().unselectAll();
 		//do the rest of the actions
-		nc = new MorphMLNeuronMorphology("5199202a", ocurve, t, NeuronMorphology.RENDER_AS_LOD, dcoords);
+		nc = new MorphMLNeuronMorphology("5199202a", ocurve, t, NeuronMorphology.RENDER_AS_LOD, src.getCoordinateSystem());
 		nc.setRelativeScale(0.01f);
 		nc.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
 		nc.setVisible(true);
