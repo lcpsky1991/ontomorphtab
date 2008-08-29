@@ -25,6 +25,7 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
 public class OntoMorph2 {
 	
 	static Scene _scene;
+	static Properties wbcProps = null;
 	
 	public static void main(String[] args) {
         //		set global log level to warning
@@ -32,12 +33,11 @@ public class OntoMorph2 {
 		//http://www.jmonkeyengine.com/jmeforum/index.php?topic=5864.0
 		Log.getLogger("").setLevel(Level.WARNING);
 		Log.getLogger("").getHandlers()[0].setLevel(Level.WARNING);
-		Properties props = null;
+		
 		try {
-			props = System.getProperties();
+			wbcProps = new Properties();
 			URL url = new File("wbc.properties").toURI().toURL();
-			System.getProperties().load(url.openStream());
-			//System.out.println(props);
+			wbcProps.load(url.openStream());
 		} catch (Exception e) {
 			Log.error("Problem loading configuration file!");
 			e.printStackTrace();
@@ -48,7 +48,7 @@ public class OntoMorph2 {
 		
 		SceneObserver obs = SceneObserver.getInstance();
 		obs.setView(view);
-		if ("demo".equals(props.getProperty("scene"))) {
+		if ("demo".equals(wbcProps.getProperty("scene"))) {
 			_scene = new DemoScene();
 		} else {
 			_scene = new DefaultScene();
@@ -77,5 +77,13 @@ public class OntoMorph2 {
 		}
 		
 		//View.getInstance().getView2D().addInfoText("This is an example of \nloading neuronal morphologies...");
+	}
+	
+	public static Scene getCurrentScene() {
+		return _scene;
+	}
+	
+	public static Properties getWBCProperties() {
+		return wbcProps;
 	}
 }

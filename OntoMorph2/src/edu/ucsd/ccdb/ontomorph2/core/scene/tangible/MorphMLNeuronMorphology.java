@@ -40,32 +40,32 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	}
 	
 
-	public MorphMLNeuronMorphology(String morphLoc, PositionVector position, 
+	public MorphMLNeuronMorphology(String name, PositionVector position, 
 			RotationVector rotation) {
-		this(morphLoc);
+		this(name);
 		setRelativePosition(position);
 		setRelativeRotation(rotation);
 	}
 
 	
-	public MorphMLNeuronMorphology(String morphLoc, PositionVector position, 
+	public MorphMLNeuronMorphology(String name, PositionVector position, 
 			RotationVector rotation, String renderOption) {
-		this(morphLoc, position, rotation);
+		this(name, position, rotation);
 		setRenderOption(renderOption);
 	}
 	
 	
-	public MorphMLNeuronMorphology(String morphLoc, Curve3D curve, float time, String renderOption) {
-		this(morphLoc);
+	public MorphMLNeuronMorphology(String name, Curve3D curve, float time, String renderOption) {
+		this(name);
 		_curve = curve;
 		_time = time;
 		this.positionAlongCurve(curve, time);
 		setRenderOption(renderOption);
 	}
 	
-	public MorphMLNeuronMorphology(String morphLoc, Curve3D curve, float time, 
+	public MorphMLNeuronMorphology(String name, Curve3D curve, float time, 
 			String renderOption, CoordinateSystem c) {
-		this(morphLoc, curve, time, renderOption);
+		this(name, curve, time, renderOption);
 		this.setCoordinateSystem(c);
 	}
 	

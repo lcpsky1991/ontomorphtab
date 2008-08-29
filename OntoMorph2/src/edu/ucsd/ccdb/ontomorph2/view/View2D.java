@@ -1,6 +1,9 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -21,6 +24,7 @@ import org.fenggui.util.Point;
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
 
+import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
@@ -215,7 +219,7 @@ public class View2D extends Display{
 		
 		
 //			Create a file chooser
-			final JFileChooser fc = new JFileChooser();
+			final JFileChooser fc = new JFileChooser(OntoMorph2.getWBCProperties().getProperty("last.load.directory"));
 			
 //			In response to a button click:
 			JFrame f = new JFrame();
@@ -226,6 +230,12 @@ public class View2D extends Display{
 			
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            File file = fc.getSelectedFile();
+	            OntoMorph2.getWBCProperties().setProperty("last.load.directory", file.getAbsolutePath());
+	            try {
+	            	OntoMorph2.getWBCProperties().store(new FileOutputStream("wbc.properties"), "");
+	            } catch (Exception e) {
+					Log.warn("Unable to write properties file");
+				}
 	            TangibleManager.getInstance().loadFile(file);
 	      
 	        } else {

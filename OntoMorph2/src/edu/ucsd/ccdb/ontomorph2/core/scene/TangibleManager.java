@@ -7,8 +7,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
+import com.jme.math.Vector3f;
+
+import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
+import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
@@ -16,6 +23,9 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
@@ -240,9 +250,27 @@ public class TangibleManager {
 	public void loadFile(File file) {
 		if (file != null && file.canRead()) {
 			Log.warn("Trying to open file " + file.getPath());
-			if (file.getPath().endsWith(".tiff") || file.getPath().endsWith(".tif")) {
+			if (file.getName().endsWith(".tiff") || file.getName().endsWith(".tif")) {
 				//add slide to scene
 				//TangibleManager.getInstance().addTangible(new Slide(file.toURI().toURL(), null, null, null));
+			} else if (file.getName().endsWith(".morph.xml")){
+				//get first part of file name without extensions
+				String fileName = file.getName().split("\\.")[0];
+				
+				//for demo purposes, load in a default location with default settings
+				NeuronMorphology cell3 = new MorphMLNeuronMorphology(fileName, 
+						new PositionVector(289f, -118f, -180f), null, 
+						NeuronMorphology.RENDER_AS_LOD_2);
+				RotationVector v = new RotationVector(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-90, Vector3f.UNIT_Y));
+				cell3.setRelativeRotation(v);
+				//cell3.setCoordinateSystem(d);
+				cell3.setRelativeScale(0.01f);
+				//semantic thing for hippocampal CA3 neuron
+				cell3.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+				cell3.setVisible(true);
+				
+				OntoMorph2.getCurrentScene().changed(Scene.CHANGED_LOAD);
+				
 			} else {
 				Log.warn("This is not a file type that can be opened");
 			}

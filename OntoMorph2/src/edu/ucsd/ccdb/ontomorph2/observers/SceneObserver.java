@@ -63,7 +63,7 @@ public class SceneObserver implements Observer {
 			else if (arg.equals(Scene.CHANGED_CELL))
 			{
 				msg = "adding cells";
-				
+				_view.getView3D().setCells(scene.getCells());
 			}
 			else if (arg.equals(Scene.CHANGED_PART))
 			{
