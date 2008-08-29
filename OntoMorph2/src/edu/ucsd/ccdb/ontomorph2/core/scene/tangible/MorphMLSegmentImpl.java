@@ -1,5 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
+import java.awt.Color;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +84,10 @@ public class MorphMLSegmentImpl extends Tangible implements ISegment{
 	 */
 	public BigInteger getId() {
 		return s.getId();
+	}
+	
+	public Color getColor() {
+		return this.getParent().getCable(this.getCableId()).getColor();
 	}
 
 	public void select() 

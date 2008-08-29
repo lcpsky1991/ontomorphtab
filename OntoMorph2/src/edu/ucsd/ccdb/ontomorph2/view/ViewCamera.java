@@ -9,6 +9,7 @@ import com.jme.renderer.Camera;
 import com.jme.scene.CameraNode;
 import com.jme.scene.Controller;
 import com.jme.scene.Node;
+import com.jme.scene.SceneElement;
 import com.jme.util.Timer;
 
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
@@ -257,6 +258,8 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         cc.setSpeed(zoom);
         cc.setDisableAfterClamp(true);
         cc.setAutoRotation(true);
+        curve.setCullMode(SceneElement.CULL_ALWAYS);
+        curve.updateRenderState();
         this.attachChild(curve);
         cc.setActive(true);        	
         

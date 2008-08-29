@@ -1,5 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
+import java.awt.Color;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -195,9 +196,7 @@ public class NeuronMorphologyView extends TangibleView{
 	}
 	
 	private void renderParts(Node node, ICable part, String renderOption) {
-		if (renderOption.equals(NeuronMorphology.RENDER_AS_LINES)) {
-			
-			
+		if (renderOption.equals(NeuronMorphology.RENDER_AS_LINES)) {			
 			Geometry g = this.getLine(part);
 			this.registerGeometry(g);
 			this.registerGeometryToCable(g, part);
@@ -219,7 +218,6 @@ public class NeuronMorphologyView extends TangibleView{
 				this.registerGeometryToCable(g, part);
 				node.attachChild(g);
 			}
-			
 		}
 		else if (renderOption.equals(NeuronMorphology.RENDER_AS_LOD)) {
 			
@@ -254,6 +252,8 @@ public class NeuronMorphologyView extends TangibleView{
 			List<Geometry> l = new ArrayList<Geometry>();
 			l.add(g);
 			((OMTDiscreteLodNode)node).addDiscreteLodNodeChild(1, l, 800, 10000);
+			node.updateGeometricState(0.5f, false);
+			node.updateRenderState();
 		}
 	}
 	
@@ -431,10 +431,10 @@ public class NeuronMorphologyView extends TangibleView{
 		cyl.setLocalRotation(q);
 		
 		cyl.setLocalTranslation(center);
-		
-		cyl.setSolidColor(ColorUtil.convertColorToColorRGBA(part.getColor()));
-		cyl.updateRenderState();
-		cyl.updateGeometricState(5f, false);
+		Color c = part.getColor();
+		cyl.setSolidColor(ColorUtil.convertColorToColorRGBA(c));
+		//cyl.updateRenderState();
+		cyl.updateGeometricState(0.5f, false);
 		return cyl;
 	}
 	
