@@ -287,14 +287,14 @@ public class ReferenceAtlas {
 		Set<BrainRegion> brs = new HashSet<BrainRegion>();
 		
 		
-		brs.add(this.getBrainRegion("HIP"));
-		this.getBrainRegion("HIP").setVisibility(BrainRegion.TRANSPARENT);
+		//brs.add(this.getBrainRegion("HIP"));
+		//this.getBrainRegion("HIP").setVisibility(BrainRegion.TRANSPARENT);
 		
 		brs.add(this.getBrainRegion("DG"));
-		this.getBrainRegion("DG").setVisibility(BrainRegion.VISIBLE);
+		this.getBrainRegion("DG").setVisibility(BrainRegion.TRANSPARENT);
 		
 		brs.add(this.getBrainRegion("CA"));
-		this.getBrainRegion("CA").setVisibility(BrainRegion.VISIBLE);
+		this.getBrainRegion("CA").setVisibility(BrainRegion.TRANSPARENT);
 		
 		
 		View.getInstance().getView3D().addBrainRegions(brs);

@@ -321,7 +321,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 
         //DYNAMIC SELECT
         {	//find all thing a user MIGHT want to select and puts them in the select submenu
-        	ArrayList<Tangible> others = View.getInstance().getView3DMouseHandler().psuedoPick(KeyInput.get().isControlDown(), false);
+        	ArrayList<Tangible> others = View.getInstance().getView3DMouseListener().psuedoPick(KeyInput.get().isControlDown(), false);
 	        for (int i=0; i < others.size(); i++)
 	        {
 	        	Tangible single = others.get(i);

@@ -250,8 +250,8 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         CurveOnceController cc = new CurveOnceController(curve, this, objectPosition);
         Log.warn("up" + up);
         cc.setActive(false);
-        Log.warn("camNode " + camNode);
-        Log.warn(cc + " curve ");
+        //Log.warn("camNode " + camNode);
+        //Log.warn(cc + " curve ");
         this.addController(cc);
         cc.setRepeatType(Controller.RT_CLAMP);
         cc.setUpVector(up);

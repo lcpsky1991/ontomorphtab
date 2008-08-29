@@ -38,9 +38,9 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
  * Handles selection and manipulation of TangibleViews within the 3D world using the mouse.
  * 
  * @author caprea
- * @deprecated
+ *
  */
-public class View3DMouseHandler extends MouseInputAction {
+public class View3DMouseListener implements MouseInputListener {
 	
 //	==================================
 	// DECLARES
@@ -60,100 +60,47 @@ public class View3DMouseHandler extends MouseInputAction {
 
 	private static int manipulation = METHOD_PICK; //use accesor
 	
-
-	//For dealing with Mouse Events, track previous time and dragging
-	boolean dragMode = false;
+	private boolean down;
+	private int lastButton;
 	long prevPressTime = 0;
 	long dblClickDelay = 800;	//in milliseconds (1000 = 1 sec)
-	int prevButtonID = 0;
-	
-	/**
-	 * This will get called upon mouse activity if 
-	 * this MouseInputHandler has been added in the view using:
-	 * input.addAction(..,..,..,.., false) (allowRepeats)
-	 * 
-	 * it will get called continuously if 
-	 * this MouseInputHandler has been added in the view using:
-	 * input.addAction(..,..,..,.., true) (allowRepeats)
-	 */
-	public void performAction( InputActionEvent evt ) 
-    {
-		//if (true) return;
-		
-		//example code for jesus
-		//if FocusManager.getInstance().isWidgetActive() return;
-		if (FocusManager.get().isWidgetFocused())
-		{
-			//exit the regular mouse handler if a widget is focused
-			return;
+			
+	public void onButton(int button, boolean pressed, int x, int y)
+	{
+		//System.out.println("onButton");
+		down = pressed;
+		lastButton = button;
+		if(pressed) {
+			onMousePress(button);
+			prevPressTime = System.currentTimeMillis();
+		} else {
+			onMouseRelease(button);
 		}
+	}
 
-		//pafind the index of which button pressed/released
-		int b = evt.getTriggerIndex();
-		long timenow = System.currentTimeMillis();
+	public void onMove(int xDelta, int yDelta, int newX, int newY)
+	{
+		//System.out.println("onMove");
+		// If the button is down, the mouse is being dragged
+		if(down)
+			onMouseDrag(lastButton);
+		else
+		    onMouseMove();
+	}	
 		
-		
-    	if (evt.getTriggerPressed()) //
-    	{
-				//=========== MOUSE DOWN ========================
-				if (!dragMode) //if previously no button pressed
-				{
-//					check double click
-					if (timenow < prevPressTime + dblClickDelay) 
-		    		{
-		    			onMouseDouble(b);
-		    			//System.out.println("double");
-		    		}
-					onMousePress(b);
-					//System.out.println("press");
-					prevPressTime = timenow;
-				}
-				//============ DRAG =========================
-				else
-				{
-					onMouseDrag();
-					//System.out.println("drag " + b + evt.getTriggerPressed());
-				}
-					
-				prevButtonID = b;
-				dragMode = true;	//begin assuming drag (deactive drag in upMouse event)
-    	}
-    	else
-    	{
-    		//+++++ BUTTON RELEASED (not pressed) ++++++
-    		/*
-    		 (enjoy a drink now and then), 
-    		 will frequently check credit at 
-    		 (moral) bank (hole in the wall), 
-    		 */
-    		boolean pushed = false;
-    		pushed = MouseInput.get().isButtonDown(b);  		
-    		
-    		//============ MOUSE UP/RELEASE =============
-    		if (!pushed && dragMode && b == prevButtonID)	
-    		{  			
-      			dragMode = false;
-    			onMouseRelease(b);
-    			//System.out.println("release " + b);
-    		}
-    		//============ MOVE - MOUSE EVENT DEFAULT =======
-    		else	
-    		{
-    			//System.out.println("mouse move/wheel");
-    			onMouseMove();
-    			onMouseWheel();
-    		}
-    	}
-    }
-	
-	 
+	public void onWheel(int wheelDelta, int x, int y)
+	{
+		onMouseWheel();
+	}
+
 	/**
 	 * Child method from handleMouseInput
 	 */ 
-	private void onMouseDrag()
+	private void onMouseDrag(int button)
 	{
 		
 		boolean mouseLook = false;
+		//int numMouseBut = button;
 		int numMouseBut = MouseInput.get().getButtonCount();
 		
 		//====================================
@@ -201,6 +148,9 @@ public class View3DMouseHandler extends MouseInputAction {
 		}
 		else if (0 == buttonIndex) //left
 		{
+			if (System.currentTimeMillis() - this.prevPressTime < this.dblClickDelay) {
+				onMouseDouble(0);
+			}
 			//doPick();
 		}
 	}
@@ -553,19 +503,21 @@ public class View3DMouseHandler extends MouseInputAction {
 	 * 
 	 * Use static fields defined in this class
 	 * @param m - one of the constant ints defined in this class
-	 * @see View3DMouseHandler#METHOD_LOOKAT
-	 * @see View3DMouseHandler#METHOD_MOVE
-	 * @see View3DMouseHandler#METHOD_NONE
-	 * @see View3DMouseHandler#METHOD_PICK
-	 * @see View3DMouseHandler#METHOD_ROTATEX
-	 * @see View3DMouseHandler#METHOD_ROTATEY
-	 * @see View3DMouseHandler#METHOD_ROTATEZ
-	 * @see View3DMouseHandler#METHOD_SCALE
+	 * @see View3DMouseListener#METHOD_LOOKAT
+	 * @see View3DMouseListener#METHOD_MOVE
+	 * @see View3DMouseListener#METHOD_NONE
+	 * @see View3DMouseListener#METHOD_PICK
+	 * @see View3DMouseListener#METHOD_ROTATEX
+	 * @see View3DMouseListener#METHOD_ROTATEY
+	 * @see View3DMouseListener#METHOD_ROTATEZ
+	 * @see View3DMouseListener#METHOD_SCALE
 	 */
 	public void setManipulation(int m)
 	{
 		manipulation = m;
 		Log.warn("Manipulation method set to: " + m);
 	}
+
+
 	
 }

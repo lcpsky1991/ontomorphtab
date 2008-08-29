@@ -57,8 +57,7 @@ public class SceneObserver implements Observer {
 				//============ LOAD ==============
 			else if (arg.equals(Scene.CHANGED_LOAD) ) 
 			{
-				_view.getView3D().setSlides(scene.getSlides());
-				msg = "reloading slides";
+				msg = "(re)loading entire scene";
 				reloadAll(scene);
 			}
 			else if (arg.equals(Scene.CHANGED_CELL))
@@ -74,7 +73,7 @@ public class SceneObserver implements Observer {
 			else if (arg.equals(Scene.CHANGED_TEST))
 			{
 				_view.getView3D().setCurves(scene.getCurves());
-				reloadCells(scene);
+				_view.getView3D().setCells(scene.getCells());
 				msg = "reloading test";
 			}
 			
@@ -199,28 +198,17 @@ public class SceneObserver implements Observer {
 		_view = view;
 	}
 
-	
-	private void reloadCells(Scene s)
-	{
-		_view.getView3D().setCells(s.getCells());
-		for (NeuronMorphology c : s.getCells())
-		{
-			c.addObserver(this);
-		}
-	}
 	public void reloadAll(Scene s)
 	{
-		 	_view.getView3D().setVolumes(s.getVolumes());
-			_view.getView3D().setCells(s.getCells());
-			_view.getView3D().setCurves(s.getCurves());
-			_view.getView3D().setSurfaces(s.getSurfaces());
-			_view.getView3D().setMeshes(s.getMeshes());
+		
+		_view.getView3D().setSlides(s.getSlides());
+		_view.getView3D().setVolumes(s.getVolumes());
+		_view.getView3D().setCells(s.getCells());
+		_view.getView3D().setCurves(s.getCurves());
+		_view.getView3D().setSurfaces(s.getSurfaces());
+		_view.getView3D().setMeshes(s.getMeshes());
 
-			
-			reloadCells(s);
-			
-			setCamera(s);
-			System.out.println("Performance Mesg: reloading entire scene");
+		setCamera(s);
 	}
 	
 	private void setCamera(Scene s) {

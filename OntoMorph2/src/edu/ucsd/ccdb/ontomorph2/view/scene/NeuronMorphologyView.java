@@ -36,6 +36,7 @@ import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.INeuronMorphologyPart;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -445,7 +446,7 @@ public class NeuronMorphologyView extends TangibleView{
 		List<Geometry> l = new ArrayList<Geometry>();
 		
 		for (int i = 0; i < part.getSubPartCount(); i++) {
-			INeuronMorphologyPart seg = part.getSubPart(i);
+			ISegment seg = (ISegment)part.getSubPart(i);
 			Cylinder c = this.getCylinder(seg);
 			l.add(c);
 		}	

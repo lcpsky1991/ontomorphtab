@@ -77,7 +77,7 @@ public class View extends BaseSimpleGame {
 	org.fenggui.Display disp; // FengGUI's display
 	
 	View3D view3D = null;
-	private View3DMouseHandler view3DMouseHandler;
+	private View3DMouseListener view3DMouseListener;
 	
 	/**
 	 * Returns the singleton instance.
@@ -109,8 +109,8 @@ public class View extends BaseSimpleGame {
 		return this.debugMode;
 	}
 	
-	public View3DMouseHandler getView3DMouseHandler() {
-		return this.view3DMouseHandler;
+	public View3DMouseListener getView3DMouseListener() {
+		return this.view3DMouseListener;
 	}
 	
 	/**
@@ -193,9 +193,12 @@ public class View extends BaseSimpleGame {
 		MouseInput.get().setCursorVisible(true);
 		
 		//(InputActionInterface action, java.lang.String deviceName, int button, int axis, boolean allowRepeats)
+		/*
     	this.view3DMouseHandler = new View3DMouseHandler();
-        input.addAction(this.view3DMouseHandler , InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, true );
-
+        input.addAction(this.view3DMouseHandler , InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, false );
+        */
+		this.view3DMouseListener = new View3DMouseListener();
+		MouseInput.get().addListener(this.view3DMouseListener);
 	}
 			
 	

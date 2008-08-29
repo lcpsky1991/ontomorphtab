@@ -208,9 +208,7 @@ public class View2D extends Display{
 	}
 	
 	public void loadAtlasBrowser() {
-		if (aBrowser == null) {
-			aBrowser = new AtlasBrowser(this);
-		}
+		aBrowser = new AtlasBrowser(this);
 	}
 	
 	public void loadFileChooser() {

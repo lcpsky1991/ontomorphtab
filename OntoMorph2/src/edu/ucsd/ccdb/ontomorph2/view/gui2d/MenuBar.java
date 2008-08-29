@@ -269,31 +269,31 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if ( strMNU_MANI_NONE.equals(act) )
 		{
-			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_PICK);
+			View.getInstance().getView3DMouseListener().setManipulation(View3DMouseHandler.METHOD_PICK);
 		}
 		else if ( strMNU_MANI_MOVE.equals(act) )
 		{
-			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_MOVE);
+			View.getInstance().getView3DMouseListener().setManipulation(View3DMouseHandler.METHOD_MOVE);
 		}
 		else if ( strMNU_MANI_ROTATEA.equals(act) )
 		{
-			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_ROTATEX);
+			View.getInstance().getView3DMouseListener().setManipulation(View3DMouseHandler.METHOD_ROTATEX);
 		}
 		else if ( strMNU_MANI_ROTATEB.equals(act) )
 		{
-			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_ROTATEY);
+			View.getInstance().getView3DMouseListener().setManipulation(View3DMouseHandler.METHOD_ROTATEY);
 		}
 		else if ( strMNU_MANI_ROTATEC.equals(act) )
 		{
-			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_ROTATEZ);
+			View.getInstance().getView3DMouseListener().setManipulation(View3DMouseHandler.METHOD_ROTATEZ);
 		}
 		else if ( strMNU_MANI_LOOK.equals(act) )
 		{
-			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_LOOKAT);
+			View.getInstance().getView3DMouseListener().setManipulation(View3DMouseHandler.METHOD_LOOKAT);
 		}
 		else if ( strMNU_MANI_SCALE.equals(act) )
 		{
-			View.getInstance().getView3DMouseHandler().setManipulation(View3DMouseHandler.METHOD_SCALE);
+			View.getInstance().getView3DMouseListener().setManipulation(View3DMouseHandler.METHOD_SCALE);
 		}
 		else if (BASIC_SEARCH.equals(act)) {
 			View2D.getInstance().loadBasicSearchBox();
