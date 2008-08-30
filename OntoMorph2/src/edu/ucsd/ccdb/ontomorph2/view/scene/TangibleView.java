@@ -93,7 +93,6 @@ public abstract class TangibleView extends Node {
 			this.unhighlight();
 		}
 
-		this.updateRenderState();
 		
 		//FIXME: setlocals may need to be changed to setWorld
 	   
@@ -101,6 +100,10 @@ public abstract class TangibleView extends Node {
 		setLocalTranslation(this.getModel().getAbsolutePosition());
 		setLocalRotation(this.getModel().getAbsoluteRotation());
 			
+
+		this.updateRenderState();
+		this.updateModelBound();
+		this.updateGeometricState(0.5f, false);
 	}
 	
 	/**

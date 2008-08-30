@@ -94,8 +94,6 @@ public class DemoScene extends Scene{
 	 *
 	 */
 	public void load() {
-		//temporary hack o load a mockup
-		DemoCoordinateSystem d = new DemoCoordinateSystem();
 
 		/*
 		CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(35);
@@ -149,6 +147,20 @@ public class DemoScene extends Scene{
 		cell3.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
 		addSceneObject(cell3);
 		*/
+		
+		DemoCoordinateSystem d = new DemoCoordinateSystem();
+		
+		
+		DataMesh mesh = new DataMesh();
+		//mesh.loadMaxFile("etc/mito/mito_outer.3ds");
+		mesh.setObjMeshURL(mitoObjURL);
+		//mesh.setRelativePosition(new PositionVector(0.49f, -3.5f, 20.01f));
+		mesh.setRelativePosition(new PositionVector(0.49f, -3.3f, 20.01f));
+		mesh.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
+		mesh.setRelativeScale(0.0002f);
+		mesh.setCoordinateSystem(d);
+		
+		addSceneObject(mesh);
 		
 		
 		setCameraPosition(Scene.CAMERA_CELLS_POSITION);

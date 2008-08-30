@@ -4,10 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.state.RenderState;
@@ -24,14 +26,14 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class MeshViewImpl {
+public class MeshViewImpl extends TangibleView{
 
 
 	//OMTDiscreteLodNode object = null;
 	Node object = null;
-	DataMesh mesh = null;
+	
 	public MeshViewImpl(DataMesh mesh) {
-		this.mesh = mesh;
+		super(mesh);
 		if (mesh.getMaxMeshURL() != null) {
 			loadMaxFile(mesh.getMaxMeshURL());
 		} else if (mesh.getObjMeshURL() != null) {
@@ -62,6 +64,9 @@ public class MeshViewImpl {
 				//this works but adds a significant time overhead to loading the program
 				//object.attachChild(this.getClodMeshFromGeometry(mesh));
 				
+				this.registerGeometry(mesh);
+				mesh.setModelBound(new BoundingBox());
+				mesh.updateModelBound();
 				object.attachChild(mesh);
 			} else if (o instanceof Node) {
 
@@ -77,20 +82,21 @@ public class MeshViewImpl {
 				object.addDiscreteLodNodeChild(n, g, 0, 1000);
 				*/
 				//object.attachChild(n);
+				for(Spatial s : n.getChildren()) {
+					if (s instanceof Geometry) {
+						this.registerGeometry((Geometry)s);
+					}
+				}
+				n.setModelBound(new BoundingBox());
+				n.updateModelBound();
 				object = n;
 			}
-			/*
-			object.updateModelBound();
-			Vector3f translateToOrigin = new Vector3f();
-			if (object.getWorldBound() != null) {
-				 translateToOrigin = object.getWorldBound().getCenter().subtract(new Vector3f(0,0,0));
-				object.setLocalTranslation(translateToOrigin);
-			}*/
-			if (mesh.getAbsolutePosition() != null)
-				object.setLocalTranslation(mesh.getAbsolutePosition().asVector3f());
-			if (mesh.getAbsoluteRotation() != null)
-				object.setLocalRotation(mesh.getAbsoluteRotation().asMatrix3f());
-			object.setLocalScale(mesh.getRelativeScale());
+
+			if (getModel().getAbsolutePosition() != null)
+				object.setLocalTranslation(getModel().getAbsolutePosition().asVector3f());
+			if (getModel().getAbsoluteRotation() != null)
+				object.setLocalRotation(getModel().getAbsoluteRotation().asMatrix3f());
+			object.setLocalScale(getModel().getRelativeScale());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,5 +135,23 @@ public class MeshViewImpl {
         acm.setRenderState(cylinder.getRenderState(RenderState.RS_MATERIAL));
         // Attach clod node.
         return acm;
+	}
+
+	@Override
+	public void doHighlight() {
+		for (Spatial s : object.getChildren()) {
+			if (s instanceof Geometry) {
+				((Geometry)s).setSolidColor(ColorRGBA.yellow);
+			}
+		}
+	}
+
+	@Override
+	public void doUnhighlight() {
+		for (Spatial s : object.getChildren()) {
+			if (s instanceof Geometry) {
+				((Geometry)s).setSolidColor(ColorRGBA.orange);
+			}
+		}
 	}
 }

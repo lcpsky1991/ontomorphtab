@@ -68,18 +68,13 @@ public class View3D extends Node{
 	public void setSlides(Set<Slide> slides) {
 		slidesNode.detachAllChildren();
 		for(Slide slide : slides){
-			slidesNode.attachChild(new SlideView(slide));
+			SlideView slideView = (SlideView)TangibleViewManager.getInstance().getTangibleViewFor(slide);
+			if (slideView == null) {
+				//implicitly adds the new TangibleView to the TangibleViewManager
+				slideView = new SlideView(slide);
+			}
+			slidesNode.attachChild(slideView);
 		}
-		slidesNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
-		
-		ZBufferState zb = View.getInstance().getRenderer().createZBufferState();
-		zb.setWritable(false);
-		zb.setFunction(ZBufferState.CF_LEQUAL);
-		zb.setEnabled(true);
-		slidesNode.setRenderState(zb);
-		
-		slidesNode.setTextureCombineMode(TextureState.COMBINE_CLOSEST);
-		slidesNode.updateRenderState();
 	}
 	
 	/**
@@ -91,7 +86,7 @@ public class View3D extends Node{
 		for(NeuronMorphology cell : cells) {
 			NeuronMorphologyView cellView = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor(cell);
 			if (cellView == null) {
-				//implicitly adds the new NeuronMorphologyView to the TangibleViewManager
+				//implicitly adds the new TangibleView to the TangibleViewManager
 				cellView = new NeuronMorphologyView(cell);
 			}
 
@@ -114,7 +109,12 @@ public class View3D extends Node{
 	public void setCurves(Set<Curve3D> curves) {
 		curvesNode.detachAllChildren();
 		for(Curve3D curve : curves) {
-			curvesNode.attachChild(new CurveView(curve));
+			CurveView curveView = (CurveView)TangibleViewManager.getInstance().getTangibleViewFor(curve);
+			if (curveView == null) {
+				//implicitly adds the new TangibleView to the TangibleViewManager
+				curveView = new CurveView(curve);
+			}
+			curvesNode.attachChild(curveView);
 		}
 		
 	}
@@ -129,7 +129,11 @@ public class View3D extends Node{
 	public void setMeshes(Set<DataMesh> meshes) {
 		meshesNode.detachAllChildren();
 		for(DataMesh mesh : meshes) {
-			MeshViewImpl meshView = new MeshViewImpl(mesh);
+			MeshViewImpl meshView = (MeshViewImpl)TangibleViewManager.getInstance().getTangibleViewFor(mesh);
+			if (meshView == null) {
+				//implicitly adds the new TangibleView to the TangibleViewManager
+				meshView = new MeshViewImpl(mesh);
+			}
 			meshesNode.attachChild(meshView.getNode());
 		}
 	}

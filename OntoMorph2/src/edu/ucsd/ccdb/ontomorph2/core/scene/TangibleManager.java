@@ -39,8 +39,6 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
  */
 public class TangibleManager {
 
-	
-
 	private ArrayList<Tangible> selectedThings = null; 
 	ArrayList<Tangible> tangibles = null;
 	boolean multiSelect = false;
