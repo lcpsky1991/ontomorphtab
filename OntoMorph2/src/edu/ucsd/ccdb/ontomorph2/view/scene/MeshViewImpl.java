@@ -39,6 +39,8 @@ public class MeshViewImpl extends TangibleView{
 		} else if (mesh.getObjMeshURL() != null) {
 			loadObjFile(mesh.getObjMeshURL());
 		}
+		
+		this.pickPriority = TangibleView.P_HIGHEST;
 	}
 	
 	private void loadFile(FormatConverter converter, URL model) {

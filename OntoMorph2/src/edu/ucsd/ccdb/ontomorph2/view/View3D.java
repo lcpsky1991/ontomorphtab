@@ -98,6 +98,7 @@ public class View3D extends Node{
 	/**
 	 * added for {@link ContextMenu}s New Cell command, because it is more efficient to add ONE than remake all
 	 * @param cell the ({@link NeuronMorphology}s to be added
+	 * @deprecated
 	 */
 	public void addOneCell(NeuronMorphology cell)
 	{

@@ -689,16 +689,15 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		View.getInstance().getScene().changed(Scene.CHANGED_CELL);
 		
-		View.getInstance().getView3D().addOneCell(nc);
+		//View.getInstance().getView3D().addOneCell(nc); //deprecated
+		
 		nc.addObserver(SceneObserver.getInstance()); //add an observer to the new cell
 		
 		TangibleView cv = TangibleViewManager.getInstance().getTangibleViewFor(nc);
 		if ( cv != null)
 		{
-			cv.updateRenderState();
 			cv.update();
 		}
-		
 	}
 }
 

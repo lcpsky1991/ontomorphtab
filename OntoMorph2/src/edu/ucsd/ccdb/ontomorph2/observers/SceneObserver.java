@@ -9,6 +9,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
@@ -19,6 +20,7 @@ import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.MeshViewImpl;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
@@ -158,14 +160,21 @@ public class SceneObserver implements Observer {
 				}
 			}
 		}
-
+		else if (o instanceof DataMesh)
+		{
+			MeshViewImpl tvdm = (MeshViewImpl)TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
+			if (tvdm != null)
+			{
+				tvdm.update();
+			}
+		}
+		
 		//catch all method for any leftover tangibles
 		else if (o instanceof Tangible)
 		{
 			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
 			if (tv != null)
 			{
-				//tv.updateRenderState();
 				tv.update();
 			}
 		}
