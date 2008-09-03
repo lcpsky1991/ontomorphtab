@@ -103,10 +103,7 @@ public class SlideView extends TangibleView {
 		this.updateRenderState();
 		
 //		update the geometries registry, this is neccessary to enable picking, which is based on geomtry key maps
-		List<Geometry> ll = new ArrayList<Geometry>();
-		ll.add(quad);
-		this.registerGeometries(ll);	
-		
+		this.registerGeometry(quad);
 		
 		this.update();
 	}

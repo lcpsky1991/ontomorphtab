@@ -30,10 +30,11 @@ public class MeshViewImpl extends TangibleView{
 
 
 	//OMTDiscreteLodNode object = null;
-	Node object = null;
+	Node standinObject = null;
 	
 	public MeshViewImpl(DataMesh mesh) {
 		super(mesh);
+		super.setName("DataMeshView for " + this.getModel().getName());
 		if (mesh.getMaxMeshURL() != null) {
 			loadMaxFile(mesh.getMaxMeshURL());
 		} else if (mesh.getObjMeshURL() != null) {
@@ -54,7 +55,7 @@ public class MeshViewImpl extends TangibleView{
 			// Load the binary .jme format into a scene graph
 			
 			//object = new OMTDiscreteLodNode(new DistanceSwitchModel(10));
-			object = new Node();
+			standinObject = new Node();
 			Object o = jbr.load(new ByteArrayInputStream(BO.toByteArray()));
 			if (o instanceof TriMesh) {
 				TriMesh mesh = (TriMesh)o;
@@ -69,9 +70,9 @@ public class MeshViewImpl extends TangibleView{
 				this.registerGeometry(mesh);
 				mesh.setModelBound(new BoundingBox());
 				mesh.updateModelBound();
-				object.attachChild(mesh);
-			} else if (o instanceof Node) {
+				standinObject.attachChild(mesh);
 
+			} else if (o instanceof Node) {
 				Node n = (Node)o;
 				/*
 				List<Geometry> g = new ArrayList<Geometry>();
@@ -91,15 +92,19 @@ public class MeshViewImpl extends TangibleView{
 				}
 				n.setModelBound(new BoundingBox());
 				n.updateModelBound();
-				object = n;
+				standinObject = n;
 			}
 
-			if (getModel().getAbsolutePosition() != null)
-				object.setLocalTranslation(getModel().getAbsolutePosition().asVector3f());
-			if (getModel().getAbsoluteRotation() != null)
-				object.setLocalRotation(getModel().getAbsoluteRotation().asMatrix3f());
-			object.setLocalScale(getModel().getRelativeScale());
 			
+			this.attachChild(standinObject);
+			this.update();
+			
+			//if (getModel().getAbsolutePosition() != null)
+			//	object.setLocalTranslation(getModel().getAbsolutePosition().asVector3f());
+			//if (getModel().getAbsoluteRotation() != null)
+			//	object.setLocalRotation(getModel().getAbsoluteRotation().asMatrix3f());			
+			//object.setLocalScale(getModel().getRelativeScale());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -116,7 +121,7 @@ public class MeshViewImpl extends TangibleView{
 	}
 
 	public Node getNode() {
-		return object;
+		return this;
 	}
 	
 	private AreaClodMesh getClodMeshFromGeometry(Geometry cylinder) {
@@ -141,7 +146,7 @@ public class MeshViewImpl extends TangibleView{
 
 	@Override
 	public void doHighlight() {
-		for (Spatial s : object.getChildren()) {
+		for (Spatial s : standinObject.getChildren()) {
 			if (s instanceof Geometry) {
 				((Geometry)s).setSolidColor(ColorRGBA.yellow);
 			}
@@ -150,7 +155,7 @@ public class MeshViewImpl extends TangibleView{
 
 	@Override
 	public void doUnhighlight() {
-		for (Spatial s : object.getChildren()) {
+		for (Spatial s : standinObject.getChildren()) {
 			if (s instanceof Geometry) {
 				((Geometry)s).setSolidColor(ColorRGBA.orange);
 			}

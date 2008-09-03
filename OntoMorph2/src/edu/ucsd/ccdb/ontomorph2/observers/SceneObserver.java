@@ -166,7 +166,11 @@ public class SceneObserver implements Observer {
 			if (tvdm != null)
 			{
 				tvdm.update();
+				System.out.println(tvdm.getLocalTranslation());
+				
 			}
+			
+			
 		}
 		
 		//catch all method for any leftover tangibles

@@ -58,10 +58,7 @@ public class BrainRegionView extends TangibleView{
         
         //register the geometries
 		//update the geometries registry, this is neccessary to enable picking, which is based on geomtry key maps
-		List<Geometry> ll = new ArrayList<Geometry>();
-		ll.add(this.mesh);
-		this.registerGeometries(ll);
-        
+        this.registerGeometry(this.mesh);
         
         this.defaultRenderQueueMode = this.getRenderQueueMode();
         

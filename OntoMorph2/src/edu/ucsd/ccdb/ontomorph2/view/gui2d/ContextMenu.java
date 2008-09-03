@@ -631,7 +631,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		//System.out.println("new curve @ " + posa + cent + posb);
 		
 		OMTVector[] pts = {posb, cent, posa};
-		Curve3D cap = new Curve3D("new curve", pts, system);	//FIXME: need to set demo coordinates on new curves
+		Curve3D cap = new Curve3D("user-created curve", pts, system);	//FIXME: need to set demo coordinates on new curves
 		cap.setColor(java.awt.Color.orange);
 		cap.setVisible(true);
 		cap.setModelBinormalWithUpVector(towardcam, 0.01f);	

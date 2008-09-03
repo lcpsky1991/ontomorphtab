@@ -72,6 +72,11 @@ public class View3DMouseListener implements MouseInputListener {
 		lastButton = button;
 		if(pressed) {
 			onMousePress(button);
+			//check double click
+			if (System.currentTimeMillis() - this.prevPressTime < this.dblClickDelay) 
+			{
+				onMouseDouble(button);
+			}
 			prevPressTime = System.currentTimeMillis();
 		} else {
 			onMouseRelease(button);
@@ -142,16 +147,12 @@ public class View3DMouseListener implements MouseInputListener {
 		if (1 == buttonIndex) //right
 		{	
 			//MouseInput.get().setCursorVisible(false); //hide mouse cursor
-			//doPick();
 			ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
 					MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
 		}
 		else if (0 == buttonIndex) //left
 		{
-			if (System.currentTimeMillis() - this.prevPressTime < this.dblClickDelay) {
-				onMouseDouble(0);
-			}
-			//doPick();
+
 		}
 	}
 	
@@ -168,8 +169,6 @@ public class View3DMouseListener implements MouseInputListener {
 		{
 			doPick();
 		}
-		 
-		//Log.warn("Double click (" + buttonIndex + ") @ " + System.currentTimeMillis());
 	}
 	
 	

@@ -55,9 +55,7 @@ public class CurveView extends TangibleView {
 		}
 		
 		//update the geometries registry, this is neccessary to enable picking, which is based on geomtry key maps
-		List<Geometry> ll = new ArrayList<Geometry>();
-		ll.add(this.b);
-		this.registerGeometries(ll);
+		this.registerGeometry(this.b);
 		
 		//no need to remove anchor points because this is done 
 		//automatically already

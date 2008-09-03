@@ -136,6 +136,9 @@ public class View3D extends Node{
 				meshView = new MeshViewImpl(mesh);
 			}
 			meshesNode.attachChild(meshView.getNode());
+			
+			System.out.println(meshView);
+			
 		}
 	}
 

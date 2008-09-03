@@ -33,12 +33,8 @@ public class CurveAnchorPointView extends TangibleView {
 		s.setModelBound(new BoundingBox());
 		s.updateModelBound();	
 		this.pickPriority = P_HIGH;
-		List<Geometry> ll = new ArrayList<Geometry>();
-		ll.add(s);
-		this.registerGeometries(ll);
-		
+		this.registerGeometry(s);
 		this.attachChild(s);
-		
 		this.update();
 	}
 
