@@ -160,18 +160,7 @@ public class SceneObserver implements Observer {
 				}
 			}
 		}
-		else if (o instanceof DataMesh)
-		{
-			MeshViewImpl tvdm = (MeshViewImpl)TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
-			if (tvdm != null)
-			{
-				tvdm.update();
-				System.out.println(tvdm.getLocalTranslation());
-				
-			}
-			
-			
-		}
+
 		
 		//catch all method for any leftover tangibles
 		else if (o instanceof Tangible)
