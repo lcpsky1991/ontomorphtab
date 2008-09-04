@@ -13,7 +13,6 @@ import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
-import edu.ucsd.ccdb.ontomorph2.view.View3DMouseHandler;
 import edu.ucsd.ccdb.ontomorph2.view.View3DMouseListener;
 
 /**

@@ -35,7 +35,6 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
-import edu.ucsd.ccdb.ontomorph2.view.View3DMouseHandler;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
