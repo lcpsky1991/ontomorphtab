@@ -50,6 +50,21 @@ public abstract class NeuronMorphology extends Tangible{
 		return _curve;
 	}
 	
+	/**
+	 * Disassociates a curve with this morphology and attaches this morphology to a different curve
+	 * @param c
+	 * @return True if successful. False if failed.
+	 */
+	public boolean attachTo(Curve3D c)
+	{
+		if (c != null)
+		{
+			_curve = c;
+			positionAlongCurve(_curve, _time);
+			return true;
+		}
+		return false;
+	}
 	
 	/**
 	 * Retrieves the "time" along the curve that this INeuronMorphology is positioned at

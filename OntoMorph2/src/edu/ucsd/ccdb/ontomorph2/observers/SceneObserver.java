@@ -160,8 +160,6 @@ public class SceneObserver implements Observer {
 				}
 			}
 		}
-
-		
 		//catch all method for any leftover tangibles
 		else if (o instanceof Tangible)
 		{

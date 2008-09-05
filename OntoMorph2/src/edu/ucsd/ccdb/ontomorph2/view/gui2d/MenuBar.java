@@ -29,7 +29,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	
 	public static final String LOAD_SCENE = "Import File...";
 	public static final String SAVE_SCENE = "Save Scene...";
-	public static final String CELLS = "Cells...";
+	public static final String strCELLS = "Cells...";
 	public static final String VOLUMES = "Volumes...";
 	public static final String SEMANTICS = "Semantics...";
 	public static final String LIST_INSTANCES = "List Instances...";
@@ -55,6 +55,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String strMNU_MANI_LOOK = "Focus Camera";
 	public static final String strMNU_MANI_NONE = "None (Pick)";
 	public static final String strMNU_MANI_SCALE = "Re-Scale";
+	public static final String strNEWCELL = "New Cell";
 	public static final String BASIC_SEARCH = "Basic Search...";
 	public static final String SHOW_SCENE_MONITOR = "Show Scene Monitor...";
 		
@@ -105,7 +106,9 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         //=[  OBJ  ]=
         Menu mnuObjects = new Menu();
         mB.registerSubMenu(mnuObjects, "Objects");
-        makeMenuItem(CELLS, mnuObjects);
+        makeMenuItem(strCELLS, mnuObjects);
+        makeMenuItem(strNEWCELL, mnuObjects);
+        
         mnuObjects.addMouseEnteredListener(FocusManager.get());
         mnuObjects.addMouseExitedListener(FocusManager.get());
         //makeMenuItem(VOLUMES, mnuObjects);
@@ -194,7 +197,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		{
 			System.out.println("Feature Not Implemented Yet");
 		}
-		else if ( CELLS.equals(act) )
+		else if ( strCELLS.equals(act) )
 		{
 			View2D.getInstance().loadCellChooser();
 		}
@@ -205,6 +208,10 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		else if ( SEMANTICS.equals(act) )
 		{
 
+		}
+		else if ( strNEWCELL.equals(act) )
+		{
+			//create a new cell X unit away from the camera
 		}
 		else if ( LIST_INSTANCES.equals(act) )
 		{

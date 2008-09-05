@@ -49,6 +49,7 @@ public class View3DMouseListener implements MouseInputListener {
 	public static final int METHOD_NONE = 0;
 	public static final int METHOD_PICK = 1;
 	public static final int METHOD_MOVE = 2;
+	public static final int METHOD_MOVETO = 3;
 	public static final int METHOD_SCALE = 4;
 	public static final int METHOD_ROTATEX = 8;
 	public static final int METHOD_ROTATEY = 16;
@@ -83,25 +84,50 @@ public class View3DMouseListener implements MouseInputListener {
 		}
 	}
 
+	/**
+	 * Higher method that determines onMouseMove versus onMouseDrag
+	 * @see onMouseDrag
+	 * @see onMouseMove
+	 */
 	public void onMove(int xDelta, int yDelta, int newX, int newY)
 	{
-		//System.out.println("onMove");
 		// If the button is down, the mouse is being dragged
 		if(down)
-			onMouseDrag(lastButton);
+			onMouseDrag(lastButton, xDelta, yDelta, newX, newY);
 		else
 		    onMouseMove();
 	}	
 		
 	public void onWheel(int wheelDelta, int x, int y)
 	{
-		onMouseWheel();
+//		====================================
+    	//	WHEEL
+    	//====================================
+			float dx = Math.abs(MouseInput.get().getWheelDelta());
+			dx= (float) Math.log(1 + (3 * dx)); //scale it by some factor so it's less jumpy
+			
+			
+			if ( wheelDelta < 0 ) dx = (-dx);	//exponents always produce positive results, allows for reverse zoom
+			
+			if (dx != 0)	
+			{
+				//zoom camera if Z press
+				if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
+				{
+					View.getInstance().getCamera().zoomIn(dx);	
+				}
+				//move camera if Z NOT pressed
+				else
+				{
+					View.getInstance().getCamera().moveForward(dx);
+				}
+			}
 	}
 
 	/**
 	 * Child method from handleMouseInput
 	 */ 
-	private void onMouseDrag(int button)
+	private void onMouseDrag(int button, int dX, int dY, int xPos, int yPos)
 	{
 		
 		boolean mouseLook = false;
@@ -123,16 +149,15 @@ public class View3DMouseListener implements MouseInputListener {
 		if (mouseLook)
 		{
 			//find mouse change
-			float mx = MouseInput.get().getXDelta() / 100.0f;
-			float my = MouseInput.get().getYDelta() / 100.0f;
-
-			View.getInstance().getCamera().turnClockwise(mx);
-			View.getInstance().getCamera().turnUp(my);
+			View.getInstance().getCamera().turnClockwise(dX / 100f);
+			View.getInstance().getCamera().turnUp(dY / 100f);
 		}
-		else if (MouseInput.get().isButtonDown(0)) //left 
+		else if (0 == button) //left 
 		{
 			//dragging
 			manipulateCurrentSelection();
+			
+			//System.out.println("x: " + dX + " y: " + dY + "  -  " + xPos + ", " + yPos);
 		}
 	}
 	
@@ -149,10 +174,6 @@ public class View3DMouseListener implements MouseInputListener {
 			//MouseInput.get().setCursorVisible(false); //hide mouse cursor
 			ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
 					MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
-		}
-		else if (0 == buttonIndex) //left
-		{
-
 		}
 	}
 	
@@ -174,7 +195,7 @@ public class View3DMouseListener implements MouseInputListener {
 	
 	/**
 	 * Exists only for possible future expansion
-	 * 
+	 * @see onMove
 	 */
 	private void onMouseMove()
 	{	
@@ -190,32 +211,6 @@ public class View3DMouseListener implements MouseInputListener {
 		 */
 	}
 	
-	/**
-	 * Child method from handleMouseInput
-	 */ 
-	private void onMouseWheel()
-	{
-		//====================================
-    	//	WHEEL
-    	//====================================
-		{
-			float dx=MouseInput.get().getWheelDelta() / (View.getInstance().getKeyPressActionRate() * 20); //scale it by some factor so it's less jumpy
-			if (dx != 0)	
-			{
-				//zoom camera if Z press
-				if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
-				{
-					View.getInstance().getCamera().zoomIn(dx);	
-				}
-				//move camera if Z NOT pressed
-				else
-				{
-					View.getInstance().getCamera().moveForward(dx);
-				}
-			}
-		}
-	}
-
 	private void doPick() 
 	{
 		
@@ -471,7 +466,7 @@ public class View3DMouseListener implements MouseInputListener {
 				catch(Exception e){};
 				break;
 			case METHOD_SCALE:
-				manip.rotate(dx, my, new OMTVector(1,1,1));
+				manip.scale(dx, my, new OMTVector(1,1,1));
 				break;
 			}
 		}

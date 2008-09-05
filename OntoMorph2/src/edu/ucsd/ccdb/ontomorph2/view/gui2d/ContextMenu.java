@@ -3,6 +3,7 @@ package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.fenggui.background.PlainBackground;
 import org.fenggui.border.TitledBorder;
@@ -35,6 +36,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
+import edu.ucsd.ccdb.ontomorph2.view.View3DMouseListener;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
@@ -63,6 +65,10 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_ANIMATE = 109;
 	public static final int CTX_ACTION_NONE = 0;
 	public static final int CTX_ACTION_DEBUG = 110;
+	public static final int CTX_ACTION_MANIP_ROTATEY = 111;
+	public static final int CTX_ACTION_MANIP_SCALE = 112;
+	public static final int CTX_ACTION_MANIP_MOVE = 113;
+	public static final int CTX_ACTION_ATTACH = 114;
 	
 	
 	
@@ -82,8 +88,12 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	static final String msSELECTPART = "Select Part ...";
 	static final String msEDIT = "Toggle Edit";
 	static final String msManipulate = "Manipulate ...";
+	static final String msRotateY = "Rotate-Y";
+	static final String msScale = "Scale";
+	static final String msMove = "Move";
 	static final String msNone = "(Nothing Selected)";
 	static final String msDebug = "Debug";
+	static final String msATTACH = "Attach to...";
 	static ContextMenu instance = null;
 	
 	//These are the titles of the user-defined fields of the menu items
@@ -201,6 +211,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		Menu mnuDeselect = new Menu();
 		Menu mnuManipulate = new Menu();
 		Menu mnuPart = new Menu();
+		Menu mnuAttach = new Menu();
 		
 		
 		//apply formatting
@@ -216,18 +227,18 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		Tangible baseContext = null;
 		
 		//set the flas on how to build the context menu
-		if ( seltans.size() < 1)
+		if ( seltans.size() < 1)			//nothing selecting
 		{
 			homog = false;
 			multiContext = false;
 		}
-		else if ( seltans.size() == 1) 
+		else if ( seltans.size() == 1) 		//only one thing
 		{
 			homog = true;
 			multiContext = false;
 			baseContext = seltans.get(0);
 		}
-		else if ( seltans.size() > 1)
+		else if ( seltans.size() > 1)		//multi selected
 		{
 			homog = isSameClass(seltans);
 			multiContext = true;
@@ -278,27 +289,42 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	        menuItemFactory(this, msPROPERTIES, CTX_ACTION_DISPROP, null);
 	        menuItemFactory(this, msDebug, CTX_ACTION_DEBUG, null);
 			
+	        //add new anchor points?
 			if (baseContext instanceof Curve3D)
 			{
 				//build curve special menu
 				menuItemFactory(mnuNew, msN_ANCHOR, CTX_ACTION_NEW_ANCHOR, null);
-				menuItemFactory(mnuNew_Cell, msN_CELL_DG, CTX_ACTION_NEW_CELL, null);
-				menuItemFactory(this, msEDIT, CTX_ACTION_MODE, null);
-				mnuNew.registerSubMenu(mnuNew_Cell, msN_CELL);
 			}
-			else if (baseContext instanceof NeuronMorphology)
+			
+			//toggle edit mode
+			if (baseContext instanceof NeuronMorphology || baseContext instanceof CurveAnchorPoint)
 			{
 				//build morphology special menu
 				menuItemFactory(this, msEDIT, CTX_ACTION_MODE, null);
 			}
-			else if (baseContext instanceof CurveAnchorPoint)
-			{
-				//build curveanchorpoint special menu
-				menuItemFactory(this, msEDIT, CTX_ACTION_MODE, null);
-			}
-			else if (baseContext instanceof Slide)
+			
+			//add new cells
+			if (baseContext instanceof Slide || baseContext instanceof Curve3D)
 			{
 				//build slide special menu
+				menuItemFactory(mnuNew_Cell, msN_CELL_DG, CTX_ACTION_NEW_CELL, null);
+			}
+			
+			
+			//ATTACH TO:
+	        if (baseContext instanceof NeuronMorphology)
+	        {
+	        	Set<Curve3D> candidates = View.getInstance().getScene().getCurves();
+		        for (Curve3D c : candidates) menuItemFactory(mnuAttach, c.getName(), CTX_ACTION_ATTACH, c);
+	        }
+			
+			
+			
+			//MANIPULATE
+			{//they are later distinguished by name, action is the same
+				menuItemFactory(mnuManipulate, msMove, CTX_ACTION_MANIP_MOVE, null);
+				menuItemFactory(mnuManipulate, msRotateY, CTX_ACTION_MANIP_ROTATEY, null);
+				menuItemFactory(mnuManipulate, msScale, CTX_ACTION_MANIP_SCALE, null);
 			}
 			
 	        //DYNAMIC RE-SELECT
@@ -311,9 +337,11 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		        }
 	        }
 	        
+	        
+	        mnuNew.registerSubMenu(mnuNew_Cell, msN_CELL); //'newcell' must preceed registering parent 'new'
 	        this.registerSubMenu(mnuNew, msNEW);
+	        this.registerSubMenu(mnuAttach, msATTACH);
 			this.registerSubMenu(mnuManipulate, msManipulate);
-			
 			this.registerSubMenu(mnuPart,msSELECTPART);
 			
 		}
@@ -437,9 +465,10 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		{
 				if (fieldOrig != null) fieldOrig.unselect();
 		}
+		
 		else
 		{//MULTIPLE - ACTION CODE
-			doActionOnSelected(fieldAct); //most things wont care about the 'reference' object so we concern ourselves with whats currently selected
+			doActionOnSelected(fieldAct, fieldOrig); //most things wont care about the 'reference' object so we concern ourselves with whats currently selected
 		}
 
 		this.closeBackward();
@@ -499,7 +528,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		System.out.println(info);
 	}
 	
-	public void doActionOnSelected(int action)
+	public void doActionOnSelected(int action, Tangible target)
 	{
 		List<Tangible> selected = TangibleManager.getInstance().getSelected();
 		for (int t = 0; t < selected.size(); t++)
@@ -532,10 +561,22 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					break;
 				}
 				case CTX_ACTION_NEW_CELL:
-					testCreateCell(single);
+					createCells(single);
+					break;
+				case CTX_ACTION_MANIP_MOVE:
+					View.getInstance().getView3DMouseListener().setManipulation(View3DMouseListener.METHOD_MOVE);
+					break;
+				case CTX_ACTION_MANIP_ROTATEY:
+					View.getInstance().getView3DMouseListener().setManipulation(View3DMouseListener.METHOD_ROTATEY);
+					break;
+				case CTX_ACTION_MANIP_SCALE:
+					View.getInstance().getView3DMouseListener().setManipulation(View3DMouseListener.METHOD_SCALE);
 					break;
 				case CTX_ACTION_DEBUG:
 					debug(single);
+					break;
+				case CTX_ACTION_ATTACH:
+					((NeuronMorphology)single).attachTo((Curve3D)target);
 					break;
 				default:
 				{
@@ -545,6 +586,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			}
 		}
 	}
+	
+
+	
 	
 	public void createPoint(Tangible src)
 	{
@@ -574,7 +618,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	 * 
 	 * @param src
 	 */
-	public void createCurve(Tangible src)
+	private Curve3D createCurve(Tangible src)
 	{
 		//TODO: rewrite this!
 		OMTVector cent = new OMTVector(src.getRelativePosition());
@@ -639,6 +683,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		//redraw the scene, but not the whole scene, let observer know the curves have changed
 		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);
+		
+		return cap;
 	}
 	
 	
@@ -649,7 +695,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
             DisplaySystem.getDisplaySystem().getWorldCoordinates( mousePos, 0.3f, pickRay.direction ).subtractLocal( pickRay.origin ).normalizeLocal()
 	 */
 	
-	public void testCreateCell(Tangible src)
+	private void createCells(Tangible src)
 	{
 		NeuronMorphology nc = null;
 		Curve3D ocurve = null;
@@ -666,38 +712,71 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			CurveAnchorPoint ocp = (CurveAnchorPoint) src;
 			ocurve = ocp.getParentCurve();
 		}
+		else if ( src != null)
+		{
+			ocurve = createCurve(src);
+		}
 		else
 		{
 			//exit early without updating the scene
+			System.out.println("Cell not created, error with source");
 			return;
 		}
 		
 		//SET
 		//Find out where to put it
-		List<NeuronMorphology> cells = ocurve.getChildrenCells();
-		float high=0;
 		
 		//CREATE
 		TangibleManager.getInstance().unselectAll();
 		//do the rest of the actions
-		nc = new MorphMLNeuronMorphology("5199202a", ocurve, t, NeuronMorphology.RENDER_AS_LOD, src.getCoordinateSystem());
-		nc.setRelativeScale(0.01f);
-		nc.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
-		nc.setVisible(true);
+		nc = cellFactory(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS, "5199202a", ocurve, true);
 		nc.select();
-		
-		View.getInstance().getScene().changed(Scene.CHANGED_CELL);
-		
-		//View.getInstance().getView3D().addOneCell(nc); //deprecated
-		
-		nc.addObserver(SceneObserver.getInstance()); //add an observer to the new cell
-		
-		TangibleView cv = TangibleViewManager.getInstance().getTangibleViewFor(nc);
-		if ( cv != null)
-		{
-			cv.update();
-		}
 	}
+	
+	/**
+	 * For conveiniance, cells can be created without updating the scene. This may be useful for making many cells at once.
+	 * If the parameters are erroneous, the factory will attempt to make a free-floating cell
+	 * @param cellType Semantic string
+	 * @param modelURL	String to the filename of the 3D-model file
+	 * @param crvParent The parent curve to attach the cell to. If null, the cell will be free-floating.
+	 * @param updateView True - forces Viewto update the scene. If creating many cells at once, it is nice to only redraw at the end 
+	 * @return cell created
+	 */
+	public NeuronMorphology cellFactory(String cellType, String modelURL, Tangible crvParent, boolean updateView)
+	{
+		NeuronMorphology ncell = null;
+		if ((null == modelURL || !(crvParent instanceof Curve3D || null == crvParent)))
+		{
+			System.out.println("Warning: created erroneous cell");
+			crvParent = null; //continue to create cell with the assumption its a free floating one
+		}
+		
+		Curve3D parentCurve = null;
+		float t = 0.5f;
+		
+		//create the cell two different ways, depending on whether it's a free-floating or attached cell
+		if (null == crvParent)
+		{	//free float
+			ncell = new MorphMLNeuronMorphology(modelURL, null, t, NeuronMorphology.RENDER_AS_LOD, null);
+		}
+		else if ( crvParent instanceof Curve3D)
+		{	//attached
+			ncell = new MorphMLNeuronMorphology(modelURL, (Curve3D)crvParent, t, NeuronMorphology.RENDER_AS_LOD, crvParent.getCoordinateSystem());
+		}
+		
+		ncell.setRelativeScale(0.01f);
+		ncell.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(cellType));
+		ncell.setVisible(true);
+		ncell.addObserver(SceneObserver.getInstance()); //add an observer to the new cell
+		
+		
+		if ( updateView) View.getInstance().getScene().changed(Scene.CHANGED_CELL); //
+		
+		return ncell;
+	}
+	
+	
+	
 }
 
 
