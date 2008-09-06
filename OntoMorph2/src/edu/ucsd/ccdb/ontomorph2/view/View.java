@@ -327,7 +327,6 @@ public class View extends BaseSimpleGame {
 			}
 		
 			if(isAction("object_sphere")){
-				camNode.SphereLeftRotation(keyPressActionRate);
 			}
 			
 		}//end key input

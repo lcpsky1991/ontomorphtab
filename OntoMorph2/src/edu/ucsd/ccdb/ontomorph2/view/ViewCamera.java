@@ -242,16 +242,11 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         points[1] = location;
 
         float distance = points[0].distance(points[1]);
-        //System.out.println("distance " + distance);
-        //Log.warn("current camera position" + points[0]);
         CatmullRomCurve curve = new CatmullRomCurve("Curve", points);
         
         Vector3f up = new Vector3f(0.0f,0.1f,0.0f).normalize();
         CurveOnceController cc = new CurveOnceController(curve, this, objectPosition);
-        //Log.warn("up" + up);
         cc.setActive(false);
-        //Log.warn("camNode " + camNode);
-        //Log.warn(cc + " curve ");
         this.addController(cc);
         cc.setRepeatType(Controller.RT_CLAMP);
         cc.setUpVector(up);
@@ -263,53 +258,8 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         this.attachChild(curve);
         cc.setActive(true);        	
         
-        this.currentDirection = objectPosition;
 	}
-	
-	/**
-	 * Rotates camera left around object being look by the camera
-	 */
-	public void SphereLeftRotation(float amount){
-	    
-		/*System.out.println("camera location kleft " + cam.getLocation());
-        Vector3f cpos = this.getCamera().getLocation();
-        campos = campos + rotationspeed;
- 
-        if( campos > 6.28f ) campos = 0; //Here we check that the camera rotation is between 0 and 2*pi
-        float cx = (float) (distance*Math.cos(campos)); //Calculating X coord
-        float cy = (float) (distance*Math.sin(campos));
-        cpos.setX(cx + currentDirection.getX()); //we add the spatial x,y components so the camera rotates around it.
-        cpos.setY(cy + currentDirection.getY());
-        //kc.setCampos(campos); we have to return the camera rotation position so it's shared between actions.
-        this.setLocalTranslation(cpos);
 
-        
-        this.lookAt(currentDirection, Vector3f.UNIT_Z.clone());
-        this.getCamera().update();*/
-		BoundingSphere sphere = new BoundingSphere(10f, currentDirection);
-        System.out.println("Bounding Sphere " + sphere.getRadius()+ " " + sphere.getCenter());
-	}
-	
-	/**
-	 * Right rotation of camera around object
-	 */
-	/*
-	public void SphereRightRotation(float amount){ 
-		/*System.out.println("camera location kright " + cam.getLocation());
-        Vector3f cpos = this.getCamera().getLocation();
-        campos = campos - rotationspeed;
-
-        if( campos < 0f ) campos = 6.28f;
-        float cx = (float) (distance*Math.cos(campos));
-        float cy = (float) (distance*Math.sin(campos));
-        cpos.setX(cx + currentDirection.getX());
-        cpos.setY(cy + currentDirection.getY());
-        //kc.setCampos(campos);
-        this.getCamera().setLocation(cpos);
-        
-        this.lookAt(currentDirection, Vector3f.UNIT_Z.clone());
-        this.getCamera().update();
-	}*/
 	/**
 	 * Smoothly reposition, rotate, and zoom the camera to the atlas
 	 * medial view.
