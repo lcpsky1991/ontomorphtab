@@ -80,7 +80,8 @@ public class Curve3D extends Tangible{
 		 while ( i.hasNext() )
 		 {
 			 NeuronMorphology consider = (NeuronMorphology)i.next();
-			 if (consider.getCurve().equals(this))
+			 Curve3D c = consider.getCurve();
+			 if (this == c)
 			 {
 				 kids.add(consider);
 			 }

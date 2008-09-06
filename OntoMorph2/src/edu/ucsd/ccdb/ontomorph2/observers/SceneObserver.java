@@ -218,22 +218,22 @@ public class SceneObserver implements Observer {
 	private void setCamera(Scene s) {
 		switch(s.getCameraPosition()) {
 		case Scene.CAMERA_SLIDE_POSITION :
-			_view.getCamera().setToSlideView();
+			_view.cameraNode().setToSlideView();
 			break;
 		case Scene.CAMERA_CELLS_POSITION :
-			_view.getCamera().smoothlyZoomToCellView();
+			_view.cameraNode().smoothlyZoomToCellView();
 			break;
 		case Scene.CAMERA_SUBCELLULAR_POSITION :
-			_view.getCamera().smoothlyZoomToSubcellularView();
+			_view.cameraNode().smoothlyZoomToSubcellularView();
 			break;
 		case Scene.CAMERA_LATERAL_POSITION :
-			_view.getCamera().setToAtlasLateralView();
+			_view.cameraNode().setToAtlasLateralView();
 			break;
 		case Scene.CAMERA_MEDIAL_POSITION :
-			_view.getCamera().setToAtlasMedialView();
+			_view.cameraNode().setToAtlasMedialView();
 			break;
 		case Scene.CAMERA_CEREBELLUM_POSITION :
-			_view.getCamera().smoothlyZoomToSlideCerebellumView();
+			_view.cameraNode().smoothlyZoomToSlideCerebellumView();
 		}
 		
 	}

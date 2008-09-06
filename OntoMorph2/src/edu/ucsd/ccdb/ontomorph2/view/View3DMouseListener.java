@@ -114,12 +114,12 @@ public class View3DMouseListener implements MouseInputListener {
 				//zoom camera if Z press
 				if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
 				{
-					View.getInstance().getCamera().zoomIn(dx);	
+					View.getInstance().cameraNode().zoomIn(dx);	
 				}
 				//move camera if Z NOT pressed
 				else
 				{
-					View.getInstance().getCamera().moveForward(dx);
+					View.getInstance().cameraNode().moveForward(dx);
 				}
 			}
 	}
@@ -149,8 +149,8 @@ public class View3DMouseListener implements MouseInputListener {
 		if (mouseLook)
 		{
 			//find mouse change
-			View.getInstance().getCamera().turnClockwise(dX / 100f);
-			View.getInstance().getCamera().turnUp(dY / 100f);
+			View.getInstance().cameraNode().turnClockwise(dX / 100f);
+			View.getInstance().cameraNode().turnUp(dY / 100f);
 		}
 		else if (0 == button) //left 
 		{
@@ -436,7 +436,7 @@ public class View3DMouseListener implements MouseInputListener {
 		{
 			//check to see where the camera is position and compare it to the Tangible's plane
 			//if it is under, reverse the X direction so movement is intuitive
-			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().getCamera().getCamera().getDirection()), manip.getWorldNormal()); 
+			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().cameraNode().getCamera().getDirection()), manip.getWorldNormal()); 
 			if (reverse) dx = -mx;	//switch X movement if it is on the opposite side of the plane
 
 			switch ( manipulation )
@@ -461,7 +461,7 @@ public class View3DMouseListener implements MouseInputListener {
 				Log.warn("LOOK AT is broken");
 				try
 				{
-					View.getInstance().getCamera().lookAt(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question	
+					View.getInstance().cameraNode().lookAt(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question	
 				}
 				catch(Exception e){};
 				break;

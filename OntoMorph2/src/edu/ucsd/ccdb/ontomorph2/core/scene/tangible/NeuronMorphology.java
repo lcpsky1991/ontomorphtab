@@ -60,6 +60,7 @@ public abstract class NeuronMorphology extends Tangible{
 		if (c != null)
 		{
 			_curve = c;
+			this.setCoordinateSystem(c.getCoordinateSystem());
 			positionAlongCurve(_curve, _time);
 			return true;
 		}
@@ -125,7 +126,7 @@ public abstract class NeuronMorphology extends Tangible{
 		//get changes in mouse movement
 		
 		//if this cell is a free-floating cell, then move it as normal
-		if (isFreeFloating())
+		if (this.isFreeFloating())
 		{
 			super.move(dx,dy, constraint);
 		}
@@ -146,11 +147,19 @@ public abstract class NeuronMorphology extends Tangible{
 	
 	/**
 	 * Set the position of this NeuronMorphology at point time
-	 * along curve c
-	 *
+	 * along curve c, or does nothing if it is a free-floating neuron
+	 * @return True if moved successfully, returns false if it does not move (free-floating neurons)
+	 * @param c The curve to position this neuron along
+	 * @param time The time to place it along the curve from [0,1]
 	 */
-	public void positionAlongCurve(Curve3D c, float time) {
-		setRelativePosition(new PositionVector(((Curve3D)c).getPoint(time)));
+	public boolean positionAlongCurve(Curve3D c, float time) 
+	{
+		if ( _curve != null)
+		{
+			setRelativePosition(new PositionVector(((Curve3D)c).getPoint(time)));
+			return true;
+		}
+		return false;
 	}
 
 	/**

@@ -476,7 +476,7 @@ public class View extends BaseSimpleGame {
     	//System.out.println("render");
         super.render(interpolation);
        
-        this.getCamera().getCamera().update();
+        this.cameraNode().getCamera().update();
         
         Renderer r = display.getRenderer();
 
@@ -547,7 +547,7 @@ public class View extends BaseSimpleGame {
 	 * Get the current instance of the ViewCamera for this view
 	 * @return
 	 */
-	public ViewCamera getCamera() {
+	public ViewCamera cameraNode() {
 		return this.camNode;
 	}
 	

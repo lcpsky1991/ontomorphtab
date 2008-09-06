@@ -9,8 +9,10 @@ import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.View3DMouseListener;
@@ -55,7 +57,10 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String strMNU_MANI_LOOK = "Focus Camera";
 	public static final String strMNU_MANI_NONE = "None (Pick)";
 	public static final String strMNU_MANI_SCALE = "Re-Scale";
-	public static final String strNEWCELL = "New Cell";
+	public static final String strNEW_CELL_A = ContextMenu.TYPE_CELL_DG_A;
+	public static final String strNEW_CELL_B = ContextMenu.TYPE_CELL_PYR_CA1_A;
+	public static final String strNEW_CELL_C = ContextMenu.TYPE_CELL_PYR_CA3_A;
+	public static final String strNEW = "New ...";
 	public static final String BASIC_SEARCH = "Basic Search...";
 	public static final String SHOW_SCENE_MONITOR = "Show Scene Monitor...";
 		
@@ -105,9 +110,15 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         
         //=[  OBJ  ]=
         Menu mnuObjects = new Menu();
+        Menu mnuObjects_New = new Menu();
+        
         mB.registerSubMenu(mnuObjects, "Objects");
         makeMenuItem(strCELLS, mnuObjects);
-        makeMenuItem(strNEWCELL, mnuObjects);
+        
+        mnuObjects.registerSubMenu(mnuObjects_New, strNEW);
+        makeMenuItem(strNEW_CELL_A, mnuObjects_New);
+        makeMenuItem(strNEW_CELL_B, mnuObjects_New);
+        makeMenuItem(strNEW_CELL_C, mnuObjects_New);
         
         mnuObjects.addMouseEnteredListener(FocusManager.get());
         mnuObjects.addMouseExitedListener(FocusManager.get());
@@ -209,9 +220,17 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		{
 
 		}
-		else if ( strNEWCELL.equals(act) )
+		else if ( strNEW_CELL_A.equals(act) )
 		{
-			//create a new cell X unit away from the camera
+			ContextMenu.getInstance().createFreeCell(ContextMenu.TYPE_CELL_DG_A);
+		}
+		else if ( strNEW_CELL_B.equals(act) )
+		{
+			ContextMenu.getInstance().createFreeCell(ContextMenu.TYPE_CELL_PYR_CA1_A);
+		}
+		else if ( strNEW_CELL_C.equals(act) )
+		{
+			ContextMenu.getInstance().createFreeCell(ContextMenu.TYPE_CELL_PYR_CA3_A);
 		}
 		else if ( LIST_INSTANCES.equals(act) )
 		{
@@ -239,39 +258,39 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if ( SLIDE_VIEW.equals(act) )
 		{
-			View.getInstance().getCamera().setToSlideView();
+			View.getInstance().cameraNode().setToSlideView();
 		} 
 		else if (ATLAS_LATERAL_VIEW.equals(act)) 
 		{
-			View.getInstance().getCamera().setToAtlasLateralView();
+			View.getInstance().cameraNode().setToAtlasLateralView();
 		} 
 		else if (ATLAS_MEDIAL_VIEW.equals(act)) 
 		{
-			View.getInstance().getCamera().setToAtlasMedialView();
+			View.getInstance().cameraNode().setToAtlasMedialView();
 		}
 		else if (SLIDE_VIEW_SMOOTH.equals(act)) 
 		{
-			View.getInstance().getCamera().smoothlyZoomToSlideView();
+			View.getInstance().cameraNode().smoothlyZoomToSlideView();
 		} 
 		else if (SLIDE_VIEW_CEREB_SMOOTH.equals(act)) 
 		{
-			View.getInstance().getCamera().smoothlyZoomToSlideCerebellumView();
+			View.getInstance().cameraNode().smoothlyZoomToSlideCerebellumView();
 		}
 		else if (ATLAS_CELL_VIEW_SMOOTH.equals(act)) 
 		{
-			View.getInstance().getCamera().smoothlyZoomToCellView();
+			View.getInstance().cameraNode().smoothlyZoomToCellView();
 		}
 		else if (ATLAS_SUBCELL_VIEW_SMOOTH.equals(act)) 
 		{
-			View.getInstance().getCamera().smoothlyZoomToSubcellularView();
+			View.getInstance().cameraNode().smoothlyZoomToSubcellularView();
 		}
 		else if (ATLAS_LATERAL_VIEW_SMOOTH.equals(act)) 
 		{
-			View.getInstance().getCamera().smoothlyZoomToAtlasLateralView();
+			View.getInstance().cameraNode().smoothlyZoomToAtlasLateralView();
 		}
 		else if (ATLAS_MEDIAL_VIEW_SMOOTH.equals(act)) 
 		{
-			View.getInstance().getCamera().smoothlyZoomToAtlasMedialView();
+			View.getInstance().cameraNode().smoothlyZoomToAtlasMedialView();
 		}
 		else if ( strMNU_MANI_NONE.equals(act) )
 		{

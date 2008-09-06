@@ -14,6 +14,7 @@ import org.fenggui.menu.MenuItem;
 import org.fenggui.util.Color;
 
 import com.jme.input.KeyInput;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
@@ -28,6 +29,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -70,7 +72,16 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_MANIP_MOVE = 113;
 	public static final int CTX_ACTION_ATTACH = 114;
 	
-	
+	//IDs for easily creating cells
+	public static final String TYPE_CELL_DG_A = "5199202a";
+	public static final String TYPE_CELL_DG_B = " ";
+	public static final String TYPE_CELL_DG_C = "";
+	public static final String TYPE_CELL_PYR_CA1_A = "pc1c";
+	public static final String TYPE_CELL_PYR_CA1_B = "pc2a";
+	public static final String TYPE_CELL_PYR_CA1_C = "";
+	public static final String TYPE_CELL_PYR_CA3_A = "cell1zr";
+	public static final String TYPE_CELL_PYR_CA3_B = "cell2zr";
+	public static final String TYPE_CELL_PYR_CA3_C = "cell6zr";
 	
 	//ms stands for Menu String
 	static final String msNEW = "New ...";
@@ -270,11 +281,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		//===========================================
 		
 		
-		
-
-		
 		//TODO: build generic menu
-		
 		//Here is the shell for the basic context decision
 		if (baseContext != null)
 		{
@@ -297,7 +304,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			}
 			
 			//toggle edit mode
-			if (baseContext instanceof NeuronMorphology || baseContext instanceof CurveAnchorPoint)
+			if (baseContext instanceof NeuronMorphology || baseContext instanceof Curve3D)
 			{
 				//build morphology special menu
 				menuItemFactory(this, msEDIT, CTX_ACTION_MODE, null);
@@ -338,13 +345,12 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	        }
 	        
 	        
-	        mnuNew.registerSubMenu(mnuNew_Cell, msN_CELL); //'newcell' must preceed registering parent 'new'
-	        this.registerSubMenu(mnuNew, msNEW);
-	        this.registerSubMenu(mnuAttach, msATTACH);
-			this.registerSubMenu(mnuManipulate, msManipulate);
-			this.registerSubMenu(mnuPart,msSELECTPART);
-			
-		}
+	        if (mnuNew_Cell.getItemCount() > 0) mnuNew.registerSubMenu(mnuNew_Cell, msN_CELL); //'newcell' must preceed registering parent 'new'
+	        if (mnuNew.getItemCount() > 0) this.registerSubMenu(mnuNew, msNEW);
+	        if (mnuAttach.getItemCount() > 0) this.registerSubMenu(mnuAttach, msATTACH);
+			if (mnuManipulate.getItemCount() > 0) this.registerSubMenu(mnuManipulate, msManipulate);
+			if (mnuPart.getItemCount() > 1) this.registerSubMenu(mnuPart,msSELECTPART);	//no need for parts if theres only 1 part
+		} //end baseContext
 
         //DYNAMIC SELECT
         {	//find all thing a user MIGHT want to select and puts them in the select submenu
@@ -361,7 +367,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		  //========================================
 		// PRIMARY MENU ITEMS 
 		//========================================
-		this.registerSubMenu(mnuSelect,msSELECT);
+		if (mnuSelect.getItemCount() > 0) this.registerSubMenu(mnuSelect,msSELECT);
         this.setSizeToMinSize();
         this.layout();			
 	}
@@ -518,7 +524,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	{
 		String info = "";
 		
-		OMTVector camDir = new OMTVector(View.getInstance().getCamera().getCamera().getDirection());
+		OMTVector camDir = new OMTVector(View.getInstance().cameraNode().getCamera().getDirection());
 		OMTVector plane = src.getWorldNormal();
 		
 		info += src.getWorldNormal() + "\n";
@@ -561,7 +567,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					break;
 				}
 				case CTX_ACTION_NEW_CELL:
-					createCells(single);
+					createCellOn(single);
 					break;
 				case CTX_ACTION_MANIP_MOVE:
 					View.getInstance().getView3DMouseListener().setManipulation(View3DMouseListener.METHOD_MOVE);
@@ -629,7 +635,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		OMTVector towardcam = null;
 		float offset = 5f;	//the ammount of offset the new points from the originator
 		
-		System.out.println("src " + src.getAbsolutePosition() + src.getRelativePosition());
+		//System.out.println("src " + src.getAbsolutePosition() + src.getRelativePosition());
 		//cent is the originating point, in some coordinate system
 		//create two side points not in that coordinate system
 		
@@ -647,9 +653,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		else
 		{
 			//find the coordinate system of the camera on which to draw the curve parallel to, to do this we need three vectors
-			towardcam = new OMTVector(View.getInstance().getCamera().getCamera().getDirection().normalize().negate().mult(5f)); 
-			left = new OMTVector(View.getInstance().getCamera().getCamera().getLeft()); //too keep units consistent multiply by -1 so positive is 'right' (a droite)
-			up = new OMTVector(View.getInstance().getCamera().getCamera().getUp());
+			towardcam = new OMTVector(View.getInstance().cameraNode().getCamera().getDirection().normalize().negate().mult(5f)); 
+			left = new OMTVector(View.getInstance().cameraNode().getCamera().getLeft()); //too keep units consistent multiply by -1 so positive is 'right' (a droite)
+			up = new OMTVector(View.getInstance().cameraNode().getCamera().getUp());
 			
 			Vector3f combined = towardcam.normalize().add(left.normalize().add(up).normalize());
 			//adopt the plane of the camera to be the coordinate system
@@ -695,7 +701,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
             DisplaySystem.getDisplaySystem().getWorldCoordinates( mousePos, 0.3f, pickRay.direction ).subtractLocal( pickRay.origin ).normalizeLocal()
 	 */
 	
-	private void createCells(Tangible src)
+	private void createCellOn(Tangible src)
 	{
 		NeuronMorphology nc = null;
 		Curve3D ocurve = null;
@@ -711,10 +717,12 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		{
 			CurveAnchorPoint ocp = (CurveAnchorPoint) src;
 			ocurve = ocp.getParentCurve();
+			t = ocp.aproxTime();	//make the cell appear on the anchorpoints time
 		}
 		else if ( src != null)
 		{
 			ocurve = createCurve(src);
+			//ocurve = null;
 		}
 		else
 		{
@@ -723,14 +731,62 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			return;
 		}
 		
-		//SET
+		//WHERE
 		//Find out where to put it
 		
 		//CREATE
-		TangibleManager.getInstance().unselectAll();
-		//do the rest of the actions
-		nc = cellFactory(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS, "5199202a", ocurve, true);
+		nc = cellFactory(TYPE_CELL_DG_A, ocurve);	//create the cell
 		nc.select();
+	}
+	
+	
+	
+	public void createFreeCell(String type)
+	{
+		
+		
+		//FIND WHERE to put it
+		Vector3f camPos = View.getInstance().cameraNode().getCamera().getLocation();
+		Vector3f camDir = View.getInstance().cameraNode().getCamera().getDirection().normalize().mult(30f); //get 4 unit-direction 
+		Vector3f dest = camPos.add(camDir);
+		
+		//camPos = OMTUtility.rotateVector(camPos, src.getCoordinateSystem().getRotationFromAbsolute());
+		System.out.println("Pos: " + camPos + "  -   Dir: " + camDir);
+		
+			
+		NeuronMorphology nc = cellFactory(type, null);	//create the cell
+		//place the thing in front of the camera
+		nc.setCoordinateSystem(null);
+		nc.setRelativePosition(new PositionVector(dest));
+		
+	}
+	
+
+	/**
+	 * Makes a generic cell based on type
+	 * @see OMTUtility TYPE_s 
+	 * @param type
+	 * @return
+	 */
+	public NeuronMorphology cellFactory(String type, Curve3D parent)
+	{
+		NeuronMorphology nc = null;
+		
+		String f=type;
+		String s=null;
+		
+
+			if (type.equals(TYPE_CELL_DG_A))	s = SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS;
+			if (type.equals(TYPE_CELL_DG_B))	s = SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS; 
+			if (type.equals(TYPE_CELL_DG_C))	s = SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS;
+			if (type.equals(TYPE_CELL_PYR_CA1_A))	s = SemanticClass.CA1_PYRAMIDAL_CELL_CLASS;
+			if (type.equals(TYPE_CELL_PYR_CA1_B))	s = SemanticClass.CA1_PYRAMIDAL_CELL_CLASS;
+			if (type.equals(TYPE_CELL_PYR_CA1_C))	s = SemanticClass.CA1_PYRAMIDAL_CELL_CLASS;
+			if (type.equals(TYPE_CELL_PYR_CA3_A))	s = SemanticClass.CA3_PYRAMIDAL_CELL_CLASS;
+			if (type.equals(TYPE_CELL_PYR_CA3_B))   s = SemanticClass.CA3_PYRAMIDAL_CELL_CLASS;
+			if (type.equals(TYPE_CELL_PYR_CA3_C))	s = SemanticClass.CA3_PYRAMIDAL_CELL_CLASS;
+		
+		return cellFactory(s, f, parent, true);
 	}
 	
 	/**
@@ -742,16 +798,16 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	 * @param updateView True - forces Viewto update the scene. If creating many cells at once, it is nice to only redraw at the end 
 	 * @return cell created
 	 */
-	public NeuronMorphology cellFactory(String cellType, String modelURL, Tangible crvParent, boolean updateView)
+	public NeuronMorphology cellFactory(String cellType, String modelURL, Curve3D crvParent, boolean updateView)
 	{
 		NeuronMorphology ncell = null;
-		if ((null == modelURL || !(crvParent instanceof Curve3D || null == crvParent)))
+		
+		if (null == modelURL)
 		{
 			System.out.println("Warning: created erroneous cell");
 			crvParent = null; //continue to create cell with the assumption its a free floating one
 		}
 		
-		Curve3D parentCurve = null;
 		float t = 0.5f;
 		
 		//create the cell two different ways, depending on whether it's a free-floating or attached cell
@@ -759,9 +815,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		{	//free float
 			ncell = new MorphMLNeuronMorphology(modelURL, null, t, NeuronMorphology.RENDER_AS_LOD, null);
 		}
-		else if ( crvParent instanceof Curve3D)
+		else
 		{	//attached
-			ncell = new MorphMLNeuronMorphology(modelURL, (Curve3D)crvParent, t, NeuronMorphology.RENDER_AS_LOD, crvParent.getCoordinateSystem());
+			ncell = new MorphMLNeuronMorphology(modelURL, crvParent, t, NeuronMorphology.RENDER_AS_LOD, crvParent.getCoordinateSystem());
 		}
 		
 		ncell.setRelativeScale(0.01f);
@@ -774,7 +830,6 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		return ncell;
 	}
-	
 	
 	
 }

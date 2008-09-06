@@ -11,9 +11,16 @@ import com.jme.scene.Geometry;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.shape.Sphere;
 
+import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
@@ -27,7 +34,7 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  *
  */
 public abstract class OMTUtility {
-
+	
 	
 	/**
 	 * Rotates a vector by some angle around some axis and returns the new vector
@@ -87,9 +94,9 @@ public abstract class OMTUtility {
 		
 		OMTVector poscent = new OMTVector(queryMesh.getModelBound().getCenter());
 		
-		OMTVector left =  new OMTVector(View.getInstance().getCamera().getCamera().getLeft());
-		OMTVector up =  new OMTVector(View.getInstance().getCamera().getCamera().getUp());	//must also offset a point by second dimension such that it makes a plane
-		OMTVector dir = new OMTVector(View.getInstance().getCamera().getCamera().getDirection());
+		OMTVector left =  new OMTVector(View.getInstance().cameraNode().getCamera().getLeft());
+		OMTVector up =  new OMTVector(View.getInstance().cameraNode().getCamera().getUp());	//must also offset a point by second dimension such that it makes a plane
+		OMTVector dir = new OMTVector(View.getInstance().cameraNode().getCamera().getDirection());
 		
 		OMTVector posa = new OMTVector(left.add(up).mult(-6f));
 		OMTVector posb = new OMTVector(left.mult(-5f));
@@ -168,7 +175,7 @@ public abstract class OMTUtility {
 	/**
 	 * Tells whetehr or not the camera (or object) looking at a plane is 'above' the origin
 	 * By calculating the angle between the vectors is such that the object is determined to be in positive Z-space
-	 * if the angle > 90 and angle < 270 and in negative Z-space otherwise
+	 * if the angle > 90 and angle < 270; and in negative Z-space otherwise
 	 * Z-space refers to the space of the plane 
 	 * @param pointingAt The 'lookingAt' direction  of an object, preferably the Camera.getDirection()
 	 * @param normalToPlane the vector that defines the plane the object is looking at
@@ -186,6 +193,9 @@ public abstract class OMTUtility {
 		else
 			return true;
 	}
+	
+
+	
 }
 
 
