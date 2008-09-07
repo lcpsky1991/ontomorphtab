@@ -14,6 +14,8 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
 /**
  * Defines the totality of the objects that can be viewed in the 3D world
@@ -77,6 +79,7 @@ public abstract class Scene extends Observable{
 	 * the raw data is retrieved from the CCDB and other sources.
 	 */
 	public void loadFromCKB() {
+		try {
 		//load up SemanticRepository
 		List<SemanticInstance> instances = GlobalSemanticRepository.getInstance().getMicroscopyProductInstances();
 		for (SemanticInstance i : instances) {
@@ -90,6 +93,9 @@ public abstract class Scene extends Observable{
 		          //store the SemanticInstance object in the neuronMorphology
 			      //add neuron morphology to scene
 		    //}
+		}
+		} catch (OMTOfflineException e) {
+			Log.warn("Scene.loadFromCKB, cannot load because client is offline!");
 		}
 	}
 	

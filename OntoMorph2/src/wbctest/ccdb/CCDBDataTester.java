@@ -9,11 +9,17 @@ import edu.ucsd.ccdb.ontomorph2.core.data.reader.CCDBFileType;
 import edu.ucsd.ccdb.ontomorph2.core.data.reader.CCDBModelReader;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
+import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
 public class CCDBDataTester {
 
 	public static void main(String[] args ){
-		CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(53);
+		CcdbMicroscopyData hippoImage = null;
+		try {
+			hippoImage = CCDBRepository.getInstance().getCCDBData(53);
+		} catch (OMTOfflineException e) {
+			e.printStackTrace();
+		}
 		URL imageURL = null;
 		CCDBModelReader reader;
 		try {

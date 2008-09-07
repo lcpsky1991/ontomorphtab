@@ -7,8 +7,12 @@ package edu.ucsd.ccdb.ontomorph2.util;
  *
  */
 public class OMTException extends RuntimeException {
-
-		public OMTException(String s, Exception e) {
-			super(s, e);
-		}
+	
+	public OMTException(String s, Exception e) {
+		super(s, e);
+	}
+	
+	public OMTException(String s) {
+		super(s);
+	}
 }

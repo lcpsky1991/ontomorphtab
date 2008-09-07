@@ -152,20 +152,19 @@ public class DemoScene extends Scene{
 		
 		
 		DataMesh mesh = new DataMesh();
-		//mesh.loadMaxFile("etc/mito/mito_outer.3ds");
+
 		mesh.setObjMeshURL(mitoObjURL);
-		//mesh.setRelativePosition(new PositionVector(0.49f, -3.5f, 20.01f));
-		mesh.setRelativePosition(new PositionVector(0.49f, -3.3f, 20.01f));
+	
+		mesh.setRelativePosition(new PositionVector(279.99f, -116.3f, -179.51f));
 		mesh.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
 		mesh.setRelativeScale(0.0002f);
-		mesh.setCoordinateSystem(d);
+		//mesh.setCoordinateSystem(d);
 		
 		addSceneObject(mesh);
 		
 		
-		setCameraPosition(Scene.CAMERA_CELLS_POSITION);
+		setCameraPosition(Scene.CAMERA_SUBCELLULAR_POSITION);
 		
-		changed(CHANGED_LOAD);
 		changed(CHANGED_LOAD);
 	}
 

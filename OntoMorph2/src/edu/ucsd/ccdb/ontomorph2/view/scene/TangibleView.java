@@ -7,6 +7,7 @@ import com.jme.scene.Node;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
+import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 
 /**
  * A base class for the view classes that display Tangibles.
@@ -92,7 +93,6 @@ public abstract class TangibleView extends Node {
 		{
 			this.unhighlight();
 		}
-
 		
 		//FIXME: setlocals may need to be changed to setWorld
 	   

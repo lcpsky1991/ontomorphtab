@@ -27,6 +27,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
 
@@ -264,8 +265,14 @@ public class TangibleManager {
 				cell3.setRelativeRotation(v);
 				//cell3.setCoordinateSystem(d);
 				cell3.setRelativeScale(0.01f);
+				
+				try {
 				//semantic thing for hippocampal CA3 neuron
-				cell3.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+					cell3.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+				} catch (OMTOfflineException e) {
+					Log.warn(e.getMessage());
+				}
+				
 				cell3.setVisible(true);
 				
 				OntoMorph2.getCurrentScene().changed(Scene.CHANGED_LOAD);

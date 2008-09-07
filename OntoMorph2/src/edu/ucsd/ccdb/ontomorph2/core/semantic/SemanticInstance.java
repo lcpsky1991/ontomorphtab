@@ -11,6 +11,8 @@ import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 import edu.stanford.smi.protegex.owl.model.impl.AbstractOWLProperty;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
 
 /**
@@ -47,18 +49,22 @@ public class SemanticInstance extends SemanticThingImpl {
 	}
 	
 	public String getLabel() {
-
-//		must be done before getLabel() is run!!!
-		KnowledgeBase owlModel = GlobalSemanticRepository.getInstance().getOWLModel();
-		
-		String label = null;
-		
-		Slot rdfsLabel = owlModel.getSlot("rdfs:label");
-		if (owlModel != null) {
-			rdfsLabel = owlModel.getSlot("rdfs:label");
-			label = (String)instance.getDirectOwnSlotValue(rdfsLabel);
+		try {
+//			must be done before getLabel() is run!!!
+			KnowledgeBase owlModel = GlobalSemanticRepository.getInstance().getOWLModel();
+			
+			String label = null;
+			
+			Slot rdfsLabel = owlModel.getSlot("rdfs:label");
+			if (owlModel != null) {
+				rdfsLabel = owlModel.getSlot("rdfs:label");
+				label = (String)instance.getDirectOwnSlotValue(rdfsLabel);
+			}
+			return label;
+		} catch (OMTOfflineException e) {
+			Log.warn(e.getMessage());
 		}
-		return label;
+		return null;
 	}
 
 	/**

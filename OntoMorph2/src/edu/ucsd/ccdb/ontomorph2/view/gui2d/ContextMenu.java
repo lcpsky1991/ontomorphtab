@@ -33,6 +33,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
@@ -524,7 +525,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	{
 		String info = "";
 		
-		OMTVector camDir = new OMTVector(View.getInstance().cameraNode().getCamera().getDirection());
+		OMTVector camDir = new OMTVector(View.getInstance().getCameraNode().getCamera().getDirection());
 		OMTVector plane = src.getWorldNormal();
 		
 		info += src.getWorldNormal() + "\n";
@@ -653,9 +654,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		else
 		{
 			//find the coordinate system of the camera on which to draw the curve parallel to, to do this we need three vectors
-			towardcam = new OMTVector(View.getInstance().cameraNode().getCamera().getDirection().normalize().negate().mult(5f)); 
-			left = new OMTVector(View.getInstance().cameraNode().getCamera().getLeft()); //too keep units consistent multiply by -1 so positive is 'right' (a droite)
-			up = new OMTVector(View.getInstance().cameraNode().getCamera().getUp());
+			towardcam = new OMTVector(View.getInstance().getCameraNode().getCamera().getDirection().normalize().negate().mult(5f)); 
+			left = new OMTVector(View.getInstance().getCameraNode().getCamera().getLeft()); //too keep units consistent multiply by -1 so positive is 'right' (a droite)
+			up = new OMTVector(View.getInstance().getCameraNode().getCamera().getUp());
 			
 			Vector3f combined = towardcam.normalize().add(left.normalize().add(up).normalize());
 			//adopt the plane of the camera to be the coordinate system
@@ -735,7 +736,20 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		//Find out where to put it
 		
 		//CREATE
+		/*
+		TangibleManager.getInstance().unselectAll();
+		//do the rest of the actions
+		nc = new MorphMLNeuronMorphology("5199202a", ocurve, t, NeuronMorphology.RENDER_AS_LOD, src.getCoordinateSystem());
+		nc.setRelativeScale(0.01f);
+		try {
+			nc.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
+		} catch (OMTOfflineException e){
+			Log.warn(e.getMessage());
+		}
+		nc.setVisible(true);
+		*/
 		nc = cellFactory(TYPE_CELL_DG_A, ocurve);	//create the cell
+
 		nc.select();
 	}
 	
@@ -746,8 +760,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		
 		//FIND WHERE to put it
-		Vector3f camPos = View.getInstance().cameraNode().getCamera().getLocation();
-		Vector3f camDir = View.getInstance().cameraNode().getCamera().getDirection().normalize().mult(30f); //get 4 unit-direction 
+		Vector3f camPos = View.getInstance().getCameraNode().getCamera().getLocation();
+		Vector3f camDir = View.getInstance().getCameraNode().getCamera().getDirection().normalize().mult(30f); //get 4 unit-direction 
 		Vector3f dest = camPos.add(camDir);
 		
 		//camPos = OMTUtility.rotateVector(camPos, src.getCoordinateSystem().getRotationFromAbsolute());
@@ -821,7 +835,12 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		}
 		
 		ncell.setRelativeScale(0.01f);
-		ncell.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(cellType));
+		try {
+			ncell.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(cellType));
+		} catch (OMTOfflineException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		ncell.setVisible(true);
 		ncell.addObserver(SceneObserver.getInstance()); //add an observer to the new cell
 		

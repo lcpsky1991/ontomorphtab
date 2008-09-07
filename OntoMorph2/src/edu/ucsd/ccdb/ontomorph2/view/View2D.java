@@ -29,6 +29,7 @@ import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.AtlasBrowser;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.BasicSearchWidget;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MenuBar;
@@ -171,10 +172,6 @@ public class View2D extends Display{
 		}
 		return instance;
 	}
-
-	
-	
-	
 	
 	public void loadCellChooser() {
 		MyNode root = TangibleManager.getInstance().getCellTree();
@@ -216,118 +213,74 @@ public class View2D extends Display{
 	}
 	
 	public void loadFileChooser() {
+//		Create a file chooser
+		final JFileChooser fc = new JFileChooser(OntoMorph2.getWBCProperties().getProperty("last.load.directory"));
 		
+//		In response to a button click:
+		JFrame f = new JFrame();
+		f.setSize(0,0);
+		f.setLocation(100,100);
+		f.setVisible(true);
+		int returnVal = fc.showOpenDialog(f);
 		
-//			Create a file chooser
-			final JFileChooser fc = new JFileChooser(OntoMorph2.getWBCProperties().getProperty("last.load.directory"));
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			OntoMorph2.getWBCProperties().setProperty("last.load.directory", file.getAbsolutePath());
+			OntoMorph2.saveWBCProperties();
+			TangibleManager.getInstance().loadFile(file);
 			
-//			In response to a button click:
-			JFrame f = new JFrame();
-			f.setSize(0,0);
-			f.setLocation(100,100);
-			f.setVisible(true);
-			int returnVal = fc.showOpenDialog(f);
-			
-	        if (returnVal == JFileChooser.APPROVE_OPTION) {
-	            File file = fc.getSelectedFile();
-	            OntoMorph2.getWBCProperties().setProperty("last.load.directory", file.getAbsolutePath());
-	            try {
-	            	OntoMorph2.getWBCProperties().store(new FileOutputStream("wbc.properties"), "");
-	            } catch (Exception e) {
-					Log.warn("Unable to write properties file");
-				}
-	            TangibleManager.getInstance().loadFile(file);
-	      
-	        } else {
-	            Log.warn("Open command cancelled by user.");
-	        }
-			
-			f.dispose();
-			
-			/*
+		} else {
+			Log.warn("Open command cancelled by user.");
+		}
 		
-//		 Create a dialog and set it to some location on the screen
-		Window frame = new Window();
-		this.addWidget(frame);
-		frame.setX(20);
-		frame.setY(350);
-		frame.setSize(200, 100);
-		frame.setShrinkable(false);
-		//frame.setExpandable(true);
-		frame.setTitle("Pick a file");
-		frame.getContentContainer().setLayoutManager(new StaticLayout());
-		
-		ComboBox<String> list = new ComboBox<String>();
-		frame.addWidget(list);
-		list.setSize(150, list.getMinHeight());
-		list.setShrinkable(false);
-		list.setX(25);
-		list.setY(25);
-		list.addItem("File 1");
-		list.addItem("File 2");
-		list.addItem("File 3");
-		list.addItem("File 4");
- 
-		list.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
-			{
-				if (!selectionChangedEvent.isSelected()) return;
-				String value = selectionChangedEvent.getToggableWidget().getText();
-				
-				//if ("White".equals(value)) light.setDiffuse(ColorRGBA.white);
-				//if ("Red".equals(value)) light.setDiffuse(ColorRGBA.red);
-				//if ("Blue".equals(value)) light.setDiffuse(ColorRGBA.blue);
-				//if ("Green".equals(value)) light.setDiffuse(ColorRGBA.green);
-				
-				Log.warn("Feature Not Implemented Yet");
-				//selectionChangedEvent..setVisible(false);
-			}
-			
-		});
-		*/
+		f.dispose();
 	}
 	
 	
 //	get a tree pane display showing cells and their semantic contents
 	public void loadInstanceBrowser()
 	{
-		Display display = this;
-		MyNode root = GlobalSemanticRepository.getInstance().getInstanceTree();
-		
-		Window window = FengGUI.createWindow(display, true, false, false, true);
-		window.getAppearance().removeAll();
-		
-		window.setTitle("Instances..");
-		
-		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
-		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
-		
-		Tree<MyNode> tree = MyTreeModel.<MyNode>createTree(sc);
-		
-		window.setSize(200, 300);
-		//StaticLayout.center(window, display);
-		window.setPosition(new Point(0,100));
-		window.layout();
-		tree.setModel(new MyTreeModel(root));
-
-		tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
-			{
-				if (!selectionChangedEvent.isSelected()) {
+		try {
+			Display display = this;
+			MyNode root = GlobalSemanticRepository.getInstance().getInstanceTree();
+			
+			Window window = FengGUI.createWindow(display, true, false, false, true);
+			window.getAppearance().removeAll();
+			
+			window.setTitle("Instances..");
+			
+			ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
+			sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
+			
+			Tree<MyNode> tree = MyTreeModel.<MyNode>createTree(sc);
+			
+			window.setSize(200, 300);
+			//StaticLayout.center(window, display);
+			window.setPosition(new Point(0,100));
+			window.layout();
+			tree.setModel(new MyTreeModel(root));
+			
+			tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
+				{
+					if (!selectionChangedEvent.isSelected()) {
+						MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+						if (n.value != null) {
+							n.value.unselect();
+						}
+						return;
+					}
 					MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
 					if (n.value != null) {
-						n.value.unselect();
+						n.value.select();
 					}
-					return;
-				}
-				MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
-				if (n.value != null) {
-					n.value.select();
+					
 				}
 				
-			}
-			
-		});
+			});
+		} catch (OMTOfflineException e) {
+			Log.warn("View2D.loadInstanceBrowser: " + e.getMessage());
+		}
 	}
 
 	public void loadBasicSearchBox() {

@@ -17,6 +17,8 @@ import org.morphml.morphml.schema.Cell.SegmentsType;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
@@ -68,20 +70,28 @@ public class MorphMLCableImpl extends Tangible implements ICable{
 	
 	public List<ISemanticThing> getSemanticThings() {
 		List<ISemanticThing> l = new ArrayList<ISemanticThing>();
+		GlobalSemanticRepository repo = null;
+		try {
+			repo = GlobalSemanticRepository.getInstance();
+		} catch (OMTOfflineException e) {
+			Log.warn(e.getMessage());
+			return null;
+		}
+		
 		for (Object ob : getMorphMLCable().getGroup()) {
 			String s = (String)ob;
 			if ("dendrite_group".equals(s)) {
-				l.add(GlobalSemanticRepository.getInstance().getSemanticClass("sao:sao1211023249"));
+				l.add(repo.getSemanticClass("sao:sao1211023249"));
 			}
 			if ("soma_group".equals(s)) {
-				l.add(GlobalSemanticRepository.getInstance().getSemanticClass("sao:sao1044911821"));
+				l.add(repo.getSemanticClass("sao:sao1044911821"));
 			} 
 			if ("axon_group".equals(s)) {
-				l.add(GlobalSemanticRepository.getInstance().getSemanticClass("sao:sao1770195789"));
+				l.add(repo.getSemanticClass("sao:sao1770195789"));
 				//should be adding all these segGroups to the Axon class and treating them as a separate unit.
 			}
 			if ("apical_dendrite".equals(s)) {
-				l.add(GlobalSemanticRepository.getInstance().getSemanticClass("sao:sao273773228"));
+				l.add(repo.getSemanticClass("sao:sao273773228"));
 			}
 			
 		}

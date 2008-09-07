@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.app;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -26,6 +27,12 @@ public class OntoMorph2 {
 	
 	static Scene _scene;
 	static Properties wbcProps = null;
+	public static final String OFFLINE_MODE = "offlineMode";
+	public static final String TRUE = "true";
+	public static final String FALSE = "false";
+	public static final String LAST_LOADED_DIRECTORY = "last.load.directory";
+	public static final String PROPERTIES_FILENAME = "wbc.properties";
+	public static final String DEBUG_MODE = "debugMode";
 	
 	public static void main(String[] args) {
         //		set global log level to warning
@@ -85,5 +92,30 @@ public class OntoMorph2 {
 	
 	public static Properties getWBCProperties() {
 		return wbcProps;
+	}
+	
+	public static void saveWBCProperties() {
+		try {
+        	getWBCProperties().store(new FileOutputStream("wbc.properties"), "");
+        } catch (Exception e) {
+			Log.warn("Unable to write properties file");
+		}
+	}
+
+	public static boolean isOfflineMode() {
+		return TRUE.equals(getWBCProperties().getProperty(OFFLINE_MODE));
+	}
+	
+	public static void setDebugMode(boolean debug) {
+		if (debug) {
+			getWBCProperties().setProperty(DEBUG_MODE, TRUE);
+		}	else {
+			getWBCProperties().setProperty(DEBUG_MODE, FALSE);
+		}
+		saveWBCProperties();
+	}
+	
+	public static boolean isDebugMode() {
+		return TRUE.equals(getWBCProperties().getProperty(DEBUG_MODE));
 	}
 }

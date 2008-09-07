@@ -12,10 +12,12 @@ import com.jme.input.action.MouseInputAction;
 import com.jme.intersection.PickData;
 import com.jme.intersection.PickResults;
 import com.jme.intersection.TrianglePickResults;
+import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 import com.jme.scene.batch.GeomBatch;
@@ -26,6 +28,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
@@ -57,9 +60,7 @@ public class View3DMouseListener implements MouseInputListener {
 	public static final int METHOD_LOOKAT = 64;
 	public static final int METHOD_MOVE_FREE = 100;	//not constrained by the coordinate system
 	
-	
-
-	private static int manipulation = METHOD_PICK; //use accesor
+	private static int manipulation = METHOD_MOVE; //set move to be default
 	
 	private boolean down;
 	private int lastButton;
@@ -114,12 +115,12 @@ public class View3DMouseListener implements MouseInputListener {
 				//zoom camera if Z press
 				if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
 				{
-					View.getInstance().cameraNode().zoomIn(dx);	
+					View.getInstance().getCameraNode().zoomIn(dx);	
 				}
 				//move camera if Z NOT pressed
 				else
 				{
-					View.getInstance().cameraNode().moveForward(dx);
+					View.getInstance().getCameraNode().moveForward(dx);
 				}
 			}
 	}
@@ -149,8 +150,8 @@ public class View3DMouseListener implements MouseInputListener {
 		if (mouseLook)
 		{
 			//find mouse change
-			View.getInstance().cameraNode().turnClockwise(dX / 100f);
-			View.getInstance().cameraNode().turnUp(dY / 100f);
+			View.getInstance().getCameraNode().turnClockwise(dX / 100f);
+			View.getInstance().getCameraNode().turnUp(dY / 100f);
 		}
 		else if (0 == button) //left 
 		{
@@ -211,6 +212,32 @@ public class View3DMouseListener implements MouseInputListener {
 		 */
 	}
 	
+	/**
+	 * Child method from handleMouseInput
+	 */ 
+	private void onMouseWheel()
+	{
+		//====================================
+    	//	WHEEL
+    	//====================================
+		{
+			float dx=MouseInput.get().getWheelDelta() / (View.getInstance().getKeyInputListener().getKeyPressActionRate() * 20); //scale it by some factor so it's less jumpy
+			if (dx != 0)	
+			{
+				//zoom camera if Z press
+				if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
+				{
+					View.getInstance().getCameraNode().zoomIn(dx);	
+				}
+				//move camera if Z NOT pressed
+				else
+				{
+					View.getInstance().getCameraNode().moveForward(dx);
+				}
+			}
+		}
+	}
+
 	private void doPick() 
 	{
 		
@@ -312,7 +339,6 @@ public class View3DMouseListener implements MouseInputListener {
 	
 	private PickResults reorderPickPriority(PickResults results)
 	{
-		PickData decision = null;
 		PickResults reorder = new TrianglePickResults();
 		
 		//setup
@@ -425,19 +451,19 @@ public class View3DMouseListener implements MouseInputListener {
 		
 		//======================================
 		//======================================
-		
 		float mx = MouseInput.get().getXDelta();
 		float my = MouseInput.get().getYDelta();
 		
 		float dx = mx;
 		
-		//do the maniupulation to all selected objects
+		//do the manipulation to all selected objects
 		for (Tangible manip : TangibleManager.getInstance().getSelected())
 		{
-			//check to see where the camera is position and compare it to the Tangible's plane
+//			check to see where the camera is positioned and compare it to the Tangible's plane
 			//if it is under, reverse the X direction so movement is intuitive
-			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().cameraNode().getCamera().getDirection()), manip.getWorldNormal()); 
+			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().getCameraNode().getCamera().getDirection()), manip.getWorldNormal()); 
 			if (reverse) dx = -mx;	//switch X movement if it is on the opposite side of the plane
+
 
 			switch ( manipulation )
 			{
@@ -445,6 +471,24 @@ public class View3DMouseListener implements MouseInputListener {
 				//do nothing
 				break;
 			case METHOD_MOVE:
+
+				/* -- Experimental code
+				//order to stay underneath the mouse pointer, regardless of 
+				//their z position relative to the camera at this moment.
+				Vector3f delta = this.getAbsoluteWorldMouseDelta();
+				mx = delta.x;
+				my = delta.y;
+				float mz = delta.z;
+				
+				dx = mx;
+				
+				if (reverse) dx = -mx;	//switch X movement if it is on the opposite side of the plane
+
+				manip.move(dx, my, mz);
+				
+				//Vector3f newPosition = this.getAbsoluteWorldMouseDesiredPosition();
+				//manip.setRelativePosition(newPosition.x, newPosition.y, newPosition.z);
+				 */
 				manip.move(dx, my, new OMTVector(1,1,0));
 				break;
 			case METHOD_ROTATEX:
@@ -461,9 +505,11 @@ public class View3DMouseListener implements MouseInputListener {
 				Log.warn("LOOK AT is broken");
 				try
 				{
-					View.getInstance().cameraNode().lookAt(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question	
+					View.getInstance().getCameraNode().lookAt(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question	
 				}
-				catch(Exception e){};
+				catch(Exception e){
+					Log.warn(e.getMessage());
+				};
 				break;
 			case METHOD_SCALE:
 				manip.scale(dx, my, new OMTVector(1,1,1));
@@ -472,24 +518,79 @@ public class View3DMouseListener implements MouseInputListener {
 		}
 	}
 	
-	private void moveSelected(float mx, float my) {
-		for (Tangible manip : TangibleManager.getInstance().getSelected())
-		{
-			manip.move(mx, my, new OMTVector(1,1,0));
-		}
+	//this method returns an x and y delta that the selected objects need
+	//to be displaced by in order to stay under the mouse pointer
+	//takes advantage of JME's Camera.getWorldCoordinates() method.
+	private Vector3f getAbsoluteWorldMouseDelta() {
+		
+		float mx = MouseInput.get().getXAbsolute();
+		float my = MouseInput.get().getYAbsolute();
+		Vector2f mouseCurrentScreenPos = new Vector2f(mx, my);
+		
+		Vector2f mouseOldScreenPos = new Vector2f(mx - MouseInput.get().getXDelta(), 
+				my - MouseInput.get().getYDelta());
+
+		//get the average position of all the selected objects.
+		Vector3f objectsAbsoluteAveragePosition = this.calculateAverageAbsolutePositionForSelectedObjects();
+		
+		//if the mouse were at the same z-position as the average position of all selected objects, 
+		//find its world position in absolute coordinates.
+		ViewCamera cam = View.getInstance().getCameraNode();
+		float distanceBetweenCameraAndSelectedObjects = cam.getDistanceToPosition(objectsAbsoluteAveragePosition);
+		Vector3f mouseCurrentWorldPosition = 
+			cam.getCamera().getWorldCoordinates(mouseCurrentScreenPos, distanceBetweenCameraAndSelectedObjects);
+		
+		
+		//find the previous world position of the mouse in absolute coordinates
+		Vector3f mouseOldWorldPosition = 
+			cam.getCamera().getWorldCoordinates(mouseOldScreenPos, distanceBetweenCameraAndSelectedObjects);
+		
+		//this delta is now expressed in the distance in absolute coordinates that the 
+		//average position of the selected objects needs to travel to stay under the mouse pointer
+		//regardless of distance from the camera
+		Vector3f mouseWorldDelta = mouseCurrentWorldPosition.subtractLocal(mouseOldWorldPosition);
+		
+		return mouseWorldDelta;
 	}
 	
-	private void rotateSelected(float mx, float my, OMTVector v) {
-		for (Tangible manip : TangibleManager.getInstance().getSelected())
-		{
-			manip.rotate(mx, my, v);
-		}
+
+	//this method returns an x and y delta that the selected objects need
+	//to be displaced by in order to stay under the mouse pointer
+	//takes advantage of JME's Camera.getWorldCoordinates() method.
+	private Vector3f getAbsoluteWorldMouseDesiredPosition() {
+		
+		float mx = MouseInput.get().getXAbsolute();
+		float my = MouseInput.get().getYAbsolute();
+		Vector2f mouseCurrentScreenPos = new Vector2f(mx, my);
+		
+		//get the average position of all the selected objects.
+		Vector3f objectsAbsoluteAveragePosition = this.calculateAverageAbsolutePositionForSelectedObjects();
+		System.out.println("Object absolute average position: " + objectsAbsoluteAveragePosition);
+		//if the mouse were at the same z-position as the average position of all selected objects, 
+		//find its world position in absolute coordinates.
+		ViewCamera cam = View.getInstance().getCameraNode();
+		float distanceBetweenCameraAndSelectedObjects = cam.getDistanceToPosition(objectsAbsoluteAveragePosition);
+		System.out.println("  Distance between camera and selected object: " + distanceBetweenCameraAndSelectedObjects );
+		Vector3f mouseCurrentWorldPosition = 
+			cam.getCamera().getWorldCoordinates(mouseCurrentScreenPos, distanceBetweenCameraAndSelectedObjects);
+		System.out.println("  Mouse current world position: " + mouseCurrentWorldPosition);
+		
+		return mouseCurrentWorldPosition;
 	}
 	
-	private void scaleSelected(float mx, float my) {
-		for (Tangible manip : TangibleManager.getInstance().getSelected()) {
-			manip.scale(mx, my,  new OMTVector(1,1,1));
+	//iterate through all selected objects and return their average
+	//position in absolute coordinates.
+	private Vector3f calculateAverageAbsolutePositionForSelectedObjects(){
+		Vector3f totalPosition = new Vector3f();
+		int n = 0;
+		for (Tangible manip : TangibleManager.getInstance().getSelected())
+		{
+			Vector3f individualPosition = manip.getAbsolutePosition();
+			totalPosition = totalPosition.add(individualPosition);
+			n++;
 		}
+		assert n > 0;
+		return totalPosition.divideLocal(n);
 	}
 		
 	/**

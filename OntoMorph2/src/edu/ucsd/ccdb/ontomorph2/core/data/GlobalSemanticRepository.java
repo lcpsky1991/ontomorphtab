@@ -15,10 +15,12 @@ import edu.stanford.smi.protegex.owl.database.OWLDatabaseModel;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
+import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
+import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
 
@@ -37,8 +39,12 @@ public class GlobalSemanticRepository {
 	 */
 	private static GlobalSemanticRepository instance;
 	
-	private GlobalSemanticRepository() {
-		this.loadOntology();
+	private GlobalSemanticRepository() throws OMTOfflineException{
+		if (!OntoMorph2.isOfflineMode()) {
+			this.loadOntology();
+		} else {
+			throw new OMTOfflineException("Cannot use Global Semantic Repository when in offline mode!");
+		}
 	}
 	
 
@@ -109,7 +115,7 @@ public class GlobalSemanticRepository {
 	
 	//initialize the semantic repository by connecting to the 
 	//database and retriving a knowledge base object
-	private void loadOntology() {
+	private void loadOntology() throws OMTOfflineException{
     	try {
     		    		
     		ApplicationProperties.setUrlConnectTimeout(100000);
@@ -160,7 +166,7 @@ public class GlobalSemanticRepository {
     			
     		}*/
     	} catch (Exception e) {
-    		throw new OMTException("Cannot connect to OWL Database!", e);
+    		throw new OMTOfflineException("Cannot connect to OWL Database!", e);
     	}	
     }
 
@@ -168,7 +174,7 @@ public class GlobalSemanticRepository {
 	 * Returns the singleton instance.
 	 @return	the singleton instance
 	 */
-	static public GlobalSemanticRepository getInstance() {
+	static public GlobalSemanticRepository getInstance() throws OMTOfflineException{
 		if (instance == null) {
 			instance = new GlobalSemanticRepository();
 		}

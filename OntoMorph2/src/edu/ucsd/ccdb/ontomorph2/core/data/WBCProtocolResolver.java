@@ -3,23 +3,34 @@ package edu.ucsd.ccdb.ontomorph2.core.data;
 import java.net.URI;
 
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
 public class WBCProtocolResolver {
 
 	public Object resolveWBCProtocol(URI proto) {
 		if (proto.getPath().startsWith("ontology"))  {
+			
+			GlobalSemanticRepository repo = null;
+			try {
+				repo = GlobalSemanticRepository.getInstance();
+			} catch (OMTOfflineException e) {
+				Log.warn(e.getMessage());
+				return null;
+			}
+				
 			if (proto.getPath().indexOf("class") > 0) {
 				
 				//get index of the final slash before the name
 				int lastSlashIndex = proto.getPath().indexOf('/', proto.getPath().indexOf("class"));
 				
-				return GlobalSemanticRepository.getInstance().getSemanticClass(proto.getPath().substring(lastSlashIndex));
+				return repo.getSemanticClass(proto.getPath().substring(lastSlashIndex));
 			} else if (proto.getPath().indexOf("instance") > 0) {
 				
 				//get index of the final slash before the name
 				int lastSlashIndex = proto.getPath().indexOf('/', proto.getPath().indexOf("instance"));
 				
-				return GlobalSemanticRepository.getInstance().getSemanticInstance(proto.getPath().substring(lastSlashIndex));
+				return repo.getSemanticInstance(proto.getPath().substring(lastSlashIndex));
 			}
 		} else if (proto.getPath().startsWith("data")) {
 			if (proto.getPath().indexOf("morphml") > 0) {

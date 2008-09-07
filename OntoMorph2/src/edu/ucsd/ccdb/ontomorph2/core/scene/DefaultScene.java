@@ -31,6 +31,8 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
@@ -97,14 +99,18 @@ public class DefaultScene extends Scene{
 		//temporary hack o load a mockup
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
 
-		CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(35);
-		
-		Slide a = new CCDBSlide(hippoImage, 0.87f);
-		a.setRelativePosition(new PositionVector(25,-32,17f));
-		a.setCoordinateSystem(d);
-		//a.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
-		a.setRelativeScale(10);
-		addSceneObject(a);
+		try {
+			CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(35);
+			
+			Slide a = new CCDBSlide(hippoImage, 0.87f);
+			a.setRelativePosition(new PositionVector(25,-32,17f));
+			a.setCoordinateSystem(d);
+			//a.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
+			a.setRelativeScale(10);
+			addSceneObject(a);
+		} catch (OMTOfflineException e) {
+			Log.warn(e.getMessage() + " Cannot load slide from CCDB Data");
+		}
 		
         Slide b = new URISlide(hippo2URL, 1.34f);
         b.setRelativePosition(new PositionVector(-14,0, 18f));
@@ -135,17 +141,20 @@ public class DefaultScene extends Scene{
 		addSceneObject(e);
 
 
-		CcdbMicroscopyData cerebImage = CCDBRepository.getInstance().getCCDBData(53);
-				
-		RotationVector rot = new RotationVector(
-						new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-20,OMTVector.UNIT_Z));
-		
-		Slide f = new CCDBSlide(cerebImage, 1.11f);
-		f.setRelativePosition(new PositionVector(440,-118,-250));
-		f.setRelativeRotation(rot);
-		f.setRelativeScale(4.5F); 
-		addSceneObject(f);
-		
+		try {
+			CcdbMicroscopyData cerebImage = CCDBRepository.getInstance().getCCDBData(53);
+			
+			RotationVector rot = new RotationVector(
+					new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-20,OMTVector.UNIT_Z));
+			
+			Slide f = new CCDBSlide(cerebImage, 1.11f);
+			f.setRelativePosition(new PositionVector(440,-118,-250));
+			f.setRelativeRotation(rot);
+			f.setRelativeScale(4.5F); 
+			addSceneObject(f);
+		} catch (OMTOfflineException e2) {
+			Log.warn(e2.getMessage());
+		}
 		
 		Volume v1 = new Volume(new Box("my box", new OMTVector(-21,-1,15), 20f, 10f, 20f), d);
 		//v1.setVisible(false);
@@ -207,21 +216,29 @@ public class DefaultScene extends Scene{
 				NeuronMorphology.RENDER_AS_LOD_2, d);
 		cell3.setRelativeScale(0.01f);
 		//semantic thing for hippocampal CA3 neuron
-		cell3.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+		
 		addSceneObject(cell3);
 		
 		NeuronMorphology cell4 = new MorphMLNeuronMorphology("cell2zr", c2, 0.2f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell4.setRelativeScale(0.01f);
-		cell4.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+		
 		addSceneObject(cell4);
 		
-		
+
 		NeuronMorphology cell5 = new MorphMLNeuronMorphology("cell6zr", c2, 0.35f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell5.setRelativeScale(0.01f);
-		cell5.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+		
 		addSceneObject(cell5);
+		
+		try {
+			cell3.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+			cell4.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+			cell5.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+		} catch (OMTOfflineException e3) {
+			Log.warn(e3.getMessage());
+		}
 		
 
 		/** These models have their up vectors pointing in an X direction
@@ -268,7 +285,13 @@ public class DefaultScene extends Scene{
 			NeuronMorphology cell11 = new MorphMLNeuronMorphology("5199202a", curve1, ((float)i)/numCells-0.01f, NeuronMorphology.RENDER_AS_LOD, d);
 
 			cell11.setRelativeScale(0.01f);
-			cell11.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
+			
+			try {
+				cell11.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
+			} catch (OMTOfflineException e4) {
+				Log.warn(e4.getMessage());
+			}
+			
 			addSceneObject(cell11);
 		}
 		

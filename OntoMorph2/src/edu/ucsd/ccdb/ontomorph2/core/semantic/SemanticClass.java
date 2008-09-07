@@ -8,6 +8,8 @@ import java.util.List;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
 /** 
  * Represents an OWL class.
@@ -36,7 +38,12 @@ public class SemanticClass extends SemanticThingImpl {
 	 * Get the OWL label
 	 */
 	public String getLabel() {
-		return GlobalSemanticRepository.getInstance().getClassLabel(OWLClass, URI);
+		try {
+			return GlobalSemanticRepository.getInstance().getClassLabel(OWLClass, URI);
+		} catch (OMTOfflineException e) {
+			Log.warn(e.getMessage());
+		}
+		return null;
 	}
 	
 	public String toString() {

@@ -110,9 +110,13 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void setRelativePosition(PositionVector pos) {
 		if (pos != null) {
 			theSpatial.setLocalTranslation(pos);
-			Vector3f test = theSpatial.getLocalTranslation();
 			changed(CHANGED_RELATIVE_POSITION);
 		}
+	}
+	
+	public void setRelativePosition(float x, float y, float z) {
+		theSpatial.setLocalTranslation(x, y, z);
+		changed(CHANGED_RELATIVE_POSITION);
 	}
 	
 	/**
@@ -396,7 +400,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 * Will typically range from (0,0,0) to (1,1,1). Where (1,1,0) corresponds to 2D movement on 
 	 * the current X,Y plane
 	 */
-	//TODO: impliment the constraint
 	public void move(float dx, float dy, OMTVector constraint)
 	{
 		//get changes in mouse movement
@@ -410,6 +413,16 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		PositionVector np = new PositionVector( this.getRelativePosition().asVector3f().add(dx,dy,dz) );
 		//PositionVector np = new PositionVector( this.getAbsolutePosition().asVector3f().add(dx,dy,dz) );
 		
+		//apply the movement
+		this.setRelativePosition( np );
+		changed(CHANGED_MOVE);
+	}
+	
+	public void move(float dx, float dy, float dz)
+	{
+		//get the position, add the change, store the new position
+		PositionVector np = new PositionVector( this.getRelativePosition().asVector3f().add(dx,dy,dz) );
+				
 		//apply the movement
 		this.setRelativePosition( np );
 		changed(CHANGED_MOVE);
