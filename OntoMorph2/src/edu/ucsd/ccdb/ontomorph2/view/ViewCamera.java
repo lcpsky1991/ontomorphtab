@@ -324,24 +324,4 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	public float getZoom() {
 		return invZoom;
 	}
-
-	/**
-	 * Gets distance to a given position from the current viewing plane.  All positions co-planar to the
-	 * current viewing plane will return the same distance.
-	 * @param position
-	 * @return a float value with the distance
-	 */
-	public float getDistanceToPosition(Vector3f position) {
-		
-		Vector3f facingDirection = getCamera().getDirection();
-				
-		Vector3f cameraPosition = getCamera().getLocation();
-		Vector3f pointsTowardsPosition = position.subtract(cameraPosition);
-		
-		float distance = facingDirection.dot(pointsTowardsPosition);
-		
-		return distance;
-		
-		//return FastMath.abs(getCamera().getLocation().z - position.z);
-	}	
 }

@@ -33,6 +33,7 @@ public class OntoMorph2 {
 	public static final String LAST_LOADED_DIRECTORY = "last.load.directory";
 	public static final String PROPERTIES_FILENAME = "wbc.properties";
 	public static final String DEBUG_MODE = "debugMode";
+	public static final String SCENE = "scene";
 	
 	public static void main(String[] args) {
         //		set global log level to warning
@@ -55,7 +56,7 @@ public class OntoMorph2 {
 		
 		SceneObserver obs = SceneObserver.getInstance();
 		obs.setView(view);
-		if ("demo".equals(wbcProps.getProperty("scene"))) {
+		if ("demo".equals(wbcProps.getProperty(SCENE))) {
 			_scene = new DemoScene();
 		} else {
 			_scene = new DefaultScene();

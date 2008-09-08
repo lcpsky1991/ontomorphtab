@@ -9,6 +9,7 @@ import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.KeyInputListener;
 import com.jme.math.FastMath;
+import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.scene.shape.Sphere;
 
@@ -65,6 +66,16 @@ public class TestViewCamera extends SimpleGame{
 			rootNode.attachChild(s);
 		}
 		
+		for (int i = 0; i < 10; i++) {
+			Sphere s = new Sphere("tight sphere " + i, 10, 10, 0.1f);
+			float scale = 5;
+			s.setLocalTranslation(0f, (float)(i*scale*0.005+2), 0f);
+			s.setModelBound(new BoundingBox());
+			s.updateModelBound();
+			spheres.add(s);
+			rootNode.attachChild(s);
+		}
+		
 		cam = new ViewCamera();
 		
 		KeyInput.get().addListener(new KeyInputListener() {
@@ -84,8 +95,12 @@ public class TestViewCamera extends SimpleGame{
 	
 	private void doTest() {
 		for (Sphere s : spheres) {
-			float distanceToSphere = cam.getDistanceToPosition(s.getLocalTranslation());
-			System.out.println("Distance to " + s.getName() + " at position " + s.getLocalTranslation() + " : " + distanceToSphere);
+			System.out.println("Distance to " + s.getName() + " at position " + s.getLocalTranslation());
+			Vector3f screenCoordinates = cam.getCamera().getScreenCoordinates(s.getLocalTranslation());
+			Vector2f screenCoords = new Vector2f(screenCoordinates.x, screenCoordinates.y);
+			System.out.println("  Screen coordinates :" + screenCoordinates);
+			System.out.println("  Alternative World Coordinates: " 
+						+ cam.getCamera().getWorldCoordinates(screenCoords, screenCoordinates.z));
 		}
 	}
 	

@@ -23,6 +23,7 @@ import com.jme.scene.Geometry;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.shape.Sphere;
 
+import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
@@ -471,25 +472,12 @@ public class View3DMouseListener implements MouseInputListener {
 				//do nothing
 				break;
 			case METHOD_MOVE:
-
-				/* -- Experimental code
-				//order to stay underneath the mouse pointer, regardless of 
-				//their z position relative to the camera at this moment.
-				Vector3f delta = this.getAbsoluteWorldMouseDelta();
-				mx = delta.x;
-				my = delta.y;
-				float mz = delta.z;
-				
-				dx = mx;
-				
-				if (reverse) dx = -mx;	//switch X movement if it is on the opposite side of the plane
-
-				manip.move(dx, my, mz);
-				
-				//Vector3f newPosition = this.getAbsoluteWorldMouseDesiredPosition();
-				//manip.setRelativePosition(newPosition.x, newPosition.y, newPosition.z);
-				 */
-				manip.move(dx, my, new OMTVector(1,1,0));
+				//ugly ugly hack for demo purposes only.. remove and integrate as soon as possible
+				if ("demo".equals(OntoMorph2.getWBCProperties().getProperty(OntoMorph2.SCENE))) {
+					moveUsingMouseAbsolutePosition(manip);
+				} else {
+					moveUsingMouseScreenPosition(manip, dx, my);
+				}
 				break;
 			case METHOD_ROTATEX:
 				manip.rotate(dx, my, new OMTVector(1,0,0));
@@ -518,59 +506,45 @@ public class View3DMouseListener implements MouseInputListener {
 		}
 	}
 	
-	//this method returns an x and y delta that the selected objects need
-	//to be displaced by in order to stay under the mouse pointer
-	//takes advantage of JME's Camera.getWorldCoordinates() method.
-	private Vector3f getAbsoluteWorldMouseDelta() {
-		
-		float mx = MouseInput.get().getXAbsolute();
-		float my = MouseInput.get().getYAbsolute();
-		Vector2f mouseCurrentScreenPos = new Vector2f(mx, my);
-		
-		Vector2f mouseOldScreenPos = new Vector2f(mx - MouseInput.get().getXDelta(), 
-				my - MouseInput.get().getYDelta());
-
-		//get the average position of all the selected objects.
-		Vector3f objectsAbsoluteAveragePosition = this.calculateAverageAbsolutePositionForSelectedObjects();
-		
-		//if the mouse were at the same z-position as the average position of all selected objects, 
-		//find its world position in absolute coordinates.
-		ViewCamera cam = View.getInstance().getCameraNode();
-		float distanceBetweenCameraAndSelectedObjects = cam.getDistanceToPosition(objectsAbsoluteAveragePosition);
-		Vector3f mouseCurrentWorldPosition = 
-			cam.getCamera().getWorldCoordinates(mouseCurrentScreenPos, distanceBetweenCameraAndSelectedObjects);
-		
-		
-		//find the previous world position of the mouse in absolute coordinates
-		Vector3f mouseOldWorldPosition = 
-			cam.getCamera().getWorldCoordinates(mouseOldScreenPos, distanceBetweenCameraAndSelectedObjects);
-		
-		//this delta is now expressed in the distance in absolute coordinates that the 
-		//average position of the selected objects needs to travel to stay under the mouse pointer
-		//regardless of distance from the camera
-		Vector3f mouseWorldDelta = mouseCurrentWorldPosition.subtractLocal(mouseOldWorldPosition);
-		
-		return mouseWorldDelta;
+	//new movement strategy.  
+	//doesn't work with coordinate systems yet as far as I can tell
+	private void moveUsingMouseAbsolutePosition(Tangible manip) {
+		Vector3f newPosition = this.getAbsoluteWorldMouseDesiredPosition(manip);
+		manip.setRelativePosition(newPosition.x, newPosition.y, newPosition.z);
 	}
 	
+	//old movement strategy encapsulated in a method
+	private void moveUsingMouseScreenPosition(Tangible manip, float dx, float my) {
+		manip.move(dx, my, new OMTVector(1,1,0));
+	}
 
-	//this method returns an x and y delta that the selected objects need
-	//to be displaced by in order to stay under the mouse pointer
+	//this method returns the position that the mouse would be located in
+	//the world if it had the same distance away from the camera that the selected objects have.
 	//takes advantage of JME's Camera.getWorldCoordinates() method.
-	private Vector3f getAbsoluteWorldMouseDesiredPosition() {
+	private Vector3f getAbsoluteWorldMouseDesiredPosition(Tangible manip) {
 		
+		//get current mouse SCREEN position
 		float mx = MouseInput.get().getXAbsolute();
 		float my = MouseInput.get().getYAbsolute();
 		Vector2f mouseCurrentScreenPos = new Vector2f(mx, my);
+		System.out.println("Screen position: " + mouseCurrentScreenPos);
 		
 		//get the average position of all the selected objects.
-		Vector3f objectsAbsoluteAveragePosition = this.calculateAverageAbsolutePositionForSelectedObjects();
-		System.out.println("Object absolute average position: " + objectsAbsoluteAveragePosition);
-		//if the mouse were at the same z-position as the average position of all selected objects, 
+		Vector3f objectsAbsoluteAveragePosition = manip.getRelativePosition(); //this.calculateAverageAbsolutePositionForSelectedObjects();
+		System.out.println("  Object absolute average position: " + objectsAbsoluteAveragePosition);
+		
+		//if the mouse were at the same z-position (relative to the camera) as the average 
+		//position of all selected objects, 
 		//find its world position in absolute coordinates.
 		ViewCamera cam = View.getInstance().getCameraNode();
-		float distanceBetweenCameraAndSelectedObjects = cam.getDistanceToPosition(objectsAbsoluteAveragePosition);
+		//extremely confusing.. getScreenCoordinates returns a z value that is the "zPos" to that object which the 
+		//getWorldCoordinates method needs to correctly place the object back in the world.  don't understand why.
+		float distanceBetweenCameraAndSelectedObjects = cam.getCamera().getScreenCoordinates(objectsAbsoluteAveragePosition).z;
 		System.out.println("  Distance between camera and selected object: " + distanceBetweenCameraAndSelectedObjects );
+				
+//		use the average position of selected objects, and the distance between those objects and the camera
+		//to determine the current position of the mouse in the 3D world.
+		//This method assumes that the camera is looking down the Z axis
 		Vector3f mouseCurrentWorldPosition = 
 			cam.getCamera().getWorldCoordinates(mouseCurrentScreenPos, distanceBetweenCameraAndSelectedObjects);
 		System.out.println("  Mouse current world position: " + mouseCurrentWorldPosition);

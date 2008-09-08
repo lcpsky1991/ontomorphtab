@@ -314,9 +314,9 @@ public class DefaultScene extends Scene{
 		cell13.getMorphology().setRenderOption(NeuronMorphology.RENDER_AS_LINES);
 		addSceneObject(cell13);*/
 		
-		loadSurfaces();
+		//loadSurfaces();
 		
-		loadMeshes();
+		//loadMeshes();
 
 		changed(CHANGED_LOAD);
 	}
