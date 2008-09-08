@@ -9,6 +9,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
+import com.jme.bounding.BoundingVolume;
 import com.jme.scene.Geometry;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
@@ -179,16 +180,10 @@ public class SceneObserver implements Observer {
 			
 			//if we have moved, test to see if any tangibles contain any other tangibles now
 			if (Tangible.CHANGED_MOVE.equals(arg)) {
-				//loop over all geometries within that tangible view tv
-				Collection geometriesWithinTangibleView = tvm.getGeometriesForTangibleView(tv);
 				
-				if (geometriesWithinTangibleView == null) return;
-				
-				for (Iterator it = geometriesWithinTangibleView.iterator(); it.hasNext();) {
-					Geometry g = (Geometry)it.next();
-					//for each geometry g, ask the tangible manager for any tangible views
-					//that contain it.
-					Set<TangibleView> containers = tvm.getContainers(g);
+				if (tv != null) {
+					BoundingVolume bounds = tv.getWorldBound();
+					Set<TangibleView> containers = tvm.getContainers(tv, bounds);
 					
 					//for any tangible view containers, look up their corresponding
 					//tangibles and inform them that they contain another tangible.
@@ -198,14 +193,10 @@ public class SceneObserver implements Observer {
 						Tangible model = tv2.getModel();
 						containerTangibles.add(model);
 					}
-					
 					t.updateContainerTangibles(containerTangibles);
 				}
-	
 			}
-			
-			if (tv != null)
-			{
+			if (tv != null) {
 				tv.update();
 			}
 		}

@@ -114,13 +114,19 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void setRelativePosition(PositionVector pos) {
 		if (pos != null) {
 			theSpatial.setLocalTranslation(pos);
+			
+			//in order for contained objects to travel along with its parent, must
+			//also set their relative positions
+			for (Tangible t: this.getContainedTangibles()) {
+				t.setRelativePosition(pos);
+			}
+			
 			changed(CHANGED_MOVE);
 		}
 	}
 	
 	public void setRelativePosition(float x, float y, float z) {
-		theSpatial.setLocalTranslation(x, y, z);
-		changed(CHANGED_MOVE);
+		this.setRelativePosition(new PositionVector(x,y,z));
 	}
 	
 	/**
@@ -473,7 +479,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		changed(CHANGED_CONTAINS);
 	}
 	
-	public Collection getContainedTangibles() {
+	public Set<Tangible> getContainedTangibles() {
 		return TangibleManager.getInstance().getContainedTangibles(this);
 	}
 	
@@ -483,12 +489,8 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	}
 
 	public void updateContainerTangibles(List<Tangible> containerTangibles) {
-		Set currentContainerTangibles = new HashSet();
-		Collection c = TangibleManager.getInstance().getContainerTangibles(this);
-		if (c != null) {
-			currentContainerTangibles.addAll(c);
-		}
-		
+		Set currentContainerTangibles = TangibleManager.getInstance().getContainerTangibles(this);
+
 		boolean changed = false; //one boolean to test if a change has happened
 		
 		//tangibles to remove contains those elements in the list of current containers

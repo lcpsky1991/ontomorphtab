@@ -32,6 +32,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.MultiHashSetMap;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
 
@@ -47,9 +48,9 @@ public class TangibleManager {
 
 	private ArrayList<Tangible> selectedThings = null; 
 	ArrayList<Tangible> tangibles = null;
-	MultiHashMap tangiblesContainingTangibles = null;
+	MultiHashSetMap tangiblesContainingTangibles = null;
 	boolean multiSelect = false;
-	MultiHashMap tangiblesContainedByTangibles = null;
+	MultiHashSetMap tangiblesContainedByTangibles = null;
 	
 	/**
 	 * Holds singleton instance
@@ -60,8 +61,8 @@ public class TangibleManager {
 	{
 		selectedThings = new ArrayList<Tangible>();
 		tangibles = new ArrayList<Tangible>();
-		tangiblesContainingTangibles = new MultiHashMap();
-		tangiblesContainedByTangibles = new MultiHashMap();
+		tangiblesContainingTangibles = new MultiHashSetMap();
+		tangiblesContainedByTangibles = new MultiHashSetMap();
 	}
 	
 	public MyNode getCellTree() {
@@ -301,6 +302,7 @@ public class TangibleManager {
 	 * @param contained - the Tangible that is enclosed by container
 	 */
 	public void addContainedTangible(Tangible container, Tangible contained) {
+		assert container != contained;
 		this.tangiblesContainingTangibles.put(container, contained);
 		this.tangiblesContainedByTangibles.put(contained, container);
 	}
@@ -310,8 +312,16 @@ public class TangibleManager {
 	 * @param container - the Tangible to discover what it contains
 	 * @return 
 	 */
-	public Collection getContainedTangibles(Tangible container) {
-		return (Collection)this.tangiblesContainingTangibles.get(container);
+	public Set<Tangible> getContainedTangibles(Tangible container) {
+		Set<Tangible> containedTangibles = new HashSet<Tangible>();
+		Collection c = (Collection)this.tangiblesContainingTangibles.get(container);
+		if (c == null) {
+			return containedTangibles;
+		}
+		for (Iterator it = c.iterator(); it.hasNext();) {
+			containedTangibles.add((Tangible)it.next());
+		}
+		return containedTangibles;
 	}
 
 	/**
@@ -319,8 +329,16 @@ public class TangibleManager {
 	 * @param contained - the Tangible to discover what it is enclosed by
 	 * @return
 	 */
-	public Collection getContainerTangibles(Tangible contained) {
-		return (Collection)this.tangiblesContainedByTangibles.get(contained);
+	public Set<Tangible> getContainerTangibles(Tangible contained) {
+		Set<Tangible> containerTangibles = new HashSet<Tangible>();
+		Collection c = (Collection)this.tangiblesContainedByTangibles.get(contained);
+		if (c == null) {
+			return containerTangibles;
+		}
+		for (Iterator it = c.iterator(); it.hasNext();) {
+			containerTangibles.add((Tangible)it.next());
+		}
+		return containerTangibles;
 	}
 	
 	/**
