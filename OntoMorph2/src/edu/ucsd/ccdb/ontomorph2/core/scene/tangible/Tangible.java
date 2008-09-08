@@ -112,13 +112,20 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 * @see CoordinateSystem
 	 */
 	public void setRelativePosition(PositionVector pos) {
+		this.setRelativePosition(pos, true);
+	}
+	
+	public void setRelativePosition(PositionVector pos, boolean flagChanged) {
 		if (pos != null) {
+			Vector3f oldPosition = theSpatial.getLocalTranslation();
 			theSpatial.setLocalTranslation(pos);
 			
+			Vector3f displacement = oldPosition.subtract(pos);
 			//in order for contained objects to travel along with its parent, must
 			//also set their relative positions
 			for (Tangible t: this.getContainedTangibles()) {
-				t.setRelativePosition(pos);
+				Vector3f newContainedPosition = t.getRelativePosition().subtract(displacement);
+				t.setRelativePosition(new PositionVector(newContainedPosition));
 			}
 			
 			changed(CHANGED_MOVE);
@@ -483,6 +490,10 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		return TangibleManager.getInstance().getContainedTangibles(this);
 	}
 	
+	public Set<Tangible> getContainerTangibles() {
+		return TangibleManager.getInstance().getContainerTangibles(this);
+	}
+	
 	public void removeContainedTangible(Tangible t) {
 		TangibleManager.getInstance().removeContainedTangible(this, t);
 		changed(CHANGED_CONTAINS);
@@ -515,6 +526,10 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 			changed(CHANGED_CONTAINS);
 		}
 
+	}
+	
+	public Node getSpatial() {
+		return theSpatial;
 	}
 
 }

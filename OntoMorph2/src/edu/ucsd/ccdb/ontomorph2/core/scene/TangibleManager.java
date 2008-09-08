@@ -34,7 +34,9 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.MultiHashSetMap;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
+import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
+import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 
 /**
@@ -302,7 +304,6 @@ public class TangibleManager {
 	 * @param contained - the Tangible that is enclosed by container
 	 */
 	public void addContainedTangible(Tangible container, Tangible contained) {
-		assert container != contained;
 		this.tangiblesContainingTangibles.put(container, contained);
 		this.tangiblesContainedByTangibles.put(contained, container);
 	}
