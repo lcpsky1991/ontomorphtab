@@ -21,7 +21,7 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
  */
 public class OMTKeyInputListener implements KeyInputListener {
 	
-	float keyPressActionRate = 20.0f; //the rate of rotation by a single key press
+	float keyPressActionRate = 1.0f; //the rate of rotation by a single key press
 	boolean pointerEnabled = true;
 	
 	/**

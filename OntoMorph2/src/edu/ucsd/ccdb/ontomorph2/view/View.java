@@ -117,7 +117,13 @@ public class View extends BaseSimpleGame {
 		  
 		OntoMorph2.initialization();
 		display.getRenderer().setBackgroundColor(ColorRGBA.black); //Set a black background.
-		display.setTitle("Whole Brain Catalog");
+		
+		//ugly hack
+		if ("demo".equals(OntoMorph2.getWBCProperties().getProperty(OntoMorph2.SCENE))) {
+			display.setTitle("Spatial and Semantic Representations");
+		} else {
+			display.setTitle("Whole Brain Catalog");
+		}
 				
 		rootNode.attachChild(view3D);
 

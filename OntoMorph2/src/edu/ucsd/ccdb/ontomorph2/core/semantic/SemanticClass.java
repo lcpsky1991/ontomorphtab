@@ -8,6 +8,7 @@ import java.util.List;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
@@ -41,9 +42,9 @@ public class SemanticClass extends SemanticThingImpl {
 		try {
 			return GlobalSemanticRepository.getInstance().getClassLabel(OWLClass, URI);
 		} catch (OMTOfflineException e) {
-			Log.warn(e.getMessage());
+			Log.warn(e.getMessage() + "Using local semantic repository instead.");
+			return LocalSemanticRepository.getInstance().getClassLabel(OWLClass, URI);
 		}
-		return null;
 	}
 	
 	public String toString() {

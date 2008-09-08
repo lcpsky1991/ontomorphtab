@@ -2,10 +2,14 @@ package edu.ucsd.ccdb.ontomorph2.core.scene;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.collections.MultiHashMap;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -13,6 +17,7 @@ import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
@@ -42,7 +47,9 @@ public class TangibleManager {
 
 	private ArrayList<Tangible> selectedThings = null; 
 	ArrayList<Tangible> tangibles = null;
+	MultiHashMap tangiblesContainingTangibles = null;
 	boolean multiSelect = false;
+	MultiHashMap tangiblesContainedByTangibles = null;
 	
 	/**
 	 * Holds singleton instance
@@ -53,7 +60,8 @@ public class TangibleManager {
 	{
 		selectedThings = new ArrayList<Tangible>();
 		tangibles = new ArrayList<Tangible>();
-
+		tangiblesContainingTangibles = new MultiHashMap();
+		tangiblesContainedByTangibles = new MultiHashMap();
 	}
 	
 	public MyNode getCellTree() {
@@ -270,7 +278,8 @@ public class TangibleManager {
 				//semantic thing for hippocampal CA3 neuron
 					cell3.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
 				} catch (OMTOfflineException e) {
-					Log.warn(e.getMessage());
+					Log.warn(e.getMessage() + "  Using local semantic repository instead.");
+					cell3.addSemanticThing(LocalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
 				}
 				
 				cell3.setVisible(true);
@@ -284,5 +293,43 @@ public class TangibleManager {
 		} else {
 			Log.warn("Can't open File!");
 		}
+	}
+
+	/**
+	 * Notes a containment relationship between two tangibles
+	 * @param container - the Tangible that encloses contained
+	 * @param contained - the Tangible that is enclosed by container
+	 */
+	public void addContainedTangible(Tangible container, Tangible contained) {
+		this.tangiblesContainingTangibles.put(container, contained);
+		this.tangiblesContainedByTangibles.put(contained, container);
+	}
+
+	/**
+	 * Returns a collection of those tangibles that this tangible encloses / contains
+	 * @param container - the Tangible to discover what it contains
+	 * @return 
+	 */
+	public Collection getContainedTangibles(Tangible container) {
+		return (Collection)this.tangiblesContainingTangibles.get(container);
+	}
+
+	/**
+	 * Returns a collection of those tangibles that this tangible is enclosed by
+	 * @param contained - the Tangible to discover what it is enclosed by
+	 * @return
+	 */
+	public Collection getContainerTangibles(Tangible contained) {
+		return (Collection)this.tangiblesContainedByTangibles.get(contained);
+	}
+	
+	/**
+	 * Removes a Tangible from a containment relationship.
+	 * @param container - the Tangible that encloses contained
+	 * @param contained - the Tangible that is enclosed by container
+	 */
+	public void removeContainedTangible(Tangible container, Tangible contained) {
+		this.tangiblesContainingTangibles.remove(container, contained);
+		this.tangiblesContainedByTangibles.remove(contained, container);
 	}
 }

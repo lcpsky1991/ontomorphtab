@@ -15,6 +15,8 @@ import org.morphml.morphml.schema.Segment;
 import org.morphml.morphml.schema.Cell.SegmentsType;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -70,12 +72,12 @@ public class MorphMLCableImpl extends Tangible implements ICable{
 	
 	public List<ISemanticThing> getSemanticThings() {
 		List<ISemanticThing> l = new ArrayList<ISemanticThing>();
-		GlobalSemanticRepository repo = null;
+		SemanticRepository repo = null;
 		try {
 			repo = GlobalSemanticRepository.getInstance();
 		} catch (OMTOfflineException e) {
-			Log.warn(e.getMessage());
-			return null;
+			Log.warn(e.getMessage() + " Using local repository instead.");
+			repo = LocalSemanticRepository.getInstance();
 		}
 		
 		for (Object ob : getMorphMLCable().getGroup()) {

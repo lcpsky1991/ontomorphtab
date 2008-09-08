@@ -1,9 +1,15 @@
 package edu.ucsd.ccdb.ontomorph2.observers;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
+
+import com.jme.scene.Geometry;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
@@ -144,14 +150,14 @@ public class SceneObserver implements Observer {
 		} 
 		else if (o instanceof ICable) {
 
-			if (arg.equals(Tangible.CHANGED_SELECT)) {
+			if (Tangible.CHANGED_SELECT.equals(arg)) {
 				ICable cable = (ICable)o;
 				NeuronMorphology parent = ((ICable)o).getParent();
 				NeuronMorphologyView nmv = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor(parent);
 				if (nmv != null) {
 					nmv.highlightCable(cable.getId());
 				}
-			} else if (arg.equals(Tangible.CHANGED_UNSELECT)) {
+			} else if (Tangible.CHANGED_UNSELECT.equals(arg)) {
 				ICable cable = (ICable)o;
 				NeuronMorphology parent = ((ICable)o).getParent();
 				NeuronMorphologyView nmv = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor(parent);
@@ -163,7 +169,41 @@ public class SceneObserver implements Observer {
 		//catch all method for any leftover tangibles
 		else if (o instanceof Tangible)
 		{
-			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
+			Tangible t = (Tangible)o;
+
+			//get the tangible view manager that holds on to the list of tangible views
+			TangibleViewManager tvm = TangibleViewManager.getInstance();
+			
+			//get the tangible view that corresponds to the current tangible
+			TangibleView tv = tvm.getTangibleViewFor(t);
+			
+			//if we have moved, test to see if any tangibles contain any other tangibles now
+			if (Tangible.CHANGED_MOVE.equals(arg)) {
+				//loop over all geometries within that tangible view tv
+				Collection geometriesWithinTangibleView = tvm.getGeometriesForTangibleView(tv);
+				
+				if (geometriesWithinTangibleView == null) return;
+				
+				for (Iterator it = geometriesWithinTangibleView.iterator(); it.hasNext();) {
+					Geometry g = (Geometry)it.next();
+					//for each geometry g, ask the tangible manager for any tangible views
+					//that contain it.
+					Set<TangibleView> containers = tvm.getContainers(g);
+					
+					//for any tangible view containers, look up their corresponding
+					//tangibles and inform them that they contain another tangible.
+					
+					List<Tangible> containerTangibles = new ArrayList<Tangible>();
+					for (TangibleView tv2 : containers) {
+						Tangible model = tv2.getModel();
+						containerTangibles.add(model);
+					}
+					
+					t.updateContainerTangibles(containerTangibles);
+				}
+	
+			}
+			
 			if (tv != null)
 			{
 				tv.update();

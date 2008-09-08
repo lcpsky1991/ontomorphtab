@@ -29,7 +29,7 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class GlobalSemanticRepository {
+public class GlobalSemanticRepository implements SemanticRepository {
 	
 	
 	OWLDatabaseModel owlModel = null;
@@ -47,12 +47,16 @@ public class GlobalSemanticRepository {
 		}
 	}
 	
-
-	
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getOWLModel()
+	 */
 	public OWLModel getOWLModel() {
 		return owlModel;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getSemanticClass(java.lang.String)
+	 */
 	public SemanticClass getSemanticClass(String uri) {
 		OWLNamedClass cls = null;
 		if (owlModel != null) {
@@ -71,6 +75,9 @@ public class GlobalSemanticRepository {
 		return s;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getInstanceTree()
+	 */
 	public MyNode getInstanceTree() {
 		MyNode root = new MyNode("Instances", null);
 		for (SemanticInstance si : this.getCellInstances()) {
@@ -79,12 +86,8 @@ public class GlobalSemanticRepository {
 		return root;
 	}
 	
-	/**
-	 * Get the Instances in the database for all children of the root rootClass
-	 * 
-	 * @param rootClass - the class at the top of the hierarchy from which you want to retrieve instances
-	 * @param requireLabel - if set to true, requires that the instance have a label in order to be included in the return list
-	 * @return
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getInstancesFromRoot(edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass, boolean)
 	 */
 	public List<SemanticInstance> getInstancesFromRoot(SemanticClass rootClass, boolean requireLabel) {
 		List<SemanticInstance> runningList = new ArrayList<SemanticInstance>();
@@ -105,9 +108,8 @@ public class GlobalSemanticRepository {
 		return runningList;
 	}
 
-	/**
-	 * Get all instances in the database under the root of Cell
-	 * @return a list of SemanticInstanceImpls
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getCellInstances()
 	 */
 	public List<SemanticInstance> getCellInstances() {
 		return getInstancesFromRoot(getSemanticClass("sao:sao1813327414"), true);
@@ -181,8 +183,8 @@ public class GlobalSemanticRepository {
 		return instance;
 	}
 
-	/**
-	 * Retrieve the rdfs:Label for an OWL Class from the database
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getClassLabel(edu.stanford.smi.protege.model.Cls, java.lang.String)
 	 */
 	public String getClassLabel(Cls OWLClass, String URI) {
 //		must be done before getLabel() is run!!!
@@ -210,9 +212,8 @@ public class GlobalSemanticRepository {
 
 	}
 
-	/**
-	 * Gets the CCDB Microscopy Product IDs that correspond to data sets taken from Mouse
-	 * @return
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getMPIDsForMouse()
 	 */
 	public int[] getMPIDsForMouse() {
 		/*
@@ -261,14 +262,15 @@ public class GlobalSemanticRepository {
 		return hackOutput;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getMicroscopyProductInstances()
+	 */
 	public List<SemanticInstance> getMicroscopyProductInstances() {
 		return getInstancesFromRoot(getSemanticClass("ccdb:MICROSCOPYPRODUCT_OBJTAB"), false);
 	}
 	
-	/**
-	 * Creates a new OWL instance of the class specified in the parameter.
-	 * @param string
-	 * @return
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#createNewInstanceOfClass(java.lang.String)
 	 */
 	public SemanticInstance createNewInstanceOfClass(String uri) {
 		// TODO Auto-generated method stub
@@ -277,6 +279,9 @@ public class GlobalSemanticRepository {
 
 
 
+	/* (non-Javadoc)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getSemanticInstance(java.lang.String)
+	 */
 	public SemanticInstance getSemanticInstance(String uri) {
 		// TODO Auto-generated method stub
 		return null;

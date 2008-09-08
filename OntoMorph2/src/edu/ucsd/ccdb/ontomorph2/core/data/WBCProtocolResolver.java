@@ -11,12 +11,12 @@ public class WBCProtocolResolver {
 	public Object resolveWBCProtocol(URI proto) {
 		if (proto.getPath().startsWith("ontology"))  {
 			
-			GlobalSemanticRepository repo = null;
+			SemanticRepository repo = null;
 			try {
 				repo = GlobalSemanticRepository.getInstance();
 			} catch (OMTOfflineException e) {
-				Log.warn(e.getMessage());
-				return null;
+				Log.warn(e.getMessage() + "  Using local semantic repository instead.");
+				repo = LocalSemanticRepository.getInstance();
 			}
 				
 			if (proto.getPath().indexOf("class") > 0) {

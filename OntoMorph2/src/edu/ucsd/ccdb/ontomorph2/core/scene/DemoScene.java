@@ -94,133 +94,20 @@ public class DemoScene extends Scene{
 	 *
 	 */
 	public void load() {
-
-		/*
-		CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(35);
-		
-		Slide a = new CCDBSlide(hippoImage, 0.87f);
-		a.setRelativePosition(new PositionVector(25,-32,17f));
-		a.setCoordinateSystem(d);
-		//a.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
-		a.setRelativeScale(10);
-		addSceneObject(a);
-		
-        Slide b = new URISlide(hippo2URL, 1.34f);
-        b.setRelativePosition(new PositionVector(-14,0, 18f));
-        b.setCoordinateSystem(d);
-        //b.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
-        b.setRelativeScale(3.2f);
-		addSceneObject(b);
-		
-		Slide c = new URISlide(hippo3aURL, 1.33f);
-		c.setRelativePosition(new PositionVector(-34,-5,19f));
-		c.setCoordinateSystem(d);
-		//c.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
-		c.setRelativeScale(0.75f);
-		addSceneObject(c);
-		
-		Slide ds = new URISlide(hippo3bURL, 1.31f);
-		ds.setRelativePosition(new PositionVector(-15f,-1.5f,19.1f));
-		ds.setCoordinateSystem(d);
-		//ds.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
-		ds.setRelativeScale(0.75f);
-		addSceneObject(ds);
-		
-		Slide e = new URISlide(hippo3cURL, 1.33f);
-		e.setRelativePosition(new PositionVector(4,-1f,19.2f));
-		e.setCoordinateSystem(d);
-		//e.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
-		e.setRelativeScale(0.75f);
-		addSceneObject(e);
-	
-		*/
-		
-		/*
-		NeuronMorphology cell3 = new MorphMLNeuronMorphology("cell1zr", 
-				new PositionVector(289f, -118f, -180f), null, 
-				NeuronMorphology.RENDER_AS_LOD_2);
-		RotationVector v = new RotationVector(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-90, Vector3f.UNIT_Y));
-		cell3.setRelativeRotation(v);
-		//cell3.setCoordinateSystem(d);
-		cell3.setRelativeScale(0.01f);
-		//semantic thing for hippocampal CA3 neuron
-		cell3.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
-		addSceneObject(cell3);
-		*/
-		
-		DemoCoordinateSystem d = new DemoCoordinateSystem();
-		
 		
 		DataMesh mesh = new DataMesh();
 
 		mesh.setObjMeshURL(mitoObjURL);
 	
-		mesh.setRelativePosition(new PositionVector(279.99f, -116.3f, -179.51f));
+		mesh.setRelativePosition(new PositionVector(289f, -116.3f, -179.51f));
 		mesh.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
 		mesh.setRelativeScale(0.0002f);
 		//mesh.setCoordinateSystem(d);
 		
 		addSceneObject(mesh);
 		
-		
 		setCameraPosition(Scene.CAMERA_SUBCELLULAR_POSITION);
 		
 		changed(CHANGED_LOAD);
 	}
-
-	public void save() {
-	}
-	
-
-	
-	public void loadMeshes() {
-
-		DemoCoordinateSystem d = new DemoCoordinateSystem();
-		
-		
-		DataMesh mesh = new DataMesh();
-		//mesh.loadMaxFile("etc/mito/mito_outer.3ds");
-		mesh.setObjMeshURL(mitoObjURL);
-		//mesh.setRelativePosition(new PositionVector(0.49f, -3.5f, 20.01f));
-		mesh.setRelativePosition(new PositionVector(0.49f, -3.3f, 20.01f));
-		mesh.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
-		mesh.setRelativeScale(0.0002f);
-		mesh.setCoordinateSystem(d);
-		
-		addSceneObject(mesh);
-		
-		DataMesh mito2 = new DataMesh();
-		mito2.setObjMeshURL(mito2ObjURL);
-		mito2.setRelativePosition(new PositionVector(0.49f, -3.3f, 20.03f));
-		mito2.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
-		mito2.setRelativeScale(0.0002f);
-		mito2.setCoordinateSystem(d);
-	
-		addSceneObject(mito2);
-		/*
-		DataMesh astro = new DataMesh();
-		astro.setObjMeshURL(astroObjURL);
-		astro.setRelativePosition(new PositionVector(0.49f, -3.3f, 20.09f));
-		astro.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
-		astro.setRelativeScale(0.0002f);
-		astro.setCoordinateSystem(d);
-	
-		addSceneObject(astro);
-		*/
-
-		/*
-		DataMesh plasma = new DataMesh();
-		plasma.setObjMeshURL(plasmaObjURL);
-		plasma.setRelativePosition(new PositionVector(0.49f, -3.3f, 21.05f));
-		plasma.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
-		plasma.setRelativeScale(0.0002f);
-		plasma.setCoordinateSystem(d);
-	
-		addSceneObject(plasma);
-		*/
-		
-	}
-	
-
-	
 }

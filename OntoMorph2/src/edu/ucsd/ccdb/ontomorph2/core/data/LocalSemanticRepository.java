@@ -33,7 +33,7 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class LocalSemanticRepository {
+public class LocalSemanticRepository implements SemanticRepository{
 	
 	
 	OWLDatabaseModel owlModel = null;
@@ -154,7 +154,7 @@ public class LocalSemanticRepository {
 			//projectManager.loadProject(uri);
 			owlModel = (OWLDatabaseModel)p.getKnowledgeBase();
     	} catch (Exception e) {
-    		throw new OMTException("Cannot connect to OWL Database!", e);
+    		throw new OMTException("Cannot connect to Local OWL Database!", e);
     	}		
     }
 

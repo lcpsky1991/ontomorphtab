@@ -26,6 +26,7 @@ import com.jme.input.MouseInput;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -240,47 +241,51 @@ public class View2D extends Display{
 //	get a tree pane display showing cells and their semantic contents
 	public void loadInstanceBrowser()
 	{
+		Display display = this;
+		MyNode root = null;
 		try {
-			Display display = this;
-			MyNode root = GlobalSemanticRepository.getInstance().getInstanceTree();
 			
-			Window window = FengGUI.createWindow(display, true, false, false, true);
-			window.getAppearance().removeAll();
+			root = GlobalSemanticRepository.getInstance().getInstanceTree();
 			
-			window.setTitle("Instances..");
-			
-			ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
-			sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
-			
-			Tree<MyNode> tree = MyTreeModel.<MyNode>createTree(sc);
-			
-			window.setSize(200, 300);
-			//StaticLayout.center(window, display);
-			window.setPosition(new Point(0,100));
-			window.layout();
-			tree.setModel(new MyTreeModel(root));
-			
-			tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
-				{
-					if (!selectionChangedEvent.isSelected()) {
-						MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
-						if (n.value != null) {
-							n.value.unselect();
-						}
-						return;
-					}
-					MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
-					if (n.value != null) {
-						n.value.select();
-					}
-					
-				}
-				
-			});
 		} catch (OMTOfflineException e) {
 			Log.warn("View2D.loadInstanceBrowser: " + e.getMessage());
+			root = LocalSemanticRepository.getInstance().getInstanceTree();
 		}
+		
+		Window window = FengGUI.createWindow(display, true, false, false, true);
+		window.getAppearance().removeAll();
+		
+		window.setTitle("Instances..");
+		
+		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
+		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
+		
+		Tree<MyNode> tree = MyTreeModel.<MyNode>createTree(sc);
+		
+		window.setSize(200, 300);
+		//StaticLayout.center(window, display);
+		window.setPosition(new Point(0,100));
+		window.layout();
+		tree.setModel(new MyTreeModel(root));
+		
+		tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
+			{
+				if (!selectionChangedEvent.isSelected()) {
+					MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+					if (n.value != null) {
+						n.value.unselect();
+					}
+					return;
+				}
+				MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+				if (n.value != null) {
+					n.value.select();
+				}
+				
+			}
+			
+		});	
 	}
 
 	public void loadBasicSearchBox() {

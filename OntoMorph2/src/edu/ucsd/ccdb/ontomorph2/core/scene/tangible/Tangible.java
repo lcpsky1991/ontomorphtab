@@ -2,8 +2,12 @@ package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
+import java.util.Set;
 
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -19,6 +23,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
+import edu.ucsd.ccdb.ontomorph2.observers.SemanticObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
@@ -32,9 +37,6 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
  */
 public abstract class Tangible extends Observable implements ISemanticsAware{
 
-	public static final String CHANGED_RELATIVE_POSITION = "relative position";
-	public static final String CHANGED_RELATIVE_ROTATION = "relative rotation";
-	public static final String CHANGED_RELATIVE_SCALE = "relative scale";
 	public static final String CHANGED_SET_COORDINATE_SYSTEM = "coordinate system";
 	public static final String CHANGED_SELECT = "select";
 	public static final String CHANGED_UNSELECT = "unselect";
@@ -49,6 +51,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public static final String CHANGED_NAME = "name";
 	public static final String CHANGED_ADD_PART = "add part";
 	public static final String CHANGED_LOADED = "loaded";
+	public static final String CHANGED_CONTAINS = "contains";
 	
 	
 	private PositionVector _position = new PositionVector();
@@ -67,6 +70,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public Tangible() {
 		TangibleManager.getInstance().addTangible(this);
 		this.addObserver(SceneObserver.getInstance());
+		this.addObserver(SemanticObserver.getInstance());
 		//by default, all objects ought to be associated with an instance.
 		//the least specific instance that can be created is one of bfo:entity.
 		//addSemanticThing(GlobalSemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
@@ -110,13 +114,13 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void setRelativePosition(PositionVector pos) {
 		if (pos != null) {
 			theSpatial.setLocalTranslation(pos);
-			changed(CHANGED_RELATIVE_POSITION);
+			changed(CHANGED_MOVE);
 		}
 	}
 	
 	public void setRelativePosition(float x, float y, float z) {
 		theSpatial.setLocalTranslation(x, y, z);
-		changed(CHANGED_RELATIVE_POSITION);
+		changed(CHANGED_MOVE);
 	}
 	
 	/**
@@ -130,7 +134,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void setRelativeRotation(RotationVector rot) {
 		if (rot != null) {
 			theSpatial.setLocalRotation(rot);
-			changed(CHANGED_RELATIVE_ROTATION);
+			changed(CHANGED_ROTATE);
 		}
 	}
 
@@ -141,7 +145,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 */
 	public void setRelativeScale(OMTVector v) {
 		theSpatial.setLocalScale(v);
-		changed(CHANGED_RELATIVE_SCALE);
+		changed(CHANGED_SCALE);
 	}
 	
 	/**
@@ -151,7 +155,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 */
 	public void setRelativeScale(float f) {
 		theSpatial.setLocalScale(f);
-		changed(CHANGED_RELATIVE_SCALE);
+		changed(CHANGED_SCALE);
 	}
 	
 
@@ -462,6 +466,53 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 
 	public SemanticInstance getSemanticInstance() {
 		return null;//GlobalSemanticRepository.getInstance().getSemanticInstance("");
+	}
+
+	public void addContainedTangible(Tangible contained) {
+		TangibleManager.getInstance().addContainedTangible(this, contained);
+		changed(CHANGED_CONTAINS);
+	}
+	
+	public Collection getContainedTangibles() {
+		return TangibleManager.getInstance().getContainedTangibles(this);
+	}
+	
+	public void removeContainedTangible(Tangible t) {
+		TangibleManager.getInstance().removeContainedTangible(this, t);
+		changed(CHANGED_CONTAINS);
+	}
+
+	public void updateContainerTangibles(List<Tangible> containerTangibles) {
+		Set currentContainerTangibles = new HashSet();
+		Collection c = TangibleManager.getInstance().getContainerTangibles(this);
+		if (c != null) {
+			currentContainerTangibles.addAll(c);
+		}
+		
+		boolean changed = false; //one boolean to test if a change has happened
+		
+		//tangibles to remove contains those elements in the list of current containers
+		//that do not appear in the update list.  these must go away
+		Set<Tangible> tangiblesToRemove = new HashSet<Tangible>(currentContainerTangibles);
+		tangiblesToRemove.removeAll(containerTangibles);
+		for (Tangible toRemove : tangiblesToRemove) {
+			TangibleManager.getInstance().removeContainedTangible(toRemove, this);
+			changed = true;
+		}
+		
+		//tangibles to add contains those elements in the update list that do not 
+		//appear in the list of current containers.  these must be added.
+		Set tangiblesToAdd = new HashSet(containerTangibles);
+		tangiblesToAdd.removeAll(currentContainerTangibles);
+		for (Iterator it = tangiblesToAdd.iterator(); it.hasNext();) {
+			TangibleManager.getInstance().addContainedTangible((Tangible)it.next(), this);
+			changed = true;
+		}
+		
+		if (changed) {
+			changed(CHANGED_CONTAINS);
+		}
+
 	}
 
 }
