@@ -13,26 +13,25 @@ import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
 public class LocalSemanticRepositorySetup {
 
 	public static void main(String args[]) {
+		JenaOWLModel owlModel  = null;
 		try {
-			
-			JenaOWLModel owlModel = ProtegeOWL.createJenaOWLModelFromURI("http://purl.org/nif/ontology/nif.owl");
-
-			String driver = "org.hsqldb.jdbcDriver";
-			String url = "jdbc:hsqldb:db/db";
-			String tableName = "nifontology";			
-			String userName = "sa";
-			
-			try {
-				DatabaseFrameDb db = new DatabaseFrameDb();
-				db.initialize(owlModel.getFrameFactory(), driver, url, userName, "", tableName, false);
-				db.overwriteKB(owlModel, true);
-				
-			} catch (Exception e) {
-				throw new OMTException("Problem loading knowledgebase into db! ", e);
-			}
-			
+			owlModel = ProtegeOWL.createJenaOWLModelFromURI("http://purl.org/nif/ontology/nif.owl");	
 		} catch (Exception e) {
 			throw new OMTException("Cannot load NIF ontology!", e);
 		}	
+		String driver = "org.hsqldb.jdbcDriver";
+		String url = "jdbc:hsqldb:db/db";
+		String tableName = "nifontology";			
+		String userName = "sa";
+		
+		try {
+			DatabaseFrameDb db = new DatabaseFrameDb();
+			db.initialize(owlModel.getFrameFactory(), driver, url, userName, "", tableName, false);
+			db.overwriteKB(owlModel, true);
+			
+		} catch (Exception e) {
+			throw new OMTException("Problem loading knowledgebase into db! ", e);
+		}
+		
 	}
 }

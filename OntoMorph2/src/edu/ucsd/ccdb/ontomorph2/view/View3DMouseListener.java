@@ -527,11 +527,11 @@ public class View3DMouseListener implements MouseInputListener {
 		float mx = MouseInput.get().getXAbsolute();
 		float my = MouseInput.get().getYAbsolute();
 		Vector2f mouseCurrentScreenPos = new Vector2f(mx, my);
-		System.out.println("Screen position: " + mouseCurrentScreenPos);
+		//System.out.println("Screen position: " + mouseCurrentScreenPos);
 		
 		//get the average position of all the selected objects.
 		Vector3f objectsAbsoluteAveragePosition = manip.getRelativePosition(); //this.calculateAverageAbsolutePositionForSelectedObjects();
-		System.out.println("  Object absolute average position: " + objectsAbsoluteAveragePosition);
+		//System.out.println("  Object absolute average position: " + objectsAbsoluteAveragePosition);
 		
 		//if the mouse were at the same z-position (relative to the camera) as the average 
 		//position of all selected objects, 
@@ -540,14 +540,14 @@ public class View3DMouseListener implements MouseInputListener {
 		//extremely confusing.. getScreenCoordinates returns a z value that is the "zPos" to that object which the 
 		//getWorldCoordinates method needs to correctly place the object back in the world.  don't understand why.
 		float distanceBetweenCameraAndSelectedObjects = cam.getCamera().getScreenCoordinates(objectsAbsoluteAveragePosition).z;
-		System.out.println("  Distance between camera and selected object: " + distanceBetweenCameraAndSelectedObjects );
+		//System.out.println("  Distance between camera and selected object: " + distanceBetweenCameraAndSelectedObjects );
 				
 //		use the average position of selected objects, and the distance between those objects and the camera
 		//to determine the current position of the mouse in the 3D world.
 		//This method assumes that the camera is looking down the Z axis
 		Vector3f mouseCurrentWorldPosition = 
 			cam.getCamera().getWorldCoordinates(mouseCurrentScreenPos, distanceBetweenCameraAndSelectedObjects);
-		System.out.println("  Mouse current world position: " + mouseCurrentWorldPosition);
+		//System.out.println("  Mouse current world position: " + mouseCurrentWorldPosition);
 		
 		return mouseCurrentWorldPosition;
 	}

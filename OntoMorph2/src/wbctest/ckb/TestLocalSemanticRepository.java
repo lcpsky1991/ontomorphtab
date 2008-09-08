@@ -2,18 +2,15 @@ package wbctest.ckb;
 
 import junit.framework.TestCase;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
 public class TestLocalSemanticRepository extends TestCase {
 	
-	GlobalSemanticRepository repo = null;
+	LocalSemanticRepository repo = null;
 	
 	public void setUp() {
-		try {
-			repo = GlobalSemanticRepository.getInstance();
-		}catch (OMTOfflineException e) {
-			e.printStackTrace();
-		}
+		repo = LocalSemanticRepository.getInstance();
 	}
 
 	/*
