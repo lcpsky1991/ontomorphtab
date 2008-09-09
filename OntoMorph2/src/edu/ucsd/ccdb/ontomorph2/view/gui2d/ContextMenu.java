@@ -72,6 +72,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_MANIP_SCALE = 112;
 	public static final int CTX_ACTION_MANIP_MOVE = 113;
 	public static final int CTX_ACTION_ATTACH = 114;
+	public static final int CTX_ACTION_PROPOGATE = 115;
 	
 	//IDs for easily creating cells
 	public static final String TYPE_CELL_DG_A = "5199202a";
@@ -307,9 +308,15 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			//toggle edit mode
 			if (baseContext instanceof NeuronMorphology || baseContext instanceof Curve3D)
 			{
-				//build morphology special menu
 				menuItemFactory(this, msEDIT, CTX_ACTION_MODE, null);
 			}
+			
+			if (baseContext instanceof NeuronMorphology)
+			{
+				//build morphology special menu
+				menuItemFactory(this, "Propogate", CTX_ACTION_PROPOGATE, null);
+			}
+			
 			
 			//add new cells
 			if (baseContext instanceof Slide || baseContext instanceof Curve3D)
@@ -567,6 +574,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					if ( ec != null) ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
 					break;
 				}
+				case CTX_ACTION_PROPOGATE:
+					propogate(single);
+					break;
 				case CTX_ACTION_NEW_CELL:
 					createCellOn(single);
 					break;
@@ -594,8 +604,39 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		}
 	}
 	
-
-	
+	/**
+	 * Propogates a cell with normal distribution
+	 * @param original
+	 */
+	public void propogate(Tangible original)
+	{
+			if (original instanceof NeuronMorphology)
+			{
+				NeuronMorphology cell = (NeuronMorphology) original;
+				int numCells = 20;
+				for (int i = 0; i < numCells; i++)
+				{
+					NeuronMorphology copy = cellFactory(cell.getName(),cell.getCurve());	//create a copy of the cells
+					
+					float rx = 0;
+					float ry=0;
+					
+					//if cell is attached to curve have to scale the movement by alot more
+					if (!cell.isFreeFloating())
+					{
+						copy.positionAlongCurve(cell.getCurve(), cell.getTime()); //start in same place
+						rx = (float)OMTUtility.randomNumberGuassian(0, 100);
+					}
+					else
+					{	//put it at the original place
+						copy.setRelativePosition(cell.getRelativePosition());	//start in same place
+						rx = (float)OMTUtility.randomNumberGuassian(0, 10);
+						ry = (float)OMTUtility.randomNumberGuassian(0, 10);
+					}
+					copy.move(rx, ry, new OMTVector(1,1,0));
+				}
+			}
+	}
 	
 	public void createPoint(Tangible src)
 	{
@@ -736,18 +777,6 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		//Find out where to put it
 		
 		//CREATE
-		/*
-		TangibleManager.getInstance().unselectAll();
-		//do the rest of the actions
-		nc = new MorphMLNeuronMorphology("5199202a", ocurve, t, NeuronMorphology.RENDER_AS_LOD, src.getCoordinateSystem());
-		nc.setRelativeScale(0.01f);
-		try {
-			nc.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
-		} catch (OMTOfflineException e){
-			Log.warn(e.getMessage());
-		}
-		nc.setVisible(true);
-		*/
 		nc = cellFactory(TYPE_CELL_DG_A, ocurve);	//create the cell
 
 		nc.select();
@@ -786,8 +815,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	{
 		NeuronMorphology nc = null;
 		
-		String f=type;
-		String s=null;
+		String f=type;	//filename
+		String s=null;	//semantic class
 		
 
 			if (type.equals(TYPE_CELL_DG_A))	s = SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS;

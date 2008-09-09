@@ -2,6 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.util;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -193,8 +194,34 @@ public abstract class OMTUtility {
 		else
 			return true;
 	}
-	
 
+	/**
+	 * Provides a random number of guassian distribution that is centered on some other number
+	 * @param center Values will be centered around this number, they can be more or less
+	 * @param bound The 'upperbound' of the distribution for 75% of the data
+	 * @return
+	 */
+	public static double randomNumberGuassian(double center, double bound)
+	{
+		double r = 0;
+		Random generator = new Random();
+		r = (generator.nextGaussian()  * bound) + center;
+		return r;
+	}
+	
+	/**
+	 * Returns a number of uniform distribution between lowerBound and upperBound inclusive
+	 * @param lowerBound
+	 * @param upperBound
+	 * @return
+	 */
+	public static double randomNumber(double lowerBound, double upperBound)
+	{
+		double r = 0;
+		Random generator = new Random();
+		r = (generator.nextDouble()  * upperBound) + lowerBound;
+		return r;
+	}
 	
 }
 

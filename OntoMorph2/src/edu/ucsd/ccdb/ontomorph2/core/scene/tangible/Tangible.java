@@ -445,6 +445,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		changed(CHANGED_MOVE);
 	}
 	
+	
 	public int hashCode() {
 		return super.hashCode() + theSpatial.hashCode();
 	}

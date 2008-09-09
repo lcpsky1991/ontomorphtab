@@ -39,8 +39,9 @@ public class SemanticObserver implements Observer {
 	public void update(Observable o, Object arg) {
 		if (o instanceof Tangible) {
 			Tangible t = (Tangible)o;
-			if (Tangible.CHANGED_CONTAINS.equals(arg)) {
-				Log.warn("Containment info has changed");
+			if (Tangible.CHANGED_CONTAINS.equals(arg)) 
+			{
+				//Log.warn("Containment info has changed");
 			}
 		}
 		/*

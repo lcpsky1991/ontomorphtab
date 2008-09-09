@@ -74,7 +74,7 @@ public abstract class NeuronMorphology extends Tangible{
 	public float getTime() {
 		return _time;
 	}
-
+	
 	
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getRenderOption()
@@ -134,7 +134,7 @@ public abstract class NeuronMorphology extends Tangible{
 		{
 			//the cell is attached to a curve
 			//move the cell by changing it's time signature on the parent curve
-			this._time += 0.002f * dx; //the dx passed may be negative
+			this._time += 0.001f * dx; //the dx passed may be negative
 			if (_time <= 0 ) _time = 0.001f;
 			if (_time >= 1) _time = 0.999f;
 			this.positionAlongCurve(_curve,_time);
