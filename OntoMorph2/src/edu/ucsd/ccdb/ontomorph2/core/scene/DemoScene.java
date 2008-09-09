@@ -16,6 +16,7 @@ import com.jme.scene.shape.Box;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CCDBSlide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
@@ -99,10 +100,11 @@ public class DemoScene extends Scene{
 
 		mesh.setObjMeshURL(mitoObjURL);
 	
-		mesh.setRelativePosition(new PositionVector(289f, -116.3f, -179.51f));
+		mesh.setRelativePosition(new PositionVector(289f, -117f, -179.51f));
 		mesh.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
 		mesh.setRelativeScale(0.0002f);
-		//mesh.setCoordinateSystem(d);
+		mesh.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.MITOCHONDRION_CLASS));
+		mesh.getMainSemanticInstance(); //get a SemanticInstance loaded into the local repository
 		
 		addSceneObject(mesh);
 		

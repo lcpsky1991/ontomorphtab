@@ -9,9 +9,12 @@ import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
+import edu.stanford.smi.protegex.owl.model.RDFProperty;
 import edu.stanford.smi.protegex.owl.model.impl.AbstractOWLProperty;
+import edu.stanford.smi.protegex.owl.model.impl.DefaultRDFProperty;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
@@ -43,7 +46,7 @@ public class SemanticInstance extends SemanticThingImpl {
 		List<SemanticProperty> l = new ArrayList<SemanticProperty>();
 		Collection c = instance.getRDFProperties();
 		for(Iterator it = c.iterator(); it.hasNext();) {
-			AbstractOWLProperty aop = (AbstractOWLProperty)it.next();
+			DefaultRDFProperty aop = (DefaultRDFProperty)it.next();
 			l.add(new SemanticProperty(aop));
 		}
 		return l;
@@ -51,36 +54,84 @@ public class SemanticInstance extends SemanticThingImpl {
 	
 	public String getLabel() {
 		KnowledgeBase owlModel = null;
-		try {
 //			must be done before getLabel() is run!!!
-			owlModel = GlobalSemanticRepository.getInstance().getOWLModel();
-			
-		} catch (OMTOfflineException e) {
-			Log.warn(e.getMessage()+ "using local semantic repository instead");
-			owlModel = LocalSemanticRepository.getInstance().getOWLModel();
-		}
+		owlModel = SemanticRepository.getAvailableInstance().getOWLModel();
 		String label = null;
 		
 		Slot rdfsLabel = owlModel.getSlot("rdfs:label");
 		if (owlModel != null) {
-			rdfsLabel = owlModel.getSlot("rdfs:label");
 			label = (String)instance.getDirectOwnSlotValue(rdfsLabel);
 		}
 		return label;
 	}
 
 	/**
-	 * Adds a relation between this ISemanticInstance and i, through SemanticProperty p.
-	 * @param p
-	 * @param i
+	 * Adds a relation between this SemanticInstance and i, through SemanticProperty p.
+	 * @param p - the property to relate this SemanticInstance to i.
+	 * @param i - the target SemanticInstance of property p.
 	 */
-	public void addRelationToInstance(SemanticProperty p, SemanticInstance i) {
-		// TODO Auto-generated method stub
-		
+	public void setPropertyValue(SemanticProperty p, SemanticInstance i) {
+		instance.setPropertyValue(p.getOWLProperty(), i.getOWLIndividual());
 	}
+
+	protected OWLIndividual getOWLIndividual() {
+		return instance;
+	}
+	
 
 	public String getId() {
 		return instance.getName();
 	}
+	
+	/**
+	 * Removes this instance from the repository.
+	 * Note that doing this will make the other commands unstable
+	 *
+	 */
+	public void removeFromRepository() {
+		instance.delete();
+	}
+	
+	/**
+	 * Returns the value of property p.  If property p does not return a value of type
+	 * SemanticInstance, this returns null.
+	 * 
+	 * @param p
+	 * @return
+	 */
+	public SemanticInstance getPropertyValue(SemanticProperty p) {
+		if (getProperties().contains(p)) {
+			Object propValue = instance.getPropertyValue(p.getOWLProperty());
+			if (propValue instanceof OWLIndividual) {
+				OWLIndividual i = (OWLIndividual)propValue;
+				return new SemanticInstance(i);
+			} else {
+				//Log.warn("Found a property value for " + p.getOWLProperty().getURI() + " that is not an instance of OWLIndividual! : " + propValue);
+			}
+		}
+		return null;
+	}
+	
+	/*
+	 * Get rid of property / value pair p and i
+	 */
+	public void removePropertyValue(SemanticProperty p, SemanticInstance i) {
+		instance.removePropertyValue(p.getOWLProperty(), i.getOWLIndividual());
+	}
+	
+	public boolean equals(Object o) {
+		if (o != null && o instanceof SemanticInstance) {
+			SemanticInstance i = (SemanticInstance)o;
+			if (instance.equals(i.getOWLIndividual()))
+				return true;
+		}
+		return false;
+	}
+	
+	public int hashCode() {
+		return instance.hashCode();
+	}
+
+	
 
 }

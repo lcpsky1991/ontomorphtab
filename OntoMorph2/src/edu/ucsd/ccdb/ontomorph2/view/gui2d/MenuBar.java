@@ -8,6 +8,7 @@ import org.fenggui.menu.MenuItem;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 
+import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
@@ -43,8 +44,8 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String SLIDE_VIEW = "View Example Slide";
 	public static final String ATLAS_LATERAL_VIEW = "View Atlas Lateral Side";
 	public static final String ATLAS_MEDIAL_VIEW = "View Atlas Medial Side";
-	public static final String SLIDE_VIEW_SMOOTH = "Smoothly Zoom to Hippocampus Slide";
-	public static final String SLIDE_VIEW_CEREB_SMOOTH = "Smoothly Zoom to Cerebellar Slide";
+	public static final String SLIDE_VIEW_SMOOTH = "Smoothly Zoom to Hippocampus";
+	public static final String SLIDE_VIEW_CEREB_SMOOTH = "Smoothly Zoom to Cerebellum";
 	public static final String ATLAS_LATERAL_VIEW_SMOOTH = "Smoothly Zoom To Lateral Side";
 	public static final String ATLAS_MEDIAL_VIEW_SMOOTH = "Smoothly Zoom To Medial Side";
 	public static final String ATLAS_CELL_VIEW_SMOOTH = "Smoothly Zoom To View Hippocampal Cells";
@@ -86,20 +87,20 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         makeMenuItem(SAVE_SCENE, mnuFile);
         mnuFile.addMouseEnteredListener(FocusManager.get());
         mnuFile.addMouseExitedListener(FocusManager.get());
+        
+        if (!OntoMorph2.isDemo()) {
         //=[ SEARCH ]=
         Menu mnuSearch = new Menu();
         mB.registerSubMenu(mnuSearch, "Search");
         makeMenuItem(BASIC_SEARCH, mnuSearch);
         mnuSearch.addMouseEnteredListener(FocusManager.get());
         mnuSearch.addMouseExitedListener(FocusManager.get());
+        }
 
         //=[  VIEW  ]=
         Menu mnuView = new Menu();
         mB.registerSubMenu(mnuView, "View");
-        //makeMenuItem(SLIDE_VIEW, mnuView);
-        //makeMenuItem(ATLAS_LATERAL_VIEW, mnuView);
-        //makeMenuItem(ATLAS_MEDIAL_VIEW, mnuView);
-        makeMenuItem(SLIDE_VIEW_CEREB_SMOOTH, mnuView);
+        if (!OntoMorph2.isDemo()) makeMenuItem(SLIDE_VIEW_CEREB_SMOOTH, mnuView);
         makeMenuItem(SLIDE_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_CELL_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_SUBCELL_VIEW_SMOOTH, mnuView);
@@ -108,12 +109,14 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         mnuView.addMouseEnteredListener(FocusManager.get());
         mnuView.addMouseExitedListener(FocusManager.get());
         
+        if (!OntoMorph2.isDemo()) {
         //=[  OBJ  ]=
         Menu mnuObjects = new Menu();
         Menu mnuObjects_New = new Menu();
         
         mB.registerSubMenu(mnuObjects, "Objects");
         makeMenuItem(strCELLS, mnuObjects);
+        
         
         mnuObjects.registerSubMenu(mnuObjects_New, strNEW);
         makeMenuItem(strNEW_CELL_A, mnuObjects_New);
@@ -124,20 +127,23 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         mnuObjects.addMouseExitedListener(FocusManager.get());
         //makeMenuItem(VOLUMES, mnuObjects);
         //makeMenuItem(SEMANTICS, mnuObjects);
+        }
         
         //=[  CKB  ]=
-        //Menu mnuCKB = new Menu();
-        //mB.registerSubMenu(mnuCKB, "Cellular KB");
-        //makeMenuItem(LIST_INSTANCES, mnuCKB);
+        Menu mnuCKB = new Menu();
+        mB.registerSubMenu(mnuCKB, "Cellular KB");
+        makeMenuItem(LIST_INSTANCES, mnuCKB);
+        mnuCKB.addMouseEnteredListener(FocusManager.get());
+        mnuCKB.addMouseExitedListener(FocusManager.get());
         
         //=[  ATLAS  ]=
         Menu mnuAtlas = new Menu();
         mB.registerSubMenu(mnuAtlas, "Reference Atlas");
-        makeMenuItem(SHOW_ATLAS, mnuAtlas);
-        makeMenuItem(DISPLAY_BASIC_ATLAS, mnuAtlas);
-        makeMenuItem(HIDE_BASIC_ATLAS, mnuAtlas);
+        if (!OntoMorph2.isDemo()) makeMenuItem(DISPLAY_BASIC_ATLAS, mnuAtlas);
+        if (!OntoMorph2.isDemo()) makeMenuItem(HIDE_BASIC_ATLAS, mnuAtlas);
         makeMenuItem(DISPLAY_DEMO_ATLAS, mnuAtlas);
         makeMenuItem(HIDE_DEMO_ATLAS, mnuAtlas);
+        makeMenuItem(SHOW_ATLAS, mnuAtlas);
         mnuAtlas.addMouseEnteredListener(FocusManager.get());
         mnuAtlas.addMouseExitedListener(FocusManager.get());
         
@@ -154,13 +160,14 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         mnuManip.addMouseEnteredListener(FocusManager.get());
         mnuManip.addMouseExitedListener(FocusManager.get());
         
+        if (!OntoMorph2.isDemo()) {
         //=[ DEBUG ]=
         Menu mnuDebug = new Menu();
         mB.registerSubMenu(mnuDebug, "Debug");
         makeMenuItem(SHOW_SCENE_MONITOR, mnuDebug);
         mnuDebug.addMouseEnteredListener(FocusManager.get());
         mnuDebug.addMouseExitedListener(FocusManager.get());
-        
+        }
 	}
 	
 	/**

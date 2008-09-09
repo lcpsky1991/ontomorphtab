@@ -27,14 +27,16 @@ import com.jme.input.MouseInput;
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.AtlasBrowser;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.BasicSearchWidget;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.InstanceBrowser;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MenuBar;
-import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyTreeModel;
 
 
@@ -56,6 +58,7 @@ public class View2D extends Display{
 	private TextEditor infoText = null;
 	
 	private AtlasBrowser aBrowser = null;
+	private InstanceBrowser iBrowser = null;
 	private BasicSearchWidget basicSearch = null;
 	//private MiniMap miniMap = null;
 	
@@ -175,7 +178,7 @@ public class View2D extends Display{
 	}
 	
 	public void loadCellChooser() {
-		MyNode root = TangibleManager.getInstance().getCellTree();
+		TreeNode root = TangibleManager.getInstance().getCellTree();
 		
 		Window window = FengGUI.createWindow(this, true, false, false, true);
 		window.getAppearance().removeAll();
@@ -185,7 +188,7 @@ public class View2D extends Display{
 		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
 		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
 		//addMouseExitedListener(FocusManager.focusManager);
-		Tree<MyNode> tree = MyTreeModel.<MyNode>createTree(sc);
+		Tree<TreeNode> tree = MyTreeModel.<TreeNode>createTree(sc);
 	
 		window.setSize(200, 300);
 		window.setPosition(new Point(0,100));
@@ -197,11 +200,11 @@ public class View2D extends Display{
 			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
 			{
 				if (!selectionChangedEvent.isSelected()) {
-					MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+					TreeNode n = (TreeNode)selectionChangedEvent.getToggableWidget().getValue();
 					n.value.unselect();
 					return;
 				}
-				MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
+				TreeNode n = (TreeNode)selectionChangedEvent.getToggableWidget().getValue();
 				n.value.select();
 				
 			}
@@ -211,6 +214,12 @@ public class View2D extends Display{
 	
 	public void loadAtlasBrowser() {
 		aBrowser = new AtlasBrowser(this);
+	}
+	
+//	get a tree pane display showing cells and their semantic contents
+	public void loadInstanceBrowser()
+	{
+		iBrowser = new InstanceBrowser(this);
 	}
 	
 	public void loadFileChooser() {
@@ -238,55 +247,7 @@ public class View2D extends Display{
 	}
 	
 	
-//	get a tree pane display showing cells and their semantic contents
-	public void loadInstanceBrowser()
-	{
-		Display display = this;
-		MyNode root = null;
-		try {
-			
-			root = GlobalSemanticRepository.getInstance().getInstanceTree();
-			
-		} catch (OMTOfflineException e) {
-			Log.warn("View2D.loadInstanceBrowser: " + e.getMessage());
-			root = LocalSemanticRepository.getInstance().getInstanceTree();
-		}
-		
-		Window window = FengGUI.createWindow(display, true, false, false, true);
-		window.getAppearance().removeAll();
-		
-		window.setTitle("Instances..");
-		
-		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
-		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
-		
-		Tree<MyNode> tree = MyTreeModel.<MyNode>createTree(sc);
-		
-		window.setSize(200, 300);
-		//StaticLayout.center(window, display);
-		window.setPosition(new Point(0,100));
-		window.layout();
-		tree.setModel(new MyTreeModel(root));
-		
-		tree.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
-			{
-				if (!selectionChangedEvent.isSelected()) {
-					MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
-					if (n.value != null) {
-						n.value.unselect();
-					}
-					return;
-				}
-				MyNode n = (MyNode)selectionChangedEvent.getToggableWidget().getValue();
-				if (n.value != null) {
-					n.value.select();
-				}
-				
-			}
-			
-		});	
-	}
+
 
 	public void loadBasicSearchBox() {
 		if (basicSearch == null) {

@@ -16,34 +16,34 @@ import org.fenggui.util.Color;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class MyTreeModel implements ITreeModel<MyNode>
+public class MyTreeModel implements ITreeModel<TreeNode>
 {
-	MyNode root = null;
+	TreeNode root = null;
 	
-	public MyTreeModel(MyNode root) {
+	public MyTreeModel(TreeNode root) {
 		this.root = root;
 	}
-	public int getNumberOfChildren(MyNode node)
+	public int getNumberOfChildren(TreeNode node)
 	{
 		return node.children.size();
 	}
 
-	public Pixmap getPixmap(MyNode node)
+	public Pixmap getPixmap(TreeNode node)
 	{
 		return null;
 	}
 
-	public String getText(MyNode node)
+	public String getText(TreeNode node)
 	{
 		return node.text;
 	}
 
-	public MyNode getRoot()
+	public TreeNode getRoot()
 	{
 		return root;
 	}
 
-	public MyNode getNode(MyNode parent, int index)
+	public TreeNode getNode(TreeNode parent, int index)
 	{
 		return parent.children.get(index);
 	}

@@ -59,7 +59,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	private CoordinateSystem sys = null;
 	private Node theSpatial = new Node();
 	private boolean _visible = false;
-	private List<ISemanticThing> semanticThings = new ArrayList<ISemanticThing>();
+	private List<SemanticClass> semanticThings = new ArrayList<SemanticClass>();
+	private SemanticClass mainSemanticClass = null;
+	private SemanticInstance mainSemanticInstance = null;
 
 	private Color c = null;
 	private Color highlightedColor = Color.yellow;
@@ -343,24 +345,53 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		return this.highlightedColor;
 	}
 	
-	public List<ISemanticThing> getSemanticThings() {
+	public List<SemanticClass> getSemanticClasses() {
 		return semanticThings;
 	}
 	
-	public List<ISemanticThing> getAllSemanticThings() {
-		return getSemanticThings();
+	public List<SemanticClass> getAllSemanticClasses() {
+		return getSemanticClasses();
 	}
 	
-	public void addSemanticThing(ISemanticThing thing) {
+	public void addSemanticClass(SemanticClass thing) {
 		this.semanticThings.add(thing);
 		thing.addSemanticsAwareAssociation(this);
 		changed(CHANGED_ADD_SEMANTIC_THING);
 	}
 	
-	public void removeSemanticThing(ISemanticThing thing) {
+	public void removeSemanticClass(SemanticClass thing) {
 		this.semanticThings.remove(thing);
 		thing.removeSemanticsAwareAssociation(this);
 		changed(CHANGED_REMOVE_SEMANTIC_THING);
+	}
+	
+	public SemanticClass getMainSemanticClass() {
+		if (mainSemanticClass != null) {
+			return mainSemanticClass;
+		}
+		
+		//if we haven't assigned the main semantic class explicitly
+		//pick the first one from the list of semantic classes
+		//if the semantic classes list is empty, return null
+		for (ISemanticThing thing : getSemanticClasses()) {
+			if (thing instanceof SemanticClass) {
+				this.mainSemanticClass = (SemanticClass)thing;
+				break;
+			}
+		}
+		return this.mainSemanticClass;
+	}
+	
+	public SemanticInstance getMainSemanticInstance() {
+		if (mainSemanticInstance != null) {
+			return mainSemanticInstance;	
+		}
+		
+		//if the main semantic instance for this tangible has not yet been defined
+		//then create a new instance for this tangible from the main semantic class
+		mainSemanticInstance = getMainSemanticClass().createInstance();
+		
+		return mainSemanticInstance;
 	}
 	
 
@@ -500,8 +531,19 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		changed(CHANGED_CONTAINS);
 	}
 
-	public void updateContainerTangibles(List<Tangible> containerTangibles) {
+	Set<Tangible> previousContainerTangibles = null;
+	
+	public Set<Tangible> getPreviousContainerTangibles() {
+		return previousContainerTangibles;
+	}
+	
+	public void setPreviousContainerTangibles(Set<Tangible> t) {
+		previousContainerTangibles = t;
+	}
+	
+	public void updateContainerTangibles(Set<Tangible> containerTangibles) {
 		Set currentContainerTangibles = TangibleManager.getInstance().getContainerTangibles(this);
+		previousContainerTangibles = currentContainerTangibles;
 
 		boolean changed = false; //one boolean to test if a change has happened
 		

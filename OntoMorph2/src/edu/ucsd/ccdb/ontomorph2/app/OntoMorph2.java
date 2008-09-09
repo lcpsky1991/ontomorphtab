@@ -42,21 +42,11 @@ public class OntoMorph2 {
 		Log.getLogger("").setLevel(Level.WARNING);
 		Log.getLogger("").getHandlers()[0].setLevel(Level.WARNING);
 		
-		try {
-			wbcProps = new Properties();
-			URL url = new File("wbc.properties").toURI().toURL();
-			wbcProps.load(url.openStream());
-		} catch (Exception e) {
-			Log.error("Problem loading configuration file!");
-			e.printStackTrace();
-			System.exit(1);
-		}
-		
 		View view = View.getInstance();
 		
 		SceneObserver obs = SceneObserver.getInstance();
 		obs.setView(view);
-		if ("demo".equals(wbcProps.getProperty(SCENE))) {
+		if ("demo".equals(getWBCProperties().getProperty(SCENE))) {
 			_scene = new DemoScene();
 		} else {
 			_scene = new DefaultScene();
@@ -92,6 +82,17 @@ public class OntoMorph2 {
 	}
 	
 	public static Properties getWBCProperties() {
+		if (wbcProps == null) {
+			try {
+				wbcProps = new Properties();
+				URL url = new File("wbc.properties").toURI().toURL();
+				wbcProps.load(url.openStream());
+			} catch (Exception e) {
+				Log.error("Problem loading configuration file!");
+				e.printStackTrace();
+				System.exit(1);
+			}
+		}
 		return wbcProps;
 	}
 	
@@ -105,6 +106,10 @@ public class OntoMorph2 {
 
 	public static boolean isOfflineMode() {
 		return TRUE.equals(getWBCProperties().getProperty(OFFLINE_MODE));
+	}
+	
+	public static boolean isDemo() {
+		return "demo".equals(getWBCProperties().getProperty(SCENE));
 	}
 	
 	public static void setDebugMode(boolean debug) {

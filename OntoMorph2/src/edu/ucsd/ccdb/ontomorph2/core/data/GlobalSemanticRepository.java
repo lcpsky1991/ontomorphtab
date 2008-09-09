@@ -21,7 +21,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
-import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
 
 
 /**
@@ -29,11 +29,8 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class GlobalSemanticRepository implements SemanticRepository {
+public class GlobalSemanticRepository extends SemanticRepository {
 	
-	
-	OWLDatabaseModel owlModel = null;
-	Map<String, OWLNamedClass> clsFlyweightStore = new HashMap<String,OWLNamedClass>();
 	/**
 	 * Holds singleton instance
 	 */
@@ -46,75 +43,8 @@ public class GlobalSemanticRepository implements SemanticRepository {
 			throw new OMTOfflineException("Cannot use Global Semantic Repository when in offline mode!");
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getOWLModel()
-	 */
-	public OWLModel getOWLModel() {
-		return owlModel;
-	}
 
-	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getSemanticClass(java.lang.String)
-	 */
-	public SemanticClass getSemanticClass(String uri) {
-		OWLNamedClass cls = null;
-		if (owlModel != null) {
-			try {
-				cls = clsFlyweightStore.get(uri);
-				if (cls == null) {
-					cls = owlModel.getOWLNamedClass(uri);
-					clsFlyweightStore.put(uri, cls);
-				}
-			} catch (Exception e ) {
-				throw new OMTException("Problem finding URI in semantic repository" + uri, e);
-			}
-		}
-		SemanticClass s = new SemanticClass(cls, uri);
-		s.addObserver(SceneObserver.getInstance());
-		return s;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getInstanceTree()
-	 */
-	public MyNode getInstanceTree() {
-		MyNode root = new MyNode("Instances", null);
-		for (SemanticInstance si : this.getCellInstances()) {
-			root.children.add(new MyNode(si.getLabel(), si));
-		}
-		return root;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getInstancesFromRoot(edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass, boolean)
-	 */
-	public List<SemanticInstance> getInstancesFromRoot(SemanticClass rootClass, boolean requireLabel) {
-		List<SemanticInstance> runningList = new ArrayList<SemanticInstance>();
-		for (Iterator it = rootClass.getInstances().iterator(); it.hasNext(); ) {
-			OWLIndividual i = (OWLIndividual)it.next();
-			if (i instanceof SimpleInstance) {
-				SemanticInstance si = new SemanticInstance(i);
-				if (requireLabel) {
-					if (si.getLabel() != null) {
-						runningList.add(si);
-					}
-				} else {
-					runningList.add(si);
-				}
-			}
-			
-		}
-		return runningList;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getCellInstances()
-	 */
-	public List<SemanticInstance> getCellInstances() {
-		return getInstancesFromRoot(getSemanticClass("sao:sao1813327414"), true);
-	}
-	
+		
 	//initialize the semantic repository by connecting to the 
 	//database and retriving a knowledge base object
 	private void loadOntology() throws OMTOfflineException{
@@ -183,91 +113,6 @@ public class GlobalSemanticRepository implements SemanticRepository {
 		return instance;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getClassLabel(edu.stanford.smi.protege.model.Cls, java.lang.String)
-	 */
-	public String getClassLabel(Cls OWLClass, String URI) {
-//		must be done before getLabel() is run!!!
-
-		String label = null;
-		
-		if (owlModel != null) {
-			Slot rdfsLabel = owlModel.getSlot("rdfs:label");
-			
-			//Cls root = owlModel.getRootCls();
-			//Cls entity = owlModel.getCls("bfo:Entity");
-			//System.out.println("The root class is: " + entity.getName());
-			//Node rootNode = getTree().addRoot();
-			rdfsLabel = owlModel.getSlot("rdfs:label");
-			label = (String)OWLClass.getDirectOwnSlotValue(rdfsLabel);
-			String prefix = null;//owlModel.getPrefixForResourceName(entity.getName());
-			if (prefix != null) {
-				label =  prefix + ":" + label;
-			}
-			if (URI != null) {
-				label = label + "(" + URI + ")";
-			}
-		}			
-		return label;
-
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getMPIDsForMouse()
-	 */
-	public int[] getMPIDsForMouse() {
-		/*
-		QueryResults qr = null;
-		try {
-		String q = "SELECT distinct ?mpid" + 
-"\nWHERE" + 
-"\n{" +
-"\n?subject rdf:type ccdb:MICROSCOPYPRODUCT_OBJTAB ." +
-"\n?subject ccdb:mpid ?mpid ." +
-"\n?subject ccdb:SECURITY_LEVEL ?level ." +
-"\n?subject obo_base:has_part ?someting . "+
-"\n?something rdf:type birn_org_tax:birnlex_167 . " +
-"\nfilter regex(str(?level),\"1\")" +
-"\n}" +
-"\norder by ?mpid";
-		qr = ((OWLModel)getOWLModel()).executeSPARQLQuery(q);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (qr != null) {
-			if (qr.hasNext()) {
-				List vars = qr.getVariables();
-				Map varsToVals = qr.next();
-                
-				for (Object o : vars) {
-					RDFObject rdf = (RDFObject)varsToVals.get((String)o);
-					if (rdf instanceof RDFSLiteral) {
-						RDFSLiteral rdfs = (RDFSLiteral)rdf;
-						System.out.println(rdfs.getInt());
-					}
-				}
-            }
-		}
-		*/
-		//can't get above code to work, so for now hard coding the values
-		int[] hackOutput = {1, 14, 16, 17, 29, 3, 30, 31, 32, 33, 3339, 3379, 
-				  3380, 3382, 3383, 3384, 35, 3561, 3563, 3587, 3592, 
-				  3593, 36, 3652, 3659, 3687, 3693, 39, 3993, 3996, 
-				  4, 40, 4003, 	4043, 4044, 4045, 4046, 4047, 4048,
-				  4049, 4050, 4051, 4052, 4053, 4054, 4055, 4056, 
-				  4057, 4058, 4059, 4060, 4061, 4062, 4063, 4064, 
-				  4065, 4066, 4067, 4068, 4069, 4070, 4071, 4072,
-				  4073, 4074, 4075, 41, 48, 49, 50, 51, 53, 54, 
-				  6, 7};
-		return hackOutput;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getMicroscopyProductInstances()
-	 */
-	public List<SemanticInstance> getMicroscopyProductInstances() {
-		return getInstancesFromRoot(getSemanticClass("ccdb:MICROSCOPYPRODUCT_OBJTAB"), false);
-	}
 	
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#createNewInstanceOfClass(java.lang.String)

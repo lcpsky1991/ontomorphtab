@@ -15,6 +15,7 @@ import com.jme.scene.shape.Box;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CCDBSlide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
@@ -232,13 +233,11 @@ public class DefaultScene extends Scene{
 		
 		addSceneObject(cell5);
 		
-		try {
-			cell3.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
-			cell4.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
-			cell5.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
-		} catch (OMTOfflineException e3) {
-			Log.warn(e3.getMessage());
-		}
+		
+			cell3.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+			cell4.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+			cell5.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+
 		
 
 		/** These models have their up vectors pointing in an X direction
@@ -287,7 +286,7 @@ public class DefaultScene extends Scene{
 			cell11.setRelativeScale(0.01f);
 			
 			try {
-				cell11.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
+				cell11.addSemanticClass(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
 			} catch (OMTOfflineException e4) {
 				Log.warn(e4.getMessage());
 			}

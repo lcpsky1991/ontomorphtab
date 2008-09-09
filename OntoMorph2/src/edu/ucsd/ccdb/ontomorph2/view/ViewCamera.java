@@ -314,6 +314,12 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		//BoundingSphere sphere = new BoundingSphere(20f, position);
 	}
 	
+	public void setToSubcellularView() {
+		Vector3f loc = new Vector3f(298.8373f, -116.61807f, -179.73985f);
+		this.setLocalTranslation(loc);
+		this.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y));
+	}
+	
 	public void smoothlyZoomToSlideCerebellumView() {
 		Vector3f loc = new Vector3f(458.9234f, -118.0f, -356.11566f);
 		Vector3f position = new Vector3f(458.9234f, -118.0f, -218.11566f);

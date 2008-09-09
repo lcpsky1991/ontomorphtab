@@ -17,11 +17,12 @@ import java.util.Stack;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.util.BitMath;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 import edu.ucsd.ccdb.ontomorph2.view.View;
-import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
 
 
 /**
@@ -217,18 +218,18 @@ public class ReferenceAtlas {
 		return brainRegions;
 	}
 
-	public MyNode getBrainRegionTree() {
+	public TreeNode getBrainRegionTree() {
 		
-		MyNode root = new MyNode("Brain Regions", getBrainRegion("Brain"));
-		HashMap<String, MyNode> m = new HashMap<String, MyNode>();
+		TreeNode root = new TreeNode("Brain Regions", getBrainRegion("Brain"));
+		HashMap<String, TreeNode> m = new HashMap<String, TreeNode>();
 		
 		for (BrainRegion r : getBrainRegions()) {
-			m.put(r.getAbbreviation(), new MyNode(r.getName(), r));
+			m.put(r.getAbbreviation(), new TreeNode(r.getName(), r));
 		}
-		for (MyNode n : m.values()) {
+		for (TreeNode n : m.values()) {
 			//assemble hierarchy
 			if (((BrainRegion)n.value).getParent() != null) {
-				MyNode parentNode = m.get(((BrainRegion)n.value).getParent().getAbbreviation());
+				TreeNode parentNode = m.get(((BrainRegion)n.value).getParent().getAbbreviation());
 				parentNode.children.add(n);
 				
 //				add top level nodes to root
@@ -267,12 +268,12 @@ public class ReferenceAtlas {
 	
 	public List<BrainRegion> getBrainRegionLeaves() {
 		List<BrainRegion> leaves = new ArrayList<BrainRegion>();
-		MyNode tree = getBrainRegionTree();
-		Stack<MyNode> s = new Stack<MyNode>();
+		TreeNode tree = getBrainRegionTree();
+		Stack<TreeNode> s = new Stack<TreeNode>();
 		s.add(tree);
 		while (!s.isEmpty()) {
-			MyNode i = s.pop();
-			for (MyNode n : i.children) {
+			TreeNode i = s.pop();
+			for (TreeNode n : i.children) {
 				if (!n.children.isEmpty()) {
 					s.addAll(n.children);
 				} else {
@@ -287,14 +288,16 @@ public class ReferenceAtlas {
 		Set<BrainRegion> brs = new HashSet<BrainRegion>();
 		
 		
-		//brs.add(this.getBrainRegion("HIP"));
-		//this.getBrainRegion("HIP").setVisibility(BrainRegion.TRANSPARENT);
+		brs.add(this.getBrainRegion("HIP"));
+		BrainRegion hippocampus = this.getBrainRegion("HIP");
+		hippocampus.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.HIPPOCAMPUS_CLASS));
+		hippocampus.setVisibility(BrainRegion.TRANSPARENT);
 		
-		brs.add(this.getBrainRegion("DG"));
-		this.getBrainRegion("DG").setVisibility(BrainRegion.TRANSPARENT);
+		//brs.add(this.getBrainRegion("DG"));
+		//this.getBrainRegion("DG").setVisibility(BrainRegion.TRANSPARENT);
 		
-		brs.add(this.getBrainRegion("CA"));
-		this.getBrainRegion("CA").setVisibility(BrainRegion.TRANSPARENT);
+		//brs.add(this.getBrainRegion("CA"));
+		//this.getBrainRegion("CA").setVisibility(BrainRegion.TRANSPARENT);
 		
 		
 		View.getInstance().getView3D().addBrainRegions(brs);
@@ -302,7 +305,7 @@ public class ReferenceAtlas {
 
 	public void hideDemoAtlas() {
 		this.getBrainRegion("HIP").setVisibility(BrainRegion.INVISIBLE);
-		this.getBrainRegion("DG").setVisibility(BrainRegion.INVISIBLE);
-		this.getBrainRegion("CA").setVisibility(BrainRegion.INVISIBLE);
+		//this.getBrainRegion("DG").setVisibility(BrainRegion.INVISIBLE);
+		//this.getBrainRegion("CA").setVisibility(BrainRegion.INVISIBLE);
 	}
 }

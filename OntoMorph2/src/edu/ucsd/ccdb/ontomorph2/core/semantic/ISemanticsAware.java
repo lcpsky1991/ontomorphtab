@@ -13,11 +13,40 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISelectable;
  */
 public interface ISemanticsAware extends ISelectable{
 
-	public List<ISemanticThing> getSemanticThings();
+	/**
+	 * Get a list of any semantic classes that have been associated with this item
+	 * @return
+	 */
+	public List<SemanticClass> getSemanticClasses();
 	
-	public void addSemanticThing(ISemanticThing thing);
+	/**
+	 * Add an association to a semantic class with this item
+	 * @param thing
+	 */
+	public void addSemanticClass(SemanticClass thing);
 	
-	public void removeSemanticThing(ISemanticThing thing);
+	/**
+	 * Remove an association between a semantic class and this item
+	 * @param thing
+	 */
+	public void removeSemanticClass(SemanticClass thing);
 	
-	public List<ISemanticThing> getAllSemanticThings();
+	/**
+	 * Gets semantic classes for this object plus any associated objects
+	 * @return
+	 */
+	public List<SemanticClass> getAllSemanticClasses();
+	
+	/**
+	 * Get the main semantic class that describes this object
+	 * @return
+	 */
+	public SemanticClass getMainSemanticClass();
+	
+	/**
+	 * Get the main semantic instance the describes this object.  If it does not exist, 
+	 * instantiate it from the main semantic class
+	 * @return
+	 */
+	public SemanticInstance getMainSemanticInstance();
 }

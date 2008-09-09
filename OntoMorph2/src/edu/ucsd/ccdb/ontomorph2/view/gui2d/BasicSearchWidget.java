@@ -32,7 +32,7 @@ public class BasicSearchWidget extends Widget{
 		displayX = d.getDisplayX();
 		displayY = d.getDisplayY();
 		input = new FengJMEInputHandler(d);
-		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
+		TreeNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
 		CustomWidget window = new CustomWidget(new Point(0,100),new Point(200,300), "Search");
 		
 		//window.addMouseExitedListener(FocusManager.focusManager);

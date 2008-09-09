@@ -18,6 +18,7 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
@@ -864,12 +865,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		}
 		
 		ncell.setRelativeScale(0.01f);
-		try {
-			ncell.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(cellType));
-		} catch (OMTOfflineException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		ncell.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(cellType));
+		
 		ncell.setVisible(true);
 		ncell.addObserver(SceneObserver.getInstance()); //add an observer to the new cell
 		

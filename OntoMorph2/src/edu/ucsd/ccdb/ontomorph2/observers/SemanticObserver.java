@@ -7,10 +7,12 @@ import java.util.Set;
 
 import com.jme.scene.Geometry;
 
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
@@ -39,9 +41,38 @@ public class SemanticObserver implements Observer {
 	public void update(Observable o, Object arg) {
 		if (o instanceof Tangible) {
 			Tangible t = (Tangible)o;
-			if (Tangible.CHANGED_CONTAINS.equals(arg)) 
-			{
-				//Log.warn("Containment info has changed");
+			if (Tangible.CHANGED_CONTAINS.equals(arg)) {
+				SemanticRepository repo = SemanticRepository.getAvailableInstance();
+				SemanticProperty containsProp = repo.getSemanticProperty(SemanticProperty.CONTAINS);
+				
+				//in order to handle the case where we have removed a containment relationship
+				//between tangibles, start out by removing any existing contains property value
+				SemanticInstance containedInstance = t.getMainSemanticInstance().getPropertyValue(containsProp);
+				if (containedInstance != null) {
+					t.getMainSemanticInstance().removePropertyValue(containsProp, containedInstance);
+				}
+				
+				//look up the container list from before the last update.
+				//start afresh with these guys insofar as instances are concerned
+				for (Tangible previousContainer : t.getPreviousContainerTangibles()) {
+					previousContainer.getMainSemanticInstance().removePropertyValue(containsProp, t.getMainSemanticInstance());
+
+				}
+				
+				//for those tangibles that are contained in this tangible, make a 
+				//containment relationship between this instance and that one
+				for (Tangible contained : t.getContainedTangibles()) {
+					t.getMainSemanticInstance().setPropertyValue(containsProp, 
+							contained.getMainSemanticInstance());
+				}
+				
+				for (Tangible containers : t.getContainerTangibles()) {
+					containers.getMainSemanticInstance().setPropertyValue(containsProp, 
+							t.getMainSemanticInstance());
+				}
+				
+				Log.warn("Containment info has changed");
+
 			}
 		}
 		/*

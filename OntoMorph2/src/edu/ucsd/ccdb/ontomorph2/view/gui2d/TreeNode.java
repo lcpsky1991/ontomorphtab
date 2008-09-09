@@ -11,16 +11,16 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISelectable;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class MyNode
+public class TreeNode
 {
-	public MyNode(String string, ISelectable value)
+	public TreeNode(String string, ISelectable value)
 	{
 		this.text = string;
 		this.value = value;
 	}
 	
 	public ISelectable value = null;
-	public ArrayList<MyNode> children = new ArrayList<MyNode>();
+	public ArrayList<TreeNode> children = new ArrayList<TreeNode>();
 	public String text = null;
 	
 	public int hashCode() {

@@ -19,6 +19,9 @@ import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
@@ -70,30 +73,26 @@ public class MorphMLCableImpl extends Tangible implements ICable{
 		this.c = cable;
 	}
 	
-	public List<ISemanticThing> getSemanticThings() {
-		List<ISemanticThing> l = new ArrayList<ISemanticThing>();
+	public List<SemanticClass> getSemanticClasses() {
+		List<SemanticClass> l = new ArrayList<SemanticClass>();
 		SemanticRepository repo = null;
-		try {
-			repo = GlobalSemanticRepository.getInstance();
-		} catch (OMTOfflineException e) {
-			Log.warn(e.getMessage() + " Using local repository instead.");
-			repo = LocalSemanticRepository.getInstance();
-		}
+		
+		repo = SemanticRepository.getAvailableInstance();
 		
 		for (Object ob : getMorphMLCable().getGroup()) {
 			String s = (String)ob;
 			if ("dendrite_group".equals(s)) {
-				l.add(repo.getSemanticClass("sao:sao1211023249"));
+				l.add(repo.getSemanticClass(SemanticClass.DENDRITE_CLASS));
 			}
 			if ("soma_group".equals(s)) {
-				l.add(repo.getSemanticClass("sao:sao1044911821"));
+				l.add(repo.getSemanticClass(SemanticClass.SOMA_CLASS));
 			} 
 			if ("axon_group".equals(s)) {
-				l.add(repo.getSemanticClass("sao:sao1770195789"));
+				l.add(repo.getSemanticClass(SemanticClass.AXON_CLASS));
 				//should be adding all these segGroups to the Axon class and treating them as a separate unit.
 			}
 			if ("apical_dendrite".equals(s)) {
-				l.add(repo.getSemanticClass("sao:sao273773228"));
+				l.add(repo.getSemanticClass(SemanticClass.APICAL_DENDRITE_CLASS));
 			}
 			
 		}
@@ -141,6 +140,19 @@ public class MorphMLCableImpl extends Tangible implements ICable{
 
 	public MorphMLNeuronMorphology getParent() {
 		return this.parentCell;
+	}
+	
+	/**
+	 * Returns the main semantic instance and fills in the has_part relationship to the parent cell
+	 */
+	public SemanticInstance getMainSemanticInstance() {
+		SemanticInstance i = super.getMainSemanticInstance();
+		SemanticInstance parentCell = this.getParent().getMainSemanticInstance();
+		
+		SemanticProperty hasPart = SemanticRepository.getAvailableInstance().getSemanticProperty(SemanticProperty.HAS_PART);
+		parentCell.setPropertyValue(hasPart, i);
+		
+		return i;
 	}
 	
 	public void select() 
@@ -217,12 +229,12 @@ public class MorphMLCableImpl extends Tangible implements ICable{
 		{
 			
 			//this is getting called more times than it should
-			infoString = this.getTags().toString() + "\n";
-			for (ISemanticThing s : this.getSemanticThings())
+			infoString = "";//this.getTags().toString() + "\n";
+			for (ISemanticThing s : this.getSemanticClasses())
 			{
 				infoString += (s.toString() + "\n"); 
 			}
-			infoString += ((NeuronMorphology)this.getParent()).getSemanticThings();
+			infoString += ((NeuronMorphology)this.getParent()).getSemanticClasses();
 			
 		}
 		catch(Exception e)

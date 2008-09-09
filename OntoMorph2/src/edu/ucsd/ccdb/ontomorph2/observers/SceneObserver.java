@@ -182,17 +182,9 @@ public class SceneObserver implements Observer {
 			if (Tangible.CHANGED_MOVE.equals(arg)) {
 				
 				if (tv != null) {
-					BoundingVolume bounds = tv.getWorldBound();
-					Set<TangibleView> containers = tvm.getContainers(tv, bounds);
 					
-					//for any tangible view containers, look up their corresponding
-					//tangibles and inform them that they contain another tangible.
-					
-					List<Tangible> containerTangibles = new ArrayList<Tangible>();
-					for (TangibleView tv2 : containers) {
-						Tangible model = tv2.getModel();
-						containerTangibles.add(model);
-					}
+					Set<Tangible> containerTangibles = tvm.getContainerTangibles(tv);
+				
 					t.updateContainerTangibles(containerTangibles);
 				}
 			}

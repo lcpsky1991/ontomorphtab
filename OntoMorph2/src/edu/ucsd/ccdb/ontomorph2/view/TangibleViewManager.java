@@ -1,9 +1,12 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.MultiHashMap;
@@ -12,7 +15,9 @@ import com.jme.bounding.BoundingVolume;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 public class TangibleViewManager {
@@ -123,16 +128,39 @@ public class TangibleViewManager {
 		return containers;
 	}
 	
-	public Set<TangibleView> getContainers(TangibleView tv, BoundingVolume bv) {
+	/**
+	 * Return a list of TangibleViews that contain the bounding volume bv belonging to the
+	 * TangibleView tv
+	 * @param tv
+	 * @param bv
+	 * @return
+	 */
+	public Set<Tangible> getContainerTangibles(TangibleView tv) {
+		BoundingVolume bv = tv.getWorldBound();
 		Set<Geometry> allGeometriesForThisTangibleView = this.getGeometriesForTangibleView(tv);
-		Set<TangibleView> containers = new HashSet<TangibleView>();
+		Set<Tangible> containers = new HashSet<Tangible>();
 		for (Geometry g : this.getAllGeometries()) {
 			//skip any geometries that are part of the same TangibleView
 			if (allGeometriesForThisTangibleView.contains(g)) {
 				continue;
 			}
+			//find out if the current geometry contains the bounding volume bv
 			if (g.getWorldBound().contains(bv.getCenter()) && g.getWorldBound().intersects(bv)) {
-				containers.add(getTangibleView(g));
+				//for any tangible view containers, look up their corresponding
+				//tangibles
+				TangibleView tv2 = getTangibleView(g);
+				Tangible model = tv2.getModel();
+				
+				
+				//for NeuronMorphologyViews, make the model to be the specific Cable that encloses tv
+				if (tv2 instanceof NeuronMorphologyView) {
+					NeuronMorphologyView nmv = (NeuronMorphologyView)tv2;
+					BigInteger idOfSpecificCable = nmv.getCableIdFromGeometry(g);
+					NeuronMorphology nm = (NeuronMorphology)model;
+					containers.add((Tangible)nm.getCable(idOfSpecificCable));
+				}
+				
+				containers.add(model);
 			}
 		}
 		return containers;

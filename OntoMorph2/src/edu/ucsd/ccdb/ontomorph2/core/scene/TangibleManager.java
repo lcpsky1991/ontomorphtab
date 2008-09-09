@@ -18,6 +18,7 @@ import com.jme.math.Vector3f;
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
@@ -35,7 +36,7 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.MultiHashSetMap;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
-import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyNode;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 
@@ -67,14 +68,14 @@ public class TangibleManager {
 		tangiblesContainedByTangibles = new MultiHashSetMap();
 	}
 	
-	public MyNode getCellTree() {
-		MyNode root = new MyNode("Cells", null);
+	public TreeNode getCellTree() {
+		TreeNode root = new TreeNode("Cells", null);
 		
 		for (NeuronMorphology n : getCells()) {
-			MyNode node = new MyNode(n.getName(), n);
+			TreeNode node = new TreeNode(n.getName(), n);
 			
-			for (ISemanticThing t : ((ISemanticsAware)n).getAllSemanticThings()) {	
-				node.children.add(new MyNode(t.toString(), t));
+			for (ISemanticThing t : ((ISemanticsAware)n).getAllSemanticClasses()) {	
+				node.children.add(new TreeNode(t.toString(), t));
 			}
 			
 			root.children.add(node);
@@ -277,17 +278,13 @@ public class TangibleManager {
 				//cell3.setCoordinateSystem(d);
 				cell3.setRelativeScale(0.01f);
 				
-				try {
 				//semantic thing for hippocampal CA3 neuron
-					cell3.addSemanticThing(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
-				} catch (OMTOfflineException e) {
-					Log.warn(e.getMessage() + "  Using local semantic repository instead.");
-					cell3.addSemanticThing(LocalSemanticRepository.getInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
-				}
+				cell3.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+				cell3.getMainSemanticInstance();
 				
 				cell3.setVisible(true);
 				
-				OntoMorph2.getCurrentScene().changed(Scene.CHANGED_LOAD);
+				OntoMorph2.getCurrentScene().changed(Scene.CHANGED_CELL);
 				
 			} else {
 				Log.warn("This is not a file type that can be opened");

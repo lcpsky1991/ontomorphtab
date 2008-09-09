@@ -41,7 +41,7 @@ public class AtlasBrowser implements ISelectionChangedListener{
 	public static final String INVISIBLE = "invis.";
 	
 	public AtlasBrowser(Display d) {
-		MyNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
+		TreeNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
 		
 		Window window = FengGUI.createWindow(d, true, false, false, true);
 		window.setSize(200, 300);
@@ -54,7 +54,7 @@ public class AtlasBrowser implements ISelectionChangedListener{
 		sc.setLayoutData(BorderLayoutData.CENTER);
 		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
 		
-		Tree<MyNode> tree = MyTreeModel.<MyNode>createTree(sc);
+		Tree<TreeNode> tree = MyTreeModel.<TreeNode>createTree(sc);
 		
 		Container radioButtons = FengGUI.createContainer(window.getContentContainer());
 		radioButtons.getAppearance().add(new PlainBackground(new Color(255f, 255f, 255f, 255f)));
@@ -99,8 +99,8 @@ public class AtlasBrowser implements ISelectionChangedListener{
 				} else if (AtlasBrowser.INVISIBLE.equals(value) && (this.currentSelection != null)) {
 					this.currentSelection.setVisibility(BrainRegion.INVISIBLE);
 				}
-			} else if (v instanceof MyNode) { //handle tree widget
-				MyNode n = (MyNode)v;
+			} else if (v instanceof TreeNode) { //handle tree widget
+				TreeNode n = (TreeNode)v;
 				BrainRegion br = (BrainRegion)n.value;
 				if (br != null) {
 					//select the model to let it know to change state
@@ -122,8 +122,8 @@ public class AtlasBrowser implements ISelectionChangedListener{
 				}
 			}
 		} else {
-			if (v instanceof MyNode) { //handle tree widget
-				MyNode n = (MyNode)e.getToggableWidget().getValue();
+			if (v instanceof TreeNode) { //handle tree widget
+				TreeNode n = (TreeNode)e.getToggableWidget().getValue();
 				if (n.value != null)
 					n.value.unselect();
 			}
