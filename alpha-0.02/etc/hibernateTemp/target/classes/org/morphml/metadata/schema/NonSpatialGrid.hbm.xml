@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.metadata.schema.NonSpatialGrid]"
+          name="org.morphml.metadata.schema.NonSpatialGrid"
+          table="NonSpatialGrid">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Y">
+         <column name="Y"/>
+         <type name="org.hibernate.type.BigIntegerType"/>
+      </property>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="X">
+         <column name="X"/>
+         <type name="org.hibernate.type.BigIntegerType"/>
+      </property>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Z">
+         <column name="Z"/>
+         <type name="org.hibernate.type.BigIntegerType"/>
+      </property>
+      <subclass discriminator-value="org.morphml.metadata.schema.NonSpatialGrid"
+                name="org.morphml.metadata.schema.impl.NonSpatialGridImpl"/>
+   </class>
+</hibernate-mapping>

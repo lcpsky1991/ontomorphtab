@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.networkml.schema.Level3Connectivity]"
+          name="org.morphml.networkml.schema.Level3Connectivity"
+          table="Level3Connectivity">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="PotentialSynLoc"
+            table="Level3Connectivity_Potential_0">
+         <key>
+            <column name="Level3Connectivity_Potential_1"/>
+         </key>
+         <list-index>
+            <column name="Level3Connectivity_Potential_2"/>
+         </list-index>
+         <one-to-many class="org.morphml.networkml.schema.PotentialSynLoc"/>
+      </list>
+      <subclass discriminator-value="org.morphml.networkml.schema.Level3Connectivity"
+                name="org.morphml.networkml.schema.impl.Level3ConnectivityImpl"/>
+   </class>
+</hibernate-mapping>

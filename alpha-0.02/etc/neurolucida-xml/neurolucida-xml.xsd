@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <!-- 
+  This is a schema that has been created to model the data found in the Neurolucida xml format.  This is not maintained by Neurolucida in any way
+  and has been automatically generated from a single example, so it may not be fully correct.
+ 
+  This schema is used to generate Java classes using JAXB to read Neurolucida XML files without maintaining the code
+  to unmarshal the XML into objects.
+  
+   author: Stephen Larson (slarson@ncmir.ucsd.edu)
+  -->
+  <xs:element name="neurolucida-data">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="comment"/>
+        <xs:element ref="contour"/>
+        <xs:element maxOccurs="unbounded" ref="tree"/>
+      </xs:sequence>
+      <xs:attribute name="filename" use="required"/>
+      <xs:attribute name="version" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="comment" type="xs:string"/>
+  <xs:element name="contour">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="color"/>
+        <xs:element ref="closed"/>
+        <xs:element ref="style"/>
+        <xs:element ref="property"/>
+        <xs:element maxOccurs="unbounded" ref="point"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="closed" type="xs:boolean"/>
+  <xs:element name="property">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="value"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="value">
+    <xs:complexType mixed="true">
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="name" type="xs:NCName"/>
+  <xs:element name="color" type="xs:NCName"/>
+  <xs:element name="style" type="xs:NCName"/>
+  <xs:element name="point">
+    <xs:complexType>
+      <xs:attribute name="comment" use="required"/>
+      <xs:attribute name="d" use="required" type="xs:decimal"/>
+      <xs:attribute name="sid" use="required"/>
+      <xs:attribute name="x" use="required" type="xs:decimal"/>
+      <xs:attribute name="y" use="required" type="xs:decimal"/>
+      <xs:attribute name="z" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tree">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:sequence minOccurs="0">
+          <xs:element minOccurs="1" ref="color"/>
+          <xs:element minOccurs="1" ref="style"/>
+          <xs:element minOccurs="1" ref="type"/>
+        </xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="point"/>
+            <xs:element ref="tree"/>
+          </xs:choice>
+          <xs:element minOccurs="0" ref="leaf"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="type" type="xs:NCName"/>
+  <xs:element name="leaf" type="xs:NCName"/>
+</xs:schema>

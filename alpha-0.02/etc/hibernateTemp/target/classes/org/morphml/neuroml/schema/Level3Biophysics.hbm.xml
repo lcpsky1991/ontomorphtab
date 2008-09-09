@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <subclass discriminator-value="[org.morphml.neuroml.schema.Level3Biophysics]"
+             extends="org.morphml.biophysics.schema.BiophysicsType"
+             name="org.morphml.neuroml.schema.Level3Biophysics">
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="PotentialSynapticLocation"
+            table="Level3Biophysics_PotentialSy_0">
+         <key>
+            <column name="Level3Biophysics_PotentialSy_1"/>
+         </key>
+         <list-index>
+            <column name="Level3Biophysics_PotentialSy_2"/>
+         </list-index>
+         <one-to-many class="org.morphml.networkml.schema.PotentialSynapticLocation"/>
+      </list>
+      <subclass discriminator-value="org.morphml.neuroml.schema.Level3Biophysics"
+                name="org.morphml.neuroml.schema.impl.Level3BiophysicsImpl"/>
+   </subclass>
+</hibernate-mapping>

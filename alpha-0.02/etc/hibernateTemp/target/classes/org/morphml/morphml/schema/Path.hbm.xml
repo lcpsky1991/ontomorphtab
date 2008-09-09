@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <subclass discriminator-value="[org.morphml.morphml.schema.Path]"
+             extends="org.morphml.metadata.schema.Points"
+             name="org.morphml.morphml.schema.Path">
+      <join table="Path_">
+         <key>
+            <column name="Hjid"/>
+         </key>
+         <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                   name="Parent">
+            <column name="Parent"/>
+            <type name="org.hibernate.type.BigIntegerType"/>
+         </property>
+         <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                   name="Id">
+            <column name="Id"/>
+            <type name="org.hibernate.type.BigIntegerType"/>
+         </property>
+      </join>
+      <subclass discriminator-value="org.morphml.morphml.schema.Path"
+                name="org.morphml.morphml.schema.impl.PathImpl"/>
+   </subclass>
+</hibernate-mapping>

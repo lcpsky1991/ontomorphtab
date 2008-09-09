@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.channelml.schema.VoltageConcGate]"
+          name="org.morphml.channelml.schema.VoltageConcGate"
+          table="VoltageConcGate">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <many-to-one class="org.morphml.channelml.schema.RateConstVoltConcDep" name="Beta">
+         <column name="Beta"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.channelml.schema.RateConstVoltConcDep" name="Inf">
+         <column name="Inf"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.channelml.schema.RateConstVoltConcDep" name="Alpha">
+         <column name="Alpha"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.channelml.schema.ConcDependence" name="ConcDependence">
+         <column name="ConcDependence"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.channelml.schema.RateConstantEqnChoice" name="Zeta">
+         <column name="Zeta"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.channelml.schema.RateConstVoltConcDep" name="Tau">
+         <column name="Tau"/>
+      </many-to-one>
+      <many-to-one class="org.morphml.channelml.schema.RateConstantEqnChoice" name="Gamma">
+         <column name="Gamma"/>
+      </many-to-one>
+      <subclass discriminator-value="org.morphml.channelml.schema.VoltageConcGate"
+                name="org.morphml.channelml.schema.impl.VoltageConcGateImpl"/>
+   </class>
+</hibernate-mapping>

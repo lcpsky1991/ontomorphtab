@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.biophysics.schema.SpecCapacitance]"
+          name="org.morphml.biophysics.schema.SpecCapacitance"
+          table="SpecCapacitance">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="VariableParameter"
+            table="SpecCapacitance_VariablePara_0">
+         <key>
+            <column name="SpecCapacitance_VariablePara_1"/>
+         </key>
+         <list-index>
+            <column name="SpecCapacitance_VariablePara_2"/>
+         </list-index>
+         <one-to-many class="org.morphml.biophysics.schema.VariableParameter"/>
+      </list>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Parameter"
+            table="SpecCapacitance_Parameter_">
+         <key>
+            <column name="SpecCapacitance_Parameter__H_0"/>
+         </key>
+         <list-index>
+            <column name="SpecCapacitance_Parameter__H_1"/>
+         </list-index>
+         <one-to-many class="org.morphml.biophysics.schema.UnnamedParameter"/>
+      </list>
+      <subclass discriminator-value="org.morphml.biophysics.schema.SpecCapacitance"
+                name="org.morphml.biophysics.schema.impl.SpecCapacitanceImpl"/>
+   </class>
+</hibernate-mapping>

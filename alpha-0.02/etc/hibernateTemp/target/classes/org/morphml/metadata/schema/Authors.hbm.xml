@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.metadata.schema.Authors]"
+          name="org.morphml.metadata.schema.Authors"
+          table="Authors">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="ModelAuthor"
+            table="Authors_ModelAuthor">
+         <key>
+            <column name="Authors_ModelAuthor_Hjid"/>
+         </key>
+         <list-index>
+            <column name="Authors_ModelAuthor_Hjindex"/>
+         </list-index>
+         <one-to-many class="org.morphml.metadata.schema.Person"/>
+      </list>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="ModelTranslator"
+            table="Authors_ModelTranslator">
+         <key>
+            <column name="Authors_ModelTranslator_Hjid"/>
+         </key>
+         <list-index>
+            <column name="Authors_ModelTranslator_Hjin_0"/>
+         </list-index>
+         <one-to-many class="org.morphml.metadata.schema.Person"/>
+      </list>
+      <subclass discriminator-value="org.morphml.metadata.schema.Authors"
+                name="org.morphml.metadata.schema.impl.AuthorsImpl"/>
+   </class>
+</hibernate-mapping>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <subclass discriminator-value="[org.morphml.neuroml.schema.Level3Cell]"
+             extends="org.morphml.morphml.schema.Cell"
+             name="org.morphml.neuroml.schema.Level3Cell">
+      <join table="Level3Cell">
+         <key>
+            <column name="Hjid"/>
+         </key>
+         <many-to-one class="org.morphml.networkml.schema.Level3Connectivity" name="Connectivity">
+            <column name="Connectivity"/>
+         </many-to-one>
+         <many-to-one class="org.morphml.neuroml.schema.Level3Biophysics" name="Biophysics">
+            <column name="Biophysics"/>
+         </many-to-one>
+      </join>
+      <subclass discriminator-value="org.morphml.neuroml.schema.Level3Cell"
+                name="org.morphml.neuroml.schema.impl.Level3CellImpl"/>
+   </subclass>
+</hibernate-mapping>
