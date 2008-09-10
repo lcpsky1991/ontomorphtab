@@ -129,6 +129,7 @@ public class CatmullRomCurve extends Curve {
 		Vector3f tangent2 = getPoint(time - precision).subtract(point);
 		Vector3f normal = tangent.cross(tangent2);
 		normal = normal.normalize();
+		
 		//calculate binormal
 		Vector3f binormal = tangent.cross(normal);
 		binormal = binormal.normalize();
@@ -158,6 +159,8 @@ public class CatmullRomCurve extends Curve {
 		if (direction == null) {
 			return getOrientation(time, precision);
 		}
+		
+		System.out.println("get orientation");
 		Matrix3f rotation = new Matrix3f();
 
 		//calculate tangent

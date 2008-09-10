@@ -243,6 +243,14 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         float distance = points[0].distance(points[1]);
         CatmullRomCurve curve = new CatmullRomCurve("Curve", points);
         
+        System.out.println("location " + cam.getLocation());
+        System.out.println("direction " + cam.getDirection());
+        System.out.println("rotation " + location);
+        
+        /*
+        if(cam.getLocation().x != location.x){
+
+        }*/
         Vector3f up = new Vector3f(0.0f,0.1f,0.0f).normalize();
         CurveOnceController cc = new CurveOnceController(curve, this, objectPosition);
         cc.setActive(false);

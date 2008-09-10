@@ -94,53 +94,6 @@ public class CurveOnceController extends Controller {
                 //System.out.println("camera direction " + cam.getLocation() + " " + newPoint);
                 if(autoRotation) {   // ***** added
                 	mover.lookAt(rotation,up);
-                	/*Quaternion vert = mover.getLocalRotation().fromAngleAxis( 
-                			-FastMath.PI/angle, new Vector3f(1,0,0));
-                	rot = new Quaternion();
-                	rot = mover.getLocalRotation().multLocal(vert);
-                	mover.setLocalRotation(rot);*/
-                	/*if(angle<1){
-                		System.out.println("angle is zero");
-                	}*/
-                	
-                	/*Vector3f lookAtObject=new Vector3f(rotation).subtractLocal(cam.getLocation()).normalizeLocal();
-                	// Left vector
-                	MemPool.m3a.setColumn(0,new Vector3f(0,1,0).crossLocal(lookAtObject));
-                	// Up vector
-                	MemPool.m3a.setColumn(1,new Vector3f(1,0,0).crossLocal(lookAtObject));
-                	// Direction vector
-                	MemPool.m3a.setColumn(2,lookAtObject);
-                	mover.setLocalRotation(MemPool.m3a);*/
-                	/*Matrix3f rot = new Matrix3f();
-
-            		//calculate tangent
-                	Vector3f tangent = new Vector3f(rotation).subtractLocal(cam.getLocation()).normalizeLocal();
-            		//tangent = tangent.normalize();
-            		
-            		//System.out.println("tangent" + tangent);
-
-            		//calculate binormal
-            		Vector3f binormal = up.cross(tangent);
-            		binormal = binormal.normalize();
-            		//System.out.println("binormal" + binormal);
-            		
-            		//calculate normal
-            		Vector3f normal =binormal.cross(tangent);
-            		normal = normal.normalize();
-            		//System.out.println("normal" + tangent);
-            		
-            		rot.setColumn(0, normal);
-            		rot.setColumn(1, binormal);
-            		rot.setColumn(2, tangent);
-            		
-            		mover.setLocalRotation(rot);*/
-                	//System.out.println("newPoint " + newPoint + "rotation " + mover.getWorldRotation()+ " angleradian " + angle + " rot " + rot);
-              
-                	/*mover.setLocalRotation(
-                            curve.getOrientation(
-                                deltaTime,
-                                orientationPrecision,
-                                rotation));*/
                 }
                 if (isDisableAfterClamp() && lastPoint != null) {
                     if (lastPoint.equals(newPoint)) {
