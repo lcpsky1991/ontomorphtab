@@ -179,22 +179,26 @@ public class SceneObserver implements Observer {
 			TangibleView tv = tvm.getTangibleViewFor(t);
 			
 			//if we have moved, test to see if any tangibles contain any other tangibles now
+			/*
 			if (Tangible.CHANGED_MOVE.equals(arg)) {
+				
 				
 				if (tv != null) {
 					
 					Set<Tangible> containerTangibles = tvm.getContainerTangibles(tv);
 				
 					t.updateContainerTangibles(containerTangibles);
-				}
+				}				
 			}
+			*/
+			
 			if (tv != null) {
 				tv.update();
 			}
 		}
 		
 		//probably good to do this on every change
-		_view.getView3D().updateRoot();
+		//_view.getView3D().updateRoot(); //commented out to drasticly improve curve reloading performance
 	}
 
 	/**

@@ -46,7 +46,7 @@ public abstract class OMTUtility {
 	 */
 	 public static Vector3f rotateVector(Vector3f v, float angle, Vector3f aboutAxis)
 	 {
-		Vector3f r = v.clone();
+		Vector3f r = new Vector3f(v);
 		Quaternion quat = new Quaternion();
         quat.fromAngleAxis(FastMath.PI * (angle/180), aboutAxis);
         quat.mult(r, r);	
@@ -61,7 +61,7 @@ public abstract class OMTUtility {
 	  */
 	 public static Vector3f rotateVector(Vector3f v, Quaternion q)
 	 {
-		 Vector3f r = v.clone();
+		 Vector3f r = new Vector3f(v);
 		 q.mult(r,r);
 		 return r;
 	 }

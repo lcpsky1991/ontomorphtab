@@ -213,31 +213,6 @@ public class View3DMouseListener implements MouseInputListener {
 		 */
 	}
 	
-	/**
-	 * Child method from handleMouseInput
-	 */ 
-	private void onMouseWheel()
-	{
-		//====================================
-    	//	WHEEL
-    	//====================================
-		{
-			float dx=MouseInput.get().getWheelDelta() / (View.getInstance().getKeyInputListener().getKeyPressActionRate() * 20); //scale it by some factor so it's less jumpy
-			if (dx != 0)	
-			{
-				//zoom camera if Z press
-				if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
-				{
-					View.getInstance().getCameraNode().zoomIn(dx);	
-				}
-				//move camera if Z NOT pressed
-				else
-				{
-					View.getInstance().getCameraNode().moveForward(dx);
-				}
-			}
-		}
-	}
 
 	private void doPick() 
 	{
@@ -452,10 +427,11 @@ public class View3DMouseListener implements MouseInputListener {
 		
 		//======================================
 		//======================================
-		float mx = MouseInput.get().getXDelta();
-		float my = MouseInput.get().getYDelta();
+		int mx = MouseInput.get().getXAbsolute();
+		int my = MouseInput.get().getYAbsolute();
 		
-		float dx = mx;
+		float dx = MouseInput.get().getXDelta();
+		float dy = MouseInput.get().getYDelta();
 		
 		//do the manipulation to all selected objects
 		for (Tangible manip : TangibleManager.getInstance().getSelected())
@@ -463,8 +439,7 @@ public class View3DMouseListener implements MouseInputListener {
 //			check to see where the camera is positioned and compare it to the Tangible's plane
 			//if it is under, reverse the X direction so movement is intuitive
 			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().getCameraNode().getCamera().getDirection()), manip.getWorldNormal()); 
-			if (reverse) dx = -mx;	//switch X movement if it is on the opposite side of the plane
-
+			if (reverse) dx = -dx;	//switch X movement if it is on the opposite side of the plane
 
 			switch ( manipulation )
 			{
@@ -476,17 +451,18 @@ public class View3DMouseListener implements MouseInputListener {
 				if ("demo".equals(OntoMorph2.getWBCProperties().getProperty(OntoMorph2.SCENE))) {
 					moveUsingMouseAbsolutePosition(manip);
 				} else {
-					moveUsingMouseScreenPosition(manip, dx, my);
+					//moveUnderMouse(manip, dx, dy, mx, my); //new method
+					manip.move(dx, dy, new OMTVector(1,1,0)); //old method
 				}
 				break;
 			case METHOD_ROTATEX:
-				manip.rotate(dx, my, new OMTVector(1,0,0));
+				manip.rotate(dx, dy, new OMTVector(1,0,0));
 				break;
 			case METHOD_ROTATEY:
-				manip.rotate(dx, my, new OMTVector(0,1,0));
+				manip.rotate(dx, dy, new OMTVector(0,1,0));
 				break;
 			case METHOD_ROTATEZ:
-				manip.rotate(dx, my, new OMTVector(0,0,1));
+				manip.rotate(dx, dy, new OMTVector(0,0,1));
 				break;
 			case METHOD_LOOKAT:
 				//FIXME: /* needs to be re-engineered to deal with multiple selections */
@@ -500,7 +476,7 @@ public class View3DMouseListener implements MouseInputListener {
 				};
 				break;
 			case METHOD_SCALE:
-				manip.scale(dx, my, new OMTVector(1,1,1));
+				manip.scale(dx, dy, new OMTVector(1,1,1));
 				break;
 			}
 		}
@@ -508,16 +484,54 @@ public class View3DMouseListener implements MouseInputListener {
 	
 	//new movement strategy.  
 	//doesn't work with coordinate systems yet as far as I can tell
-	private void moveUsingMouseAbsolutePosition(Tangible manip) {
+	private void moveUsingMouseAbsolutePosition(Tangible manip) 
+	{
 		Vector3f newPosition = this.getAbsoluteWorldMouseDesiredPosition(manip);
+		
 		manip.setRelativePosition(newPosition.x, newPosition.y, newPosition.z);
 	}
 	
-	//old movement strategy encapsulated in a method
-	private void moveUsingMouseScreenPosition(Tangible manip, float dx, float my) {
-		manip.move(dx, my, new OMTVector(1,1,0));
+	/**
+	 * 
+	 * @param manip
+	 * @param dx delta X
+	 * @param dy delta Y
+	 * @param mx position of mouse now X
+	 * @param my position of mouse now Y
+	 */
+	private void moveUnderMouse(Tangible manip, float dx, float dy, int mx, int my)
+	{
+		//designed to replace manip.move() - which needs to be overwritten in NeuronMorphology
+		Quaternion rot = new Quaternion(0,0,0,1);		//for non-coordinated Tangibles
+		Quaternion inv = new Quaternion();				//inverse rotation of coordinate system
+		Vector3f offset = new Vector3f(0,0,0); 			//offset of origin of coordinate system
+		Camera cam = View.getInstance().getCameraNode().getCamera();
+		
+		if (manip.getCoordinateSystem() != null) 
+		{
+			rot = manip.getCoordinateSystem().getRotationFromAbsolute();
+			offset = manip.getCoordinateSystem().getOriginVector();
+		}
+		inv = new Quaternion(rot.inverse());
+		
+		Vector3f fromPos = new Vector3f(manip.getRelativePosition());
+		fromPos.subtractLocal(offset);
+		fromPos = OMTUtility.rotateVector(fromPos, inv);
+		
+		float dist = cam.getScreenCoordinates(fromPos).z;
+		
+		//a 3D mouse needs an X, Y and a distance where distance is [0,1] where 0 is close
+		Vector3f mWorldPos = new Vector3f(cam.getWorldCoordinates(new Vector2f(mx, my), dist));
+		Vector3f toPos = new Vector3f(mWorldPos);
+		
+		toPos.subtractLocal(offset);
+		toPos = OMTUtility.rotateVector(toPos, inv);
+		PositionVector change = new PositionVector(toPos);
+		//System.out.println(change.subtract(fromPos) + " " + dx + " " + dy);
+		
+		manip.setRelativePosition(toPos.x, toPos.y, toPos.z);
 	}
-
+	
 	//this method returns the position that the mouse would be located in
 	//the world if it had the same distance away from the camera that the selected objects have.
 	//takes advantage of JME's Camera.getWorldCoordinates() method.

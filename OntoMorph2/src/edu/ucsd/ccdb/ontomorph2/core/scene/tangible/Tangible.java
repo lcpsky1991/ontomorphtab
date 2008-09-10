@@ -10,7 +10,9 @@ import java.util.Observable;
 import java.util.Set;
 
 import com.jme.math.Quaternion;
+import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 import com.jme.scene.Node;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
@@ -26,6 +28,7 @@ import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.observers.SemanticObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
  * Defines an object that can be viewed in the scene.  This object can be made relative
@@ -466,8 +469,10 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		changed(CHANGED_MOVE);
 	}
 	
+	/*
 	public void move(float dx, float dy, float dz)
 	{
+	//Use setRelative Position instead?
 		//get the position, add the change, store the new position
 		PositionVector np = new PositionVector( this.getRelativePosition().asVector3f().add(dx,dy,dz) );
 				
@@ -475,6 +480,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		this.setRelativePosition( np );
 		changed(CHANGED_MOVE);
 	}
+	*/
 	
 	
 	public int hashCode() {
