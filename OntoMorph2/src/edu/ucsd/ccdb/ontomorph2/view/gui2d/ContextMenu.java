@@ -69,9 +69,10 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_ANIMATE = 109;
 	public static final int CTX_ACTION_NONE = 0;
 	public static final int CTX_ACTION_DEBUG = 110;
-	public static final int CTX_ACTION_MANIP_ROTATEY = 111;
-	public static final int CTX_ACTION_MANIP_SCALE = 112;
-	public static final int CTX_ACTION_MANIP_MOVE = 113;
+	//public static final int CTX_ACTION_MANIP_ROTATEY = 111;
+	public static final int CTX_ACTION_MANIP = 99;
+	//public static final int CTX_ACTION_MANIP_SCALE = 112;
+	//public static final int CTX_ACTION_MANIP_MOVE = 113;
 	public static final int CTX_ACTION_ATTACH = 114;
 	public static final int CTX_ACTION_PROPOGATE = 115;
 	
@@ -103,6 +104,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	static final String msEDIT = "Toggle Edit";
 	static final String msManipulate = "Manipulate ...";
 	static final String msRotateY = "Rotate-Y";
+	static final String msRotateX = "Rotate-X";
+	static final String msRotateZ = "Rotate-Z";
 	static final String msScale = "Scale";
 	static final String msMove = "Move";
 	static final String msNone = "(Nothing Selected)";
@@ -113,6 +116,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	//These are the titles of the user-defined fields of the menu items
 	static final String mFIELD_ACTION = "action";
 	static final String mFIELD_REFERENCE = "reference tangible";
+	static final String mFIELD_VALUE = "value";
 	
 	TitledBorder border = null;
 	
@@ -294,28 +298,28 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			// secondary must be built before primary in order to attach them as non-empty
 			//===================================
 			
-			menuItemFactory(mnuNew, msN_CURVE, CTX_ACTION_NEW_CURVE, null); //new curves are a generic action
-	        menuItemFactory(this, msANNOTATE, CTX_ACTION_ANNOTATE, null);
-	        menuItemFactory(this, msPROPERTIES, CTX_ACTION_DISPROP, null);
-	        menuItemFactory(this, msDebug, CTX_ACTION_DEBUG, null);
+			menuItemFactory(mnuNew, msN_CURVE, CTX_ACTION_NEW_CURVE); //new curves are a generic action
+	        menuItemFactory(this, msANNOTATE, CTX_ACTION_ANNOTATE);
+	        menuItemFactory(this, msPROPERTIES, CTX_ACTION_DISPROP);
+	        menuItemFactory(this, msDebug, CTX_ACTION_DEBUG);
 			
 	        //add new anchor points?
 			if (baseContext instanceof Curve3D)
 			{
 				//build curve special menu
-				menuItemFactory(mnuNew, msN_ANCHOR, CTX_ACTION_NEW_ANCHOR, null);
+				menuItemFactory(mnuNew, msN_ANCHOR, CTX_ACTION_NEW_ANCHOR);
 			}
 			
 			//toggle edit mode
 			if (baseContext instanceof NeuronMorphology || baseContext instanceof Curve3D)
 			{
-				menuItemFactory(this, msEDIT, CTX_ACTION_MODE, null);
+				menuItemFactory(this, msEDIT, CTX_ACTION_MODE);
 			}
 			
 			if (baseContext instanceof NeuronMorphology)
 			{
 				//build morphology special menu
-				menuItemFactory(this, "Propogate", CTX_ACTION_PROPOGATE, null);
+				menuItemFactory(this, "Propogate", CTX_ACTION_PROPOGATE);
 			}
 			
 			
@@ -323,7 +327,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			if (baseContext instanceof Slide || baseContext instanceof Curve3D)
 			{
 				//build slide special menu
-				menuItemFactory(mnuNew_Cell, msN_CELL_DG, CTX_ACTION_NEW_CELL, null);
+				menuItemFactory(mnuNew_Cell, msN_CELL_DG, CTX_ACTION_NEW_CELL);
 			}
 			
 			
@@ -331,16 +335,18 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	        if (baseContext instanceof NeuronMorphology)
 	        {
 	        	Set<Curve3D> candidates = View.getInstance().getScene().getCurves();
-		        for (Curve3D c : candidates) menuItemFactory(mnuAttach, c.getName(), CTX_ACTION_ATTACH, c);
+		        for (Curve3D c : candidates) menuItemFactory(mnuAttach, c.getName(), CTX_ACTION_ATTACH, c, 0);
 	        }
 			
 			
 			
 			//MANIPULATE
 			{//they are later distinguished by name, action is the same
-				menuItemFactory(mnuManipulate, msMove, CTX_ACTION_MANIP_MOVE, null);
-				menuItemFactory(mnuManipulate, msRotateY, CTX_ACTION_MANIP_ROTATEY, null);
-				menuItemFactory(mnuManipulate, msScale, CTX_ACTION_MANIP_SCALE, null);
+				menuItemFactory(mnuManipulate, msMove, CTX_ACTION_MANIP, null, View3DMouseListener.METHOD_MOVE);
+				menuItemFactory(mnuManipulate, msScale, CTX_ACTION_MANIP, null, View3DMouseListener.METHOD_SCALE);
+				menuItemFactory(mnuManipulate, msRotateX, CTX_ACTION_MANIP, null, View3DMouseListener.METHOD_ROTATEX);
+				menuItemFactory(mnuManipulate, msRotateY, CTX_ACTION_MANIP, null, View3DMouseListener.METHOD_ROTATEY);
+				menuItemFactory(mnuManipulate, msRotateZ, CTX_ACTION_MANIP, null, View3DMouseListener.METHOD_ROTATEZ);
 			}
 			
 	        //DYNAMIC RE-SELECT
@@ -349,7 +355,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		        {
 		        	Tangible single = seltans.get(i);
 		        	String name = single.getName();
-		        	menuItemFactory(mnuPart, name, CTX_ACTION_SELECT, single);
+		        	menuItemFactory(mnuPart, name, CTX_ACTION_SELECT, single, 0);
 		        }
 	        }
 	        
@@ -368,7 +374,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	        {
 	        	Tangible single = others.get(i);
 	        	String name = single.getName();
-		        menuItemFactory(mnuSelect, name, CTX_ACTION_SELECT, single);	
+		        menuItemFactory(mnuSelect, name, CTX_ACTION_SELECT, single, 0);	
 	        }
         }
 		
@@ -428,10 +434,11 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	 * @param title
 	 * @param action the action to perform on the Tangible, which is paramaterized by tangChange 
 	 * @param effectedTangibles the {@link Tangible} within the world to perform action upon
+	 * @param value an extra parmeter for the menu item, commonly, this is how much of the specified action is to be performed or 
 	 * @param parent If null, will create a new parent menu
 	 * @see View3DMouseHandler 
 	 */
-	private void menuItemFactory(Menu mparent, String title, int action, Tangible effectedTangibles)
+	private void menuItemFactory(Menu mparent, String title, int action, Tangible effectedTangibles, double value)
 	{
 		try
 		{
@@ -451,14 +458,27 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				mparent.addItem(mitem); 
 				mitem.addUserData(mFIELD_REFERENCE, effectedTangibles); 	//tie a Tangible to the menu button
 				mitem.addUserData(mFIELD_ACTION, action);			//tie an associated action to the menu button
+				mitem.addUserData(mFIELD_VALUE, value);
 			}
 		}
 		catch (Exception e)
 		{
 			Log.warn("Exception; Error creating submenu; " + e.getMessage());
 		}
-        
 	}
+	
+	/**
+	 * Overloads menuItemFactory with fewer arguments for simplicity and default values
+	 * Many items will not need to reference a tangible directly
+	 * @param mparent
+	 * @param title
+	 * @param action
+	 */
+	private void menuItemFactory(Menu mparent, String title, int action)
+	{
+		menuItemFactory(mparent, title, action, null, 0);
+	}
+	
 	public void menuItemPressed(MenuItemPressedEvent arg0) {
 		
 		String opt = arg0.getItem().getText();
@@ -469,6 +489,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		//get all of the fields form the MenuItem
 		int fieldAct = (Integer)trigger.getUserData(mFIELD_ACTION); //find out what action we should do on the tangible
 		Tangible fieldOrig = (Tangible)trigger.getUserData(mFIELD_REFERENCE);
+		double fieldV = (Double)trigger.getUserData(mFIELD_VALUE);
 		
 		//===========================
 		//SINGLE - ACTION CODE (this code does not iterate over all, only concerned with menu-referenced object)
@@ -483,7 +504,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		else
 		{//MULTIPLE - ACTION CODE
-			doActionOnSelected(fieldAct, fieldOrig); //most things wont care about the 'reference' object so we concern ourselves with whats currently selected
+			doActionOnSelected(fieldAct, fieldOrig, fieldV); //most things wont care about the 'reference' object so we concern ourselves with whats currently selected
 		}
 
 		this.closeBackward();
@@ -543,7 +564,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		System.out.println(info);
 	}
 	
-	public void doActionOnSelected(int action, Tangible target)
+	public void doActionOnSelected(int action, Tangible target, double value)
 	{
 		List<Tangible> selected = TangibleManager.getInstance().getSelected();
 		for (int t = 0; t < selected.size(); t++)
@@ -576,19 +597,13 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					break;
 				}
 				case CTX_ACTION_PROPOGATE:
-					propogate(single);
+					propogate(single, 20);
 					break;
 				case CTX_ACTION_NEW_CELL:
 					createCellOn(single);
 					break;
-				case CTX_ACTION_MANIP_MOVE:
-					View.getInstance().getView3DMouseListener().setManipulation(View3DMouseListener.METHOD_MOVE);
-					break;
-				case CTX_ACTION_MANIP_ROTATEY:
-					View.getInstance().getView3DMouseListener().setManipulation(View3DMouseListener.METHOD_ROTATEY);
-					break;
-				case CTX_ACTION_MANIP_SCALE:
-					View.getInstance().getView3DMouseListener().setManipulation(View3DMouseListener.METHOD_SCALE);
+				case CTX_ACTION_MANIP:
+					View.getInstance().getView3DMouseListener().setManipulation((int)value);
 					break;
 				case CTX_ACTION_DEBUG:
 					debug(single);
@@ -609,13 +624,12 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	 * Propogates a cell with normal distribution
 	 * @param original
 	 */
-	public void propogate(Tangible original)
+	public void propogate(Tangible original, int howMany)
 	{
 			if (original instanceof NeuronMorphology)
 			{
 				NeuronMorphology cell = (NeuronMorphology) original;
-				int numCells = 20;
-				for (int i = 0; i < numCells; i++)
+				for (int i = 0; i < howMany; i++)
 				{
 					NeuronMorphology copy = cellFactory(cell.getName(),cell.getCurve());	//create a copy of the cells
 					
@@ -627,14 +641,15 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					{
 						copy.positionAlongCurve(cell.getCurve(), cell.getTime()); //start in same place
 						rx = (float)OMTUtility.randomNumberGuassian(0, 100);
+						copy.move(rx, ry, 0, 0);
 					}
 					else
 					{	//put it at the original place
 						copy.setRelativePosition(cell.getRelativePosition());	//start in same place
-						rx = (float)OMTUtility.randomNumberGuassian(0, 10);
-						ry = (float)OMTUtility.randomNumberGuassian(0, 10);
+						rx = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getRelativePosition().getX();
+						ry = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getRelativePosition().getY();
+						copy.setRelativePosition(rx, ry, copy.getRelativePosition().getZ()); //keep the same Z
 					}
-					copy.move(rx, ry, 0, 0);
 				}
 			}
 	}
