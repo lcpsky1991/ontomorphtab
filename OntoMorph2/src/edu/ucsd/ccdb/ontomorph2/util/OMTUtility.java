@@ -62,7 +62,7 @@ public abstract class OMTUtility {
 	 public static Vector3f rotateVector(Vector3f v, Quaternion q)
 	 {
 		 Vector3f r = new Vector3f(v);
-		 q.mult(r,r);
+		 r = q.mult(r,r);
 		 return r;
 	 }
 	 

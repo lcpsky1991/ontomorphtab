@@ -71,7 +71,7 @@ public class TestCurve3D extends TestCase {
 			capOrig = ptsDemo.get(1);
 			orig = capOrig.getAbsolutePosition();
 			//orig = capOrig.getRelativePosition();
-			capOrig.move(5f, 10f, new OMTVector(1,1,0));
+			//capOrig.move(5f, 10f, new OMTVector(1,1,0));
 			dest = capOrig.getAbsolutePosition();
 			//dest = capOrig.getRelativePosition();
 			System.out.println("orig: " + orig + "   -->  " + dest);
@@ -80,7 +80,7 @@ public class TestCurve3D extends TestCase {
 			capOrig = ptsNoCoords.get(1);
 			orig = capOrig.getAbsolutePosition();
 			//orig = capOrig.getRelativePosition();
-			capOrig.move(10f, 10f, new OMTVector(1,1,0));
+			//capOrig.move(10f, 10f, new OMTVector(1,1,0));
 			dest = capOrig.getAbsolutePosition();
 			//dest = capOrig.getRelativePosition();
 			System.out.println("no orig: " + orig + "   -->  " + dest);			
@@ -131,14 +131,14 @@ public class TestCurve3D extends TestCase {
 			float oldZ1 = anchorPoint1.getRelativePosition().z;
 			
 			//do move
-			anchorPoint1.move(0.5f, 0.5f, new OMTVector(1,1,0));
+			//anchorPoint1.move(0.5f, 0.5f, new OMTVector(1,1,0));
 			
 			//test
 			assertEquals("Testing predicted movement on point 1 of curve " + i, 
 					new PositionVector(oldX1 + 0.5f, oldY1 + 0.5f, oldZ1), temp2.get(1).getRelativePosition());
 			
 			//do move
-			anchorPoint1.move(0.5f, 0.5f, new OMTVector(1,1,0));
+			//anchorPoint1.move(0.5f, 0.5f, new OMTVector(1,1,0));
 			//test
 			assertEquals("Testing second predicted movement on point 1 of curve " + i, 
 					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1), temp2.get(1).getRelativePosition());
@@ -149,7 +149,7 @@ public class TestCurve3D extends TestCase {
 			float oldZ2 = anchorPoint2.getRelativePosition().z;
 			
 			//do move
-			anchorPoint2.move(0.5f, -0.5f, new OMTVector(1,1,0));
+			//anchorPoint2.move(0.5f, -0.5f, new OMTVector(1,1,0));
 			
 			//test
 			assertEquals("Testing predicted movement on point 2 of curve " + i, 
@@ -159,7 +159,7 @@ public class TestCurve3D extends TestCase {
 					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1), temp2.get(1).getRelativePosition());
 			
 			//do move
-			anchorPoint2.move(0.5f, -0.5f, new OMTVector(1,1,0));
+			//anchorPoint2.move(0.5f, -0.5f, new OMTVector(1,1,0));
 			
 			//test
 			assertEquals("Testing predicted movement on point 2 of curve " + i, 

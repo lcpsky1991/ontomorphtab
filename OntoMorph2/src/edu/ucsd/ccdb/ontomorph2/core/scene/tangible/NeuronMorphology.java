@@ -3,13 +3,18 @@ package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 import java.math.BigInteger;
 import java.util.Set;
 
+import com.jme.math.Quaternion;
+import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
+import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
  * Describes the morphology of the cell, independent of different ways of visualizing it.  
@@ -121,14 +126,15 @@ public abstract class NeuronMorphology extends Tangible{
 	 * Overrides the general Tangible move() because most cells will be attached to a curve
 	 * therefore, in most cases cells only move along a curve's time
 	 */
-	public void move(float dx, float dy, OMTVector constraint)
+	
+	public void move(float dx, float dy, int mx, int my)
 	{
 		//get changes in mouse movement
 		
 		//if this cell is a free-floating cell, then move it as normal
 		if (this.isFreeFloating())
 		{
-			super.move(dx,dy, constraint);
+			super.move(dx,dy, mx, my);
 		}
 		else 
 		{
@@ -143,6 +149,7 @@ public abstract class NeuronMorphology extends Tangible{
 		//apply the movement
 		changed(CHANGED_MOVE);
 	}
+	
 	
 	
 	/**

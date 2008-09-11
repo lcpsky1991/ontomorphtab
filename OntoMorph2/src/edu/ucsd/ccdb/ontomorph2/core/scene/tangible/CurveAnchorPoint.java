@@ -30,10 +30,28 @@ public class CurveAnchorPoint extends Tangible {
 		this.i = i;
 	}
 	
+	/**
+	 * 
+	 * @param dx
+	 * @param dy
+	 * @param constraint
+	 * @deprecated with change to moving tangibles under mouse
+	 */
+	/*
 	public void move(float dx, float dy, OMTVector constraint)
 	{
 		super.move(dx,dy,constraint);
 		
+		parentCurve.setControlPoint(this.i, this.getRelativePosition());
+	}
+	*/
+	
+	/**
+	 * 
+	 */
+	public void move(float dx, float dy, int mx, int my)
+	{
+		super.move(dx,dy,mx,my);
 		parentCurve.setControlPoint(this.i, this.getRelativePosition());
 	}
 	

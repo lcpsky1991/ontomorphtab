@@ -444,6 +444,63 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		changed(CHANGED_ROTATE);
 	}
 	
+	
+	/**
+	 * Changes the local translation this Tangible
+	 * @param manip
+	 * @param dx delta X
+	 * @param dy delta Y
+	 * @param mx position of mouse now X
+	 * @param my position of mouse now Y
+	 * @author Stephen Larson, @author caprea
+	 */
+	public void move(float dx, float dy, int mx, int my)
+	{
+		//this method returns the position that the mouse would be located in
+		//the world if it had the same distance away from the camera that the selected objects have.
+		//takes advantage of JME's Camera.getWorldCoordinates() method.
+		
+		Tangible manip = this;
+		
+		//designed to replace manip.move() - which needs to be overwritten in NeuronMorphology
+		Quaternion rot = new Quaternion(0,0,0,1);		//for non-coordinated Tangibles
+		Quaternion inv = new Quaternion();				//inverse rotation of coordinate system
+		Vector3f offset = new Vector3f(0,0,0); 			//offset of origin of coordinate system
+		Camera cam = View.getInstance().getCameraNode().getCamera();
+		
+		
+		//Find the rotation of the coordinate system and the offset of the origin 
+		//
+		if (manip.getCoordinateSystem() != null) 
+		{
+			rot = manip.getCoordinateSystem().getRotationFromAbsolute();
+			offset = manip.getCoordinateSystem().getOriginVector();
+		}
+		inv = new Quaternion(rot.inverse());	//inverse the rotation to put things into regular world coordinates
+		
+		//if the mouse were at the same z-position (relative to the camera) as the average 
+		//position of all selected objects, 
+		//find its world position in absolute coordinates.
+		
+		Vector3f fromPos = new Vector3f(manip.getAbsolutePosition());
+		//note: previously used getRelativePosition and inverted its rotation, this caused jumps along Z - dont know why
+		
+		float dist = cam.getScreenCoordinates(fromPos).getZ();
+		
+		//a 3D mouse needs an X, Y and a distance where distance is [0,1] where 0 is close
+		//detemine that position based on the X,Y and the predicted distance away from the camera
+		Vector3f mWorldPos = cam.getWorldCoordinates(new Vector2f(mx, my), dist);
+		Vector3f toPos = mWorldPos;
+		
+		//adjust the new position by the adjustments in the coordinate system
+		toPos = toPos.subtract(offset);
+		toPos = OMTUtility.rotateVector(toPos, inv);
+		
+		//put it in it's place
+		manip.setRelativePosition(toPos.getX(), toPos.getY(), toPos.getZ());
+		changed(CHANGED_MOVE);
+	}
+	
 	/**
 	 * Changes the local translation this Tangible
 	 * The dimensions of freedom allow the 2D movement of the mouse to map to the 3D movement intended
@@ -451,6 +508,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 * Will typically range from (0,0,0) to (1,1,1). Where (1,1,0) corresponds to 2D movement on 
 	 * the current X,Y plane
 	 */
+	/*
 	public void move(float dx, float dy, OMTVector constraint)
 	{
 		//get changes in mouse movement
@@ -468,6 +526,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		this.setRelativePosition( np );
 		changed(CHANGED_MOVE);
 	}
+	*/
 	
 	/*
 	public void move(float dx, float dy, float dz)
@@ -509,7 +568,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	
 	/**
 	 * Returns the SemanticClass corresponding to this Tangible.
-	 * @return
+	 * @return {@link SemanticClass}
 	 */
 	public SemanticClass getSemanticClass() {
 		return getSemanticInstance().getSemanticClass();

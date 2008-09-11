@@ -451,8 +451,9 @@ public class View3DMouseListener implements MouseInputListener {
 				if ("demo".equals(OntoMorph2.getWBCProperties().getProperty(OntoMorph2.SCENE))) {
 					moveUsingMouseAbsolutePosition(manip);
 				} else {
+					manip.move(dx,dy,mx,my); //new member method
 					//moveUnderMouse(manip, dx, dy, mx, my); //new method
-					manip.move(dx, dy, new OMTVector(1,1,0)); //old method
+					//manip.move(dx, dy, new OMTVector(1,1,0)); //old method
 				}
 				break;
 			case METHOD_ROTATEX:
@@ -491,46 +492,7 @@ public class View3DMouseListener implements MouseInputListener {
 		manip.setRelativePosition(newPosition.x, newPosition.y, newPosition.z);
 	}
 	
-	/**
-	 * 
-	 * @param manip
-	 * @param dx delta X
-	 * @param dy delta Y
-	 * @param mx position of mouse now X
-	 * @param my position of mouse now Y
-	 */
-	private void moveUnderMouse(Tangible manip, float dx, float dy, int mx, int my)
-	{
-		//designed to replace manip.move() - which needs to be overwritten in NeuronMorphology
-		Quaternion rot = new Quaternion(0,0,0,1);		//for non-coordinated Tangibles
-		Quaternion inv = new Quaternion();				//inverse rotation of coordinate system
-		Vector3f offset = new Vector3f(0,0,0); 			//offset of origin of coordinate system
-		Camera cam = View.getInstance().getCameraNode().getCamera();
-		
-		if (manip.getCoordinateSystem() != null) 
-		{
-			rot = manip.getCoordinateSystem().getRotationFromAbsolute();
-			offset = manip.getCoordinateSystem().getOriginVector();
-		}
-		inv = new Quaternion(rot.inverse());
-		
-		Vector3f fromPos = new Vector3f(manip.getRelativePosition());
-		fromPos.subtractLocal(offset);
-		fromPos = OMTUtility.rotateVector(fromPos, inv);
-		
-		float dist = cam.getScreenCoordinates(fromPos).z;
-		
-		//a 3D mouse needs an X, Y and a distance where distance is [0,1] where 0 is close
-		Vector3f mWorldPos = new Vector3f(cam.getWorldCoordinates(new Vector2f(mx, my), dist));
-		Vector3f toPos = new Vector3f(mWorldPos);
-		
-		toPos.subtractLocal(offset);
-		toPos = OMTUtility.rotateVector(toPos, inv);
-		PositionVector change = new PositionVector(toPos);
-		//System.out.println(change.subtract(fromPos) + " " + dx + " " + dy);
-		
-		manip.setRelativePosition(toPos.x, toPos.y, toPos.z);
-	}
+	
 	
 	//this method returns the position that the mouse would be located in
 	//the world if it had the same distance away from the camera that the selected objects have.

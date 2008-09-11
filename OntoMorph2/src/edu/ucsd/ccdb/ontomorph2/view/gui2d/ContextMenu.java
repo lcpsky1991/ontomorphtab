@@ -634,7 +634,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 						rx = (float)OMTUtility.randomNumberGuassian(0, 10);
 						ry = (float)OMTUtility.randomNumberGuassian(0, 10);
 					}
-					copy.move(rx, ry, new OMTVector(1,1,0));
+					copy.move(rx, ry, 0, 0);
 				}
 			}
 	}
