@@ -244,7 +244,21 @@ public class Curve3D extends Tangible{
 	 */
 	public void setAnchorPointsVisibility(boolean visible) {
 		this.seeAnchorPoints = visible;
-		changed();
+		this.changed();
+		
+	}
+	
+	
+	public PositionVector getCenterPoint()
+	{
+		Vector3f mean=new Vector3f(0,0,0);
+		for (CurveAnchorPoint p: getAnchorPoints())
+		{
+			mean = mean.add(p.getRelativePosition().asVector3f());
+		}
+		
+		mean = mean.divide(getAnchorCount()); //divie to get eh average
+		return (new PositionVector(mean));
 	}
 	
 	/**
@@ -331,8 +345,8 @@ public class Curve3D extends Tangible{
 	{
 		//null theCurve to force a getCurve to recreate the 
 		// underlying curve instance
-		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);  //FIXME: possible site of tension with model/view/controller
 		this.theCurve = null;
+		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);  //FIXME: possible site of tension with model/view/controller
 		super.changed();
 	}
 

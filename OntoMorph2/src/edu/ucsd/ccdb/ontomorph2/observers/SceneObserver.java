@@ -148,7 +148,7 @@ public class SceneObserver implements Observer {
 				tv = TangibleViewManager.getInstance().getTangibleViewFor(c);
 				if (tv != null)	tv.update();
 			}
-		} 
+		}
 		else if (o instanceof ICable) {
 
 			if (Tangible.CHANGED_SELECT.equals(arg)) {

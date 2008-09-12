@@ -69,10 +69,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_ANIMATE = 109;
 	public static final int CTX_ACTION_NONE = 0;
 	public static final int CTX_ACTION_DEBUG = 110;
-	//public static final int CTX_ACTION_MANIP_ROTATEY = 111;
 	public static final int CTX_ACTION_MANIP = 99;
-	//public static final int CTX_ACTION_MANIP_SCALE = 112;
-	//public static final int CTX_ACTION_MANIP_MOVE = 113;
 	public static final int CTX_ACTION_ATTACH = 114;
 	public static final int CTX_ACTION_PROPOGATE = 115;
 	
@@ -313,7 +310,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			//toggle edit mode
 			if (baseContext instanceof NeuronMorphology || baseContext instanceof Curve3D)
 			{
-				menuItemFactory(this, msEDIT, CTX_ACTION_MODE);
+				menuItemFactory(this, msEDIT, CTX_ACTION_MODE, baseContext, 0);
 			}
 			
 			if (baseContext instanceof NeuronMorphology)
@@ -593,7 +590,12 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					//get the curve that corresponds to the originating curve
 					if ( single instanceof Curve3D) ec = (Curve3D) single;
 					
-					if ( ec != null) ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
+					if ( ec != null)
+					{
+						ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
+						ec.changed();
+						System.out.println("setting mode to " + ec.getAnchorPointsVisibility());
+					}
 					break;
 				}
 				case CTX_ACTION_PROPOGATE:
@@ -650,6 +652,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 						ry = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getRelativePosition().getY();
 						copy.setRelativePosition(rx, ry, copy.getRelativePosition().getZ()); //keep the same Z
 					}
+					copy.rotate(rx, 0, new OMTVector(0,1,0)); //for aesthetics rotate them about Y to make them seem more random
 				}
 			}
 	}

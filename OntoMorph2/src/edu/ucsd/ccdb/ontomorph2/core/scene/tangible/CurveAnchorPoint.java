@@ -55,6 +55,13 @@ public class CurveAnchorPoint extends Tangible {
 		parentCurve.setControlPoint(this.i, this.getRelativePosition());
 	}
 	
+	public PositionVector getDeltafromCenter()
+	{
+		//return (thisPosition - center)
+		return new PositionVector(this.getRelativePosition().asVector3f().subtract(parentCurve.getCenterPoint().asVector3f()));
+	}
+	
+	
 	/**
 	 * Meant to be used to access the functionality of the curve this anchor point belongs to
 	 * Should not be used for creating new curves, but ok for creating new anchor points
@@ -113,4 +120,5 @@ public class CurveAnchorPoint extends Tangible {
 		return info;	//if it has a name return it
 	}
 	
+
 }
