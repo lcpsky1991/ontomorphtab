@@ -75,6 +75,7 @@ public class View3D extends Node{
 			}
 			slidesNode.attachChild(slideView);
 		}
+		this.updateNode(slidesNode);
 	}
 	
 	/**
@@ -93,6 +94,7 @@ public class View3D extends Node{
 			Node n = cellView.getNode();
 			cellsNode.attachChild(n);
 		}
+		this.updateNode(cellsNode);
 	}
 
 	/**
@@ -137,6 +139,7 @@ public class View3D extends Node{
 			}
 			meshesNode.attachChild(meshView.getNode());
 		}
+		this.updateNode(meshesNode);
 	}
 
 	public void setVolumes(Set<Volume> volumes) {
@@ -163,8 +166,9 @@ public class View3D extends Node{
 		SceneMonitor.getMonitor().showViewer(true);
 	}
 	
-	public void updateRoot() {
-		this.updateGeometricState(0.5f, false);
-		this.updateRenderState();
+	public void updateNode(Node n) {
+		n.updateGeometricState(0.5f, false);
+		n.updateWorldBound();
+		n.updateRenderState();
 	}
 }

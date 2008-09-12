@@ -3,6 +3,8 @@
  */
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
+import java.util.Set;
+
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
@@ -118,6 +120,12 @@ public class CurveAnchorPoint extends Tangible {
 			return "P" + this.i + " of " + this.getParentCurve().getName();
 		}
 		return info;	//if it has a name return it
+	}
+	
+
+	//stub to prevent execution of this method for CurveAnchorPoint.. perhaps will help performance issues
+	public void updateContainerTangibles(Set<Tangible> containerTangibles) {
+		
 	}
 	
 

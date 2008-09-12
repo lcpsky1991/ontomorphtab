@@ -65,6 +65,8 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	private List<SemanticClass> semanticThings = new ArrayList<SemanticClass>();
 	private SemanticClass mainSemanticClass = null;
 	private SemanticInstance mainSemanticInstance = null;
+	private Set<Tangible> previousContainerTangibles = null;
+	
 
 	private Color c = null;
 	private Color highlightedColor = Color.yellow;
@@ -596,8 +598,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		changed(CHANGED_CONTAINS);
 	}
 
-	Set<Tangible> previousContainerTangibles = null;
-	
 	public Set<Tangible> getPreviousContainerTangibles() {
 		return previousContainerTangibles;
 	}
@@ -607,7 +607,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	}
 	
 	public void updateContainerTangibles(Set<Tangible> containerTangibles) {
-		Set currentContainerTangibles = TangibleManager.getInstance().getContainerTangibles(this);
+		Set<Tangible> currentContainerTangibles = TangibleManager.getInstance().getContainerTangibles(this);
 		previousContainerTangibles = currentContainerTangibles;
 
 		boolean changed = false; //one boolean to test if a change has happened
@@ -623,7 +623,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		
 		//tangibles to add contains those elements in the update list that do not 
 		//appear in the list of current containers.  these must be added.
-		Set tangiblesToAdd = new HashSet(containerTangibles);
+		Set<Tangible> tangiblesToAdd = new HashSet<Tangible>(containerTangibles);
 		tangiblesToAdd.removeAll(currentContainerTangibles);
 		for (Iterator it = tangiblesToAdd.iterator(); it.hasNext();) {
 			TangibleManager.getInstance().addContainedTangible((Tangible)it.next(), this);

@@ -377,6 +377,12 @@ public class Curve3D extends Tangible{
 			anchors.get(i).unselect();
 		}
 	}
+	
+
+	//stub to prevent execution of this method for Curve3D.. perhaps will help performance issues
+	public void updateContainerTangibles(Set<Tangible> containerTangibles) {
+		
+	}
 
 }
 

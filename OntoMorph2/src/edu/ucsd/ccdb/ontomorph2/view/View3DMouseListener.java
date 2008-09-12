@@ -506,7 +506,7 @@ public class View3DMouseListener implements MouseInputListener {
 		//System.out.println("Screen position: " + mouseCurrentScreenPos);
 		
 		//get the average position of all the selected objects.
-		Vector3f objectsAbsoluteAveragePosition = manip.getRelativePosition(); //this.calculateAverageAbsolutePositionForSelectedObjects();
+		Vector3f objectsAbsoluteAveragePosition = this.calculateAverageAbsolutePositionForSelectedObjects();
 		//System.out.println("  Object absolute average position: " + objectsAbsoluteAveragePosition);
 		
 		//if the mouse were at the same z-position (relative to the camera) as the average 

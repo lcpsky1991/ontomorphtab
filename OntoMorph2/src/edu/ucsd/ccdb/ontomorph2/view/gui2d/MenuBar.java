@@ -160,14 +160,13 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         mnuManip.addMouseEnteredListener(FocusManager.get());
         mnuManip.addMouseExitedListener(FocusManager.get());
         
-        if (!OntoMorph2.isDemo()) {
         //=[ DEBUG ]=
         Menu mnuDebug = new Menu();
         mB.registerSubMenu(mnuDebug, "Debug");
         makeMenuItem(SHOW_SCENE_MONITOR, mnuDebug);
         mnuDebug.addMouseEnteredListener(FocusManager.get());
         mnuDebug.addMouseExitedListener(FocusManager.get());
-        }
+
 	}
 	
 	/**

@@ -1,22 +1,14 @@
 package edu.ucsd.ccdb.ontomorph2.observers;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
-
-import com.jme.bounding.BoundingVolume;
-import com.jme.scene.Geometry;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
@@ -25,9 +17,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
-import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.MeshViewImpl;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
@@ -179,10 +169,10 @@ public class SceneObserver implements Observer {
 			TangibleView tv = tvm.getTangibleViewFor(t);
 			
 			//if we have moved, test to see if any tangibles contain any other tangibles now
-			/*
+			//this code is required to do containment operations.   We need to find
+			//another way of improving performance beyond commenting it out because it
+			//is core functionality.
 			if (Tangible.CHANGED_MOVE.equals(arg)) {
-				
-				
 				if (tv != null) {
 					
 					Set<Tangible> containerTangibles = tvm.getContainerTangibles(tv);
@@ -190,7 +180,6 @@ public class SceneObserver implements Observer {
 					t.updateContainerTangibles(containerTangibles);
 				}				
 			}
-			*/
 			
 			if (tv != null) {
 				tv.update();
@@ -239,7 +228,7 @@ public class SceneObserver implements Observer {
 		_view.getView3D().setMeshes(s.getMeshes());
 
 		setCamera(s);
-		_view.getView3D().updateRoot();
+		_view.getView3D().updateNode(_view.getView3D());
 	}
 	
 	private void setCamera(Scene s) {
