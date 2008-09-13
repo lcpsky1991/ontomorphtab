@@ -248,13 +248,9 @@ public class Curve3D extends Tangible{
 		this.changed();
 	}
 	
-	public void toggleEdit()
+	
+	public void reapply()
 	{
-		boolean vis = getAnchorPointsVisibility();
-		
-		//reverse the visibility
-		setAnchorPointsVisibility(!vis);
-		
 		//redraw the curve
 		for (CurveAnchorPoint p : getAnchorPoints())
 		{
@@ -262,7 +258,6 @@ public class Curve3D extends Tangible{
 		}
 		
 	}
-	
 	
 	public PositionVector getCenterPoint()
 	{
@@ -311,6 +306,7 @@ public class Curve3D extends Tangible{
 	 */
 	public void addControlPoint(int index, OMTVector pos)
 	{
+		
 		OMTVector modlist[] = new OMTVector[controlPoints.length+1]; //make the new list one element larger 
 		
 		//if no index supplied append a new control point
@@ -353,6 +349,7 @@ public class Curve3D extends Tangible{
 		
 		//update the scene
 		changed();
+		
 	}
 	
 	
@@ -391,6 +388,7 @@ public class Curve3D extends Tangible{
 		{
 			anchors.get(i).unselect();
 		}
+		reapply();
 	}
 	
 

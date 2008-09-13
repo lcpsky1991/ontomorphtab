@@ -592,7 +592,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					
 					if ( ec != null)
 					{
-						ec.toggleEdit();
+						ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
+						ec.reapply();
 					}
 					break;
 				}
@@ -657,7 +658,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	
 	public void createPoint(Tangible src)
 	{
-		//if source is not an anchorpoint then dont do anything
+		//if source is not an  then dont do anything
 		if (!(src instanceof CurveAnchorPoint)) return;	
 		CurveAnchorPoint cp = (CurveAnchorPoint) src;
 		int i = cp.getIndex() + 1;
@@ -673,6 +674,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		place = new OMTVector(cp.getParentCurve().getPoint(t+delta));
 
 		cp.getParentCurve().addControlPoint(i, place);
+		cp.getParentCurve().reapply(); //TODO: remove this line
 	}
 	
 	/**

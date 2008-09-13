@@ -123,7 +123,6 @@ public class SceneObserver implements Observer {
 		
 		else if (o instanceof Curve3D)
 		{
-			
 			Curve3D changed = (Curve3D)o;
 			TangibleView tv = null; //used for updating 
 
@@ -131,18 +130,23 @@ public class SceneObserver implements Observer {
 			tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
 			if ( tv != null) tv.update();	//update the anchorpoint
 			
-			
+			//update the cells on this curve
 			for ( NeuronMorphology c: changed.getChildrenCells())
 			{
 				c.positionAlongCurve(c.getCurve(), c.getTime());
 				tv = TangibleViewManager.getInstance().getTangibleViewFor(c);
 				if (tv != null)	tv.update();
 			}
-			
 		}
 		
-		
-		
+		else if (o instanceof CurveAnchorPoint)
+		{
+			CurveAnchorPoint ap = (CurveAnchorPoint) o;
+			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) ap);
+			
+			if ( tv != null) tv.update();
+			System.out.println("update CurveAnchorPoint");
+		}
 		else if (o instanceof ICable) {
 
 			if (Tangible.CHANGED_SELECT.equals(arg)) {
@@ -185,7 +189,9 @@ public class SceneObserver implements Observer {
 				}				
 			}
 			
-			if (tv != null) {
+			if (tv != null) 
+			{
+				System.out.println("updating " + tv.getName());
 				tv.update();
 			}
 		}

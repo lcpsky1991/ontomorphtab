@@ -26,10 +26,12 @@ public class CurveAnchorPoint extends Tangible {
 	 * @param i - the index of the point in the curve
 	 */
 	public CurveAnchorPoint(Curve3D curve, OMTVector position, int i) {
+		super();
 		this.parentCurve = curve;
 		this.setCoordinateSystem(curve.getCoordinateSystem());
 		this.setRelativePosition(new PositionVector(position));
 		this.i = i;
+		
 	}
 	
 	/**
@@ -48,14 +50,6 @@ public class CurveAnchorPoint extends Tangible {
 	}
 	*/
 	
-	/**
-	 * 
-	 */
-	public void move(float dx, float dy, int mx, int my)
-	{
-		super.move(dx,dy,mx,my);
-		//parentCurve.setControlPoint(this.i, this.getRelativePosition());
-	}
 	
 	public PositionVector getDeltafromCenter()
 	{

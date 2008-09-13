@@ -88,7 +88,9 @@ public class CurveView extends TangibleView {
 	    this.updateModelBound();
 	}
 
-	private void renderAnchorPoints(Curve3D curve) {
+	private void renderAnchorPoints(Curve3D curve) 
+	{
+		System.out.println("rendering");
 		if (anchors == null) 
 		{
 			anchors = new Node();
