@@ -592,9 +592,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					
 					if ( ec != null)
 					{
-						ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
-						ec.changed();
-						System.out.println("setting mode to " + ec.getAnchorPointsVisibility());
+						ec.toggleEdit();
 					}
 					break;
 				}

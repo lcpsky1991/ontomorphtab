@@ -606,7 +606,8 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		previousContainerTangibles = t;
 	}
 	
-	public void updateContainerTangibles(Set<Tangible> containerTangibles) {
+	public void updateContainerTangibles(Set<Tangible> containerTangibles) 
+	{
 		Set<Tangible> currentContainerTangibles = TangibleManager.getInstance().getContainerTangibles(this);
 		previousContainerTangibles = currentContainerTangibles;
 

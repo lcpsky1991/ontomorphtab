@@ -89,11 +89,13 @@ public class CurveView extends TangibleView {
 	}
 
 	private void renderAnchorPoints(Curve3D curve) {
-		if (anchors == null) {
+		if (anchors == null) 
+		{
 			anchors = new Node();
 			
-			for (CurveAnchorPoint c : curve.getAnchorPoints()) {
-				this.attachChild(new CurveAnchorPointView(c));
+			for (CurveAnchorPoint c : curve.getAnchorPoints()) 
+			{
+				anchors.attachChild(new CurveAnchorPointView(c));
 			}
 			this.attachChild(anchors);
 		}

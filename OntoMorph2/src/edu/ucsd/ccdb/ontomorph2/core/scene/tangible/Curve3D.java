@@ -242,9 +242,24 @@ public class Curve3D extends Tangible{
 	 * 
 	 * @param visible - if true, make points visible, if false, make invisible
 	 */
-	public void setAnchorPointsVisibility(boolean visible) {
+	public void setAnchorPointsVisibility(boolean visible)
+	{
 		this.seeAnchorPoints = visible;
 		this.changed();
+	}
+	
+	public void toggleEdit()
+	{
+		boolean vis = getAnchorPointsVisibility();
+		
+		//reverse the visibility
+		setAnchorPointsVisibility(!vis);
+		
+		//redraw the curve
+		for (CurveAnchorPoint p : getAnchorPoints())
+		{
+			setControlPoint(p.getIndex(), p.getRelativePosition());
+		}
 		
 	}
 	

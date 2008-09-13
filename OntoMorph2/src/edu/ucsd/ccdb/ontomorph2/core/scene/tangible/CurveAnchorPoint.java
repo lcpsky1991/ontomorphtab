@@ -54,7 +54,7 @@ public class CurveAnchorPoint extends Tangible {
 	public void move(float dx, float dy, int mx, int my)
 	{
 		super.move(dx,dy,mx,my);
-		parentCurve.setControlPoint(this.i, this.getRelativePosition());
+		//parentCurve.setControlPoint(this.i, this.getRelativePosition());
 	}
 	
 	public PositionVector getDeltafromCenter()

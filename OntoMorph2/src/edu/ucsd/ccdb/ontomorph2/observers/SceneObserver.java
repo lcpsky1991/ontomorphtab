@@ -121,24 +121,28 @@ public class SceneObserver implements Observer {
 			}
 		}
 		
-		else if (o instanceof CurveAnchorPoint)
+		else if (o instanceof Curve3D)
 		{
-			//TODO: Curve3D now has a getChildrenCells, use that to query cells instead of this
-			CurveAnchorPoint point = (CurveAnchorPoint) o;	
-			Curve3D changed = point.getParentCurve();
+			
+			Curve3D changed = (Curve3D)o;
 			TangibleView tv = null; //used for updating 
 
 			//now update the anchorpoint itself
 			tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
 			if ( tv != null) tv.update();	//update the anchorpoint
-				
+			
+			
 			for ( NeuronMorphology c: changed.getChildrenCells())
 			{
 				c.positionAlongCurve(c.getCurve(), c.getTime());
 				tv = TangibleViewManager.getInstance().getTangibleViewFor(c);
 				if (tv != null)	tv.update();
 			}
+			
 		}
+		
+		
+		
 		else if (o instanceof ICable) {
 
 			if (Tangible.CHANGED_SELECT.equals(arg)) {

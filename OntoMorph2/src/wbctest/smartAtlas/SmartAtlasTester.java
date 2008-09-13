@@ -65,8 +65,7 @@ public class SmartAtlasTester {
 
 		SpatialAtlasClientDataModel dataModel;
 		try {
-			dataModel = client.getAtlasEnvelope("Smart Atlas");
-//			input is in string and the name of the atlas that you need to use is “Smart Atlas”
+			dataModel = client.getAtlasEnvelope("Smart Atlas");			//input is in string and the name of the atlas that you need to use is Smart Atlas
 			
 			System.out.println("Atlas Name - " + dataModel.getAtlasName() ); //output is in string
 			
