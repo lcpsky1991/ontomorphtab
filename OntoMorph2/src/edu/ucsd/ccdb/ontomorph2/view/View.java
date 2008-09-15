@@ -292,6 +292,8 @@ public class View extends BaseSimpleGame {
         
         doDebug(r);
         
+        //Flush the renderQueue right before rendering the menu so that nothing can get on top of it
+        r.renderQueue();
 		// Then we display the GUI
 		disp.display();
     }

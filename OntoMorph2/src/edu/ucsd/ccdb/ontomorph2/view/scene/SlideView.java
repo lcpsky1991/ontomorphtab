@@ -83,7 +83,7 @@ public class SlideView extends TangibleView {
 		
 		quad.setRenderState(zb);
 
-		quad.setZOrder(9);
+		//quad.setZOrder(9);
 		
 		quad.setModelBound(new BoundingBox());
 		quad.updateModelBound();
