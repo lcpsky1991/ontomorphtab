@@ -101,8 +101,17 @@ public class SemanticClass extends SemanticThingImpl {
 	 */
 	public SemanticInstance createInstance()
 	{
-		assert OWLClass != null;
-		return new SemanticInstance(OWLClass.createOWLIndividual(this.getLabel() + "_00" + counter++));
+		try
+		{
+			assert OWLClass != null;
+		
+			return new SemanticInstance(OWLClass.createOWLIndividual(this.getLabel() + "_00" + counter++));
+		}
+		catch(Exception e)
+		{
+			System.err.println("ERROR: could not create instance");
+			return null;
+		}
 	}
 	
 	public boolean equals(Object o) {

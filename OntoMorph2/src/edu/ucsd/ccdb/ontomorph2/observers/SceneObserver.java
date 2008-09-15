@@ -191,7 +191,6 @@ public class SceneObserver implements Observer {
 			
 			if (tv != null) 
 			{
-				System.out.println("updating " + tv.getName());
 				tv.update();
 			}
 		}

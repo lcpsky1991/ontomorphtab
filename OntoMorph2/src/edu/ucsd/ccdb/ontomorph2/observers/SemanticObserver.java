@@ -38,42 +38,50 @@ public class SemanticObserver implements Observer {
 		return instance;
 	}
 	
-	public void update(Observable o, Object arg) {
-		if (o instanceof Tangible) {
-			Tangible t = (Tangible)o;
-			if (Tangible.CHANGED_CONTAINS.equals(arg)) {
-				SemanticRepository repo = SemanticRepository.getAvailableInstance();
-				SemanticProperty containsProp = repo.getSemanticProperty(SemanticProperty.CONTAINS);
-				
-				//in order to handle the case where we have removed a containment relationship
-				//between tangibles, start out by removing any existing contains property value
-				SemanticInstance containedInstance = t.getMainSemanticInstance().getPropertyValue(containsProp);
-				if (containedInstance != null) {
-					t.getMainSemanticInstance().removePropertyValue(containsProp, containedInstance);
+	public void update(Observable o, Object arg) 
+	{
+		try
+		{
+			if (o instanceof Tangible) {
+				Tangible t = (Tangible)o;
+				if (Tangible.CHANGED_CONTAINS.equals(arg)) {
+					SemanticRepository repo = SemanticRepository.getAvailableInstance();
+					SemanticProperty containsProp = repo.getSemanticProperty(SemanticProperty.CONTAINS);
+					
+					//in order to handle the case where we have removed a containment relationship
+					//between tangibles, start out by removing any existing contains property value
+					SemanticInstance containedInstance = t.getMainSemanticInstance().getPropertyValue(containsProp);
+					if (containedInstance != null) {
+						t.getMainSemanticInstance().removePropertyValue(containsProp, containedInstance);
+					}
+					
+					//look up the container list from before the last update.
+					//start afresh with these guys insofar as instances are concerned
+					for (Tangible previousContainer : t.getPreviousContainerTangibles()) {
+						previousContainer.getMainSemanticInstance().removePropertyValue(containsProp, t.getMainSemanticInstance());
+	
+					}
+					
+					//for those tangibles that are contained in this tangible, make a 
+					//containment relationship between this instance and that one
+					for (Tangible contained : t.getContainedTangibles()) {
+						t.getMainSemanticInstance().setPropertyValue(containsProp, 
+								contained.getMainSemanticInstance());
+					}
+					
+					for (Tangible containers : t.getContainerTangibles()) {
+						containers.getMainSemanticInstance().setPropertyValue(containsProp, 
+								t.getMainSemanticInstance());
+					}
+					
+					Log.warn("Containment info has changed");
+	
 				}
-				
-				//look up the container list from before the last update.
-				//start afresh with these guys insofar as instances are concerned
-				for (Tangible previousContainer : t.getPreviousContainerTangibles()) {
-					previousContainer.getMainSemanticInstance().removePropertyValue(containsProp, t.getMainSemanticInstance());
-
-				}
-				
-				//for those tangibles that are contained in this tangible, make a 
-				//containment relationship between this instance and that one
-				for (Tangible contained : t.getContainedTangibles()) {
-					t.getMainSemanticInstance().setPropertyValue(containsProp, 
-							contained.getMainSemanticInstance());
-				}
-				
-				for (Tangible containers : t.getContainerTangibles()) {
-					containers.getMainSemanticInstance().setPropertyValue(containsProp, 
-							t.getMainSemanticInstance());
-				}
-				
-				Log.warn("Containment info has changed");
-
 			}
+		}
+		catch (Exception e)
+		{
+			System.err.println("ERROR: Could not update() in SemanticObserver");
 		}
 		/*
 		if (o instanceof NeuronMorphology) {
