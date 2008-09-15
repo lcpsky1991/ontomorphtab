@@ -109,7 +109,7 @@ public class SemanticClass extends SemanticThingImpl {
 		}
 		catch(Exception e)
 		{
-			System.err.println("ERROR: could not create instance");
+			Log.warn("ERROR: could not create instance");
 			return null;
 		}
 	}

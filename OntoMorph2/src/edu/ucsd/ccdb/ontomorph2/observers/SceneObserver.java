@@ -80,7 +80,7 @@ public class SceneObserver implements Observer {
 			else	
 			{
 				//Default case for reloading entire scene 
-				System.err.println("Warning in WBC SceneObserver: argument supplied for update scene not accounted for (" + arg +")");
+				Log.warn("Warning in WBC SceneObserver: argument supplied for update scene not accounted for (" + arg +")");
 				
 			}
 		
@@ -145,7 +145,7 @@ public class SceneObserver implements Observer {
 			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) ap);
 			
 			if ( tv != null) tv.update();
-			System.out.println("update CurveAnchorPoint");
+			Log.warn("update CurveAnchorPoint");
 		}
 		else if (o instanceof ICable) {
 

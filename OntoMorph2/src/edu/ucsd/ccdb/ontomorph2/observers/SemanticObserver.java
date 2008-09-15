@@ -81,7 +81,7 @@ public class SemanticObserver implements Observer {
 		}
 		catch (Exception e)
 		{
-			System.err.println("ERROR: Could not update() in SemanticObserver");
+			Log.warn("ERROR: Could not update() in SemanticObserver");
 		}
 		/*
 		if (o instanceof NeuronMorphology) {

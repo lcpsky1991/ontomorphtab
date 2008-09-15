@@ -18,7 +18,8 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  * configuration files are read and processed.  Logging is configured.  The main 
  * classes for the MVC architecture are initialized.  View, SceneObserver, and 
  * Scene are initialized and related to each other.  The scene is loaded with 
- * Tangibles from the central repository.  High-level error handling happens here as well.
+ * Tangibles from the central repository.  High-level error handling happens here as well.  
+ * System properties are loaded from wbc.properties.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
