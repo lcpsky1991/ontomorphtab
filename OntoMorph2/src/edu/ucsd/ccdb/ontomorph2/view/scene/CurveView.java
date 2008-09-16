@@ -90,7 +90,7 @@ public class CurveView extends TangibleView {
 
 	private void renderAnchorPoints(Curve3D curve) 
 	{
-		System.out.println("rendering");
+		//System.out.println("rendering");
 		if (anchors == null) 
 		{
 			anchors = new Node();

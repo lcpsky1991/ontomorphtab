@@ -67,7 +67,9 @@ public class View3DMouseListener implements MouseInputListener {
 	private int lastButton;
 	long prevPressTime = 0;
 	long dblClickDelay = 800;	//in milliseconds (1000 = 1 sec)
-			
+	
+	PositionVector beginLoc = null;
+	
 	public void onButton(int button, boolean pressed, int x, int y)
 	{
 		//System.out.println("onButton");
@@ -177,6 +179,8 @@ public class View3DMouseListener implements MouseInputListener {
 			ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
 					MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
 		}
+		
+		
 	}
 	
 	
@@ -432,10 +436,14 @@ public class View3DMouseListener implements MouseInputListener {
 		
 		float dx = MouseInput.get().getXDelta();
 		float dy = MouseInput.get().getYDelta();
+		Tangible recent = TangibleManager.getInstance().getSelectedRecent();
 		
 		//do the manipulation to all selected objects
-		for (Tangible manip : TangibleManager.getInstance().getSelected())
+		//loop over the objects in reverse as to keep order of selected objects relevant
+		for (int t=TangibleManager.getInstance().getSelected().size() - 1; t >= 0 ; t--)
 		{
+			Tangible manip = TangibleManager.getInstance().getSelected().get(t);
+			
 //			check to see where the camera is positioned and compare it to the Tangible's plane
 			//if it is under, reverse the X direction so movement is intuitive
 			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().getCameraNode().getCamera().getDirection()), manip.getWorldNormal()); 
@@ -448,12 +456,17 @@ public class View3DMouseListener implements MouseInputListener {
 				break;
 			case METHOD_MOVE:
 				//ugly ugly hack for demo purposes only.. remove and integrate as soon as possible
+				/*
 				if ("demo".equals(OntoMorph2.getWBCProperties().getProperty(OntoMorph2.SCENE))) {
 					moveUsingMouseAbsolutePosition(manip);
-				} else {
-					manip.move(dx,dy,mx,my); //new member method
-					//moveUnderMouse(manip, dx, dy, mx, my); //new method
-					//manip.move(dx, dy, new OMTVector(1,1,0)); //old method
+				} 
+				*/
+				//if this is moving with other things then adjust it's displacement
+
+				if ( recent == manip ) //temporary fix to multi-item movement
+				{
+					
+					manip.move(dx, dy,mx, my);
 				}
 				break;
 			case METHOD_ROTATEX:

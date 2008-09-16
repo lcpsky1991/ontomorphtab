@@ -139,7 +139,7 @@ public class SceneObserver implements Observer {
 			}
 		}
 		
-		else if (o instanceof CurveAnchorPoint)
+		/*else if (o instanceof CurveAnchorPoint)
 		{
 			CurveAnchorPoint ap = (CurveAnchorPoint) o;
 			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) ap);
@@ -147,6 +147,7 @@ public class SceneObserver implements Observer {
 			if ( tv != null) tv.update();
 			Log.warn("update CurveAnchorPoint");
 		}
+		*/
 		else if (o instanceof ICable) {
 
 			if (Tangible.CHANGED_SELECT.equals(arg)) {

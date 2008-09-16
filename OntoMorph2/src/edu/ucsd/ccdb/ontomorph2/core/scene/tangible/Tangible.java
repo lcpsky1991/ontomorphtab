@@ -135,7 +135,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 				t.setRelativePosition(new PositionVector(newContainedPosition));
 			}
 			
-			changed(CHANGED_MOVE);
+			if (flagChanged) changed(CHANGED_MOVE);
 		}
 	}
 	
@@ -454,11 +454,20 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 * @param dy delta Y
 	 * @param mx position of mouse now X
 	 * @param my position of mouse now Y
+	 * @return {@link PositionVector} of displacement
 	 * @author Stephen Larson, @author caprea
 	 */
 	public void move(float dx, float dy, int mx, int my)
 	{
-		//this method returns the position that the mouse would be located in
+	
+		PositionVector desired = pointUnderMouse(mx,my);
+		this.setRelativePosition(desired, true); //implicitly calls changed()
+	
+	}
+	
+	private PositionVector pointUnderMouse(int mx, int my)
+	{
+//		this method returns the position that the mouse would be located in
 		//the world if it had the same distance away from the camera that the selected objects have.
 		//takes advantage of JME's Camera.getWorldCoordinates() method.
 		
@@ -499,9 +508,12 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		toPos = OMTUtility.rotateVector(toPos, inv);
 		
 		//put it in it's place
-		manip.setRelativePosition(toPos.getX(), toPos.getY(), toPos.getZ());
-		changed(CHANGED_MOVE);
+		PositionVector place = new PositionVector(toPos);
+		
+		return place;
 	}
+	
+	
 	
 	/**
 	 * Changes the local translation this Tangible

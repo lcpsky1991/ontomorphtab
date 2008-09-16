@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import org.fenggui.background.PlainBackground;
 import org.fenggui.border.TitledBorder;
 import org.fenggui.event.IMenuItemPressedListener;
@@ -14,7 +16,6 @@ import org.fenggui.menu.MenuItem;
 import org.fenggui.util.Color;
 
 import com.jme.input.KeyInput;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
@@ -34,14 +35,11 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
-import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
-import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.View3DMouseListener;
-import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
  * A dynamic context menu that pops up when you right click in the display.
@@ -564,6 +562,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public void doActionOnSelected(int action, Tangible target, double value)
 	{
 		List<Tangible> selected = TangibleManager.getInstance().getSelected();
+		//Tangible recent = TangibleManager.getInstance().getSelectedRecent();
 		for (int t = 0; t < selected.size(); t++)
 		{
 			Tangible single = selected.get(t);
@@ -592,13 +591,18 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					
 					if ( ec != null)
 					{
-						ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
-						ec.reapply();
+						ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility()); 
 					}
 					break;
 				}
 				case CTX_ACTION_PROPOGATE:
-					propogate(single, 20);
+				{
+					int num = 0;
+					String reply = JOptionPane.showInputDialog(null, "Propogate how many cells?", "How many?", JOptionPane.QUESTION_MESSAGE);
+					if ( reply != null) num = Integer.parseInt(reply);
+					propogate(single, num);
+				}
+					
 					break;
 				case CTX_ACTION_NEW_CELL:
 					createCellOn(single);
