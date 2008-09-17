@@ -159,8 +159,7 @@ public class CatmullRomCurve extends Curve {
 		if (direction == null) {
 			return getOrientation(time, precision);
 		}
-		
-		System.out.println("get orientation");
+
 		Matrix3f rotation = new Matrix3f();
 
 		//calculate tangent

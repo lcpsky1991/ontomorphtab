@@ -1,5 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.util;
 
+
 import org.fenggui.Display;
 import org.fenggui.event.Key;
 import org.fenggui.event.mouse.MouseButton;
@@ -11,12 +12,6 @@ import com.jme.input.MouseInputListener;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
  
-/**
- * FengJMEInputHandler
- * 
- * @author Joshua Keplinger
- *
- */
 public class FengJMEInputHandler extends InputHandler
 {
 	
@@ -24,7 +19,7 @@ public class FengJMEInputHandler extends InputHandler
 	private KeyInputAction keyAction;
 	
 	private boolean keyHandled;
-	private boolean mouseHandled, mouseOverGui;
+	private boolean mouseHandled;
 	
 	public FengJMEInputHandler(Display disp)
 	{
@@ -53,85 +48,33 @@ public class FengJMEInputHandler extends InputHandler
 		return mouseHandled;
 	}
 	
-	public boolean isMouseOverGui() {
-        return mouseOverGui;
-    }
-	
-	public void setMouseOverGui( boolean mouseOver ) {
-        mouseOverGui = mouseOver;
-    }
-	
-	public void reset() {
-        keyHandled = false;
-        mouseHandled = false;
-    }
-	//@override
-	public void mouseMoved(int displayX, int displayY)
+	private class KeyAction extends KeyInputAction
 	{
-		System.out.println("mouse moved");
-	}
-	private class KeyAction extends KeyInputAction implements Runnable
-	{
-        private static final int MAX_DELAY = 8;
-        private boolean keyPressed=false;
-        private InputActionEvent lastEvent;
-        private int delay=0;
-        private Object LOCK=new Object();
-        public KeyAction()
-        {
-            new Thread(this).start();
-        }
-        private void wakeUp()
-        {
-            synchronized (LOCK)
-            {
-                LOCK.notify();
-            }
-        }
-        public void performAction(InputActionEvent evt)
-        {
-            char character = evt.getTriggerCharacter();
-            Key key = mapKeyEvent();
-            if (evt.getTriggerPressed())
-            {
-                delay=MAX_DELAY;
-                lastEvent=evt;
-                keyPressed=true;
-                wakeUp();
-                keyHandled = disp.fireKeyPressedEvent(character, key);
-                // Bug workaround see note after code
-                if (key == Key.LETTER || key == Key.DIGIT)
-                {
-                    keyHandled = disp.fireKeyTypedEvent(character);
-                }
-            }
-            else
-            {
-                keyHandled = disp.fireKeyReleasedEvent(character, key);
-                keyPressed=false;
-            }
-        }
-        /**
-         * Method to support Key Repetition in Widgets using Text Editor
-         */
-        public void keyRepeated(InputActionEvent evt)
-        {
-            char character = evt.getTriggerCharacter();
-            Key key = mapKeyEvent();
-            if (evt.getTriggerPressed())
-            {
-                keyHandled = disp.fireKeyPressedEvent(character, key);
-                // Bug workaround see note after code
-                if (key == Key.LETTER || key == Key.DIGIT)
-                {
-                    keyHandled = disp.fireKeyTypedEvent(character);
-                }
-            }
-            else
-            {
-                keyHandled = disp.fireKeyReleasedEvent(character, key);
-            }
-        }
+		/*
+		public void performAction(InputActionEvent evt)
+		{
+			char character = evt.getTriggerCharacter();
+			Key key = mapKeyEvent();
+			if(evt.getTriggerPressed())
+				keyHandled = disp.fireKeyPressedEvent(character, key);
+			else
+				keyHandled = disp.fireKeyReleasedEvent(character, key);
+		}
+		*/
+		public void performAction(InputActionEvent evt)
+		{
+			char character = evt.getTriggerCharacter();
+			Key key = mapKeyEvent();
+			if(evt.getTriggerPressed())
+				keyHandled = disp.fireKeyPressedEvent(character, key);
+				if (key == Key.LETTER || key == Key.DIGIT) {
+					keyHandled = disp.fireKeyTypedEvent(character);
+					keyHandled = true;
+				}
+			else {
+				keyHandled = disp.fireKeyReleasedEvent(character, key);
+			}
+		}
 		
 		/**
 		 * Helper method that maps LWJGL key events to FengGUI.
@@ -150,7 +93,6 @@ public class FengJMEInputHandler extends InputHandler
 		        	keyClass = Key.ENTER;
 		            break;
 		        case Keyboard.KEY_DELETE: 
-		        	System.out.println("delete");
 		        	keyClass = Key.DELETE;
 		            break;
 		        case Keyboard.KEY_UP:
@@ -166,7 +108,6 @@ public class FengJMEInputHandler extends InputHandler
 		        	keyClass = Key.DOWN;
 		            break;
 		        case Keyboard.KEY_SCROLL:
-		        	System.out.println("shift");
 		        	keyClass = Key.SHIFT;
 		            break;
 		        case Keyboard.KEY_LMENU:
@@ -226,6 +167,9 @@ public class FengJMEInputHandler extends InputHandler
 		        case Keyboard.KEY_F1:
 		        	keyClass = Key.F1;
 		            break;
+		        case Keyboard.KEY_NUMPAD1:
+		        	keyClass = Key.DIGIT;
+		            break;
 		        default:
 		        	if("1234567890".indexOf(Keyboard.getEventCharacter()) != -1) {
 		        		keyClass = Key.DIGIT;
@@ -235,52 +179,10 @@ public class FengJMEInputHandler extends InputHandler
 		        	}
 		        	break;
 	    	}
-			System.out.println("keyclass" + keyClass);
+	        
 	        return keyClass;
 		}
 		
-		/**
-		 * Run method
-		 */
-		public void run() {
-            while(true)
-            {
-                if(keyPressed)
-                {
-                    try
-                    {
-                        if(delay>0)
-                        {
-                            --delay;
-                        }
-                        else if(lastEvent!=null)
-                        {
-                            keyRepeated(lastEvent);
-                        }
-                        Thread.sleep(100);
-                    }
-                    catch (Exception e)
-                    {
-                    }
-                }
-                else
-                {
-                    synchronized (LOCK)
-                    {
-                        {
-                            try
-                            {
-                                LOCK.wait();
-                            }
-                            catch (InterruptedException e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }
-		}
 	}
 	
 	private class MouseListener implements MouseInputListener
@@ -288,10 +190,9 @@ public class FengJMEInputHandler extends InputHandler
 		
 		private boolean down;
 		private int lastButton;
-				
+		
 		public void onButton(int button, boolean pressed, int x, int y)
 		{
-			//System.out.println("onButton");
 			down = pressed;
 			lastButton = button;
 			if(pressed)
@@ -302,24 +203,20 @@ public class FengJMEInputHandler extends InputHandler
  
 		public void onMove(int xDelta, int yDelta, int newX, int newY)
 		{
-			//System.out.println("onMove");
 			// If the button is down, the mouse is being dragged
 			if(down)
 				mouseHandled = disp.fireMouseDraggedEvent(newX, newY, getMouseButton(lastButton));
 			else
-			     mouseHandled = disp.fireMouseMovedEvent(newX, newY);
-		}	
-			
+				mouseHandled = disp.fireMouseMovedEvent(newX, newY);
+		}
+ 
 		public void onWheel(int wheelDelta, int x, int y)
 		{
-			//System.out.println("onWheel");
 			// wheelDelta is positive if the mouse wheel rolls up
-                        if(wheelDelta > 0)
-		                mouseHandled = disp.fireMouseWheel(x, y, true, wheelDelta);
-                        else
-                                mouseHandled = disp.fireMouseWheel(x, y, false, wheelDelta);
- 
-                        // note (johannes): wheeling code not tested on jME, please report problems on www.fenggui.org/forum/
+			if(wheelDelta > 0)
+				mouseHandled = disp.fireMouseWheel(x, y, true,0);
+			else
+				mouseHandled = disp.fireMouseWheel(x, y, false,0);
 		}
 		
 		/**

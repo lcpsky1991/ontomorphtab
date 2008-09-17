@@ -5,11 +5,14 @@ import org.fenggui.Display;
 import org.fenggui.FengGUI;
 import org.fenggui.TextEditor;
 import org.fenggui.Widget;
+import org.fenggui.composites.Window;
 import org.fenggui.event.ButtonPressedEvent;
 import org.fenggui.event.IButtonPressedListener;
+import org.fenggui.layout.BorderLayout;
 import org.fenggui.util.Point;
 
 import com.jme.input.InputHandler;
+import com.jme.input.KeyInput;
 import com.jme.input.action.KeyInputAction;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
@@ -20,26 +23,30 @@ import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
  * 2D widget that allows a user to type in keywords and issue a keyword search
  *
  */
-public class BasicSearchWidget extends Widget{
+public class BasicSearchWidget extends InputHandler{
     
-	InputHandler input = null;
-	//MouseManager mouse;
-	
-	private float displayX, displayY;
-	private KeyInputAction keyAction;
+	private FengJMEInputHandler fengGui;
+	InputHandler input;
+	private boolean add;
+
 	public BasicSearchWidget(Display d) {
 		
-		displayX = d.getDisplayX();
-		displayY = d.getDisplayY();
-		input = new FengJMEInputHandler(d);
 		TreeNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
-		CustomWidget window = new CustomWidget(new Point(0,100),new Point(200,300), "Search");
+		Window window = new Window(true, false, false, true);
+		window.setPosition(new Point(100, 100));
+		window.setSize(200, 300);
+    	window.getContentContainer().setLayoutManager(new BorderLayout());
+		window.setTitle("Search Query"); 
 		
 		//window.addMouseExitedListener(FocusManager.focusManager);
-        TextEditor textArea = FengGUI.createTextArea(window.getContainer());
+        TextEditor textArea = FengGUI.createTextArea(window.getContentContainer());
         textArea.setText("Enter Keyword");
         textArea.setSize(100, 20);
         
+        /*input = new InputHandler();
+        fengGui = new FengJMEInputHandler(d);
+        input.addToAttachedHandlers(fengGui);*/
+        System.out.println(add + " add");
         textArea.addMouseEnteredListener(FocusManager.get());
         textArea.addMouseExitedListener(FocusManager.get());
         //System.out.println("writing state " + textArea.isInWritingState());
@@ -58,7 +65,9 @@ public class BasicSearchWidget extends Widget{
 
         button.addMouseEnteredListener(FocusManager.get());
         button.addMouseExitedListener(FocusManager.get());
-        window.getContainer().addWidget( button );
+        textArea.addMouseEnteredListener(FocusManager.get());
+        textArea.addMouseExitedListener(FocusManager.get());
+        window.getContentContainer().addWidget( button );
         textArea.setPosition(new Point(30,220));
         d.layout();
 

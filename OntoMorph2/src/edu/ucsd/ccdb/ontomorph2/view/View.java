@@ -15,6 +15,8 @@ import com.jme.input.KeyInputListener;
 import com.jme.input.MouseInput;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
+import com.jme.math.Ray;
+import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -33,6 +35,7 @@ import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 
@@ -64,7 +67,7 @@ public class View extends BaseSimpleGame {
 	View3D view3D = null;
 	private View3DMouseListener view3DMouseListener;
 	private OMTKeyInputListener OMTKeyListener;
-	
+	private FocusManager focus;
 	/**
 	 * Returns the singleton instance.
 	 @return	the singleton instance
@@ -133,7 +136,7 @@ public class View extends BaseSimpleGame {
 		
 		//Remove lighting for rootNode so that it will use our basic colors
 		rootNode.setLightCombineMode(LightState.OFF);
-		
+        
 		disp = View2D.getInstance();
 	}
 	
@@ -158,16 +161,21 @@ public class View extends BaseSimpleGame {
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
 		
+		focus = new FocusManager();
 		//(InputActionInterface action, java.lang.String deviceName, int button, int axis, boolean allowRepeats)
 		/*
     	this.view3DMouseHandler = new View3DMouseHandler();
         input.addAction(this.view3DMouseHandler , InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, false );
         */
-		this.view3DMouseListener = new View3DMouseListener();
-		MouseInput.get().addListener(this.view3DMouseListener);
+		if(focus.isWidgetFocused() == false ){
+			
+			System.out.println("Mouse Listener");
+			this.view3DMouseListener = new View3DMouseListener();
+			MouseInput.get().addListener(this.view3DMouseListener);
 		
-		this.OMTKeyListener = new OMTKeyInputListener();
-		KeyInput.get().addListener(this.OMTKeyListener);
+			this.OMTKeyListener = new OMTKeyInputListener();
+			KeyInput.get().addListener(this.OMTKeyListener);
+		}	
 	}
 			
 	public OMTKeyInputListener getKeyInputListener() {
@@ -294,6 +302,8 @@ public class View extends BaseSimpleGame {
         
         //Flush the renderQueue right before rendering the menu so that nothing can get on top of it
         r.renderQueue();
+        
+        //input = new FengJMEInputHandler(disp);
 		// Then we display the GUI
 		disp.display();
     }
@@ -352,7 +362,7 @@ public class View extends BaseSimpleGame {
 	
 	public Node getMainViewRootNode() {
 		return rootNode;
-	}
+	}	
 }
 
 

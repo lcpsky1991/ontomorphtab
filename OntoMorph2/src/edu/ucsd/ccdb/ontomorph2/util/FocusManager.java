@@ -38,16 +38,18 @@ public class FocusManager extends Widget implements IMouseEnteredListener, IMous
 	
 	public void mouseEntered(MouseEnteredEvent mouseEnteredEvent) 
 	{
+		//System.out.println("mouse Entered");
 		this.guiInFocus = true;
 	}
 	
 	public void mouseExited(MouseExitedEvent mouseExitedEvent) 
 	{
+		//System.out.println("mouse exited");
 		this.guiInFocus = false;
 	}
 	
 	public boolean isWidgetFocused()
 	{
-		return guiInFocus;
+		return this.guiInFocus;
 	}
 }
