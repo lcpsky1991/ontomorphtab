@@ -46,7 +46,6 @@ public class BasicSearchWidget extends InputHandler{
         /*input = new InputHandler();
         fengGui = new FengJMEInputHandler(d);
         input.addToAttachedHandlers(fengGui);*/
-        System.out.println(add + " add");
         textArea.addMouseEnteredListener(FocusManager.get());
         textArea.addMouseExitedListener(FocusManager.get());
         //System.out.println("writing state " + textArea.isInWritingState());
