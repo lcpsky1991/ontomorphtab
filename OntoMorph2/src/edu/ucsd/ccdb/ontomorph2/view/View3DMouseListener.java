@@ -20,11 +20,13 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
+import com.jme.scene.Node;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.shape.Sphere;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
@@ -62,6 +64,10 @@ public class View3DMouseListener implements MouseInputListener {
 	public static final int METHOD_MOVE_FREE = 100;	//not constrained by the coordinate system
 	
 	private static int manipulation = METHOD_MOVE; //set move to be default
+	
+	public static final int OMT_MBUTTON_LEFT = 0;
+	public static final int OMT_MBUTTON_RIGHT = 1;
+	public static final int OMT_MBUTTON_MIDDLE = 2;
 	
 	private boolean down;
 	private int lastButton;
@@ -145,10 +151,10 @@ public class View3DMouseListener implements MouseInputListener {
     	
     	//middle click manipulates camera OR leftANDright mouse button
 		//mouselook is true if there is a middle mouse button and it's pressed down
-		if ( numMouseBut >= 2 ) if (MouseInput.get().isButtonDown(2)) mouseLook = true;
+		if ( numMouseBut >= OMT_MBUTTON_MIDDLE ) if (MouseInput.get().isButtonDown(OMT_MBUTTON_MIDDLE)) mouseLook = true;
 		 
 		//mouselook is also true if left mouse and right mouse are pressed
-		if ( MouseInput.get().isButtonDown(0) && MouseInput.get().isButtonDown(1) ) mouseLook = true;
+		if ( MouseInput.get().isButtonDown(OMT_MBUTTON_RIGHT) && MouseInput.get().isButtonDown(OMT_MBUTTON_LEFT) ) mouseLook = true;
 		
 		if (mouseLook)
 		{
@@ -156,7 +162,7 @@ public class View3DMouseListener implements MouseInputListener {
 			View.getInstance().getCameraNode().turnClockwise(dX / 100f);
 			View.getInstance().getCameraNode().turnUp(dY / 100f);
 		}
-		else if (0 == button) //left 
+		else if (OMT_MBUTTON_LEFT == button) //left 
 		{
 			//dragging
 			manipulateCurrentSelection();
@@ -184,15 +190,28 @@ public class View3DMouseListener implements MouseInputListener {
 	}
 	
 	
-	//fugacious method
 	private void onMouseRelease(int buttonIndex)
 	{		
 
+		if (OMT_MBUTTON_LEFT == buttonIndex) 
+		{
+			//after-manipulation code
+			Tangible last = TangibleManager.getInstance().getSelectedRecent(); //could possibly be used for dragging ONTO in mouse release
+			Tangible ontop = null;//psuedoPick(KeyInput.get().isControlDown(), true).get(0);
+			
+			if (last instanceof CurveAnchorPoint)
+			{
+				last.execPostManipulate(ontop);
+			}
+		}
+			
+		
+		
 	}
 	
 	private void onMouseDouble(int buttonIndex)
 	{
-		if (0 == buttonIndex) //left 
+		if (OMT_MBUTTON_LEFT == buttonIndex) //left 
 		{
 			doPick();
 		}
@@ -396,41 +415,49 @@ public class View3DMouseListener implements MouseInputListener {
 	}
 	
 	
+	private void complicatedMultiMove(Tangible master, float dx, float dy, int mx, int my)
+	{
+		/*
+		 * How multi-movement works:
+		 * First, while looping over ALL selected tangibles, ONLY move the most recently selected
+		 * Second, after the most recently selected tangible is moved, find the displacement that the movement caused
+		 * Third, apply that displacement to all OTHER selected tangibles
+		 * 
+		 * Finally, Tangibles like NeuronMorpologies do not move the same way, so they can be treated 'normally'
+		 * where normal mans just apply the same to all
+		 */
+		
+			PositionVector dis = master.move(dx, dy,mx, my);	//find the displacement caused by movement
+			
+			if ( dis != null) //displacement will be null for neurons on curves
+			{
+				for (Tangible mirror : TangibleManager.getInstance().getSelected())
+				{
+					if ( mirror != master) //aply the displacement to all OTHER tangibles (that are not the most recent)
+					{
+						PositionVector goes = new PositionVector(mirror.getRelativePosition().add(dis.asVector3f()));
+						mirror.setRelativePosition(goes);
+					}
+				}
+			}
+			else
+			{	//displacement was null, so move all the others as normal
+				for (Tangible mirror : TangibleManager.getInstance().getSelected())
+				{
+					if ( mirror != master) //aply the displacement to all OTHER tangibles (that are not the most recent)
+					{
+						mirror.move(dx, dy, mx, my);
+					}
+				}
+			}	
+	}
+	
 	/**
 	 * Apply manipulations to the tangible that is currently selected
 	 * Called during mouse handling
 	 */
 	private void manipulateCurrentSelection() 
 	{		
-	
-		//CA: new movement code experiment
-		//======================================
-		//======================================
-		/*
-		float cx = 0;
-		float cy = 0;
-		Vector2f mPos = new Vector2f();
-		cx = MouseInput.get().getXDelta();
-		cy = MouseInput.get().getYDelta();
-		
-		double angle = 0;
-		mPos.set(cx, cy);
-		DemoCoordinateSystem dcoords = new DemoCoordinateSystem();
-		Vector3f dir = new Vector3f();
-		
-		Quaternion qc = View.getInstance().getCamera().getWorldRotation();
-		
-		dir = View.getInstance().getCamera().getCamera().getDirection();
-		Vector3f wunit = new Vector3f(1,1,0);
-		Vector3f dunit = (new DemoCoordinateSystem().getOriginVector());
-		angle = dir.angleBetween(dunit);
-		System.out.println(wunit + "" + dir.normalize() + " " + dunit.normalize() + " angle between " + angle);
-		//System.out.println(new Quaternion().from)
-		System.out.println(dcoords.getOriginRotation());
-		*/
-		
-		//======================================
-		//======================================
 		int mx = MouseInput.get().getXAbsolute();
 		int my = MouseInput.get().getYAbsolute();
 		
@@ -440,9 +467,9 @@ public class View3DMouseListener implements MouseInputListener {
 		
 		//do the manipulation to all selected objects
 		//loop over the objects in reverse as to keep order of selected objects relevant
-		for (int t=TangibleManager.getInstance().getSelected().size() - 1; t >= 0 ; t--)
+//		for (int t=TangibleManager.getInstance().getSelected().size() - 1; t >= 0 ; t--)
+		for (Tangible manip : TangibleManager.getInstance().getSelected())
 		{
-			Tangible manip = TangibleManager.getInstance().getSelected().get(t);
 			
 //			check to see where the camera is positioned and compare it to the Tangible's plane
 			//if it is under, reverse the X direction so movement is intuitive
@@ -455,18 +482,10 @@ public class View3DMouseListener implements MouseInputListener {
 				//do nothing
 				break;
 			case METHOD_MOVE:
-				//ugly ugly hack for demo purposes only.. remove and integrate as soon as possible
-				/*
-				if ("demo".equals(OntoMorph2.getWBCProperties().getProperty(OntoMorph2.SCENE))) {
-					moveUsingMouseAbsolutePosition(manip);
-				} 
-				*/
-				//if this is moving with other things then adjust it's displacement
-
-				if ( recent == manip ) //temporary fix to multi-item movement
+				
+				if ( recent == manip ) //only move the most recent, do not apply movement to all selected
 				{
-					
-					manip.move(dx, dy,mx, my);
+					complicatedMultiMove(recent, dx, dy, mx, my);
 				}
 				break;
 			case METHOD_ROTATEX:

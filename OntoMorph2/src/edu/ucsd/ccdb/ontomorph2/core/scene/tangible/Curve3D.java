@@ -364,7 +364,7 @@ public class Curve3D extends Tangible{
 
 	
 	public void select()
-	{
+	{ 
 		
 		boolean ms = TangibleManager.getInstance().getMultiSelect(); //get previous state of multiselect
 		super.select();

@@ -127,27 +127,33 @@ public abstract class NeuronMorphology extends Tangible{
 	 * therefore, in most cases cells only move along a curve's time
 	 */
 	
-	public void move(float dx, float dy, int mx, int my)
+	public PositionVector move(float dx, float dy, int mx, int my)
 	{
 		//get changes in mouse movement
 		//if this cell is a free-floating cell, then move it as normal
+		PositionVector p = null;
 		if (this.isFreeFloating())
 		{
-			super.move(dx,dy, mx, my);
+			p = super.move(dx,dy, mx, my);
 		}
 		else 
 		{
 			//the cell is attached to a curve
 			//move the cell by changing it's time signature on the parent curve
+			PositionVector prev = this.getRelativePosition();
+			
 			this._time += 0.001f * dx; //the dx passed may be negative
 			
 			if (_time <= 0 ) _time = 0.001f;
 			if (_time >= 1) _time = 0.999f;
 			this.positionAlongCurve(_curve,_time);
+			//p = new PositionVector(prev.asVector3f().subtract(this.getRelativePosition().asVector3f())); //return the displacement
+			
 		}
 		
 		//apply the movement
 		changed(CHANGED_MOVE);
+		return p;
 	}
 	
 	

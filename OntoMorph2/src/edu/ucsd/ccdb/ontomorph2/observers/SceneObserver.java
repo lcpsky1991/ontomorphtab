@@ -126,6 +126,8 @@ public class SceneObserver implements Observer {
 			Curve3D changed = (Curve3D)o;
 			TangibleView tv = null; //used for updating 
 
+			//changed.reapply(); //recalculate the curve
+			
 			//now update the anchorpoint itself
 			tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
 			if ( tv != null) tv.update();	//update the anchorpoint

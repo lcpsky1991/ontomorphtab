@@ -5,6 +5,7 @@ package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.util.Set;
 
+
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
@@ -53,13 +54,17 @@ public class CurveAnchorPoint extends Tangible {
 	/**
 	 * 
 	 */
-	public void move(float dx, float dy, int mx, int my)
+	public PositionVector move(float dx, float dy, int mx, int my)
 	{
-		
-		parentCurve.setControlPoint(this.i, this.getRelativePosition());
-		
+		PositionVector p = super.move(dx, dy, mx, my);
+		//parentCurve.setControlPoint(this.i, this.getRelativePosition());
+		return p;
 	}
 	
+	public void execPostManipulate(Tangible target)
+	{
+		this.parentCurve.reapply();
+	}
 	
 	public PositionVector getDeltafromCenter()
 	{

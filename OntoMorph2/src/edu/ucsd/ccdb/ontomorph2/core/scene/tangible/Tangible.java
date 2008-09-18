@@ -454,18 +454,21 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 * @param dy delta Y
 	 * @param mx position of mouse now X
 	 * @param my position of mouse now Y
-	 * @return {@link PositionVector} of displacement
+	 * @return Vector representing the displacement of this movement
 	 * @author Stephen Larson, @author caprea
 	 */
-	public void move(float dx, float dy, int mx, int my)
+	public PositionVector move(float dx, float dy, int mx, int my)
 	{
 	
-		PositionVector desired = pointUnderMouse(mx,my);
-		this.setRelativePosition(desired, true); //implicitly calls changed()
+		Vector3f previous = this.getRelativePosition();
+		Vector3f desired = pointUnderMouse(mx,my);
+		this.setRelativePosition(new PositionVector(desired), true); //implicitly calls changed()
+		
+		return new PositionVector(desired.subtract(previous));
 	
 	}
 	
-	private PositionVector pointUnderMouse(int mx, int my)
+	private Vector3f pointUnderMouse(int mx, int my)
 	{
 //		this method returns the position that the mouse would be located in
 		//the world if it had the same distance away from the camera that the selected objects have.
@@ -508,9 +511,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		toPos = OMTUtility.rotateVector(toPos, inv);
 		
 		//put it in it's place
-		PositionVector place = new PositionVector(toPos);
+		//PositionVector place = new PositionVector(toPos);
 		
-		return place;
+		return toPos.clone();
 	}
 	
 	
@@ -573,6 +576,19 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 			strName = this.name;
 		}
 		return strName;
+	}
+	
+	/**
+	 * meant for calling from on mouse-UP event (such as dragging one tangible onto another) and clean-up code
+	 * Not intended for calling changed() or update() - rethink architecture if putting that in here
+	 * @param newTarget
+	 */
+	public void execPostManipulate(Tangible newTarget)
+	{
+		/** this is NOT meant for an update() or change() **/ //that's not change() we can beleive in, that's more of the same! - Obama '08
+		
+		
+		
 	}
 	
 	public void setName(String name) {
