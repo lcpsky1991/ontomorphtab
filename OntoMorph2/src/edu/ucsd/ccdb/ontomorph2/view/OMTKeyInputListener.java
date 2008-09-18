@@ -1,5 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
+import org.fenggui.Display;
+
 import com.jme.input.KeyInput;
 import com.jme.input.KeyInputListener;
 import com.jme.input.MouseInput;
@@ -8,7 +10,7 @@ import com.jme.math.Vector3f;
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
+import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 
 /**
@@ -24,6 +26,13 @@ public class OMTKeyInputListener implements KeyInputListener {
 	float keyPressActionRate = 1.0f; //the rate of rotation by a single key press
 	boolean pointerEnabled = true;
 	
+	FengJMEInputHandler guiInput;
+	Display disp;
+	
+	public OMTKeyInputListener(Display disp, FengJMEInputHandler guiInput){
+		this.disp = disp;
+		this.guiInput = guiInput;
+	}
 	/**
 	 * Handles key presses.
 	 * 
@@ -34,7 +43,7 @@ public class OMTKeyInputListener implements KeyInputListener {
 	 */
 	public void onKey(char character, int keyCode, boolean pressed) {
 		//don't handle if focus manager has another widget focused
-		if (FocusManager.get().isWidgetFocused()) return;
+		if (guiInput.wasKeyHandled()) return;
 		
 		//don't process any released events for now
 		//may consider implementing handlers that operate in a loop as long

@@ -4,6 +4,9 @@ import java.math.BigInteger;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
+import org.fenggui.Display;
+import org.fenggui.event.mouse.MouseButton;
+
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
 import com.jme.input.MouseInputListener;
@@ -32,7 +35,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
+import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
@@ -63,6 +66,10 @@ public class View3DMouseListener implements MouseInputListener {
 	public static final int METHOD_LOOKAT = 64;
 	public static final int METHOD_MOVE_FREE = 100;	//not constrained by the coordinate system
 	
+	
+	Display disp;
+	View v = new View();
+	FengJMEInputHandler guiInput;
 	private static int manipulation = METHOD_MOVE; //set move to be default
 	
 	public static final int OMT_MBUTTON_LEFT = 0;
@@ -76,22 +83,35 @@ public class View3DMouseListener implements MouseInputListener {
 	
 	PositionVector beginLoc = null;
 	
+	/**
+	 * Created Constructors with two parameteres needed, called in View.java
+	 * @param disp
+	 * @param guiInput
+	 */
+	public View3DMouseListener(Display disp, FengJMEInputHandler guiInput){
+		/*Two variables needed passed from View.java to get access to FengGUI listeners at FengJMEInputHandler*/
+		this.disp = disp;
+		this.guiInput = guiInput;
+	}
+	
 	public void onButton(int button, boolean pressed, int x, int y)
-	{
-		//System.out.println("onButton");
-		down = pressed;
-		lastButton = button;
-		if(pressed) {
-			onMousePress(button);
-			//check double click
-			if (System.currentTimeMillis() - this.prevPressTime < this.dblClickDelay) 
-			{
-				onMouseDouble(button);
+	{	
+		//if statement prohibiting mouse movements on scene to interfere with FengGUI windows
+		if(!this.guiInput.wasMouseHandled()){
+			down = pressed;
+			lastButton = button;
+			if(pressed) {
+				onMousePress(button);
+				//check double click
+				if (System.currentTimeMillis() - this.prevPressTime < this.dblClickDelay) 
+				{
+					onMouseDouble(button);
+				}
+				prevPressTime = System.currentTimeMillis();
+			} else {
+				onMouseRelease(button);
 			}
-			prevPressTime = System.currentTimeMillis();
-		} else {
-			onMouseRelease(button);
-		}
+		}	
 	}
 
 	/**
@@ -101,11 +121,14 @@ public class View3DMouseListener implements MouseInputListener {
 	 */
 	public void onMove(int xDelta, int yDelta, int newX, int newY)
 	{
-		// If the button is down, the mouse is being dragged
-		if(down)
-			onMouseDrag(lastButton, xDelta, yDelta, newX, newY);
-		else
-		    onMouseMove();
+		//if statement prohibiting mouse movements on scene to interfere with FengGUI windows
+		if(!this.guiInput.wasMouseHandled()){
+			// If the button is down, the mouse is being dragged
+			if(down)
+				onMouseDrag(lastButton, xDelta, yDelta, newX, newY);
+			else
+				onMouseMove();
+		}	
 	}	
 		
 	public void onWheel(int wheelDelta, int x, int y)
@@ -113,23 +136,26 @@ public class View3DMouseListener implements MouseInputListener {
 //		====================================
     	//	WHEEL
     	//====================================
-			float dx = Math.abs(MouseInput.get().getWheelDelta());
-			dx= (float) Math.log(1 + (3 * dx)); //scale it by some factor so it's less jumpy
+			//if statement prohibiting mouse movements on scene to interfere with FengGUI windows
+			if(!this.guiInput.wasMouseHandled()){
+				float dx = Math.abs(MouseInput.get().getWheelDelta());
+				dx= (float) Math.log(1 + (3 * dx)); //scale it by some factor so it's less jumpy
 			
 			
-			if ( wheelDelta < 0 ) dx = (-dx);	//exponents always produce positive results, allows for reverse zoom
+				if ( wheelDelta < 0 ) dx = (-dx);	//exponents always produce positive results, allows for reverse zoom
 			
-			if (dx != 0)	
-			{
-				//zoom camera if Z press
-				if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
+				if (dx != 0)	
 				{
-					View.getInstance().getCameraNode().zoomIn(dx);	
-				}
-				//move camera if Z NOT pressed
-				else
-				{
-					View.getInstance().getCameraNode().moveForward(dx);
+					//zoom camera if Z press
+					if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
+					{
+						View.getInstance().getCameraNode().zoomIn(dx);	
+					}
+					//move camera if Z NOT pressed
+					else
+					{
+						View.getInstance().getCameraNode().moveForward(dx);
+					}
 				}
 			}
 	}
@@ -594,7 +620,4 @@ public class View3DMouseListener implements MouseInputListener {
 		manipulation = m;
 		Log.warn("Manipulation method set to: " + m);
 	}
-
-
-	
 }

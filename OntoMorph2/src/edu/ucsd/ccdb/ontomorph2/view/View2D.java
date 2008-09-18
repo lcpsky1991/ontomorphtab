@@ -49,8 +49,6 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyTreeModel;
  */
 public class View2D extends Display{
 	
-		
-	FengJMEInputHandler input = null;
 	/**
 	 * Holds singleton instance
 	 */
@@ -132,10 +130,7 @@ public class View2D extends Display{
 	 *
 	 */
 	protected void initGUI()
-	{
- 
-		input = new FengJMEInputHandler(this);
- 
+	{	
 		this.addWidget(new MenuBar());        
         this.getInfoText();
 		// Update the display with the newly added components
@@ -254,11 +249,4 @@ public class View2D extends Display{
 			basicSearch = new BasicSearchWidget(this);
 		}
 	}
-	/*
-	public void loadMiniMap(){
-		if(miniMap == null){
-			miniMap = new MiniMap(this);
-		}
-	}*/
-
 }

@@ -17,13 +17,12 @@ import com.jme.input.action.KeyInputAction;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
-import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 
 /**
  * 2D widget that allows a user to type in keywords and issue a keyword search
  *
  */
-public class BasicSearchWidget extends InputHandler{
+public class BasicSearchWidget extends Widget{
     
 	private FengJMEInputHandler fengGui;
 	InputHandler input;
@@ -33,7 +32,7 @@ public class BasicSearchWidget extends InputHandler{
 		
 		TreeNode root = ReferenceAtlas.getInstance().getBrainRegionTree();
 		Window window = new Window(true, false, false, true);
-		window.setPosition(new Point(100, 100));
+		window.setPosition(new Point(0, 100));
 		window.setSize(200, 300);
     	window.getContentContainer().setLayoutManager(new BorderLayout());
 		window.setTitle("Search Query"); 
@@ -42,14 +41,11 @@ public class BasicSearchWidget extends InputHandler{
         TextEditor textArea = FengGUI.createTextArea(window.getContentContainer());
         textArea.setText("Enter Keyword");
         textArea.setSize(100, 20);
-        
+
         /*input = new InputHandler();
         fengGui = new FengJMEInputHandler(d);
         input.addToAttachedHandlers(fengGui);*/
-        textArea.addMouseEnteredListener(FocusManager.get());
-        textArea.addMouseExitedListener(FocusManager.get());
         //System.out.println("writing state " + textArea.isInWritingState());
-        
         Button button = new Button( "Start Search" );
         button.setSize(80, 30);
         button.setPosition(new Point(45, 180));
@@ -62,10 +58,6 @@ public class BasicSearchWidget extends InputHandler{
             }
         } );
 
-        button.addMouseEnteredListener(FocusManager.get());
-        button.addMouseExitedListener(FocusManager.get());
-        textArea.addMouseEnteredListener(FocusManager.get());
-        textArea.addMouseExitedListener(FocusManager.get());
         window.getContentContainer().addWidget( button );
         textArea.setPosition(new Point(30,220));
         d.layout();

@@ -13,7 +13,6 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.scene.shape.Sphere;
 
-import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 
 /**

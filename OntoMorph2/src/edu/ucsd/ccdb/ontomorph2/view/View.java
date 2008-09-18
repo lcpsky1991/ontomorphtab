@@ -36,7 +36,6 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
-import edu.ucsd.ccdb.ontomorph2.util.FocusManager;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 
 //=========
@@ -67,7 +66,8 @@ public class View extends BaseSimpleGame {
 	View3D view3D = null;
 	private View3DMouseListener view3DMouseListener;
 	private OMTKeyInputListener OMTKeyListener;
-	private FocusManager focus;
+	
+	FengJMEInputHandler guiInput;
 	/**
 	 * Returns the singleton instance.
 	 @return	the singleton instance
@@ -127,17 +127,18 @@ public class View extends BaseSimpleGame {
 		} else {
 			display.setTitle("Whole Brain Catalog");
 		}
-				
+		
 		rootNode.attachChild(view3D);
 
 		
+		//Remove lighting for rootNode so that it will use our basic colors
+		rootNode.setLightCombineMode(LightState.OFF);
+		
+		disp = View2D.getInstance();
+		guiInput = new FengJMEInputHandler(disp);
 		//Section for setting up the mouse and other input controls	
 		configureControls();
 		
-		//Remove lighting for rootNode so that it will use our basic colors
-		rootNode.setLightCombineMode(LightState.OFF);
-        
-		disp = View2D.getInstance();
 	}
 	
 	public FirstPersonHandler getFPHandler() {
@@ -146,6 +147,7 @@ public class View extends BaseSimpleGame {
     	
 	private void configureControls()
 	{
+		
 		fpHandler = new FirstPersonHandler(cam, 50, camNode.getRotationRate()); //(cam, moveSpeed, turnSpeed)
 		
 		//This is where we disable the FPShooter controls that are created by default by JME	
@@ -157,25 +159,24 @@ public class View extends BaseSimpleGame {
         fpHandler.getMouseLookHandler().setEnabled( false);
 		
         input.clearActions();	//removes all input actions not specifically programmed
-		
+        input.addToAttachedHandlers(guiInput);
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
 		
-		focus = new FocusManager();
+		//focus = new FocusManager();
+		
 		//(InputActionInterface action, java.lang.String deviceName, int button, int axis, boolean allowRepeats)
 		/*
     	this.view3DMouseHandler = new View3DMouseHandler();
         input.addAction(this.view3DMouseHandler , InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, false );
         */
-		if(focus.isWidgetFocused() == false ){
-			
-			System.out.println("Mouse Listener");
-			this.view3DMouseListener = new View3DMouseListener();
-			MouseInput.get().addListener(this.view3DMouseListener);
+
+		this.view3DMouseListener = new View3DMouseListener(disp, guiInput);
+		MouseInput.get().addListener(this.view3DMouseListener);
 		
-			this.OMTKeyListener = new OMTKeyInputListener();
-			KeyInput.get().addListener(this.OMTKeyListener);
-		}	
+		this.OMTKeyListener = new OMTKeyInputListener(disp, guiInput);
+		KeyInput.get().addListener(this.OMTKeyListener);
+		
 	}
 			
 	public OMTKeyInputListener getKeyInputListener() {
@@ -302,8 +303,7 @@ public class View extends BaseSimpleGame {
         
         //Flush the renderQueue right before rendering the menu so that nothing can get on top of it
         r.renderQueue();
-        
-        //input = new FengJMEInputHandler(disp);
+       
 		// Then we display the GUI
 		disp.display();
     }

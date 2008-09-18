@@ -11,6 +11,8 @@ import com.jme.input.MouseInput;
 import com.jme.input.MouseInputListener;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
+
+import edu.ucsd.ccdb.ontomorph2.view.View3DMouseListener;
  
 public class FengJMEInputHandler extends InputHandler
 {
@@ -20,7 +22,6 @@ public class FengJMEInputHandler extends InputHandler
 	
 	private boolean keyHandled;
 	private boolean mouseHandled;
-	
 	public FengJMEInputHandler(Display disp)
 	{
 		this.disp = disp;
@@ -33,7 +34,6 @@ public class FengJMEInputHandler extends InputHandler
 	
 	public void update(float time)
 	{
-		keyHandled = false;
 		mouseHandled = false;
 		super.update(time);
 	}
@@ -43,11 +43,17 @@ public class FengJMEInputHandler extends InputHandler
 		return keyHandled;
 	}
 	
+	public void setKey(boolean mouseHandled){
+		keyHandled = mouseHandled;
+	}
 	public boolean wasMouseHandled()
 	{
 		return mouseHandled;
 	}
 	
+	public void set(boolean mouseValue){
+		mouseHandled = mouseValue;
+	}
 	private class KeyAction extends KeyInputAction
 	{
 		/*
@@ -63,16 +69,21 @@ public class FengJMEInputHandler extends InputHandler
 		*/
 		public void performAction(InputActionEvent evt)
 		{
+			
+			//System.out.println("perform action");
 			char character = evt.getTriggerCharacter();
+			
+			//System.out.println("character " + character + " " + evt.getTriggerPressed());
 			Key key = mapKeyEvent();
-			if(evt.getTriggerPressed())
-				keyHandled = disp.fireKeyPressedEvent(character, key);
+			if(evt.getTriggerPressed()){
+				disp.fireKeyPressedEvent(character, key);
+
 				if (key == Key.LETTER || key == Key.DIGIT) {
-					keyHandled = disp.fireKeyTypedEvent(character);
-					keyHandled = true;
+					disp.fireKeyTypedEvent(character);
 				}
+			}
 			else {
-				keyHandled = disp.fireKeyReleasedEvent(character, key);
+				disp.fireKeyReleasedEvent(character, key);
 			}
 		}
 		
@@ -84,6 +95,7 @@ public class FengJMEInputHandler extends InputHandler
 		{
 			Key keyClass;
 			
+			//System.out.println("map Key Event");
 	        switch(Keyboard.getEventKey()) 
 	        {
 		        case Keyboard.KEY_BACK:
@@ -195,19 +207,28 @@ public class FengJMEInputHandler extends InputHandler
 		{
 			down = pressed;
 			lastButton = button;
-			if(pressed)
+			if(pressed){
 				mouseHandled = disp.fireMousePressedEvent(x, y, getMouseButton(button), 1);
-			else
+				set(mouseHandled);
+			}
+			
+			else{
 				mouseHandled = disp.fireMouseReleasedEvent(x, y, getMouseButton(button), 1);
+				set(mouseHandled);
+			}
 		}
  
 		public void onMove(int xDelta, int yDelta, int newX, int newY)
 		{
 			// If the button is down, the mouse is being dragged
-			if(down)
+			if(down){
 				mouseHandled = disp.fireMouseDraggedEvent(newX, newY, getMouseButton(lastButton));
-			else
+				setKey(mouseHandled);
+			}	
+			else{
 				mouseHandled = disp.fireMouseMovedEvent(newX, newY);
+				setKey(mouseHandled);
+			}	
 		}
  
 		public void onWheel(int wheelDelta, int x, int y)
