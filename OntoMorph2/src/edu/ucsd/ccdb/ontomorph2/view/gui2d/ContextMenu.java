@@ -294,7 +294,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	        menuItemFactory(this, msDebug, CTX_ACTION_DEBUG);
 			
 	        //add new anchor points?
-			if (baseContext instanceof Curve3D)
+			if (baseContext instanceof Curve3D || baseContext instanceof CurveAnchorPoint)
 			{
 				//build curve special menu
 				menuItemFactory(mnuNew, msN_ANCHOR, CTX_ACTION_NEW_ANCHOR);
@@ -674,6 +674,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		place = new OMTVector(cp.getParentCurve().getPoint(t+delta));
 
 		cp.getParentCurve().addControlPoint(i, place);
+		
 		cp.getParentCurve().reapply(); //TODO: remove this line
 	}
 	

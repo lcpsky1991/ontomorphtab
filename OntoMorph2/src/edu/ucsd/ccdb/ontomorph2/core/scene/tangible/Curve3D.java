@@ -347,8 +347,10 @@ public class Curve3D extends Tangible{
 		curr.setVisible(true);
 		curr.select();
 		
+		curr.changed();
+		
 		//update the scene
-		changed();
+		//changed();
 		
 	}
 	

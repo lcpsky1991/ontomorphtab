@@ -90,7 +90,11 @@ public class CurveView extends TangibleView {
 
 	private void renderAnchorPoints(Curve3D curve) 
 	{
-		//System.out.println("rendering");
+		//first delete all the anchor points
+		this.detachChild(anchors);
+		anchors = null;
+		
+		//redraw the points
 		if (anchors == null) 
 		{
 			anchors = new Node();
