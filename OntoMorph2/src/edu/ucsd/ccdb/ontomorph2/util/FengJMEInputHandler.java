@@ -22,6 +22,7 @@ public class FengJMEInputHandler extends InputHandler
 	
 	private boolean keyHandled;
 	private boolean mouseHandled;
+	
 	public FengJMEInputHandler(Display disp)
 	{
 		this.disp = disp;
@@ -77,7 +78,6 @@ public class FengJMEInputHandler extends InputHandler
 			Key key = mapKeyEvent();
 			if(evt.getTriggerPressed()){
 				disp.fireKeyPressedEvent(character, key);
-
 				if (key == Key.LETTER || key == Key.DIGIT) {
 					disp.fireKeyTypedEvent(character);
 				}
