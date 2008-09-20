@@ -182,7 +182,6 @@ public class View2D extends Display{
 		
 		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
 		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
-		//addMouseExitedListener(FocusManager.focusManager);
 		Tree<TreeNode> tree = MyTreeModel.<TreeNode>createTree(sc);
 	
 		window.setSize(200, 300);
@@ -202,6 +201,7 @@ public class View2D extends Display{
 				TreeNode n = (TreeNode)selectionChangedEvent.getToggableWidget().getValue();
 				n.value.select();
 				
+				System.out.println("selection");
 			}
 			
 		});
@@ -220,6 +220,7 @@ public class View2D extends Display{
 	public void loadFileChooser() {
 //		Create a file chooser
 		final JFileChooser fc = new JFileChooser(OntoMorph2.getWBCProperties().getProperty("last.load.directory"));
+		
 		
 //		In response to a button click:
 		JFrame f = new JFrame();
