@@ -122,15 +122,17 @@ public class View extends BaseSimpleGame {
 		display.getRenderer().setBackgroundColor(ColorRGBA.black); //Set a black background.
 		
 		//ugly hack
-		if ("demo".equals(OntoMorph2.getWBCProperties().getProperty(OntoMorph2.SCENE))) {
+		if ("demo".equals(OntoMorph2.getWBCProperties().getProperty(OntoMorph2.SCENE))) 
+		{
 			display.setTitle("Spatial and Semantic Representations");
-		} else {
+		}
+		else 
+		{
 			display.setTitle("Whole Brain Catalog");
 		}
 		
 		rootNode.attachChild(view3D);
 
-		
 		//Remove lighting for rootNode so that it will use our basic colors
 		rootNode.setLightCombineMode(LightState.OFF);
 		
@@ -138,30 +140,33 @@ public class View extends BaseSimpleGame {
 		guiInput = new FengJMEInputHandler(disp);
 		//Section for setting up the mouse and other input controls	
 		configureControls();
-		
+	
 	}
 	
-	public FirstPersonHandler getFPHandler() {
+	public FirstPersonHandler getFPSHandler() {
 		return fpHandler;
 	}
     	
 	private void configureControls()
 	{
 		
-		fpHandler = new FirstPersonHandler(cam, 50, camNode.getRotationRate()); //(cam, moveSpeed, turnSpeed)
+		fpHandler = new FirstPersonHandler(camNode.getCamera(), 50, camNode.getRotationRate()); //(cam, moveSpeed, turnSpeed)
 		
 		//This is where we disable the FPShooter controls that are created by default by JME	
         input = fpHandler;
         
+		
         //Disable both of these because I want to track things with the camera
         
-        fpHandler.getKeyboardLookHandler().setEnabled( false );
-        fpHandler.getMouseLookHandler().setEnabled( false);
+        fpHandler.getKeyboardLookHandler().setEnabled( true );
+        fpHandler.getMouseLookHandler().setEnabled( true);
 		
+        
         input.clearActions();	//removes all input actions not specifically programmed
         input.addToAttachedHandlers(guiInput);
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
+		
 		
 		//focus = new FocusManager();
 		

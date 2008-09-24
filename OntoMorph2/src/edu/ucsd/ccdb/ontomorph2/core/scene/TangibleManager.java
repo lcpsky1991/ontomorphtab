@@ -254,8 +254,13 @@ public class TangibleManager {
 		return selectedThings.contains(thing);
 	}
 
-	public void addTangible(Tangible tangible) {
-		this.tangibles.add(tangible);
+	public boolean addTangible(Tangible tangible) {
+		return this.tangibles.add(tangible);
+	}
+	
+	public boolean removeTangible(Tangible t)
+	{
+		return this.tangibles.remove(t);
 	}
 
 	public void loadFile(File file) {

@@ -207,6 +207,7 @@ public class View3DMouseListener implements MouseInputListener {
 		//	RIGHT CLICK
 		if (1 == buttonIndex) //right
 		{	
+			doPick();
 			//MouseInput.get().setCursorVisible(false); //hide mouse cursor
 			ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
 					MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());

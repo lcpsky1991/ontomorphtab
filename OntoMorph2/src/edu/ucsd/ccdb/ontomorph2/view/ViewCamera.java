@@ -132,6 +132,18 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		this.setLocalTranslation( this.getLocalTranslation().add(dir));
 	}
 
+	public void moveLeft(float amount)
+	{
+		Vector3f dir = this.getCamera().getLeft().normalize().mult(amount);
+		this.setLocalTranslation(this.getLocalTranslation().add(dir));
+	}
+	
+	public void moveRight(float amount)
+	{
+		Vector3f dir = this.getCamera().getLeft().normalize().negate().mult(amount);
+		this.setLocalTranslation(this.getLocalTranslation().add(dir));
+	}
+	
 	/**
 	 * Move the camera one unit backward
 	 * @author caprea

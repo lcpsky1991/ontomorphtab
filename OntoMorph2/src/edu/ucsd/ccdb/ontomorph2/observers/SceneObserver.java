@@ -171,31 +171,39 @@ public class SceneObserver implements Observer {
 		//catch all method for any leftover tangibles
 		else if (o instanceof Tangible)
 		{
-			Tangible t = (Tangible)o;
-
-			//get the tangible view manager that holds on to the list of tangible views
-			TangibleViewManager tvm = TangibleViewManager.getInstance();
-			
-			//get the tangible view that corresponds to the current tangible
-			TangibleView tv = tvm.getTangibleViewFor(t);
-			
-			//if we have moved, test to see if any tangibles contain any other tangibles now
-			//this code is required to do containment operations.   We need to find
-			//another way of improving performance beyond commenting it out because it
-			//is core functionality.
-			if (Tangible.CHANGED_MOVE.equals(arg)) {
-				if (tv != null) {
-					
-					Set<Tangible> containerTangibles = tvm.getContainerTangibles(tv);
+				Tangible t = (Tangible)o;
+	
+				//get the tangible view manager that holds on to the list of tangible views
+				TangibleViewManager tvm = TangibleViewManager.getInstance();
 				
-					t.updateContainerTangibles(containerTangibles);
-				}				
-			}
-			
-			if (tv != null) 
-			{
-				tv.update();
-			}
+				//get the tangible view that corresponds to the current tangible
+				TangibleView tv = tvm.getTangibleViewFor(t);
+				
+				//if we have moved, test to see if any tangibles contain any other tangibles now
+				//this code is required to do containment operations.   We need to find
+				//another way of improving performance beyond commenting it out because it
+				//is core functionality.
+				if (Tangible.CHANGED_MOVE.equals(arg)) 
+				{
+					if (tv != null) 
+					{
+						Set<Tangible> containerTangibles = tvm.getContainerTangibles(tv);
+						t.updateContainerTangibles(containerTangibles);
+					}				
+				}
+				
+				//remove ttangible
+				if (Tangible.CHANGED_DELETE.equals(arg) && tv != null)
+				{
+					tv.detachAllChildren();
+					tv.removeFromParent();
+					//tv = null;
+				}
+				
+				if (tv != null) 
+				{
+					tv.update();
+				}
 		}
 		
 		//probably good to do this on every change

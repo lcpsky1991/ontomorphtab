@@ -49,9 +49,18 @@ public class OMTKeyInputListener implements KeyInputListener {
 		//may consider implementing handlers that operate in a loop as long
 		//as a button stays pressed later though.  This may need to be done in a
 		//separate thread or using JME's controller mechanism though -SL
-		if (!pressed) return;
 		
-		switch(keyCode) {
+		
+		/////////////////////////////////////////////
+		// inside IF statement handles repeating key actions
+		if (!pressed)
+		{
+
+			return;
+		}
+		
+		switch(keyCode)
+		{
 		case KeyInput.KEY_ESCAPE:
 			//Bind the Escape key to kill our app
 			View.getInstance().finish();
@@ -90,12 +99,20 @@ public class OMTKeyInputListener implements KeyInputListener {
 		case KeyInput.KEY_LBRACKET:
 			View.getInstance().getCameraNode().zoomOut(keyPressActionRate);
 			break;
+		
+			
+		case KeyInput.KEY_A:
+			View.getInstance().getCameraNode().moveLeft(keyPressActionRate);
+			break;
+		case KeyInput.KEY_D:
+			View.getInstance().getCameraNode().moveRight(keyPressActionRate);
+			break;
 			
 		//////////////////////////////////////////
 	    // Miscellaneous and debug keys
 		// (this stuff should probably only run when debug mode is on)	
 	    /////////////////////////////////////////
-		case KeyInput.KEY_D:
+		case KeyInput.KEY_F:
 			//toggle debug
 			OntoMorph2.setDebugMode(!OntoMorph2.isDebugMode());
 			{
@@ -118,6 +135,11 @@ public class OMTKeyInputListener implements KeyInputListener {
 				}
 			}
 			break;
+		case KeyInput.KEY_BACK:
+			{
+				//delete
+			}
+			break;
 		case KeyInput.KEY_M:
 			//toggle mouse
 			if (OntoMorph2.isDebugMode()) {
@@ -125,12 +147,12 @@ public class OMTKeyInputListener implements KeyInputListener {
 				
 				if (pointerEnabled)
 				{
-					View.getInstance().getFPHandler().setEnabled(false);
+					View.getInstance().getFPSHandler().setEnabled(false);
 					MouseInput.get().setCursorVisible(true);
 				}
 				else
 				{
-					View.getInstance().getFPHandler().setEnabled(true);
+					View.getInstance().getFPSHandler().setEnabled(true);
 					MouseInput.get().setCursorVisible(false);
 				}
 			}
@@ -174,7 +196,9 @@ public class OMTKeyInputListener implements KeyInputListener {
 		}
 	}
 	
-	public float getKeyPressActionRate() {
+	public float getKeyPressActionRate() 
+	{
 		return this.keyPressActionRate;
 	}
+		
 }

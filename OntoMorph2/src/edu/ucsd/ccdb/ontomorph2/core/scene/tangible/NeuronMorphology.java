@@ -25,19 +25,13 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
 public abstract class NeuronMorphology extends Tangible{
 
 	public static final String RENDER_AS_LINES = "lines";
-
 	public static final String RENDER_AS_CYLINDERS = "cylinders";
-
 	public static final String RENDER_AS_LOD = "LOD";
-
 	public static final String RENDER_AS_LOD_2 = "LOD2";
-
 	public static final String RENDER_AS_DETAILED_BOXES = "detailed_boxes";
 
 	//public static final String RENDER_AS_CYLINDER_BATCH = "cylinder_batch";
 
-	
-	
 	String _renderOption = RENDER_AS_LINES; //default render option
 	
 	Set<ICable> segmentGroupList = null;
@@ -193,7 +187,7 @@ public abstract class NeuronMorphology extends Tangible{
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getName()
 	 */
-	public abstract String getName();
+	//public abstract String getName();
 
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#setUpVector(com.jme.math.Vector3f)

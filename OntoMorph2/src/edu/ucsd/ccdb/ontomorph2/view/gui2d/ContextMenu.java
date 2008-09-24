@@ -69,6 +69,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_MANIP = 99;
 	public static final int CTX_ACTION_ATTACH = 114;
 	public static final int CTX_ACTION_PROPOGATE = 115;
+	public static final int CTX_ACTION_DELETE = 116;
+	public static final int CTX_ACTION_RENAME = 117;
 	
 	//IDs for easily creating cells
 	public static final String TYPE_CELL_DG_A = "5199202a";
@@ -83,8 +85,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	
 	//ms stands for Menu String
 	static final String msNEW = "New ...";
-	static final String msN_CURVE = "Curve";
-	static final String msANNOTATE = "Annotate";
+	//static final String msN_CURVE = "Curve";
+	//static final String msANNOTATE = "Annotate";
 	static final String msANIMATE = "Animate";
 	static final String msPROPERTIES = "Display Properties";
 	static final String msN_ANCHOR = "Anchor Point";
@@ -103,8 +105,10 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	static final String msScale = "Scale";
 	static final String msMove = "Move";
 	static final String msNone = "(Nothing Selected)";
-	static final String msDebug = "Debug";
+	//static final String msDebug = "Debug";
 	static final String msATTACH = "Attach to...";
+	//static final String msDELETE = "Delete";
+	static final String msPropogate = "Propogate";
 	static ContextMenu instance = null;
 	
 	//These are the titles of the user-defined fields of the menu items
@@ -272,8 +276,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		else
 		{
 			//All conditions about list size were already considered, this should never happen!
-			String wtf = "'How often have I said to you that when you have eliminated the impossible, whatever remains, however improbable, must be the truth?' - Sherlock";
-			System.out.println(wtf);
+			//"'How often have I said to you that when you have eliminated the impossible, whatever remains, however improbable, must be the truth?' - Sherlock";
+			System.out.println("WTF");
 		}
 		//===========================================
 		
@@ -288,10 +292,12 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			// secondary must be built before primary in order to attach them as non-empty
 			//===================================
 			
-			menuItemFactory(mnuNew, msN_CURVE, CTX_ACTION_NEW_CURVE); //new curves are a generic action
-	        menuItemFactory(this, msANNOTATE, CTX_ACTION_ANNOTATE);
-	        menuItemFactory(this, msPROPERTIES, CTX_ACTION_DISPROP);
-	        menuItemFactory(this, msDebug, CTX_ACTION_DEBUG);
+			menuItemFactory(mnuNew, "New Curve", CTX_ACTION_NEW_CURVE); //new curves are a generic action
+	        menuItemFactory(this, "Annotate", CTX_ACTION_ANNOTATE);
+	        menuItemFactory(this, "Properties", CTX_ACTION_DISPROP);
+	        menuItemFactory(this, "Debug", CTX_ACTION_DEBUG);
+	        menuItemFactory(this, "Delete", CTX_ACTION_DELETE);
+	        menuItemFactory(this, "Rename", CTX_ACTION_RENAME);
 			
 	        //add new anchor points?
 			if (baseContext instanceof Curve3D || baseContext instanceof CurveAnchorPoint)
@@ -309,7 +315,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			if (baseContext instanceof NeuronMorphology)
 			{
 				//build morphology special menu
-				menuItemFactory(this, "Propogate", CTX_ACTION_PROPOGATE);
+				menuItemFactory(this, msPropogate, CTX_ACTION_PROPOGATE);
 			}
 			
 			
@@ -558,6 +564,10 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	{
 		List<Tangible> selected = TangibleManager.getInstance().getSelected();
 		//Tangible recent = TangibleManager.getInstance().getSelectedRecent();
+		
+		String strReply = null;
+		int ival = 0;
+		
 		for (int t = 0; t < selected.size(); t++)
 		{
 			Tangible single = selected.get(t);
@@ -593,15 +603,30 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				}
 				case CTX_ACTION_PROPOGATE:
 				{
-					int num = 0;
-					String reply = JOptionPane.showInputDialog(null, "Propogate how many cells?", "How many?", JOptionPane.QUESTION_MESSAGE);
-					if ( reply != null) num = Integer.parseInt(reply);
-					propogate(single, num);
+					strReply = JOptionPane.showInputDialog(null, "Propogate how many cells?", "How many?", JOptionPane.QUESTION_MESSAGE);
+					if ( strReply != null) ival = Integer.parseInt(strReply);
+					propogate(single, ival);
 				}
 					
 					break;
 				case CTX_ACTION_NEW_CELL:
 					createCellOn(single);
+					break;
+				case CTX_ACTION_DELETE:
+					{
+						ival = JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete " + single.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+						if (ival == JOptionPane.YES_OPTION) 
+						{
+							if (!single.delete())
+							{
+								JOptionPane.showMessageDialog(null, "Unable to delete " + single.getName());
+							}
+						}
+					}
+					break;
+				case CTX_ACTION_RENAME:
+					strReply = JOptionPane.showInputDialog("Rename '" + single.getName() + "' to:", single.getName());
+					if (strReply != null) single.setName(strReply);
 					break;
 				case CTX_ACTION_MANIP:
 					View.getInstance().getView3DMouseListener().setManipulation((int)value);

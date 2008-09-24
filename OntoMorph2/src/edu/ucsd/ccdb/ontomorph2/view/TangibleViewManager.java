@@ -145,7 +145,7 @@ public class TangibleViewManager {
 				continue;
 			}
 			//find out if the current geometry contains the bounding volume bv
-			if (g.getWorldBound().contains(bv.getCenter()) && g.getWorldBound().intersects(bv)) {
+			if (g != null && g.getWorldBound().contains(bv.getCenter()) && g.getWorldBound().intersects(bv)) {
 				//for any tangible view containers, look up their corresponding
 				//tangibles
 				TangibleView tv2 = getTangibleView(g);

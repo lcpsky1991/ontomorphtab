@@ -31,8 +31,12 @@ public class CurveAnchorPoint extends Tangible {
 		this.parentCurve = curve;
 		this.setCoordinateSystem(curve.getCoordinateSystem());
 		this.setRelativePosition(new PositionVector(position));
-		this.i = i;
-		
+		this.i = i;	
+	}
+	
+	public boolean delete()
+	{
+		return (parentCurve.removeControlPoint(this.i) && super.delete());
 	}
 	
 	/**

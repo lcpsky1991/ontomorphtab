@@ -1,9 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import com.jme.curve.Curve;
 import com.jme.math.FastMath;
@@ -53,7 +55,8 @@ public class Curve3D extends Tangible{
 	 * @return
 	 */
 	public List<CurveAnchorPoint> getAnchorPoints() {
-		if (anchors == null) {
+		if (anchors == null) 
+		{
 			anchors = new ArrayList<CurveAnchorPoint>();
 			for (int i = 0; i< controlPoints.length; i++) {
 				anchors.add(new CurveAnchorPoint(this, controlPoints[i], i));
@@ -252,6 +255,7 @@ public class Curve3D extends Tangible{
 	public void reapply()
 	{
 		//redraw the curve
+		System.out.println("pts " + getAnchorPoints().size());
 		for (CurveAnchorPoint p : getAnchorPoints())
 		{
 			setControlPoint(p.getIndex(), p.getRelativePosition());
@@ -352,6 +356,45 @@ public class Curve3D extends Tangible{
 		//update the scene
 		//changed();
 		
+	}
+	
+	
+	public boolean removeControlPoint(int index)
+	{
+		if (true) return true;
+		
+		if (controlPoints.length > 2)
+		{
+			OMTVector modpoints[] = new OMTVector[controlPoints.length-1];
+			
+			//copy over the points that preceed the index-to-remove
+			for (int i = 0; i < index; i++)
+			{
+				modpoints[i] = controlPoints[i];
+			}
+			
+			//copy over the points that follow the index-to-remove
+			for (int j = index+1; j < controlPoints.length; j++)
+			{
+				modpoints[j-1] = controlPoints[j];
+			}
+			controlPoints = modpoints.clone();
+			
+			
+			//update the anchor points (their Is)
+			anchors.remove(index);
+			for (int i=0; i < controlPoints.length; i++)
+			{
+				anchors.get(i).i = i;
+				System.out.println(i + ":" + anchors.get(i).getIndex());
+			}
+			
+			//System.out.println("anchors " + anchors.size());
+			//System.out.println("apc " +  getAnchorPoints().size());
+			return true;
+		}		
+		
+		return true;
 	}
 	
 	

@@ -52,6 +52,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public static final String CHANGED_ROTATE = "rotate";
 	public static final String CHANGED_MOVE = "move";
 	public static final String CHANGED_NAME = "name";
+	public static final String CHANGED_DELETE = "delete";
 	public static final String CHANGED_ADD_PART = "add part";
 	public static final String CHANGED_LOADED = "loaded";
 	public static final String CHANGED_CONTAINS = "contains";
@@ -81,6 +82,17 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		//by default, all objects ought to be associated with an instance.
 		//the least specific instance that can be created is one of bfo:entity.
 		//addSemanticThing(GlobalSemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
+	}
+	
+	/**
+	 * 
+	 * @return True if successfully deleted this tangible
+	 */
+	public boolean delete()
+	{
+		this.changed(CHANGED_DELETE);
+		return TangibleManager.getInstance().removeTangible(this);
+		
 	}
 	
 	/**
@@ -271,6 +283,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void changed() {
 		changed(null);
 	}
+
 	
 	protected void changed(String argument) {
 		this.setChanged();
