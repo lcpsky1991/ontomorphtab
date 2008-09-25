@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.fenggui.background.PlainBackground;
@@ -550,7 +551,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	{
 		String info = "";
 		
-		OMTVector camDir = new OMTVector(View.getInstance().getCameraNode().getCamera().getDirection());
+		OMTVector camDir = new OMTVector(View.getInstance().getCameraView().getCamera().getDirection());
 		OMTVector plane = src.getWorldNormal();
 		
 		info += src.getWorldNormal() + "\n";
@@ -560,10 +561,15 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		System.out.println(info);
 	}
 	
-	public void doActionOnSelected(int action, Tangible target, double value)
+	private void doActionOnSelected(int action, Tangible target, double value)
 	{
 		List<Tangible> selected = TangibleManager.getInstance().getSelected();
-		//Tangible recent = TangibleManager.getInstance().getSelectedRecent();
+		
+		//Create a dummy frame for the dialog boxes to exist inside of, this forces the dialog boxes to appear 'on top' of the application
+		JFrame frmDialog = new JFrame();
+		frmDialog.setSize(1,1);
+		frmDialog.setLocation(1,1);
+		frmDialog.setVisible(true);
 		
 		String strReply = null;
 		int ival = 0;
@@ -603,7 +609,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				}
 				case CTX_ACTION_PROPOGATE:
 				{
-					strReply = JOptionPane.showInputDialog(null, "Propogate how many cells?", "How many?", JOptionPane.QUESTION_MESSAGE);
+					strReply = JOptionPane.showInputDialog(frmDialog, "Propogate how many cells?", "How many?", JOptionPane.QUESTION_MESSAGE);
 					if ( strReply != null) ival = Integer.parseInt(strReply);
 					propogate(single, ival);
 				}
@@ -614,7 +620,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					break;
 				case CTX_ACTION_DELETE:
 					{
-						ival = JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete " + single.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+						ival = JOptionPane.showConfirmDialog(frmDialog, "Are you sure you wish to delete " + single.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 						if (ival == JOptionPane.YES_OPTION) 
 						{
 							if (!single.delete())
@@ -625,7 +631,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					}
 					break;
 				case CTX_ACTION_RENAME:
-					strReply = JOptionPane.showInputDialog("Rename '" + single.getName() + "' to:", single.getName());
+					strReply = JOptionPane.showInputDialog(frmDialog, "Rename '" + single.getName() + "' to:", single.getName());
 					if (strReply != null) single.setName(strReply);
 					break;
 				case CTX_ACTION_MANIP:
@@ -740,9 +746,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		else
 		{
 			//find the coordinate system of the camera on which to draw the curve parallel to, to do this we need three vectors
-			towardcam = new OMTVector(View.getInstance().getCameraNode().getCamera().getDirection().normalize().negate().mult(5f)); 
-			left = new OMTVector(View.getInstance().getCameraNode().getCamera().getLeft()); //too keep units consistent multiply by -1 so positive is 'right' (a droite)
-			up = new OMTVector(View.getInstance().getCameraNode().getCamera().getUp());
+			towardcam = new OMTVector(View.getInstance().getCameraView().getCamera().getDirection().normalize().negate().mult(5f)); 
+			left = new OMTVector(View.getInstance().getCameraView().getCamera().getLeft()); //too keep units consistent multiply by -1 so positive is 'right' (a droite)
+			up = new OMTVector(View.getInstance().getCameraView().getCamera().getUp());
 			
 			Vector3f combined = towardcam.normalize().add(left.normalize().add(up).normalize());
 			//adopt the plane of the camera to be the coordinate system
@@ -834,13 +840,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		
 		//FIND WHERE to put it
-		Vector3f camPos = View.getInstance().getCameraNode().getCamera().getLocation();
-		Vector3f camDir = View.getInstance().getCameraNode().getCamera().getDirection().normalize().mult(30f); //get 4 unit-direction 
+		Vector3f camPos = View.getInstance().getCameraView().getCamera().getLocation();
+		Vector3f camDir = View.getInstance().getCameraView().getCamera().getDirection().normalize().mult(30f); //get 4 unit-direction 
 		Vector3f dest = camPos.add(camDir);
-		
-		//camPos = OMTUtility.rotateVector(camPos, src.getCoordinateSystem().getRotationFromAbsolute());
-		System.out.println("Pos: " + camPos + "  -   Dir: " + camDir);
-		
 			
 		NeuronMorphology nc = cellFactory(type, null);	//create the cell
 		//place the thing in front of the camera

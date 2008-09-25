@@ -71,48 +71,40 @@ public class OMTKeyInputListener implements KeyInputListener {
 	    ////////////////////////////////////////////
 		case KeyInput.KEY_ADD:
 		case KeyInput.KEY_EQUALS: //for shift not pressed;
-			View.getInstance().getCameraNode().moveForward(keyPressActionRate);
+			View.getInstance().getCameraView().moveForward(keyPressActionRate);
 			break;
 		case KeyInput.KEY_SUBTRACT:
 		case KeyInput.KEY_MINUS: //for no-shift control
-			View.getInstance().getCameraNode().moveBackward(keyPressActionRate);
+			View.getInstance().getCameraView().moveBackward(keyPressActionRate);
 			break;
 		case KeyInput.KEY_LEFT:
-			View.getInstance().getCameraNode().turnCounterClockwise(keyPressActionRate);
+			View.getInstance().getCameraView().turnCounterClockwise(keyPressActionRate);
 			break;
 		case KeyInput.KEY_RIGHT:
-			View.getInstance().getCameraNode().turnClockwise(keyPressActionRate);
+			View.getInstance().getCameraView().turnClockwise(keyPressActionRate);
 			break;
 		case KeyInput.KEY_UP:
-			View.getInstance().getCameraNode().turnUp(keyPressActionRate);
+			View.getInstance().getCameraView().turnUp(keyPressActionRate);
 			break;
 		case KeyInput.KEY_DOWN:
-			View.getInstance().getCameraNode().turnDown(keyPressActionRate);
+			View.getInstance().getCameraView().turnDown(keyPressActionRate);
 			break;
 		case KeyInput.KEY_1:
 			//object_sphere
 			//View.getInstance().getCamera().SphereLeftRotation(keyPressActionRate);
 			break;
 		case KeyInput.KEY_RBRACKET:
-			View.getInstance().getCameraNode().zoomIn(keyPressActionRate);
+			View.getInstance().getCameraView().zoomIn(keyPressActionRate);
 			break;		
 		case KeyInput.KEY_LBRACKET:
-			View.getInstance().getCameraNode().zoomOut(keyPressActionRate);
+			View.getInstance().getCameraView().zoomOut(keyPressActionRate);
 			break;
 		
-			
-		case KeyInput.KEY_A:
-			View.getInstance().getCameraNode().moveLeft(keyPressActionRate);
-			break;
-		case KeyInput.KEY_D:
-			View.getInstance().getCameraNode().moveRight(keyPressActionRate);
-			break;
-			
 		//////////////////////////////////////////
 	    // Miscellaneous and debug keys
 		// (this stuff should probably only run when debug mode is on)	
 	    /////////////////////////////////////////
-		case KeyInput.KEY_F:
+		case KeyInput.KEY_D:
 			//toggle debug
 			OntoMorph2.setDebugMode(!OntoMorph2.isDebugMode());
 			{
@@ -123,7 +115,7 @@ public class OMTKeyInputListener implements KeyInputListener {
 			//assign 'R' to reload the view to inital state //reinit
 			if (OntoMorph2.isDebugMode()) {
 				Log.warn( "\nResetting");
-				View.getInstance().getCameraNode().reset();
+				View.getInstance().getCameraView().reset();
 			}
 			break;
 		case KeyInput.KEY_U:
@@ -171,7 +163,7 @@ public class OMTKeyInputListener implements KeyInputListener {
 			if (OntoMorph2.isDebugMode()) {
 				Vector3f unit = new Vector3f(0f,0f,1f);
 				
-				ViewCamera camNode = View.getInstance().getCameraNode();
+				ViewCamera camNode = View.getInstance().getCameraView();
 				
 				Log.warn( 
 						"\nAngle Between Cam and Origin: " + unit.angleBetween(camNode.getCamera().getDirection()) +

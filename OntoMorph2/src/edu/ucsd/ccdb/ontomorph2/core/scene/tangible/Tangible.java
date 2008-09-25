@@ -493,7 +493,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		Quaternion rot = new Quaternion(0,0,0,1);		//for non-coordinated Tangibles
 		Quaternion inv = new Quaternion();				//inverse rotation of coordinate system
 		Vector3f offset = new Vector3f(0,0,0); 			//offset of origin of coordinate system
-		Camera cam = View.getInstance().getCameraNode().getCamera();
+		Camera cam = View.getInstance().getCameraView().getCamera();
 		
 		
 		//Find the rotation of the coordinate system and the offset of the origin 

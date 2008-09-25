@@ -149,12 +149,12 @@ public class View3DMouseListener implements MouseInputListener {
 					//zoom camera if Z press
 					if ( KeyInput.get().isKeyDown(KeyInput.KEY_Z) )
 					{
-						View.getInstance().getCameraNode().zoomIn(dx);	
+						View.getInstance().getCameraView().zoomIn(dx);	
 					}
 					//move camera if Z NOT pressed
 					else
 					{
-						View.getInstance().getCameraNode().moveForward(dx);
+						View.getInstance().getCameraView().moveForward(dx);
 					}
 				}
 			}
@@ -185,8 +185,16 @@ public class View3DMouseListener implements MouseInputListener {
 		if (mouseLook)
 		{
 			//find mouse change
-			View.getInstance().getCameraNode().turnClockwise(dX / 100f);
-			View.getInstance().getCameraNode().turnUp(dY / 100f);
+			View.getInstance().getCameraView().turnClockwise(dX / 100f);
+			View.getInstance().getCameraView().turnUp(dY / 100f);
+			
+			//rotate the camera around the selected tangibles
+			Tangible recent = TangibleManager.getInstance().getSelectedRecent();
+			if (recent != null)	
+			{
+				View.getInstance().rotateCameraAbout(recent, (Integer)dX, Vector3f.UNIT_Y);
+			}
+			
 		}
 		else if (OMT_MBUTTON_LEFT == button) //left 
 		{
@@ -500,7 +508,7 @@ public class View3DMouseListener implements MouseInputListener {
 			
 //			check to see where the camera is positioned and compare it to the Tangible's plane
 			//if it is under, reverse the X direction so movement is intuitive
-			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().getCameraNode().getCamera().getDirection()), manip.getWorldNormal()); 
+			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().getCameraView().getCamera().getDirection()), manip.getWorldNormal()); 
 			if (reverse) dx = -dx;	//switch X movement if it is on the opposite side of the plane
 
 			switch ( manipulation )
@@ -529,7 +537,7 @@ public class View3DMouseListener implements MouseInputListener {
 				Log.warn("LOOK AT is broken");
 				try
 				{
-					View.getInstance().getCameraNode().lookAt(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question	
+					View.getInstance().getCameraView().lookAt(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question	
 				}
 				catch(Exception e){
 					Log.warn(e.getMessage());
@@ -571,7 +579,7 @@ public class View3DMouseListener implements MouseInputListener {
 		//if the mouse were at the same z-position (relative to the camera) as the average 
 		//position of all selected objects, 
 		//find its world position in absolute coordinates.
-		ViewCamera cam = View.getInstance().getCameraNode();
+		ViewCamera cam = View.getInstance().getCameraView();
 		//extremely confusing.. getScreenCoordinates returns a z value that is the "zPos" to that object which the 
 		//getWorldCoordinates method needs to correctly place the object back in the world.  don't understand why.
 		float distanceBetweenCameraAndSelectedObjects = cam.getCamera().getScreenCoordinates(objectsAbsoluteAveragePosition).z;

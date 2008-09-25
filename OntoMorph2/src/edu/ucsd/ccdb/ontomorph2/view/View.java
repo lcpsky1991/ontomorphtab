@@ -15,9 +15,11 @@ import com.jme.input.KeyInputListener;
 import com.jme.input.MouseInput;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
+import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Line;
@@ -55,7 +57,7 @@ public class View extends BaseSimpleGame {
 	//=================================
 	// Global Interface-Objects
 	//=================================
-	public ViewCamera camNode;					//thisobject needed for manipulating the camera in a simple way
+	public ViewCamera viewNode;					//thisobject needed for manipulating the camera in a simple way
 	
 	FirstPersonHandler fpHandler = null;
 	Line debugRay = null;	//used for mouse picking debugging mode
@@ -110,10 +112,10 @@ public class View extends BaseSimpleGame {
 
 	
 	protected void simpleInitGame() {
-		this.camNode = new ViewCamera();
-		this.cam = camNode.getCamera();
+		this.viewNode = new ViewCamera();
+		this.cam = viewNode.getCamera();
 		
-		rootNode.attachChild(camNode);
+		rootNode.attachChild(viewNode);
 		
 		//as a hack, calling the main application class to do initialization
 		//this is because model loading needs to have the view running in order to work
@@ -150,7 +152,7 @@ public class View extends BaseSimpleGame {
 	private void configureControls()
 	{
 		
-		fpHandler = new FirstPersonHandler(camNode.getCamera(), 50, camNode.getRotationRate()); //(cam, moveSpeed, turnSpeed)
+		fpHandler = new FirstPersonHandler(viewNode.getCamera(), 50, viewNode.getRotationRate()); //(cam, moveSpeed, turnSpeed)
 		
 		//This is where we disable the FPShooter controls that are created by default by JME	
         input = fpHandler;
@@ -275,7 +277,38 @@ public class View extends BaseSimpleGame {
 		//handleKeyInput();	//should be mvoed to some other handler
 	}
 	
-	
+	/**
+	 * Rotates the camera (from user-perspective it rotates the world) around a Tangible
+	 * @param focus
+	 * @param degrees
+	 * @param axis
+	 */
+	public void rotateCameraAbout(Tangible focus, float degrees, Vector3f axis)
+	{
+		Camera camView = viewNode.camNode.getCamera();
+		
+		Quaternion Q = new Quaternion().fromAngleAxis(degrees, axis);
+		viewNode.setLocalRotation(Q);
+		
+		camView.lookAt(focus.getAbsolutePosition(), focus.getAbsolutePosition());
+		
+		
+		//first find the old position and old rotation
+		//Vector3f posOrig = camNode.cam
+		
+		//then apply the new rotation to the camera
+		
+		//apply the new rotation to the old position
+		
+		//apply the new position
+		
+		/*
+		Quaternion roll = new Quaternion();
+		roll.fromAngleAxis( -1*amount*getRotationRate(), Vector3f.UNIT_X ); //rotates Rate degrees
+		roll = this.getLocalRotation().multLocal(roll); // (q, save)
+		this.setLocalRotation(roll);
+		*/
+	}
 
 	
     /**
@@ -289,7 +322,7 @@ public class View extends BaseSimpleGame {
     	//System.out.println("render");
         super.render(interpolation);
        
-        this.getCameraNode().getCamera().update();
+        this.getCameraView().getCamera().update();
         
         Renderer r = display.getRenderer();
 
@@ -361,8 +394,8 @@ public class View extends BaseSimpleGame {
 	 * Get the current instance of the ViewCamera for this view
 	 * @return
 	 */
-	public ViewCamera getCameraNode() {
-		return this.camNode;
+	public ViewCamera getCameraView() {
+		return this.viewNode;
 	}
 	
 	public Node getMainViewRootNode() {

@@ -246,39 +246,39 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if ( SLIDE_VIEW.equals(act) )
 		{
-			View.getInstance().getCameraNode().setToSlideView();
+			View.getInstance().getCameraView().setToSlideView();
 		} 
 		else if (ATLAS_LATERAL_VIEW.equals(act)) 
 		{
-			View.getInstance().getCameraNode().setToAtlasLateralView();
+			View.getInstance().getCameraView().setToAtlasLateralView();
 		} 
 		else if (ATLAS_MEDIAL_VIEW.equals(act)) 
 		{
-			View.getInstance().getCameraNode().setToAtlasMedialView();
+			View.getInstance().getCameraView().setToAtlasMedialView();
 		}
 		else if (SLIDE_VIEW_SMOOTH.equals(act)) 
 		{
-			View.getInstance().getCameraNode().smoothlyZoomToSlideView();
+			View.getInstance().getCameraView().smoothlyZoomToSlideView();
 		} 
 		else if (SLIDE_VIEW_CEREB_SMOOTH.equals(act)) 
 		{
-			View.getInstance().getCameraNode().smoothlyZoomToSlideCerebellumView();
+			View.getInstance().getCameraView().smoothlyZoomToSlideCerebellumView();
 		}
 		else if (ATLAS_CELL_VIEW_SMOOTH.equals(act)) 
 		{
-			View.getInstance().getCameraNode().smoothlyZoomToCellView();
+			View.getInstance().getCameraView().smoothlyZoomToCellView();
 		}
 		else if (ATLAS_SUBCELL_VIEW_SMOOTH.equals(act)) 
 		{
-			View.getInstance().getCameraNode().smoothlyZoomToSubcellularView();
+			View.getInstance().getCameraView().smoothlyZoomToSubcellularView();
 		}
 		else if (ATLAS_LATERAL_VIEW_SMOOTH.equals(act)) 
 		{
-			View.getInstance().getCameraNode().smoothlyZoomToAtlasLateralView();
+			View.getInstance().getCameraView().smoothlyZoomToAtlasLateralView();
 		}
 		else if (ATLAS_MEDIAL_VIEW_SMOOTH.equals(act)) 
 		{
-			View.getInstance().getCameraNode().smoothlyZoomToAtlasMedialView();
+			View.getInstance().getCameraView().smoothlyZoomToAtlasMedialView();
 		}
 		else if ( strMNU_MANI_NONE.equals(act) )
 		{

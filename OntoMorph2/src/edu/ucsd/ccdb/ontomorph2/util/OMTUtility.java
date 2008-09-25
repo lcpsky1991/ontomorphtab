@@ -95,9 +95,9 @@ public abstract class OMTUtility {
 		
 		OMTVector poscent = new OMTVector(queryMesh.getModelBound().getCenter());
 		
-		OMTVector left =  new OMTVector(View.getInstance().getCameraNode().getCamera().getLeft());
-		OMTVector up =  new OMTVector(View.getInstance().getCameraNode().getCamera().getUp());	//must also offset a point by second dimension such that it makes a plane
-		OMTVector dir = new OMTVector(View.getInstance().getCameraNode().getCamera().getDirection());
+		OMTVector left =  new OMTVector(View.getInstance().getCameraView().getCamera().getLeft());
+		OMTVector up =  new OMTVector(View.getInstance().getCameraView().getCamera().getUp());	//must also offset a point by second dimension such that it makes a plane
+		OMTVector dir = new OMTVector(View.getInstance().getCameraView().getCamera().getDirection());
 		
 		OMTVector posa = new OMTVector(left.add(up).mult(-6f));
 		OMTVector posb = new OMTVector(left.mult(-5f));
