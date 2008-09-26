@@ -100,8 +100,11 @@ public class DefaultScene extends Scene{
 		//temporary hack o load a mockup
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
 
-		try {
+		try 
+		{
+			
 			CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(35);
+			
 			
 			Slide a = new CCDBSlide(hippoImage, 0.87f);
 			a.setRelativePosition(new PositionVector(25,-32,17f));
@@ -109,7 +112,10 @@ public class DefaultScene extends Scene{
 			//a.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
 			a.setRelativeScale(10);
 			addSceneObject(a);
-		} catch (OMTOfflineException e) {
+			a.setVisible(false); 
+			
+		} 
+		catch (OMTOfflineException e) {
 			Log.warn(e.getMessage() + " Cannot load slide from CCDB Data");
 		}
 		
@@ -142,6 +148,15 @@ public class DefaultScene extends Scene{
 		addSceneObject(e);
 
 
+		//hide the slides for tedd waitt
+		//TODO: remove this section
+		{
+			b.setVisible(false);
+			c.setVisible(false);
+			ds.setVisible(false);
+			e.setVisible(false);
+		}
+		
 		try {
 			CcdbMicroscopyData cerebImage = CCDBRepository.getInstance().getCCDBData(53);
 			
@@ -153,6 +168,7 @@ public class DefaultScene extends Scene{
 			f.setRelativeRotation(rot);
 			f.setRelativeScale(4.5F); 
 			addSceneObject(f);
+			f.setVisible(false);	//added for tedd wait demo
 		} catch (OMTOfflineException e2) {
 			Log.warn(e2.getMessage());
 		}
