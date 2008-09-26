@@ -13,6 +13,7 @@ import org.fenggui.util.Point;
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
@@ -51,6 +52,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String ATLAS_MEDIAL_VIEW_SMOOTH = "Smoothly Zoom To Medial Side";
 	public static final String ATLAS_CELL_VIEW_SMOOTH = "Smoothly Zoom To View Hippocampal Cells";
 	public static final String ATLAS_SUBCELL_VIEW_SMOOTH = "Smoothly Zoom To View Subcellular Components";
+	public static final String strVIEW_SLIDES = "Toggle Slides";
 	public static final String strMNU_MANIPULATE = "Manipulate Object";
 	public static final String strMNU_MANI_ROTATEA = "Rotate (X - Axis)";
 	public static final String strMNU_MANI_ROTATEB = "Rotate (Y - Axis)";
@@ -87,24 +89,25 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         makeMenuItem(LOAD_SCENE, mnuFile);
         makeMenuItem(SAVE_SCENE, mnuFile);
         
-        if (!OntoMorph2.isDemo()) {
+        
         //=[ SEARCH ]=
         Menu mnuSearch = new Menu();
         mB.registerSubMenu(mnuSearch, "Search");
         makeMenuItem(BASIC_SEARCH, mnuSearch);
-        }
+        
 
         //=[  VIEW  ]=
         Menu mnuView = new Menu();
         mB.registerSubMenu(mnuView, "View");
-        if (!OntoMorph2.isDemo()) makeMenuItem(SLIDE_VIEW_CEREB_SMOOTH, mnuView);
+        makeMenuItem(strVIEW_SLIDES, mnuView);
+        makeMenuItem(SLIDE_VIEW_CEREB_SMOOTH, mnuView);
         makeMenuItem(SLIDE_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_CELL_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_SUBCELL_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_LATERAL_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_MEDIAL_VIEW_SMOOTH, mnuView);
         
-        if (!OntoMorph2.isDemo()) {
+        
         //=[  OBJ  ]=
         Menu mnuObjects = new Menu();
         Menu mnuObjects_New = new Menu();
@@ -119,7 +122,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         makeMenuItem(strNEW_CELL_C, mnuObjects_New);
         //makeMenuItem(VOLUMES, mnuObjects);
         //makeMenuItem(SEMANTICS, mnuObjects);
-        }
+        
         
         //=[  CKB  ]=
         Menu mnuCKB = new Menu();
@@ -129,8 +132,8 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         //=[  ATLAS  ]=
         Menu mnuAtlas = new Menu();
         mB.registerSubMenu(mnuAtlas, "Reference Atlas");
-        if (!OntoMorph2.isDemo()) makeMenuItem(DISPLAY_BASIC_ATLAS, mnuAtlas);
-        if (!OntoMorph2.isDemo()) makeMenuItem(HIDE_BASIC_ATLAS, mnuAtlas);
+        makeMenuItem(DISPLAY_BASIC_ATLAS, mnuAtlas);
+        makeMenuItem(HIDE_BASIC_ATLAS, mnuAtlas);
         makeMenuItem(DISPLAY_DEMO_ATLAS, mnuAtlas);
         makeMenuItem(HIDE_DEMO_ATLAS, mnuAtlas);
         makeMenuItem(SHOW_ATLAS, mnuAtlas);
@@ -213,6 +216,15 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		else if ( SEMANTICS.equals(act) )
 		{
 
+		}
+		else if ( strVIEW_SLIDES.equals(act))
+		{
+			//toggle slides on or off
+			for (Slide s : TangibleManager.getInstance().getSlides())
+			{
+				s.setVisible(!s.isVisible());
+				View.getInstance().getScene().changed(edu.ucsd.ccdb.ontomorph2.core.scene.Scene.CHANGED_SLIDE);
+			}
 		}
 		else if ( strNEW_CELL_A.equals(act) )
 		{

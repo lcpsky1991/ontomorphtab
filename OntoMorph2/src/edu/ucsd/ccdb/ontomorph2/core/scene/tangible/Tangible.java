@@ -95,6 +95,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		
 	}
 	
+
 	/**
 	 * get the RotationVector that defines this INeuronMorphology's rotation.
 	 * This is relative to the coordinate system that this ISceneObject has

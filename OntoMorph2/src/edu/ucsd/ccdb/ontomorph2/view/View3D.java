@@ -69,11 +69,20 @@ public class View3D extends Node{
 		slidesNode.detachAllChildren();
 		for(Slide slide : slides){
 			SlideView slideView = (SlideView)TangibleViewManager.getInstance().getTangibleViewFor(slide);
-			if (slideView == null) {
-				//implicitly adds the new TangibleView to the TangibleViewManager
-				slideView = new SlideView(slide);
+			
+			if (slide.isVisible())
+			{
+				if (slideView == null) 
+				{
+					//implicitly adds the new TangibleView to the TangibleViewManager
+					slideView = new SlideView(slide);
+				}
+				slidesNode.attachChild(slideView);	
 			}
-			slidesNode.attachChild(slideView);
+			else
+			{
+				//dont attach the slide to the scene if it's invisible
+			}
 		}
 		this.updateNode(slidesNode);
 	}
