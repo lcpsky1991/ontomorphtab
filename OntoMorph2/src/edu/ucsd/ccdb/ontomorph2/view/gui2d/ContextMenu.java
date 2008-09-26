@@ -538,8 +538,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		//Create a dummy frame for the dialog boxes to exist inside of, this forces the dialog boxes to appear 'on top' of the application
 		JFrame frmDialog = new JFrame();
 		frmDialog.setSize(0,0);
-		frmDialog.setLocation(1,1);
-		frmDialog.setVisible(false);
+		frmDialog.setLocation(100,100);
+		frmDialog.setVisible(true);
+		
 		
 		String strReply = null;
 		int ival = 0;
@@ -638,10 +639,13 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					break;
 				default:
 				{
-					System.out.println("menu pressed but not handled " + single);
+					System.out.println("menu pressed but not handled " + single);					
 					break;	
 				}
-			}
+			}//end switch
+
+			frmDialog.setVisible(false);
+			frmDialog.dispose(); //destroy the frame that holds the dialogs
 		}
 	}
 	
