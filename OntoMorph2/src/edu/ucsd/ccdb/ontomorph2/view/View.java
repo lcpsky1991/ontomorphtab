@@ -388,7 +388,8 @@ public class View extends BaseSimpleGame {
 		return rootNode;
 	}
 	
-	public void indicator(Vector3f location){
+	public boolean indicator(Vector3f location){
+		boolean state = false;
 		
 		/*Sphere s = new Sphere("Sphere", location,30,30,2);
 		s.setModelBound(new BoundingSphere());
@@ -420,20 +421,19 @@ public class View extends BaseSimpleGame {
 	        Texture.FM_LINEAR));
 	    ts.setEnabled(true);
 
-	    pMesh = ParticleFactory.buildParticles("particles", 300);
+	    pMesh = ParticleFactory.buildParticles("particles", 500);
 	    pMesh.setOriginOffset(location);
 	    pMesh.setEmissionDirection(new Vector3f(0,1,0));
 	    pMesh.setInitialVelocity(.006f);
 	    pMesh.setStartSize(2.5f);
-	    pMesh.setEndSize(.5f);
+	    pMesh.setEndSize(2.5f);
 	    pMesh.setMinimumLifeTime(1200f);
 	    pMesh.setMaximumLifeTime(1400f);
-	    pMesh.setStartColor(new ColorRGBA(1, 0, 0, 1));
-	    pMesh.setEndColor(new ColorRGBA(0, 1, 0, 0));
+	    pMesh.setStartColor(new ColorRGBA(1, 1, 1, 1));
+	    pMesh.setEndColor(new ColorRGBA(0, 1, 1, 0));
 	    pMesh.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
 	    pMesh.getParticleController().setControlFlow(false);
 	    pMesh.warmUp(60);
-
 	    rootNode.setRenderState(ts);
 	    rootNode.setRenderState(as1);
 	                ZBufferState zstate = display.getRenderer().createZBufferState();
@@ -443,7 +443,11 @@ public class View extends BaseSimpleGame {
 	    pMesh.updateModelBound();
 
 	    rootNode.attachChild(pMesh);
+	    
+	    return state;
 	}
+	
+	
 }
 
 

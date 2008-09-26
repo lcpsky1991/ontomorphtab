@@ -33,17 +33,22 @@ import org.fenggui.util.Spacing;
 
 import com.jme.input.InputHandler;
 import com.jme.input.KeyInput;
+import com.jme.input.MouseInput;
 import com.jme.input.action.KeyInputAction;
 import com.jme.light.PointLight;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISelectable;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticQuery;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.view.View;
+import edu.ucsd.ccdb.ontomorph2.view.View2D;
+import edu.ucsd.ccdb.ontomorph2.view.View3DMouseListener;
 import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 
 /**
@@ -58,7 +63,7 @@ public class BasicSearchWidget extends Widget{
 	List<Integer> list;
 	ScrollContainer sc; 
 	HashMap<String, Vector3f> regions;
-	Vector3f location;
+	Vector3f location,position;
 	ViewCamera view = new ViewCamera();
 	private CheckBox cells, images, brainRegion;
 	private Window window;
@@ -73,6 +78,10 @@ public class BasicSearchWidget extends Widget{
 		buildWindowFrame();
 		
        
+	}
+
+	public BasicSearchWidget() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public void buildWindowFrame(){
@@ -139,15 +148,20 @@ public class BasicSearchWidget extends Widget{
  			ListItem<String> item = FengGUI.createListItem(list);
  			item.setText(textInput);
  			item.setPixmap(pixmap);
+ 			slideHide();
+ 			View.getInstance().indicator(regions.get(textInput));
  		}
 
  		if(images.isSelected()){
+ 			list.clear();
  			Iterator i = regions.keySet().iterator();
  			while(i.hasNext()) {
  				ListItem<String> item = FengGUI.createListItem(list);
  				checkBoxSelection = (String)i.next();
  				item.setText(checkBoxSelection);
  				item.setPixmap(pixmap);
+ 				slideHide();
+ 				View.getInstance().indicator(regions.get(checkBoxSelection));
  			}
  		}
  		
@@ -157,20 +171,22 @@ public class BasicSearchWidget extends Widget{
 				//System.out.println("selection");
 				selected = (String)selectionChangedEvent.getToggableWidget().getText();
 				location = regions.get(selected);
-				System.out.println(location);
-		 		if(selected == "Cerebellum"){
+				//System.out.println(location +" "  + selected);
+		 		if(selected.equals("Cerebellum")){
 		 			System.out.println("cerebellum");
-
+		 			//slideHide();
 		 			View.getInstance().getCameraView().smoothlyZoomToSlideCerebellumView();}
-		 		if(selected == "Hippocampus"){
+		 		if(selected.equals("Hippocampus")){
 		 			System.out.println("hippo");
+		 			//slideHide();
 		 			View.getInstance().getCameraView().smoothlyZoomToSlideView();}
-		 		if(selected == "Cells"){
+		 		if(selected.equals("Cells")){
 		 			System.out.println("cells");
+		 			//slideHide();
 		 			View.getInstance().getCameraView().smoothlyZoomToCellView();}
 		 		selected = null;
 		 		
-		 		View.getInstance().indicator(location);
+		 		//System.out.println(position);
 		 		}}
 			);
 	}
@@ -180,11 +196,38 @@ public class BasicSearchWidget extends Widget{
 		regions.put("Hippocampus", new Vector3f(190f, -118f, -180f));
 		//regions.put("Cell", new Vector3f(300f, 180f, -300f));
 		regions.put("Cerebellum", new Vector3f(458.9234f, -118.0f, -253.11566f));
-		regions.put("Cells" , new Vector3f(278.8373f, -116.61807f, -179.73985f));
+		regions.put("Cells" , new Vector3f(378.8373f, -116.61807f, -179.73985f));
 				
 	}
 	
-	public void lightIndicator(){	
+
+	public void slideHide(){
 		
+		System.out.println("slide hide");
+		
+		//TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition();
+		
+		Tangible recent = TangibleManager.getInstance().getSelectedRecent();
+		
+		//do the manipulation to all selected objects
+		//loop over the objects in reverse as to keep order of selected objects relevant
+//		for (int t=TangibleManager.getInstance().getSelected().size() - 1; t >= 0 ; t--)
+		
+		//System.out.println(recent);
+		for (Tangible manip : TangibleManager.getInstance().getSelected())
+		{
+			//System.out.println(recent + " " + manip);
+		}
+		//System.out.println(dx + " " + dy + " " + recent);
+		for (Slide s : TangibleManager.getInstance().getSlides())
+		{
+			s.setVisible(!s.isVisible());
+			View.getInstance().getScene().changed(edu.ucsd.ccdb.ontomorph2.core.scene.Scene.CHANGED_SLIDE);
+		}
 	}
+	
+	public void absolutePosition(Vector3f position){
+		this.position = position;
+	}
+
 }

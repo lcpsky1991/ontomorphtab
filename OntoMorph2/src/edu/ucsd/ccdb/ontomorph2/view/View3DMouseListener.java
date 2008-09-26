@@ -39,6 +39,7 @@ import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.BasicSearchWidget;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
@@ -70,6 +71,7 @@ public class View3DMouseListener implements MouseInputListener {
 	Display disp;
 	View v = new View();
 	FengJMEInputHandler guiInput;
+	BasicSearchWidget widget = new BasicSearchWidget();
 	private static int manipulation = METHOD_MOVE; //set move to be default
 	
 	public static final int OMT_MBUTTON_LEFT = 0;
@@ -504,8 +506,12 @@ public class View3DMouseListener implements MouseInputListener {
 //		for (int t=TangibleManager.getInstance().getSelected().size() - 1; t >= 0 ; t--)
 		for (Tangible manip : TangibleManager.getInstance().getSelected())
 		{
-			
-//			check to see where the camera is positioned and compare it to the Tangible's plane
+		
+			//widget.absolutePosition(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
+			System.out.println("selection "  + recent + " manip:" + manip);
+			System.out.println("position" + TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
+
+			//check to see where the camera is positioned and compare it to the Tangible's plane
 			//if it is under, reverse the X direction so movement is intuitive
 			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().getCameraView().getCamera().getDirection()), manip.getWorldNormal()); 
 			if (reverse) dx = -dx;	//switch X movement if it is on the opposite side of the plane
