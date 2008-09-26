@@ -231,9 +231,7 @@ public class View2D extends Display{
 				}
 				TreeNode n = (TreeNode)selectionChangedEvent.getToggableWidget().getValue();
 				n.value.select();
-				
-				System.out.println("selection");
-			}
+		}
 			
 		});
 	}

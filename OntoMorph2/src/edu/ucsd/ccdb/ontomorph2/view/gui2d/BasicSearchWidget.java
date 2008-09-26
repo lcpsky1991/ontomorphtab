@@ -1,8 +1,17 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import org.fenggui.Button;
+import org.fenggui.CheckBox;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
+import org.fenggui.Label;
+import org.fenggui.LayoutManager;
 import org.fenggui.List;
 import org.fenggui.ListItem;
 import org.fenggui.ScrollContainer;
@@ -13,19 +22,29 @@ import org.fenggui.background.PlainBackground;
 import org.fenggui.composites.Window;
 import org.fenggui.event.ButtonPressedEvent;
 import org.fenggui.event.IButtonPressedListener;
+import org.fenggui.event.ISelectionChangedListener;
+import org.fenggui.event.SelectionChangedEvent;
 import org.fenggui.layout.BorderLayout;
+import org.fenggui.layout.RowLayout;
 import org.fenggui.render.Pixmap;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
+import org.fenggui.util.Spacing;
 
 import com.jme.input.InputHandler;
 import com.jme.input.KeyInput;
 import com.jme.input.action.KeyInputAction;
+import com.jme.light.PointLight;
+import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISelectable;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticQuery;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
+import edu.ucsd.ccdb.ontomorph2.view.View;
+import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 
 /**
  * 2D widget that allows a user to type in keywords and issue a keyword search
@@ -35,8 +54,13 @@ public class BasicSearchWidget extends Widget{
     
 	private Display d;
 	private TreeNode root;
-	private String textInput
-	;
+	private String textInput, selected, checkBoxSelection;
+	List<Integer> list;
+	ScrollContainer sc; 
+	HashMap<String, Vector3f> regions;
+	Vector3f location;
+	ViewCamera view = new ViewCamera();
+	private CheckBox cells, images, brainRegion;
 	private Window window;
 	private Button button;
 	private Pixmap pixmap = null;
@@ -54,21 +78,36 @@ public class BasicSearchWidget extends Widget{
 	public void buildWindowFrame(){
 		
 		window = new Window(true, false, false, true);
-		window.getAppearance().removeAll();
-		ScrollContainer sc = FengGUI.createScrollContainer(window.getContentContainer());
-		sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
-		window.setPosition(new Point(0, 100));
+		//window.getAppearance().removeAll();
+		window.getContentContainer().setLayoutManager(new RowLayout(false));
+		window.getContentContainer().getAppearance().setPadding(new Spacing(0, 5));
+		sc = FengGUI.createScrollContainer(window.getContentContainer());
+		//sc.getAppearance().add(new PlainBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f)));
+		//FengGUI.getTheme().setUp(sc.getVerticalScrollBar());
+
+ 		list = FengGUI.createList(sc);
+ 		window.setPosition(new Point(0, 100));
 		window.setSize(200, 300);
     	//window.getContentContainer().setLayoutManager(new BorderLayout());
 		window.setTitle("Search Query"); 
 		window.layout();
 		
-		//window.addMouseExitedListener(FocusManager.focusManager);
+		DB();
         final TextEditor textArea = FengGUI.createTextArea(window.getContentContainer());
-        textArea.setText("Enter Keyword");
+        //textArea.setText("Enter Keyword");
         textArea.setSize(100, 20);
 
-
+        
+        brainRegion = FengGUI.createCheckBox(window.getContentContainer(), "Brain Region");
+        brainRegion.setPosition(new Point(0,210));
+        brainRegion.setSize(80,20);
+        images = FengGUI.createCheckBox(window.getContentContainer(), "Images");
+        images.setPosition(new Point(85,210));
+        images.setSize(50,20);
+        cells = FengGUI.createCheckBox(window.getContentContainer(), "Cells");
+        cells.setPosition(new Point(140,210));
+        cells.setSize(50,20);
+        
         button = new Button( "Start Search" );
         button.setSize(80, 30);
         button.setPosition(new Point(45, 180));
@@ -80,43 +119,11 @@ public class BasicSearchWidget extends Widget{
         			search(textInput);
         	}
         } );
-
-        window.getContentContainer().addWidget( button );
-        textArea.setPosition(new Point(30,220));
-        //d.layout();
-
-        d.addWidget(window);
-		/*
-		window = FengGUI.createDialog(d);
-		window.setPosition(new Point(0, 100));
-		window.setSize(200,300);
-		window.setTitle("Search Query");
-		
-		SplitContainer centerSC = FengGUI.createSplitContainer(window.getContentContainer(), true);
-		SplitContainer northSC = FengGUI.createSplitContainer(false);
-		SplitContainer southSC = FengGUI.createSplitContainer(false);
-
-		final TextEditor textArea = FengGUI.createTextArea(window.getContentContainer());
-        textArea.setText("Enter Keyword");
-        textArea.setSize(100, 20);
         
-		button = new Button("Start Search");
-		button.setSize(80,30);
-		button.setPosition(new Point(45, 180));
-		button.addButtonPressedListener( new IButtonPressedListener() {
-
-        	
-	        public void buttonPressed( ButtonPressedEvent arg0 ) {
-	        			textInput = textArea.getText();
-	        			search(textInput);
-	        	}
-	        } );
-		
-		centerSC.setFirstWidget(southSC);
-		centerSC.setFirstWidget(northSC);
-		
-		window.layout();*/
-
+        window.getContentContainer().addWidget( button );
+        textArea.setPosition(new Point(35,240));
+        d.addWidget(window);
+        sc.layout();
 	}
 	
 	
@@ -124,41 +131,60 @@ public class BasicSearchWidget extends Widget{
 		
 		textInput = searchInput;
 		
-		//call to the Semantic Repository
-		SemanticQuery searchQuery = new SemanticQuery();
-		searchQuery.createSimpleQuery(textInput);
-		
-		
-		button.removedFromWidgetTree();
-		System.out.println(textInput);
-		displayList();
-	}
-	
-	public void displayList(){
-	
-		
-		Window listFrame = FengGUI.createDialog(d);
-		listFrame.getAppearance().removeAll();
-		listFrame.setPosition(new Point(0,100));
-		listFrame.setSize(200, 180);
-		 
-		listFrame.setTitle("List with icons");
-		
- 		ScrollContainer sc = FengGUI.createScrollContainer(listFrame.getContentContainer());
-
- 		List<Integer> list = FengGUI.createList(sc);
- 		list.setSize(100, 100);
- 
- 		 for (int i = 0; i < 15; i++)
- 		{
- 			ListItem<Integer> item = FengGUI.createListItem(list);
- 			item.setText((i + 1) + ". Item");
+		list.clear();
+        list.setSize(100, 130);
+        list.setPosition(new Point(40,00));
+        
+ 		if(regions.containsKey(textInput)){
+ 			ListItem<String> item = FengGUI.createListItem(list);
+ 			item.setText(textInput);
  			item.setPixmap(pixmap);
  		}
 
- 		listFrame.layout();
+ 		if(images.isSelected()){
+ 			Iterator i = regions.keySet().iterator();
+ 			while(i.hasNext()) {
+ 				ListItem<String> item = FengGUI.createListItem(list);
+ 				checkBoxSelection = (String)i.next();
+ 				item.setText(checkBoxSelection);
+ 				item.setPixmap(pixmap);
+ 			}
+ 		}
  		
+ 		list.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
+			{
+				//System.out.println("selection");
+				selected = (String)selectionChangedEvent.getToggableWidget().getText();
+				location = regions.get(selected);
+				System.out.println(location);
+		 		if(selected == "Cerebellum"){
+		 			System.out.println("cerebellum");
+
+		 			View.getInstance().getCameraView().smoothlyZoomToSlideCerebellumView();}
+		 		if(selected == "Hippocampus"){
+		 			System.out.println("hippo");
+		 			View.getInstance().getCameraView().smoothlyZoomToSlideView();}
+		 		if(selected == "Cells"){
+		 			System.out.println("cells");
+		 			View.getInstance().getCameraView().smoothlyZoomToCellView();}
+		 		selected = null;
+		 		
+		 		View.getInstance().indicator(location);
+		 		}}
+			);
+	}
+	
+	public void DB(){
+		regions = new HashMap<String, Vector3f>();
+		regions.put("Hippocampus", new Vector3f(190f, -118f, -180f));
+		//regions.put("Cell", new Vector3f(300f, 180f, -300f));
+		regions.put("Cerebellum", new Vector3f(458.9234f, -118.0f, -253.11566f));
+		regions.put("Cells" , new Vector3f(278.8373f, -116.61807f, -179.73985f));
+				
+	}
+	
+	public void lightIndicator(){	
+		
 	}
 }
-
-

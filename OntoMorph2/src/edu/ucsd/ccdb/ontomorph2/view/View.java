@@ -3,8 +3,10 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 
+import com.jme.animation.SpatialTransformer;
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
+import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
 import com.jme.input.FirstPersonHandler;
@@ -15,6 +17,9 @@ import com.jme.input.KeyInputListener;
 import com.jme.input.MouseInput;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
+import com.jme.light.PointLight;
+import com.jme.light.SimpleLightNode;
+import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
@@ -24,19 +29,27 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
+import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Cone;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.PropertiesIO;
+import com.jme.util.TextureManager;
 import com.jme.util.geom.Debugger;
+import com.jmex.effects.glsl.BloomRenderPass;
+import com.jmex.effects.particles.ParticleFactory;
+import com.jmex.effects.particles.ParticleMesh;
+import com.jmex.effects.particles.ParticlePoints;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.misc.TestParticleSystem;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
@@ -71,6 +84,8 @@ public class View extends BaseSimpleGame {
 	private OMTKeyInputListener OMTKeyListener;
 	
 	FengJMEInputHandler guiInput;
+	ParticlePoints pPoints = ParticleFactory.buildPointParticles("particles", 50); 
+	private ParticleMesh pMesh;
 	/**
 	 * Returns the singleton instance.
 	 @return	the singleton instance
@@ -325,6 +340,7 @@ public class View extends BaseSimpleGame {
      */
     protected final void update(float interpolation) {
         super.update(interpolation);
+        pPoints.getParticleController().update(interpolation);
 
         if ( !pause ) {
         	//System.out.println("update interpolation");
@@ -370,7 +386,64 @@ public class View extends BaseSimpleGame {
 	
 	public Node getMainViewRootNode() {
 		return rootNode;
-	}	
+	}
+	
+	public void indicator(Vector3f location){
+		
+		/*Sphere s = new Sphere("Sphere", location,30,30,2);
+		s.setModelBound(new BoundingSphere());
+        s.updateModelBound();
+
+		rootNode.attachChild(s);
+		
+	    pPoints.setPointSize(10);
+	    pPoints.setAntialiased(true);
+	    pPoints.setEmissionDirection(new Vector3f(0, 1, 0));
+	    pPoints.setOriginOffset(location);
+	    pPoints.setInitialVelocity(.006f);
+	    
+	    rootNode.attachChild(pPoints);*/
+		AlphaState as1 = display.getRenderer().createAlphaState();
+	    as1.setBlendEnabled(true);
+	    as1.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+	    as1.setDstFunction(AlphaState.DB_ONE);
+	    as1.setTestEnabled(true);
+	    as1.setTestFunction(AlphaState.TF_GREATER);
+	    as1.setEnabled(true);
+
+	    TextureState ts = display.getRenderer().createTextureState();
+	    ts.setTexture(
+	        TextureManager.loadTexture(
+	        TestParticleSystem.class.getClassLoader().getResource(
+	        "jmetest/data/texture/flaresmall.jpg"),
+	        Texture.MM_LINEAR_LINEAR,
+	        Texture.FM_LINEAR));
+	    ts.setEnabled(true);
+
+	    pMesh = ParticleFactory.buildParticles("particles", 300);
+	    pMesh.setOriginOffset(location);
+	    pMesh.setEmissionDirection(new Vector3f(0,1,0));
+	    pMesh.setInitialVelocity(.006f);
+	    pMesh.setStartSize(2.5f);
+	    pMesh.setEndSize(.5f);
+	    pMesh.setMinimumLifeTime(1200f);
+	    pMesh.setMaximumLifeTime(1400f);
+	    pMesh.setStartColor(new ColorRGBA(1, 0, 0, 1));
+	    pMesh.setEndColor(new ColorRGBA(0, 1, 0, 0));
+	    pMesh.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
+	    pMesh.getParticleController().setControlFlow(false);
+	    pMesh.warmUp(60);
+
+	    rootNode.setRenderState(ts);
+	    rootNode.setRenderState(as1);
+	                ZBufferState zstate = display.getRenderer().createZBufferState();
+	                zstate.setEnabled(false);
+	                pMesh.setRenderState(zstate);
+	    pMesh.setModelBound(new BoundingSphere());
+	    pMesh.updateModelBound();
+
+	    rootNode.attachChild(pMesh);
+	}
 }
 
 

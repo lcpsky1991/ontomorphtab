@@ -314,9 +314,9 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         float distance = points[0].distance(points[1]);
         CatmullRomCurve curve = new CatmullRomCurve("Curve", points);
         
-        System.out.println("location " + cam.getLocation());
-        System.out.println("direction " + cam.getDirection());
-        System.out.println("rotation " + location);
+        //System.out.println("location " + cam.getLocation());
+        //System.out.println("direction " + cam.getDirection());
+        //System.out.println("rotation " + location);
         
         /*
         if(cam.getLocation().x != location.x){
@@ -405,6 +405,14 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		continuousZoomTo(loc, position, 0.21f);
 	}
 	
+	/*
+	 * Method called from Basic Search. Location of Query passed as parameter
+	 */
+	public void searchZoomTo(Vector3f location){
+		Vector3f loc = location;
+		Vector3f position = location;
+		continuousZoomTo(loc, position, .21f);
+	}
 
 	public float getZoom() {
 		return invZoom;

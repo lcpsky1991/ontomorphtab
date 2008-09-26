@@ -272,6 +272,7 @@ public class View3DMouseListener implements MouseInputListener {
 
 	private void doPick() 
 	{
+		System.out.println("do Pick");
 		
 //		get the tangible picked
 		ArrayList<Tangible> pickedlist = psuedoPick(KeyInput.get().isControlDown(), true);   
