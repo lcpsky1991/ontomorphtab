@@ -83,8 +83,6 @@ public abstract class TangibleView extends Node {
 	
 	public void update() 
 	{
-
-		
 		if (this.getModel().isSelected()) 
 		{
 			this.highlight();

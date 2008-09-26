@@ -77,6 +77,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_RENAME = 117;
 	public static final int CTX_ACTION_NEW_CELLE = 120;
 	public static final int CTX_ACTION_NEW_CELL = 121;
+	public static final int CTX_ACTION_VISIBLE = 125;
 	
 	//IDs for easily creating cells
 	public static final String TYPE_CELL_DG_A = "5199202a";
@@ -231,7 +232,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		Menu mnuManipulate = new Menu();
 		Menu mnuPart = new Menu();
 		Menu mnuAttach = new Menu();
-		
+		Menu mnuModify = new Menu();
 		
 		//apply formatting
 		decorate();
@@ -300,11 +301,12 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			//===================================
 			
 			menuItemFactory(mnuNew, "New Curve", CTX_ACTION_NEW_CURVE); //new curves are a generic action
-	        menuItemFactory(this, "Annotate", CTX_ACTION_ANNOTATE);
-	        menuItemFactory(this, "Properties", CTX_ACTION_DISPROP);
+	        menuItemFactory(mnuModify, "Annotate", CTX_ACTION_ANNOTATE);
+	        menuItemFactory(mnuModify, "Properties", CTX_ACTION_DISPROP);
 	        menuItemFactory(this, "Debug", CTX_ACTION_DEBUG);
-	        menuItemFactory(this, "Delete", CTX_ACTION_DELETE);
-	        menuItemFactory(this, "Rename", CTX_ACTION_RENAME);
+	        menuItemFactory(mnuModify, "Delete", CTX_ACTION_DELETE);
+	        menuItemFactory(mnuModify, "Rename", CTX_ACTION_RENAME);
+	        menuItemFactory(mnuModify, "Set inVisibile:" , CTX_ACTION_VISIBLE);
 			
 	        //add new anchor points?
 			if (baseContext instanceof Curve3D || baseContext instanceof CurveAnchorPoint)
@@ -331,7 +333,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			{
 				//build slide special menu
 				menuItemFactory(mnuNew_Cell, "DG Cell", CTX_ACTION_NEW_CELLE);
-				menuItemFactory(mnuNew_Cell, "open...", CTX_ACTION_NEW_CELL);
+				menuItemFactory(mnuNew_Cell, "From Disk...", CTX_ACTION_NEW_CELL);
 			}
 			
 			
@@ -365,6 +367,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	        
 	        
 	        if (mnuNew_Cell.getItemCount() > 0) mnuNew.registerSubMenu(mnuNew_Cell, msN_CELL); //'newcell' must preceed registering parent 'new'
+	        if (mnuModify.getItemCount() > 0) this.registerSubMenu(mnuModify, "Modify ...");
 	        if (mnuNew.getItemCount() > 0) this.registerSubMenu(mnuNew, msNEW);
 	        if (mnuAttach.getItemCount() > 0) this.registerSubMenu(mnuAttach, msATTACH);
 			if (mnuManipulate.getItemCount() > 0) this.registerSubMenu(mnuManipulate, msManipulate);
@@ -564,6 +567,10 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					break;
 				case CTX_ACTION_NEW_ANCHOR:
 					createPoint(single);
+					break;
+				case CTX_ACTION_VISIBLE:
+					single.setVisible(!single.isVisible());
+					View.getInstance().getScene().changed(Scene.CHANGED_SLIDE); //hacked for Ted Waitt, must be generalized
 					break;
 				case CTX_ACTION_MODE:
 				{
