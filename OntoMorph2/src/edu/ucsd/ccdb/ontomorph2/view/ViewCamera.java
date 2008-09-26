@@ -10,11 +10,14 @@ import com.jme.scene.CameraNode;
 import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
+import com.jme.scene.shape.Sphere;
 import com.jme.util.Timer;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.CurveOnceController;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 /**
  * Wraps the camera functionality.
  * 
@@ -27,15 +30,17 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	float camRotationRate = FastMath.PI * 5 / 180;	//(FastMath.PI * X / 180) corresponds to X degrees per (FPS?) = Rate/UnitOfUpdate 
 	float invZoom = 1.0f; //zoom amount
     protected Timer timer;
-    private Vector3f currentDirection;
     
 	float campos = 1.57f; //camera position between 0 and 2*pi
     float distance = 10f;
     float rotationspeed = .1f; 
 
 	Camera cam;
-	CameraNode camNode;
+	//CameraNode camNode;
+	Node visRepresentation = new Node("camera avatar");
 	Node rootNode = new Node("root Node");
+	
+	
 	InputHandler input = new InputHandler();
 	public ViewCamera() {
 		init();	
@@ -88,7 +93,19 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		//camNode.setLocalTranslation(loc);
 		Log.warn("Rotation: " + this.getLocalRotation() + "\nTranslation: " + 
 				this.getLocalTranslation());
-			
+		
+		
+		
+		//make a sphere that repsents the camera
+        Sphere s=new Sphere("camtar",10,10,2f); //last number is radius
+        s.setModelBound(new BoundingSphere());
+        s.updateModelBound();
+        s.setRandomColors();
+        s.setLocalTranslation(this.getLocalTranslation());
+        visRepresentation.attachChild(s);
+        //this.attachChild(visRepresentation);
+		
+		
 	}
 	
 	/**
@@ -142,6 +159,48 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	{
 		Vector3f dir = this.getCamera().getLeft().normalize().negate().mult(amount);
 		this.setLocalTranslation(this.getLocalTranslation().add(dir));
+	}
+	
+	
+	/**
+	 * Rotates the camera (from user-perspective it rotates the world) around a Tangible
+	 * @param degreesX
+	 * @param degreesY
+	 */
+	public void rotateCameraAbout(Tangible focus, float degreesX, float degreesY)
+	{
+		
+		float factor = (FastMath.PI / 180);
+		
+		Vector3f posOrig = new Vector3f(this.getLocalTranslation().clone());
+		System.out.println("orig " + posOrig);
+		
+		//then apply the new rotation to the camera
+		Quaternion rotX = new Quaternion();
+		Quaternion rotY = new Quaternion();
+		Quaternion q = new Quaternion();
+		
+		//
+		rotX.fromAngleAxis(degreesX * factor, Vector3f.UNIT_Y); //up or Y
+		rotY.fromAngleAxis(degreesY * factor, cam.getLeft()); //X or left
+		
+		q = new Quaternion(this.getLocalRotation());
+		q = rotX.mult(q);
+		q = rotY.mult(q);
+		
+		//apply the new rotation to the old position
+		Vector3f posTo = new Vector3f(posOrig);
+		posTo = posTo.add(cam.getLeft().mult(-degreesX * factor));
+		posTo = posTo.add(cam.getUp().mult(degreesY));
+
+		
+		//apply the new position and rotation
+		this.setLocalRotation(q);
+		this.setLocalTranslation(posTo);
+		
+		
+		System.out.println("to " + posTo);
+		System.out.println(99999 * posTo.angleBetween(posOrig));
 	}
 	
 	/**

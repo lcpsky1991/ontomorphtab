@@ -185,14 +185,13 @@ public class View3DMouseListener implements MouseInputListener {
 		if (mouseLook)
 		{
 			//find mouse change
-			View.getInstance().getCameraView().turnClockwise(dX / 100f);
-			View.getInstance().getCameraView().turnUp(dY / 100f);
+			//View.getInstance().getCameraView().turnClockwise(dX / 100f);
+			//View.getInstance().getCameraView().turnUp(dY / 100f);
 			
 			//rotate the camera around the selected tangibles
-			Tangible recent = TangibleManager.getInstance().getSelectedRecent();
-			if (recent != null)	
+			
 			{
-				View.getInstance().rotateCameraAbout(recent, (Integer)dX, Vector3f.UNIT_Y);
+				View.getInstance().getCameraView().rotateCameraAbout(null, dX ,dY );
 			}
 			
 		}
@@ -200,7 +199,6 @@ public class View3DMouseListener implements MouseInputListener {
 		{
 			//dragging
 			manipulateCurrentSelection();
-			
 			//System.out.println("x: " + dX + " y: " + dY + "  -  " + xPos + ", " + yPos);
 		}
 	}
@@ -550,65 +548,6 @@ public class View3DMouseListener implements MouseInputListener {
 		}
 	}
 	
-	//new movement strategy.  
-	//doesn't work with coordinate systems yet as far as I can tell
-	private void moveUsingMouseAbsolutePosition(Tangible manip) 
-	{
-		Vector3f newPosition = this.getAbsoluteWorldMouseDesiredPosition(manip);
-		
-		manip.setRelativePosition(newPosition.x, newPosition.y, newPosition.z);
-	}
-	
-	
-	
-	//this method returns the position that the mouse would be located in
-	//the world if it had the same distance away from the camera that the selected objects have.
-	//takes advantage of JME's Camera.getWorldCoordinates() method.
-	private Vector3f getAbsoluteWorldMouseDesiredPosition(Tangible manip) {
-		
-		//get current mouse SCREEN position
-		float mx = MouseInput.get().getXAbsolute();
-		float my = MouseInput.get().getYAbsolute();
-		Vector2f mouseCurrentScreenPos = new Vector2f(mx, my);
-		//System.out.println("Screen position: " + mouseCurrentScreenPos);
-		
-		//get the average position of all the selected objects.
-		Vector3f objectsAbsoluteAveragePosition = this.calculateAverageAbsolutePositionForSelectedObjects();
-		//System.out.println("  Object absolute average position: " + objectsAbsoluteAveragePosition);
-		
-		//if the mouse were at the same z-position (relative to the camera) as the average 
-		//position of all selected objects, 
-		//find its world position in absolute coordinates.
-		ViewCamera cam = View.getInstance().getCameraView();
-		//extremely confusing.. getScreenCoordinates returns a z value that is the "zPos" to that object which the 
-		//getWorldCoordinates method needs to correctly place the object back in the world.  don't understand why.
-		float distanceBetweenCameraAndSelectedObjects = cam.getCamera().getScreenCoordinates(objectsAbsoluteAveragePosition).z;
-		//System.out.println("  Distance between camera and selected object: " + distanceBetweenCameraAndSelectedObjects );
-				
-//		use the average position of selected objects, and the distance between those objects and the camera
-		//to determine the current position of the mouse in the 3D world.
-		//This method assumes that the camera is looking down the Z axis
-		Vector3f mouseCurrentWorldPosition = 
-			cam.getCamera().getWorldCoordinates(mouseCurrentScreenPos, distanceBetweenCameraAndSelectedObjects);
-		//System.out.println("  Mouse current world position: " + mouseCurrentWorldPosition);
-		
-		return mouseCurrentWorldPosition;
-	}
-	
-	//iterate through all selected objects and return their average
-	//position in absolute coordinates.
-	private Vector3f calculateAverageAbsolutePositionForSelectedObjects(){
-		Vector3f totalPosition = new Vector3f();
-		int n = 0;
-		for (Tangible manip : TangibleManager.getInstance().getSelected())
-		{
-			Vector3f individualPosition = manip.getAbsolutePosition();
-			totalPosition = totalPosition.add(individualPosition);
-			n++;
-		}
-		assert n > 0;
-		return totalPosition.divideLocal(n);
-	}
 		
 	/**
 	 * Sets the manipulation method that dragging the mouse should have on a selected object.

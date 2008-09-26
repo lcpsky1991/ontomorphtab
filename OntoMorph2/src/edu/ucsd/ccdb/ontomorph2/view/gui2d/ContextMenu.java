@@ -1,10 +1,12 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -19,6 +21,7 @@ import org.fenggui.util.Color;
 import com.jme.input.KeyInput;
 import com.jme.math.Vector3f;
 
+import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
@@ -59,7 +62,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_ANNOTATE = 100;
 	public static final int CTX_ACTION_DISPROP = 101;
 	public static final int CTX_ACTION_DESELECT = 103;
-	public static final int CTX_ACTION_NEW_CELL = 104;
+	
 	public static final int CTX_ACTION_NEW_CURVE = 105;
 	public static final int CTX_ACTION_NEW_ANCHOR = 106;
 	public static final int CTX_ACTION_SELECT = 107;
@@ -72,10 +75,12 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_PROPOGATE = 115;
 	public static final int CTX_ACTION_DELETE = 116;
 	public static final int CTX_ACTION_RENAME = 117;
+	public static final int CTX_ACTION_NEW_CELLE = 120;
+	public static final int CTX_ACTION_NEW_CELL = 121;
 	
 	//IDs for easily creating cells
 	public static final String TYPE_CELL_DG_A = "5199202a";
-	public static final String TYPE_CELL_DG_B = " ";
+	public static final String TYPE_CELL_DG_B = "";
 	public static final String TYPE_CELL_DG_C = "";
 	public static final String TYPE_CELL_PYR_CA1_A = "pc1c";
 	public static final String TYPE_CELL_PYR_CA1_B = "pc2a";
@@ -83,6 +88,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final String TYPE_CELL_PYR_CA3_A = "cell1zr";
 	public static final String TYPE_CELL_PYR_CA3_B = "cell2zr";
 	public static final String TYPE_CELL_PYR_CA3_C = "cell6zr";
+	public static final String TYPE_CELL_DISK = "disk";
 	
 	//ms stands for Menu String
 	static final String msNEW = "New ...";
@@ -92,9 +98,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	static final String msPROPERTIES = "Display Properties";
 	static final String msN_ANCHOR = "Anchor Point";
 	static final String msN_CELL = "Cell ...";
-	static final String msN_CELL_DG = "DG Granule";
-	static final String msN_CELL_CA3Pyr = "CA3 Pyramidal";
-	static final String msN_CELL_CA1Pyr = "CA1 Pyramidal";
+	//static final String msN_CELL_DG = "DG Granule";
+	//static final String msN_CELL_CA3Pyr = "CA3 Pyramidal";
+	//static final String msN_CELL_CA1Pyr = "CA1 Pyramidal";
 	static final String msSELECT = "Select ...";
 	static final String msDESELECT = "De-Select ...";
 	static final String msSELECTPART = "Select Part ...";
@@ -324,7 +330,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			if (baseContext instanceof Slide || baseContext instanceof Curve3D)
 			{
 				//build slide special menu
-				menuItemFactory(mnuNew_Cell, msN_CELL_DG, CTX_ACTION_NEW_CELL);
+				menuItemFactory(mnuNew_Cell, "DG Cell", CTX_ACTION_NEW_CELLE);
+				menuItemFactory(mnuNew_Cell, "open...", CTX_ACTION_NEW_CELL);
 			}
 			
 			
@@ -509,43 +516,6 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	}
 	
 	
-		//===========================
-		//OLD ACTION CODE
-		/*
-		for (int t=0; t < TangibleManager.getInstance().getSelected().size(); t++)
-		{
-			Tangible orig = TangibleManager.getInstance().getSelected().get(t);	//find the originating tangible
-			if (orig instanceof Tangible)
-			{
-				if (msANNOTATE.equals(opt)) {
-					System.out.println("do annotation");
-				} else if (msANIMATE.equals(opt)) {
-					System.out.println("do animation");
-				} else if (msPROPERTIES.equals(opt)) {
-					System.out.println("show properties");
-				}
-				else if (msN_CURVE.equals(opt)) createCurve(orig);
-				
-				else if (msN_ANCHOR.equals(opt)) createPoint(orig);
-				
-				else if (msN_CELL_DG.equals(opt))	testCreateCell(orig);
-				
-				else if (msEDIT.equals(opt))
-				{
-					Curve3D ec = null;
-					//get the curve that corresponds to the originating curve
-					if ( orig instanceof Curve3D) ec = (Curve3D) orig;
-					//else if ( orig instanceof CurveAnchorPoint)	ec = ((CurveAnchorPoint)orig).getParentCurve();
-					
-					if ( ec != null) ec.setAnchorPointsVisibility(!ec.getAnchorPointsVisibility());
-				}
-			}
-			else if ( opt != null)
-			{
-				System.out.println("Warning: There was no tangible do to this action on (" + opt + ")");
-			}	
-		}*/
-	
 	
 	private void debug(Tangible src)
 	{
@@ -567,9 +537,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		
 		//Create a dummy frame for the dialog boxes to exist inside of, this forces the dialog boxes to appear 'on top' of the application
 		JFrame frmDialog = new JFrame();
-		frmDialog.setSize(1,1);
+		frmDialog.setSize(0,0);
 		frmDialog.setLocation(1,1);
-		frmDialog.setVisible(true);
+		frmDialog.setVisible(false);
 		
 		String strReply = null;
 		int ival = 0;
@@ -609,14 +579,37 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				}
 				case CTX_ACTION_PROPOGATE:
 				{
-					strReply = JOptionPane.showInputDialog(frmDialog, "Propogate how many cells?", "How many?", JOptionPane.QUESTION_MESSAGE);
-					if ( strReply != null) ival = Integer.parseInt(strReply);
-					propogate(single, ival);
+					try
+					{
+						strReply = JOptionPane.showInputDialog(frmDialog, "Propogate how many cells?", "How many?", JOptionPane.QUESTION_MESSAGE);
+						if ( strReply != null) ival = Integer.parseInt(strReply);
+						propogate(single, ival);	
+					}
+					catch (NumberFormatException e)
+					{
+						//user did not enter a valid number, do nothing
+					}
 				}
 					
 					break;
+				case CTX_ACTION_NEW_CELLE:
+					createCellOn(single, SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS , TYPE_CELL_DG_A);
+					System.out.println("Attempting to create " + TYPE_CELL_DG_A + " on " + single.getName());
+					break;
 				case CTX_ACTION_NEW_CELL:
-					createCellOn(single);
+					try
+					{
+						System.out.println("Attempting to add cell on " + single.getName());
+						String file = View2D.getInstance().showFileChooser().getName();						
+						file = file.substring(0, file.indexOf(".morph.xml"));		//strip off the extensions because the filenames are used as a key
+						
+						if (file != null) createCellOn(single, "hardcoded_semantics", file);
+					}
+					catch(Exception e)
+					{
+						System.out.println("failed createCellOn: " + e.getMessage());
+					}
+					
 					break;
 				case CTX_ACTION_DELETE:
 					{
@@ -652,6 +645,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		}
 	}
 	
+	
+	
+	
 	/**
 	 * Propogates a cell with normal distribution
 	 * @param original
@@ -663,7 +659,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				NeuronMorphology cell = (NeuronMorphology) original;
 				for (int i = 0; i < howMany; i++)
 				{
-					NeuronMorphology copy = cellFactory(cell.getName(),cell.getCurve());	//create a copy of the cells
+					NeuronMorphology copy = cellFactory("copy of " + cell.getName(),cell.getFilename(),cell.getCurve(), true);	//create a copy of the cells
 					
 					float rx = 0;
 					float ry=0;
@@ -787,14 +783,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	}
 	
 	
-	/**
-	 * 
-	 * 		mousePos.set( mouse.getLocalTranslation().x, mouse.getLocalTranslation().y );
-            DisplaySystem.getDisplaySystem().getWorldCoordinates( mousePos, 0, pickRay.origin );
-            DisplaySystem.getDisplaySystem().getWorldCoordinates( mousePos, 0.3f, pickRay.direction ).subtractLocal( pickRay.origin ).normalizeLocal()
-	 */
-	
-	private void createCellOn(Tangible src)
+	private void createCellOn(Tangible src, String type, String modelURL)
 	{
 		NeuronMorphology nc = null;
 		Curve3D ocurve = null;
@@ -828,56 +817,27 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		//Find out where to put it
 		
 		//CREATE
-		nc = cellFactory(TYPE_CELL_DG_A, ocurve);	//create the cell
-
+		//nc = cellFactory(type, ocurve);	//create the cell
+		nc= cellFactory(type, modelURL, ocurve, true);	//create the cell and update display
+		
 		nc.select();
 	}
 	
 	
 	
-	public void createFreeCell(String type)
+	public void createFreeCell(String modelURL)
 	{
-		
-		
 		//FIND WHERE to put it
 		Vector3f camPos = View.getInstance().getCameraView().getCamera().getLocation();
 		Vector3f camDir = View.getInstance().getCameraView().getCamera().getDirection().normalize().mult(30f); //get 4 unit-direction 
 		Vector3f dest = camPos.add(camDir);
 			
-		NeuronMorphology nc = cellFactory(type, null);	//create the cell
+		NeuronMorphology nc = cellFactory("harcoded_semantics", modelURL, null, true);	//create the cell
 		//place the thing in front of the camera
 		nc.setCoordinateSystem(null);
 		nc.setRelativePosition(new PositionVector(dest));
-		
 	}
 	
-
-	/**
-	 * Makes a generic cell based on type
-	 * @see OMTUtility TYPE_s 
-	 * @param type
-	 * @return
-	 */
-	public NeuronMorphology cellFactory(String type, Curve3D parent)
-	{
-		NeuronMorphology nc = null;
-		
-		String f=type;	//filename
-		String s=null;	//semantic class
-		
-
-			if (type.equals(TYPE_CELL_DG_A))	s = SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS;
-			if (type.equals(TYPE_CELL_DG_B))	s = SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS; 
-			if (type.equals(TYPE_CELL_DG_C))	s = SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS;
-			if (type.equals(TYPE_CELL_PYR_CA1_A))	s = SemanticClass.CA1_PYRAMIDAL_CELL_CLASS;
-			if (type.equals(TYPE_CELL_PYR_CA1_B))	s = SemanticClass.CA1_PYRAMIDAL_CELL_CLASS;
-			if (type.equals(TYPE_CELL_PYR_CA1_C))	s = SemanticClass.CA1_PYRAMIDAL_CELL_CLASS;
-			if (type.equals(TYPE_CELL_PYR_CA3_A))	s = SemanticClass.CA3_PYRAMIDAL_CELL_CLASS;
-			if (type.equals(TYPE_CELL_PYR_CA3_B))   s = SemanticClass.CA3_PYRAMIDAL_CELL_CLASS;
-			if (type.equals(TYPE_CELL_PYR_CA3_C))	s = SemanticClass.CA3_PYRAMIDAL_CELL_CLASS;
-		
-		return cellFactory(s, f, parent, true);
-	}
 	
 	/**
 	 * For conveiniance, cells can be created without updating the scene. This may be useful for making many cells at once.

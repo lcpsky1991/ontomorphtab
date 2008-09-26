@@ -172,6 +172,37 @@ public class View2D extends Display{
 		return instance;
 	}
 	
+	
+	
+	public File showFileChooser()
+	{
+		//Create a file chooser
+		final JFileChooser fc = new JFileChooser(OntoMorph2.getWBCProperties().getProperty("last.load.directory"));
+		
+//		In response to a button click:
+		JFrame f = new JFrame();
+		f.setSize(0,0);
+		f.setLocation(100,100);
+		f.setVisible(false);
+		int returnVal = fc.showOpenDialog(f);
+		
+		File rfile = null;
+		if (returnVal == JFileChooser.APPROVE_OPTION) 
+		{
+			rfile = fc.getSelectedFile();
+			OntoMorph2.getWBCProperties().setProperty("last.load.directory", rfile.getAbsolutePath());
+			OntoMorph2.saveWBCProperties();
+		} else {
+			Log.warn("Open command cancelled by user.");
+		}
+		
+		f.dispose();
+		
+		return rfile;
+	}
+	
+	
+	
 	public void loadCellChooser() {
 		TreeNode root = TangibleManager.getInstance().getCellTree();
 		
@@ -217,6 +248,7 @@ public class View2D extends Display{
 		iBrowser = new InstanceBrowser(this);
 	}
 	
+	/*
 	public void loadFileChooser() {
 //		Create a file chooser
 		final JFileChooser fc = new JFileChooser(OntoMorph2.getWBCProperties().getProperty("last.load.directory"));
@@ -233,7 +265,7 @@ public class View2D extends Display{
 			File file = fc.getSelectedFile();
 			OntoMorph2.getWBCProperties().setProperty("last.load.directory", file.getAbsolutePath());
 			OntoMorph2.saveWBCProperties();
-			TangibleManager.getInstance().loadFile(file);
+			
 			
 		} else {
 			Log.warn("Open command cancelled by user.");
@@ -241,6 +273,7 @@ public class View2D extends Display{
 		
 		f.dispose();
 	}
+	*/
 	
 	
 

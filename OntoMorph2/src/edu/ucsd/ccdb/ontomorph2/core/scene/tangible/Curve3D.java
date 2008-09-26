@@ -255,7 +255,6 @@ public class Curve3D extends Tangible{
 	public void reapply()
 	{
 		//redraw the curve
-		System.out.println("pts " + getAnchorPoints().size());
 		for (CurveAnchorPoint p : getAnchorPoints())
 		{
 			setControlPoint(p.getIndex(), p.getRelativePosition());

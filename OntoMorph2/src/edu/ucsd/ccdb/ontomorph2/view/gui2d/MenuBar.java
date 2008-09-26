@@ -1,5 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
+import java.io.File;
+
 import org.fenggui.background.PlainBackground;
 import org.fenggui.event.IMenuItemPressedListener;
 import org.fenggui.event.MenuItemPressedEvent;
@@ -190,7 +192,11 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		
 		if ( LOAD_SCENE.equals(act) )
 		{
-			View2D.getInstance().loadFileChooser();
+			//get file
+			File nfile = View2D.getInstance().showFileChooser();
+			//load that file
+			TangibleManager.getInstance().loadFile(nfile);
+			
 		}
 		else if ( SAVE_SCENE.equals(act) )
 		{

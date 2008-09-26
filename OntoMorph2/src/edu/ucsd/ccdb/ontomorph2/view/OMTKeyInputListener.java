@@ -127,6 +127,9 @@ public class OMTKeyInputListener implements KeyInputListener {
 				}
 			}
 			break;
+		case KeyInput.KEY_A:
+			View.getInstance().getCameraView().rotateCameraAbout(null, 90f,0);
+			break;
 		case KeyInput.KEY_BACK:
 			{
 				//delete

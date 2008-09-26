@@ -39,6 +39,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 
 //=========
 
@@ -57,7 +58,7 @@ public class View extends BaseSimpleGame {
 	//=================================
 	// Global Interface-Objects
 	//=================================
-	public ViewCamera viewNode;					//thisobject needed for manipulating the camera in a simple way
+	private ViewCamera viewNode;					//thisobject needed for manipulating the camera in a simple way
 	
 	FirstPersonHandler fpHandler = null;
 	Line debugRay = null;	//used for mouse picking debugging mode
@@ -277,38 +278,7 @@ public class View extends BaseSimpleGame {
 		//handleKeyInput();	//should be mvoed to some other handler
 	}
 	
-	/**
-	 * Rotates the camera (from user-perspective it rotates the world) around a Tangible
-	 * @param focus
-	 * @param degrees
-	 * @param axis
-	 */
-	public void rotateCameraAbout(Tangible focus, float degrees, Vector3f axis)
-	{
-		Camera camView = viewNode.camNode.getCamera();
-		
-		Quaternion Q = new Quaternion().fromAngleAxis(degrees, axis);
-		viewNode.setLocalRotation(Q);
-		
-		camView.lookAt(focus.getAbsolutePosition(), focus.getAbsolutePosition());
-		
-		
-		//first find the old position and old rotation
-		//Vector3f posOrig = camNode.cam
-		
-		//then apply the new rotation to the camera
-		
-		//apply the new rotation to the old position
-		
-		//apply the new position
-		
-		/*
-		Quaternion roll = new Quaternion();
-		roll.fromAngleAxis( -1*amount*getRotationRate(), Vector3f.UNIT_X ); //rotates Rate degrees
-		roll = this.getLocalRotation().multLocal(roll); // (q, save)
-		this.setLocalRotation(roll);
-		*/
-	}
+	
 
 	
     /**

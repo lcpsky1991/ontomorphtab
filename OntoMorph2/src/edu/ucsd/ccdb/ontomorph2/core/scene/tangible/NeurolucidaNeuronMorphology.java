@@ -50,6 +50,11 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 		}
 	}
 	
+	public String getFilename()
+	{
+		return _morphLoc.getFile();
+	}
+	
 	public NeurolucidaNeuronMorphology(URL morphLoc, PositionVector position, RotationVector rotation) {
 		this(morphLoc);
 		setRelativePosition(position);

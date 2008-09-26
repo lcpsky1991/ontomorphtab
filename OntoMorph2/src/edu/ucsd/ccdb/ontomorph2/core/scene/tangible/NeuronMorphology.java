@@ -49,6 +49,8 @@ public abstract class NeuronMorphology extends Tangible{
 		return _curve;
 	}
 	
+	public abstract String getFilename();
+	
 	/**
 	 * Disassociates a curve with this morphology and attaches this morphology to a different curve
 	 * @param c
