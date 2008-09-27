@@ -186,17 +186,17 @@ public class BasicSearchWidget extends Widget{
 		 			View.getInstance().getCameraView().smoothlyZoomToCellView();}
 		 		selected = null;
 		 		
-		 		//System.out.println(position);
+		 		System.out.println(returnObjectPosition());
 		 		}}
 			);
 	}
 	
 	public void DB(){
 		regions = new HashMap<String, Vector3f>();
-		regions.put("Hippocampus", new Vector3f(190f, -118f, -180f));
+		regions.put("Hippocampus", new Vector3f(-300f, -118f, -180f));
 		//regions.put("Cell", new Vector3f(300f, 180f, -300f));
 		regions.put("Cerebellum", new Vector3f(458.9234f, -118.0f, -253.11566f));
-		regions.put("Cells" , new Vector3f(378.8373f, -116.61807f, -179.73985f));
+		regions.put("Cells" , new Vector3f(190f, -118f, -180f));
 				
 	}
 	
@@ -228,6 +228,10 @@ public class BasicSearchWidget extends Widget{
 	
 	public void absolutePosition(Vector3f position){
 		this.position = position;
+	}
+	
+	public Vector3f returnObjectPosition(){
+		return this.position;
 	}
 
 }

@@ -31,6 +31,7 @@ public class CCDBSlide extends URISlide {
 		CCDBModelReader reader;
 		try {
 			reader = new CCDBModelReader(image);
+			System.out.println("image" + image);
 			List file = reader.getFiles();
 			
 			for(int i=0;i<file.size();i++)

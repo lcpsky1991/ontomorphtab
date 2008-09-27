@@ -523,6 +523,7 @@ public class View3DMouseListener implements MouseInputListener {
 			System.out.println("selection "  + recent + " manip:" + manip);
 			System.out.println("position" + TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
 
+			widget.absolutePosition(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
 			//check to see where the camera is positioned and compare it to the Tangible's plane
 			//if it is under, reverse the X direction so movement is intuitive
 			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().getCameraView().getCamera().getDirection()), manip.getWorldNormal()); 

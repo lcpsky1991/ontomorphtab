@@ -14,6 +14,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
@@ -22,6 +23,7 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.MeshViewImpl;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.SphereParticlesView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.VolumeView;
 
 /**
@@ -36,6 +38,7 @@ public class View3D extends Node{
 	private Node surfacesNode = null;
 	private Node meshesNode = null;
 	private Node volumesNode = null;
+	private Node particlesNode = null;
 	private Node atlasNode = null;
 	
 	public View3D() {
@@ -46,6 +49,7 @@ public class View3D extends Node{
 		surfacesNode = new Node("Surfaces");
 		meshesNode = new Node("Meshes");
 		volumesNode = new Node("Volumes");
+		particlesNode = new Node("Particles");
 		atlasNode = new Node("Atlas");
 		
 		slidesNode.setLightCombineMode(LightState.OFF);
@@ -54,6 +58,7 @@ public class View3D extends Node{
 		surfacesNode.setLightCombineMode(LightState.OFF);
 		meshesNode.setLightCombineMode(LightState.OFF);
 		volumesNode.setLightCombineMode(LightState.OFF);
+		particlesNode.setLightCombineMode(LightState.OFF);
 		atlasNode.setLightCombineMode(LightState.COMBINE_CLOSEST);
 		
 		this.attachChild(slidesNode);
@@ -62,6 +67,7 @@ public class View3D extends Node{
 		this.attachChild(surfacesNode);
 		this.attachChild(meshesNode);
 		this.attachChild(volumesNode);
+		this.attachChild(particlesNode);
 		this.attachChild(atlasNode);
 	}
 	
@@ -160,6 +166,12 @@ public class View3D extends Node{
 		}
 	}
 	
+	public void addParticles(Set<SphereParticles> particles){
+		for(SphereParticles sp: particles){
+			SphereParticlesView spView = (SphereParticlesView)TangibleViewManager.getInstance().getTangibleViewFor(sp);
+						
+		}
+	}
 	public void addBrainRegions(Set<BrainRegion> regions) {
 		
 		for (BrainRegion br: regions) {

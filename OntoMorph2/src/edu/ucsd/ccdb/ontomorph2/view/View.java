@@ -77,7 +77,7 @@ public class View extends BaseSimpleGame {
 	Cone wand = null;
 	
 	org.fenggui.Display disp; // FengGUI's display
-	
+
 	View3D view3D = null;
 	private View3DMouseListener view3DMouseListener;
 	private OMTKeyInputListener OMTKeyListener;
