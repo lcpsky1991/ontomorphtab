@@ -190,7 +190,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		
 		//apply the new rotation to the old position
 		Vector3f posTo = new Vector3f(posOrig);
-		posTo = posTo.add(cam.getLeft().mult(-degreesX * factor));
+		posTo = posTo.add(cam.getLeft().mult(-degreesX * 5));
 		posTo = posTo.add(cam.getUp().mult(degreesY));
 
 		
@@ -199,8 +199,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		this.setLocalTranslation(posTo);
 		
 		
-		System.out.println("to " + posTo);
-		System.out.println(99999 * posTo.angleBetween(posOrig));
+		if (focus != null) this.lookAt(focus.getAbsolutePosition(), cam.getUp());
 	}
 	
 	/**

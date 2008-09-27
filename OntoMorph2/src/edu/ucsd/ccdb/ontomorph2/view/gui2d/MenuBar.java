@@ -59,11 +59,13 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String strMNU_MANI_ROTATEC = "Rotate (Z - Axis)";
 	public static final String strMNU_MANI_MOVE = "Move";
 	public static final String strMNU_MANI_LOOK = "Focus Camera";
-	public static final String strMNU_MANI_NONE = "None (Pick)";
+	public static final String strMNU_MANI_PICK = "Pick";
+	public static final String strMNU_MANI_NONE = "Pan Camera";
 	public static final String strMNU_MANI_SCALE = "Re-Scale";
 	public static final String strNEW_CELL_A = ContextMenu.TYPE_CELL_DG_A;
-	public static final String strNEW_CELL_B = ContextMenu.TYPE_CELL_PYR_CA1_A;
-	public static final String strNEW_CELL_C = ContextMenu.TYPE_CELL_PYR_CA3_A;
+	public static final String strNEW_CELL_B = ContextMenu.TYPE_CELL_PYR_CA3_A;
+	public static final String strNEW_CELL_DISK = "From Disk...";
+	
 	public static final String strNEW = "New ...";
 	public static final String BASIC_SEARCH = "Basic Search...";
 	public static final String SHOW_SCENE_MONITOR = "Show Scene Monitor...";
@@ -119,7 +121,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         mnuObjects.registerSubMenu(mnuObjects_New, strNEW);
         makeMenuItem(strNEW_CELL_A, mnuObjects_New);
         makeMenuItem(strNEW_CELL_B, mnuObjects_New);
-        makeMenuItem(strNEW_CELL_C, mnuObjects_New);
+        makeMenuItem(strNEW_CELL_DISK, mnuObjects_New);
         //makeMenuItem(VOLUMES, mnuObjects);
         //makeMenuItem(SEMANTICS, mnuObjects);
         
@@ -233,11 +235,23 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if ( strNEW_CELL_B.equals(act) )
 		{
-			ContextMenu.getInstance().createFreeCell(ContextMenu.TYPE_CELL_PYR_CA1_A);
-		}
-		else if ( strNEW_CELL_C.equals(act) )
-		{
 			ContextMenu.getInstance().createFreeCell(ContextMenu.TYPE_CELL_PYR_CA3_A);
+		}
+		else if ( strNEW_CELL_DISK.equals(act) )
+		{
+			try
+			{
+				String strFile = View2D.getInstance().showFileChooser().getName();
+				strFile = strFile.substring(0, strFile.indexOf(".morph.xml"));
+				if (strFile != null);
+				{
+					ContextMenu.getInstance().createFreeCell(strFile);	
+				}	
+			}
+			catch(Exception e)
+			{
+				Log.warn("Failed to create free-floating cell because: " + e.getMessage());
+			}
 		}
 		else if ( LIST_INSTANCES.equals(act) )
 		{
@@ -300,6 +314,10 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 			View.getInstance().getCameraView().smoothlyZoomToAtlasMedialView();
 		}
 		else if ( strMNU_MANI_NONE.equals(act) )
+		{
+			View.getInstance().getView3DMouseListener().setManipulation(View3DMouseListener.METHOD_NONE);
+		}
+		else if ( strMNU_MANI_PICK.equals(act) )
 		{
 			View.getInstance().getView3DMouseListener().setManipulation(View3DMouseListener.METHOD_PICK);
 		}

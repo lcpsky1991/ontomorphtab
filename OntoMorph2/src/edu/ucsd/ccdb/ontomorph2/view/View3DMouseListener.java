@@ -71,9 +71,9 @@ public class View3DMouseListener implements MouseInputListener {
 	Display disp;
 	View v = new View();
 	FengJMEInputHandler guiInput;
-	BasicSearchWidget widget = new BasicSearchWidget();
-	private static int manipulation = METHOD_MOVE; //set move to be default
+	BasicSearchWidget widget = new BasicSearchWidget();	
 	
+	private static int manipulation = METHOD_PICK; //set move to be default
 	public static final int OMT_MBUTTON_LEFT = 0;
 	public static final int OMT_MBUTTON_RIGHT = 1;
 	public static final int OMT_MBUTTON_MIDDLE = 2;
@@ -191,17 +191,26 @@ public class View3DMouseListener implements MouseInputListener {
 			//View.getInstance().getCameraView().turnUp(dY / 100f);
 			
 			//rotate the camera around the selected tangibles
-			
+			Tangible recent = TangibleManager.getInstance().getSelectedRecent();
 			{
-				View.getInstance().getCameraView().rotateCameraAbout(null, dX ,dY );
+				View.getInstance().getCameraView().rotateCameraAbout(recent, dX ,dY );
 			}
 			
 		}
 		else if (OMT_MBUTTON_LEFT == button) //left 
 		{
-			//dragging
-			manipulateCurrentSelection();
-			//System.out.println("x: " + dX + " y: " + dY + "  -  " + xPos + ", " + yPos);
+			//in the case of no method, use panning instead of manipulating
+			//this must be outside of manipulateCurrent because we apply it once, rather than over all selected
+			if ( manipulation == METHOD_NONE)
+			{
+				//pan
+				//View.getInstance().getCameraView().moveLeft(dX);
+			}
+			else
+			{
+				//dragging
+				manipulateCurrentSelection();	
+			}
 		}
 	}
 	
@@ -227,21 +236,26 @@ public class View3DMouseListener implements MouseInputListener {
 	
 	private void onMouseRelease(int buttonIndex)
 	{		
-
+		/** 
+		 * This is for code to be executed when draggig is over
+		 * for example, when yuo drag one object onto another
+		 */
 		if (OMT_MBUTTON_LEFT == buttonIndex) 
 		{
 			//after-manipulation code
+			//find the originating tangible and the target that it is being dragge donto
 			Tangible last = TangibleManager.getInstance().getSelectedRecent(); //could possibly be used for dragging ONTO in mouse release
-			Tangible ontop = null;//psuedoPick(KeyInput.get().isControlDown(), true).get(0);
+			ArrayList<Tangible> targets = psuedoPick(KeyInput.get().isControlDown(), true); //dropped onto targets
 			
+			Tangible ontop = null;
+			if (targets.size() > 0)	ontop = targets.get(0);
+			
+			//Execute code for post-dragging of anchorpionts
 			if (last instanceof CurveAnchorPoint)
 			{
 				last.execPostManipulate(ontop);
 			}
-		}
-			
-		
-		
+		}	
 	}
 	
 	private void onMouseDouble(int buttonIndex)
@@ -273,10 +287,8 @@ public class View3DMouseListener implements MouseInputListener {
 	
 
 	private void doPick() 
-	{
-		System.out.println("do Pick");
-		
-//		get the tangible picked
+	{		
+		//get the tangible picked
 		ArrayList<Tangible> pickedlist = psuedoPick(KeyInput.get().isControlDown(), true);   
 		
 		boolean shift = KeyInput.get().isShiftDown();
@@ -518,6 +530,9 @@ public class View3DMouseListener implements MouseInputListener {
 
 			switch ( manipulation )
 			{
+			case METHOD_NONE:
+				//do nothing
+				break;
 			case METHOD_PICK:
 				//do nothing
 				break;

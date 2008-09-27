@@ -49,7 +49,6 @@ import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.misc.TestParticleSystem;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
@@ -415,7 +414,7 @@ public class View extends BaseSimpleGame {
 	    TextureState ts = display.getRenderer().createTextureState();
 	    ts.setTexture(
 	        TextureManager.loadTexture(
-	        TestParticleSystem.class.getClassLoader().getResource(
+	        jmetest.effects.TestParticleSystem.class.getClassLoader().getResource(
 	        "jmetest/data/texture/flaresmall.jpg"),
 	        Texture.MM_LINEAR_LINEAR,
 	        Texture.FM_LINEAR));
