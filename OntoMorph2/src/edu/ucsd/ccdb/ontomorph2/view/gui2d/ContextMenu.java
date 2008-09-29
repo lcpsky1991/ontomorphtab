@@ -21,6 +21,8 @@ import org.fenggui.util.Color;
 import com.jme.input.KeyInput;
 import com.jme.math.Vector3f;
 
+import edu.ucsd.ccdb.ontomorph2.core.scene.CellFactory;
+import edu.ucsd.ccdb.ontomorph2.core.scene.CurveFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
@@ -284,7 +286,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		{
 			//All conditions about list size were already considered, this should never happen!
 			//"'How often have I said to you that when you have eliminated the impossible, whatever remains, however improbable, must be the truth?' - Sherlock";
-			System.out.println("WTF");
+			Log.warn("WTF");
 		}
 		//===========================================
 		
@@ -530,7 +532,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 		info += " above: " + OMTUtility.isLookingFromAbove(camDir, plane);
 		
 		
-		System.out.println(info);
+		Log.warn(info);
 	}
 	
 	private void doActionOnSelected(int action, Tangible target, double value)
@@ -553,19 +555,21 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			switch (action)
 			{
 				case CTX_ACTION_DISPROP:
-					System.out.println("show properties for: " + single);
+					Log.warn("show properties for: " + single);
 					break;
 				case CTX_ACTION_ANNOTATE:
-					System.out.println("annotate: " + single);
+					Log.warn("annotate: " + single);
 					break;
 				case CTX_ACTION_ANIMATE:
-					System.out.println("animate: " + single);
+					Log.warn("animate: " + single);
 					break;
 				case CTX_ACTION_NEW_CURVE:
-					createCurve(single);
+					CurveFactory.getInstance().createCurve(single);
 					break;
 				case CTX_ACTION_NEW_ANCHOR:
-					createPoint(single);
+					if (single instanceof CurveAnchorPoint) {
+						((CurveAnchorPoint)single).createPoint();
+					}
 					break;
 				case CTX_ACTION_VISIBLE:
 					//TODO: generalize to all tangibles
@@ -589,9 +593,11 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				{
 					try
 					{
-						strReply = JOptionPane.showInputDialog(frmDialog, "Propogate how many cells?", "How many?", JOptionPane.QUESTION_MESSAGE);
+						strReply = JOptionPane.showInputDialog(frmDialog, "Propagate how many cells?", "How many?", JOptionPane.QUESTION_MESSAGE);
 						if ( strReply != null) ival = Integer.parseInt(strReply);
-						propogate(single, ival);	
+						if (single instanceof NeuronMorphology) {
+							((NeuronMorphology)single).propagate(ival);	
+						}
 					}
 					catch (NumberFormatException e)
 					{
@@ -601,21 +607,21 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					
 					break;
 				case CTX_ACTION_NEW_CELLE:
-					createCellOn(single, SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS , TYPE_CELL_DG_A);
-					System.out.println("Attempting to create " + TYPE_CELL_DG_A + " on " + single.getName());
+					CellFactory.getInstance().createCellOn(single, SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS , TYPE_CELL_DG_A);
+					Log.warn("Attempting to create " + TYPE_CELL_DG_A + " on " + single.getName());
 					break;
 				case CTX_ACTION_NEW_CELL:
 					try
 					{
-						System.out.println("Attempting to add cell on " + single.getName());
+						Log.warn("Attempting to add cell on " + single.getName());
 						String file = View2D.getInstance().showFileChooser().getName();						
 						file = file.substring(0, file.indexOf(".morph.xml"));		//strip off the extensions because the filenames are used as a key
 						
-						if (file != null) createCellOn(single, "hardcoded_semantics", file);
+						if (file != null) CellFactory.getInstance().createCellOn(single, "hardcoded_semantics", file);
 					}
 					catch(Exception e)
 					{
-						System.out.println("failed createCellOn: " + e.getMessage());
+						Log.warn("failed createCellOn: " + e.getMessage());
 					}
 					
 					break;
@@ -646,7 +652,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					break;
 				default:
 				{
-					System.out.println("menu pressed but not handled " + single);					
+					Log.warn("menu pressed but not handled " + single);					
 					break;	
 				}
 			}//end switch
@@ -655,245 +661,8 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			frmDialog.dispose(); //destroy the frame that holds the dialogs
 		}
 	}
-	
-	
-	
-	
-	/**
-	 * Propogates a cell with normal distribution
-	 * @param original
-	 */
-	public void propogate(Tangible original, int howMany)
-	{
-			if (original instanceof NeuronMorphology)
-			{
-				NeuronMorphology cell = (NeuronMorphology) original;
-				for (int i = 0; i < howMany; i++)
-				{
-					NeuronMorphology copy = cellFactory("copy of " + cell.getName(),cell.getFilename(),cell.getCurve(), true);	//create a copy of the cells
-					
-					float rx = 0;
-					float ry=0;
-					
-					//if cell is attached to curve have to scale the movement by alot more
-					if (!cell.isFreeFloating())
-					{
-						copy.positionAlongCurve(cell.getCurve(), cell.getTime()); //start in same place
-						rx = (float)OMTUtility.randomNumberGuassian(0, 100);
-						copy.move(rx, ry, 0, 0);
-					}
-					else
-					{	//put it at the original place
-						copy.setRelativePosition(cell.getRelativePosition());	//start in same place
-						rx = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getRelativePosition().getX();
-						ry = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getRelativePosition().getY();
-						copy.setRelativePosition(rx, ry, copy.getRelativePosition().getZ()); //keep the same Z
-					}
-					copy.rotate(rx, 0, new OMTVector(0,1,0)); //for aesthetics rotate them about Y to make them seem more random
-				}
-			}
-	}
-	
-	public void createPoint(Tangible src)
-	{
-		//if source is not an  then dont do anything
-		if (!(src instanceof CurveAnchorPoint)) return;	
-		CurveAnchorPoint cp = (CurveAnchorPoint) src;
-		int i = cp.getIndex() + 1;
-		float t = cp.aproxTime();
-		float delta = 0.05f;
-		OMTVector place = null;
-		
-		
-		//place = new OMTVector(src.getRelativePosition()); //original
-		//find out what 'time' the current point is at, incriment that ammount a small ammount
-		//find out the tangent of the current point, then add the tangent unit to the position
-		//DOes not work well with the end points
-		place = new OMTVector(cp.getParentCurve().getPoint(t+delta));
 
-		cp.getParentCurve().addControlPoint(i, place);
-		
-		cp.getParentCurve().reapply(); //TODO: remove this line
-	}
-	
-	/**
-	 * This function intends to create a curve in the view based on some originating Tangible.
-	 * If the originating Tangible has a CoordinateSystem then the curve is supposed to be created in parallel to that Coords
-	 * If the originating Tangible has no CoordinateSystem then the curve will be parallel to the camera's plane and will also adop that plane to be its coordinatesystem
-	 * Regarding movement for movement of the newly created curve it will inherit movement based on global, or on the CoordinateSystem
-	 * 
-	 * @param src
-	 */
-	private Curve3D createCurve(Tangible src)
-	{
-		//TODO: rewrite this!
-		OMTVector cent = new OMTVector(src.getRelativePosition());
-		OMTVector up = null;
-		OMTVector left = null;
-		OMTVector posa = null;
-		OMTVector posb = null;
-		OMTVector towardcam = null;
-		float offset = 5f;	//the ammount of offset the new points from the originator
-		
-		//System.out.println("src " + src.getAbsolutePosition() + src.getRelativePosition());
-		//cent is the originating point, in some coordinate system
-		//create two side points not in that coordinate system
-		
-		
-		//if there is a coordinate system, apply this curve to that coordinate system
-		//if no coordinate system make it aligned with the camera
-		CoordinateSystem system = src.getCoordinateSystem();
-		if (system != null)
-		{
-			//cent.subtractLocal(system.getOriginVector());
-			towardcam = new OMTVector(OMTVector.UNIT_Z);
-			up = new OMTVector(OMTVector.UNIT_Y);
-			left = new OMTVector(OMTVector.UNIT_X);
-		}
-		else
-		{
-			//find the coordinate system of the camera on which to draw the curve parallel to, to do this we need three vectors
-			towardcam = new OMTVector(View.getInstance().getCameraView().getCamera().getDirection().normalize().negate().mult(5f)); 
-			left = new OMTVector(View.getInstance().getCameraView().getCamera().getLeft()); //too keep units consistent multiply by -1 so positive is 'right' (a droite)
-			up = new OMTVector(View.getInstance().getCameraView().getCamera().getUp());
-			
-			Vector3f combined = towardcam.normalize().add(left.normalize().add(up).normalize());
-			//adopt the plane of the camera to be the coordinate system
-			//TODO: apply coordinate system
-			
-		}
-		
-		//make two side points that are +/-X and +/-Y
-		posa = new OMTVector(left.add(up).mult(offset));
-		posb = new OMTVector(left.mult(-offset).add(up.mult(offset)));
-		
-		//align the side points to be near the center point
-		posa.addLocal(cent);	
-		posb.addLocal(cent);
-		
-		//adjust the curve so it appears ever-slightly in front of the background objects
-		cent.addLocal(towardcam); 
-		posa.addLocal(towardcam);
-		posb.addLocal(towardcam);
 
-		//System.out.println("sys " + system);
-		//System.out.println("new curve @ " + posa + cent + posb);
-		
-		OMTVector[] pts = {posb, cent, posa};
-		Curve3D cap = new Curve3D("user-created curve", pts, system);	//FIXME: need to set demo coordinates on new curves
-		cap.setColor(java.awt.Color.orange);
-		cap.setVisible(true);
-		cap.setModelBinormalWithUpVector(towardcam, 0.01f);	
-		cap.addObserver(SceneObserver.getInstance());
-		cap.changed();
-		
-		//redraw the scene, but not the whole scene, let observer know the curves have changed
-		View.getInstance().getScene().changed(Scene.CHANGED_CURVE);
-		
-		return cap;
-	}
-	
-	
-	private void createCellOn(Tangible src, String type, String modelURL)
-	{
-		NeuronMorphology nc = null;
-		Curve3D ocurve = null;
-		
-		//INITIAL
-		//first, set things up and get the Reference Curve
-		float t = 0.5f;	//default is middle
-		if ( src instanceof Curve3D)
-		{
-			ocurve = (Curve3D) src;
-		}
-		else if ( src instanceof CurveAnchorPoint)
-		{
-			CurveAnchorPoint ocp = (CurveAnchorPoint) src;
-			ocurve = ocp.getParentCurve();
-			t = ocp.aproxTime();	//make the cell appear on the anchorpoints time
-		}
-		else if ( src != null)
-		{
-			ocurve = createCurve(src);
-			//ocurve = null;
-		}
-		else
-		{
-			//exit early without updating the scene
-			System.out.println("Cell not created, error with source");
-			return;
-		}
-		
-		//WHERE
-		//Find out where to put it
-		
-		//CREATE
-		//nc = cellFactory(type, ocurve);	//create the cell
-		nc= cellFactory(type, modelURL, ocurve, true);	//create the cell and update display
-		
-		nc.select();
-	}
-	
-	
-	
-	public void createFreeCell(String modelURL)
-	{
-		//FIND WHERE to put it
-		Vector3f camPos = View.getInstance().getCameraView().getCamera().getLocation();
-		Vector3f camDir = View.getInstance().getCameraView().getCamera().getDirection().normalize().mult(30f); //get 4 unit-direction 
-		Vector3f dest = camPos.add(camDir);
-			
-		NeuronMorphology nc = cellFactory("harcoded_semantics", modelURL, null, true);	//create the cell
-		//place the thing in front of the camera
-		nc.setCoordinateSystem(null);
-		nc.setRelativePosition(new PositionVector(dest));
-	}
-	
-	
-	/**
-	 * For conveiniance, cells can be created without updating the scene. This may be useful for making many cells at once.
-	 * If the parameters are erroneous, the factory will attempt to make a free-floating cell
-	 * @param cellType Semantic string
-	 * @param modelURL	String to the filename of the 3D-model file
-	 * @param crvParent The parent curve to attach the cell to. If null, the cell will be free-floating.
-	 * @param updateView True - forces Viewto update the scene. If creating many cells at once, it is nice to only redraw at the end 
-	 * @return cell created
-	 */
-	public NeuronMorphology cellFactory(String cellType, String modelURL, Curve3D crvParent, boolean updateView)
-	{
-		NeuronMorphology ncell = null;
-		
-		if (null == modelURL)
-		{
-			System.out.println("Warning: created erroneous cell");
-			crvParent = null; //continue to create cell with the assumption its a free floating one
-		}
-		
-		float t = 0.5f;
-		
-		//create the cell two different ways, depending on whether it's a free-floating or attached cell
-		if (null == crvParent)
-		{	//free float
-			ncell = new MorphMLNeuronMorphology(modelURL, null, t, NeuronMorphology.RENDER_AS_LOD, null);
-		}
-		else
-		{	//attached
-			ncell = new MorphMLNeuronMorphology(modelURL, crvParent, t, NeuronMorphology.RENDER_AS_LOD, crvParent.getCoordinateSystem());
-		}
-		
-		ncell.setRelativeScale(0.01f);
-
-		ncell.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(cellType));
-		
-		ncell.setVisible(true);
-		ncell.addObserver(SceneObserver.getInstance()); //add an observer to the new cell
-		
-		
-		if ( updateView) View.getInstance().getScene().changed(Scene.CHANGED_CELL); //
-		
-		return ncell;
-	}
-	
 	
 }
 

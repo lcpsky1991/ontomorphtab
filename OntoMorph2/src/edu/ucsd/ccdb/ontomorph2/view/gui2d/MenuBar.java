@@ -12,6 +12,7 @@ import org.fenggui.util.Point;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.core.scene.CellFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -231,11 +232,11 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if ( strNEW_CELL_A.equals(act) )
 		{
-			ContextMenu.getInstance().createFreeCell(ContextMenu.TYPE_CELL_DG_A);
+			CellFactory.getInstance().createFreeCell(ContextMenu.TYPE_CELL_DG_A);
 		}
 		else if ( strNEW_CELL_B.equals(act) )
 		{
-			ContextMenu.getInstance().createFreeCell(ContextMenu.TYPE_CELL_PYR_CA3_A);
+			CellFactory.getInstance().createFreeCell(ContextMenu.TYPE_CELL_PYR_CA3_A);
 		}
 		else if ( strNEW_CELL_DISK.equals(act) )
 		{
@@ -245,7 +246,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 				strFile = strFile.substring(0, strFile.indexOf(".morph.xml"));
 				if (strFile != null);
 				{
-					ContextMenu.getInstance().createFreeCell(strFile);	
+					CellFactory.getInstance().createFreeCell(strFile);	
 				}	
 			}
 			catch(Exception e)

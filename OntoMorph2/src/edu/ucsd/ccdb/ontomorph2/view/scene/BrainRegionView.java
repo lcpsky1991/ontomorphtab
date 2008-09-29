@@ -1,15 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jme.bounding.BoundingBox;
 import com.jme.renderer.Renderer;
-import com.jme.scene.Geometry;
-import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
@@ -18,10 +10,7 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
-import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
-import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
@@ -80,6 +69,7 @@ public class BrainRegionView extends TangibleView{
 	 *
 	 */
 	public void update() {
+		super.update();
 		if (mesh != null) {
 			switch(getBrainRegion().getVisibility()) {
 			case BrainRegion.VISIBLE:
@@ -109,10 +99,7 @@ public class BrainRegionView extends TangibleView{
 			this.mesh.updateModelBound();
 			this.mesh.updateRenderState();
 			this.mesh.updateGeometricState(5f, true);
-			
-			this.updateModelBound();
-			this.updateRenderState();
-			this.updateGeometricState(5f, true);
+
 		}
 	}
 	

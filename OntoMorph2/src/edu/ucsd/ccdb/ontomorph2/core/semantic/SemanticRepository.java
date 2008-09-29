@@ -41,17 +41,17 @@ public abstract class SemanticRepository {
 	}
 	
 	/**
-	 * Returns a GlobalSemanticRepository if not offline, returns a LocalSemanticRepository if
-	 * retrieving the GlobalSemanticRepository causes an OMTOfflineException
+	 * Returns the LocalSemanticRepository for now.
 	 * @return
 	 */
 	public static SemanticRepository getAvailableInstance() {
+		return LocalSemanticRepository.getInstance();
+		/*
 		try {
 			return GlobalSemanticRepository.getInstance();
 		} catch (OMTOfflineException e) {
-			//Log.warn(e.getMessage() + " Using local semantic repository instead.");
 			return LocalSemanticRepository.getInstance();
-		}
+		}*/
 	}
 
 	/* (non-Javadoc)

@@ -64,14 +64,14 @@ public class BrainRegion extends ContainerTangible {
 
 		long tick = Log.tick();
 		data = loadAllenMesh();
-		/*
+		/* when low detail meshes are working again, we can employ this loading strategy
 		try {
 			data = loadLowDetailMesh();
 		} catch (IOException e) {
 			data = loadAllenMesh();
 		}*/
 
-		Log.tock("Loading BrainRegionView for " + getName() + " took ", tick);
+		Log.tock("Loading BrainRegion for " + getName() + " took ", tick);
 	}
 	
 	public TriMesh getData() {
