@@ -3,6 +3,8 @@ package edu.ucsd.ccdb.ontomorph2.util;
 import org.morphml.metadata.schema.Point;
 import org.morphml.metadata.schema.impl.PointImpl;
 
+import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 
@@ -33,5 +35,34 @@ public class OMTVector extends Vector3f {
 		p.setZ(this.z);
 		return p;
 	}
+
+	/**
+	  * Rotates a vector around a specified quaternion
+	  * @param v {@link Vector3f} to rotate
+	  * @param q {@link Quaternion} about which to rotate v
+	  * @return the {@link Vector3f} (v) as rotated around q
+	  */
+	 public static Vector3f rotateVector(Vector3f v, Quaternion q)
+	 {
+		 Vector3f r = new Vector3f(v);
+		 r = q.mult(r,r);
+		 return r;
+	 }
+
+	/**
+	 * Rotates a vector by some angle around some axis and returns the new vector
+	 * @param v the vector to be rotated
+	 * @param angle how many degrees to rotate the vector
+	 * @param aboutAxis the UNIT vector representing which axis to rotate this vector on
+	 * @return a new vector of same length as v, which has been rotated around Axis
+	 */
+	 public static Vector3f rotateVector(Vector3f v, float angle, Vector3f aboutAxis)
+	 {
+		Vector3f r = new Vector3f(v);
+		Quaternion quat = new Quaternion();
+	    quat.fromAngleAxis(FastMath.PI * (angle/180), aboutAxis);
+	    quat.mult(r, r);	
+		return r;
+	 }
 	
 }

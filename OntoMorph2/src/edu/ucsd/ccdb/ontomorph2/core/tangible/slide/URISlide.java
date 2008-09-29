@@ -10,6 +10,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
 
 /**
  * A slide that refers to some URI.
@@ -67,7 +68,7 @@ public class URISlide extends Slide {
 				bufImg = ImageIO.read(this.getImageURL());
 			}
 		} catch (IOException e) {
-			System.out.println(this.getImageURL().getFile());
+			Log.warn(this.getImageURL().getFile());
 			e.printStackTrace();
 		}
 		return bufImg;

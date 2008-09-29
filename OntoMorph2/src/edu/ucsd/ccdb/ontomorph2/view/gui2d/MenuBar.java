@@ -63,8 +63,8 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String strMNU_MANI_PICK = "Pick";
 	public static final String strMNU_MANI_NONE = "Pan Camera";
 	public static final String strMNU_MANI_SCALE = "Re-Scale";
-	public static final String strNEW_CELL_A = ContextMenu.TYPE_CELL_DG_A;
-	public static final String strNEW_CELL_B = ContextMenu.TYPE_CELL_PYR_CA3_A;
+	public static final String strNEW_CELL_A = CellFactory.TYPE_CELL_DG_A;
+	public static final String strNEW_CELL_B = CellFactory.TYPE_CELL_PYR_CA3_A;
 	public static final String strNEW_CELL_DISK = "From Disk...";
 	
 	public static final String strNEW = "New ...";
@@ -206,7 +206,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if ( SAVE_SCENE.equals(act) )
 		{
-			System.out.println("Feature Not Implemented Yet");
+			Log.warn("Feature Not Implemented Yet");
 		}
 		else if ( strCELLS.equals(act) )
 		{
@@ -225,18 +225,18 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 			//toggle slides on or off
 			for (Slide s : TangibleManager.getInstance().getSlides())
 			{
-				System.out.println(s);
+				//System.out.println(s);
 				s.setVisible(!s.isVisible());
 				View.getInstance().getScene().changed(edu.ucsd.ccdb.ontomorph2.core.scene.Scene.CHANGED_SLIDE);
 			}
 		}
 		else if ( strNEW_CELL_A.equals(act) )
 		{
-			CellFactory.getInstance().createFreeCell(ContextMenu.TYPE_CELL_DG_A);
+			CellFactory.getInstance().createFreeCell(CellFactory.TYPE_CELL_DG_A);
 		}
 		else if ( strNEW_CELL_B.equals(act) )
 		{
-			CellFactory.getInstance().createFreeCell(ContextMenu.TYPE_CELL_PYR_CA3_A);
+			CellFactory.getInstance().createFreeCell(CellFactory.TYPE_CELL_PYR_CA3_A);
 		}
 		else if ( strNEW_CELL_DISK.equals(act) )
 		{

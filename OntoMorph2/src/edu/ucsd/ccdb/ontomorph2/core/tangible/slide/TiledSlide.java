@@ -32,7 +32,6 @@ public class TiledSlide extends Slide{
 		
 		ByteBuffer byteBuffer = ByteBuffer.wrap(byteArray);
 		Image i = new Image(Image.GUESS_FORMAT, 1405,1080, byteBuffer);
-		System.out.println(i.getType());
 		return i;
 		
 		

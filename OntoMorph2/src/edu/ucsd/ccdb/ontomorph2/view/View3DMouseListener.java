@@ -73,7 +73,17 @@ public class View3DMouseListener implements MouseInputListener {
 	FengJMEInputHandler guiInput;
 	BasicSearchWidget widget = new BasicSearchWidget();	
 	
-	private static int manipulation = METHOD_PICK; //set move to be default
+	/**
+	 * Seriously, can we set the default to be move for all objects?  It is 
+	 * pretty unintuitive to have to select move from the menu.  
+	 */
+	private static int manipulation = METHOD_MOVE; //talk to me before changing this! -SL
+	/**
+	 * I'd like to understand why we cannot have it this way by default 
+	 * before we change it back to something else again.  Please engage me
+	 * in a conversation about this. -SL
+	 */
+	
 	public static final int OMT_MBUTTON_LEFT = 0;
 	public static final int OMT_MBUTTON_RIGHT = 1;
 	public static final int OMT_MBUTTON_MIDDLE = 2;
@@ -220,7 +230,6 @@ public class View3DMouseListener implements MouseInputListener {
 	 */ 
 	private void onMousePress(int buttonIndex)
 	{
-		
 		//	RIGHT CLICK
 		if (1 == buttonIndex) //right
 		{	
@@ -229,8 +238,6 @@ public class View3DMouseListener implements MouseInputListener {
 			ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
 					MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
 		}
-		
-		
 	}
 	
 	
@@ -520,8 +527,10 @@ public class View3DMouseListener implements MouseInputListener {
 		{
 		
 			//widget.absolutePosition(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
-			System.out.println("selection "  + recent + " manip:" + manip);
-			System.out.println("position" + TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
+			if (OntoMorph2.isDebugMode()) {
+				Log.warn("selection "  + recent + " manip:" + manip);
+				Log.warn("position" + TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
+			}
 
 			widget.absolutePosition(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
 			//check to see where the camera is positioned and compare it to the Tangible's plane

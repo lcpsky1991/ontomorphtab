@@ -291,7 +291,6 @@ public class View extends BaseSimpleGame {
      * @see AbstractGame#render(float interpolation)
      */
     protected final void render(float interpolation) {
-    	//System.out.println("render");
         super.render(interpolation);
        
         this.getCameraView().getCamera().update();
@@ -330,7 +329,6 @@ public class View extends BaseSimpleGame {
         pPoints.getParticleController().update(interpolation);
 
         if ( !pause ) {
-        	//System.out.println("update interpolation");
             /** Call simpleUpdate in any derived classes of SimpleGame. */
             simpleUpdate();
 

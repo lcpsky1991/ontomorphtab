@@ -1,7 +1,10 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene;
 
+import java.util.HashMap;
+
 import com.jme.math.Vector3f;
 
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
@@ -10,6 +13,9 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
@@ -21,6 +27,20 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  */
 public class CellFactory {
 	
+	//IDs for easily creating cells
+	public static final String TYPE_CELL_DG_A = "5199202a";
+	public static final String TYPE_CELL_DG_B = "";
+	public static final String TYPE_CELL_DG_C = "";
+	public static final String TYPE_CELL_PYR_CA1_A = "pc1c";
+	public static final String TYPE_CELL_PYR_CA1_B = "pc2a";
+	public static final String TYPE_CELL_PYR_CA1_C = "";
+	public static final String TYPE_CELL_PYR_CA3_A = "cell1zr";
+	public static final String TYPE_CELL_PYR_CA3_B = "cell2zr";
+	public static final String TYPE_CELL_PYR_CA3_C = "cell6zr";
+	public static final String TYPE_CELL_DISK = "disk";
+	
+	private HashMap<String, String> cellNameToSemanticClass = new HashMap<String, String>();
+	
 	private static CellFactory instance = null;
 	
 	public static CellFactory getInstance() {
@@ -30,7 +50,16 @@ public class CellFactory {
 		return instance;
 	}
 	
-	private CellFactory() {}
+	private CellFactory() {
+		cellNameToSemanticClass.put(TYPE_CELL_DG_A, SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS);
+		
+		cellNameToSemanticClass.put(TYPE_CELL_PYR_CA1_A, SemanticClass.CA1_PYRAMIDAL_CELL_CLASS);
+		cellNameToSemanticClass.put(TYPE_CELL_PYR_CA1_B, SemanticClass.CA1_PYRAMIDAL_CELL_CLASS);
+		
+		cellNameToSemanticClass.put(TYPE_CELL_PYR_CA3_A, SemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
+		cellNameToSemanticClass.put(TYPE_CELL_PYR_CA3_B, SemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
+		cellNameToSemanticClass.put(TYPE_CELL_PYR_CA3_C, SemanticClass.CA3_PYRAMIDAL_CELL_CLASS);
+	}
 	
 	/**
 	 * For conveiniance, cells can be created without updating the scene. This may be useful for making many cells at once.
@@ -41,13 +70,13 @@ public class CellFactory {
 	 * @param updateView True - forces Viewto update the scene. If creating many cells at once, it is nice to only redraw at the end 
 	 * @return cell created
 	 */
-	public NeuronMorphology createCell(String cellType, String modelURL, Curve3D crvParent, boolean updateView)
+	public NeuronMorphology createCell(String modelURL, Curve3D crvParent, boolean updateView)
 	{
 		NeuronMorphology ncell = null;
 		
 		if (null == modelURL)
 		{
-			System.out.println("Warning: created erroneous cell");
+			Log.warn("Warning: created erroneous cell");
 			crvParent = null; //continue to create cell with the assumption its a free floating one
 		}
 		
@@ -60,12 +89,17 @@ public class CellFactory {
 		}
 		else
 		{	//attached
-			ncell = new MorphMLNeuronMorphology(modelURL, crvParent, t, NeuronMorphology.RENDER_AS_LOD, crvParent.getCoordinateSystem());
+			ncell = new MorphMLNeuronMorphology(modelURL, crvParent, t, 
+					NeuronMorphology.RENDER_AS_LOD, crvParent.getCoordinateSystem());
 		}
 		
 		ncell.setRelativeScale(0.01f);
 
-		ncell.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(cellType));
+		ncell.addSemanticClass(
+				SemanticRepository.getAvailableInstance().getSemanticClass(
+						this.cellNameToSemanticClass.get(modelURL)));
+		//creates a SemanticInstance of this cell in the SemanticRepository
+		ncell.getMainSemanticInstance();
 		
 		ncell.setVisible(true);
 		ncell.addObserver(SceneObserver.getInstance()); //add an observer to the new cell
@@ -83,14 +117,14 @@ public class CellFactory {
 		Vector3f camDir = View.getInstance().getCameraView().getCamera().getDirection().normalize().mult(30f); //get 4 unit-direction 
 		Vector3f dest = camPos.add(camDir);
 			
-		NeuronMorphology nc = createCell("harcoded_semantics", modelURL, null, true);	//create the cell
+		NeuronMorphology nc = createCell(modelURL, null, true);	//create the cell
 		//place the thing in front of the camera
 		nc.setCoordinateSystem(null);
 		nc.setRelativePosition(new PositionVector(dest));
 	}
 	
 
-	public void createCellOn(Tangible src, String type, String modelURL)
+	public void createCellOn(Tangible src, String modelURL)
 	{
 		NeuronMorphology nc = null;
 		Curve3D ocurve = null;
@@ -116,7 +150,7 @@ public class CellFactory {
 		else
 		{
 			//exit early without updating the scene
-			System.out.println("Cell not created, error with source");
+			Log.warn("Cell not created, error with source");
 			return;
 		}
 		
@@ -125,9 +159,40 @@ public class CellFactory {
 		
 		//CREATE
 		//nc = cellFactory(type, ocurve);	//create the cell
-		nc= createCell(type, modelURL, ocurve, true);	//create the cell and update display
+		nc = createCell(modelURL, ocurve, true);	//create the cell and update display
 		
 		nc.select();
+	}
+	
+	/**
+	 * Propagates a NeuronMorphology with normal distribution
+	 * @param cell
+	 */
+	public void propagate(NeuronMorphology cell, int howMany)
+	{
+		for (int i = 0; i < howMany; i++)
+		{
+			NeuronMorphology copy = createCell(cell.getFilename(),cell.getCurve(), true);	//create a copy of the cells
+			
+			float rx = 0;
+			float ry=0;
+			
+			//if cell is attached to curve have to scale the movement by alot more
+			if (!cell.isFreeFloating())
+			{
+				copy.positionAlongCurve(cell.getCurve(), cell.getTime()); //start in same place
+				rx = (float)OMTUtility.randomNumberGuassian(0, 100);
+				copy.move(rx, ry, 0, 0);
+			}
+			else
+			{	//put it at the original place
+				copy.setRelativePosition(cell.getRelativePosition());	//start in same place
+				rx = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getRelativePosition().getX();
+				ry = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getRelativePosition().getY();
+				copy.setRelativePosition(rx, ry, copy.getRelativePosition().getZ()); //keep the same Z
+			}
+			copy.rotate(rx, 0, new OMTVector(0,1,0)); //for aesthetics rotate them about Y to make them seem more random
+		}
 	}
 
 }

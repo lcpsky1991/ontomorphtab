@@ -214,7 +214,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		Vector3f xyplane = new Vector3f(0,0,1); //an apopgraph of X.cross(Y), Z is normal
 		
 		//now rotate that vector that is the normal to be aligned with the coordinates system
-		v = new OMTVector(OMTUtility.rotateVector(xyplane, rotOrig));
+		v = new OMTVector(OMTVector.rotateVector(xyplane, rotOrig));
 		
 		return v;
 	}
@@ -384,15 +384,15 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		return this.mainSemanticClass;
 	}
 	
+	/**
+	 * Creates a SemanticInstance of this Tangible in the SemanticRepository
+	 */
 	public SemanticInstance getMainSemanticInstance() {
-		if (mainSemanticInstance != null) {
-			return mainSemanticInstance;	
+		if (mainSemanticInstance == null) {
+			//if the main semantic instance for this tangible has not yet been defined
+			//then create a new instance for this tangible from the main semantic class
+			mainSemanticInstance = getMainSemanticClass().createInstance();
 		}
-		
-		//if the main semantic instance for this tangible has not yet been defined
-		//then create a new instance for this tangible from the main semantic class
-		mainSemanticInstance = getMainSemanticClass().createInstance();
-		
 		return mainSemanticInstance;
 	}
 	
@@ -503,7 +503,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		
 		//adjust the new position by the adjustments in the coordinate system
 		toPos = toPos.subtract(offset);
-		toPos = OMTUtility.rotateVector(toPos, inv);
+		toPos = OMTVector.rotateVector(toPos, inv);
 		
 		//put it in it's place
 		//PositionVector place = new PositionVector(toPos);

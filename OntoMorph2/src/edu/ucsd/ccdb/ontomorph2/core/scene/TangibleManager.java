@@ -9,21 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections.MultiHashMap;
-
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-
-import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.LocalSemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
@@ -32,13 +19,9 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.MultiHashSetMap;
-import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
-import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
-import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 
 /**
@@ -276,6 +259,8 @@ public class TangibleManager {
 				
 				//for demo purposes, load in a default location with default settings
 				//for now can only load files in the /etc/hippocampus directory if they aren't already in the DB
+				CellFactory.getInstance().createFreeCell(fileName);
+				/*
 				NeuronMorphology cell3 = new MorphMLNeuronMorphology(fileName, 
 						new PositionVector(289f, -118f, -180f), null, 
 						NeuronMorphology.RENDER_AS_LOD_2);
@@ -291,6 +276,7 @@ public class TangibleManager {
 				cell3.setVisible(true);
 				
 				OntoMorph2.getCurrentScene().changed(Scene.CHANGED_CELL);
+				*/
 				
 			} else {
 				Log.warn("This is not a file type that can be opened");

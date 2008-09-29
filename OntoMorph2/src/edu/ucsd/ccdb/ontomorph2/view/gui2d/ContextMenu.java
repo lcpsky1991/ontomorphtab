@@ -79,19 +79,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_NEW_CELLE = 120;
 	public static final int CTX_ACTION_NEW_CELL = 121;
 	public static final int CTX_ACTION_VISIBLE = 125;
-	
-	//IDs for easily creating cells
-	public static final String TYPE_CELL_DG_A = "5199202a";
-	public static final String TYPE_CELL_DG_B = "";
-	public static final String TYPE_CELL_DG_C = "";
-	public static final String TYPE_CELL_PYR_CA1_A = "pc1c";
-	public static final String TYPE_CELL_PYR_CA1_B = "pc2a";
-	public static final String TYPE_CELL_PYR_CA1_C = "";
-	public static final String TYPE_CELL_PYR_CA3_A = "cell1zr";
-	public static final String TYPE_CELL_PYR_CA3_B = "cell2zr";
-	public static final String TYPE_CELL_PYR_CA3_C = "cell6zr";
-	public static final String TYPE_CELL_DISK = "disk";
-	
+		
 	//ms stands for Menu String
 	static final String msNEW = "New ...";
 	//static final String msN_CURVE = "Curve";
@@ -596,7 +584,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 						strReply = JOptionPane.showInputDialog(frmDialog, "Propagate how many cells?", "How many?", JOptionPane.QUESTION_MESSAGE);
 						if ( strReply != null) ival = Integer.parseInt(strReply);
 						if (single instanceof NeuronMorphology) {
-							((NeuronMorphology)single).propagate(ival);	
+							CellFactory.getInstance().propagate(((NeuronMorphology)single),ival);	
 						}
 					}
 					catch (NumberFormatException e)
@@ -604,11 +592,11 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 						//user did not enter a valid number, do nothing
 					}
 				}
-					
-					break;
+				
+				break;
 				case CTX_ACTION_NEW_CELLE:
-					CellFactory.getInstance().createCellOn(single, SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS , TYPE_CELL_DG_A);
-					Log.warn("Attempting to create " + TYPE_CELL_DG_A + " on " + single.getName());
+					CellFactory.getInstance().createCellOn(single, CellFactory.TYPE_CELL_DG_A);
+					Log.warn("Attempting to create " + CellFactory.TYPE_CELL_DG_A + " on " + single.getName());
 					break;
 				case CTX_ACTION_NEW_CELL:
 					try
@@ -617,7 +605,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 						String file = View2D.getInstance().showFileChooser().getName();						
 						file = file.substring(0, file.indexOf(".morph.xml"));		//strip off the extensions because the filenames are used as a key
 						
-						if (file != null) CellFactory.getInstance().createCellOn(single, "hardcoded_semantics", file);
+						if (file != null) CellFactory.getInstance().createCellOn(single, file);
 					}
 					catch(Exception e)
 					{

@@ -31,13 +31,11 @@ public class CCDBSlide extends URISlide {
 		CCDBModelReader reader;
 		try {
 			reader = new CCDBModelReader(image);
-			System.out.println("image" + image);
 			List file = reader.getFiles();
 			
 			for(int i=0;i<file.size();i++)
 			{
 				CCDBFile f = (CCDBFile)file.get(i);
-				//System.out.println(f.getCCDBCatagory());
 				if (f.getCCDBFileType() == CCDBFileType.IMAGE_JPEG) {
 						imageURL = f.getURL();
 				} 

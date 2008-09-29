@@ -246,36 +246,4 @@ public abstract class NeuronMorphology extends ContainerTangible{
 	 */
 	public abstract ICable getCable(BigInteger id);
 	
-	
-	/**
-	 * Propogates this cell with normal distribution
-	 * @param original
-	 */
-	public void propagate(int howMany)
-	{
-		NeuronMorphology cell = this;
-		for (int i = 0; i < howMany; i++)
-		{
-			NeuronMorphology copy = CellFactory.getInstance().createCell("copy of " + cell.getName(),cell.getFilename(),cell.getCurve(), true);	//create a copy of the cells
-			
-			float rx = 0;
-			float ry=0;
-			
-			//if cell is attached to curve have to scale the movement by alot more
-			if (!cell.isFreeFloating())
-			{
-				copy.positionAlongCurve(cell.getCurve(), cell.getTime()); //start in same place
-				rx = (float)OMTUtility.randomNumberGuassian(0, 100);
-				copy.move(rx, ry, 0, 0);
-			}
-			else
-			{	//put it at the original place
-				copy.setRelativePosition(cell.getRelativePosition());	//start in same place
-				rx = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getRelativePosition().getX();
-				ry = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getRelativePosition().getY();
-				copy.setRelativePosition(rx, ry, copy.getRelativePosition().getZ()); //keep the same Z
-			}
-			copy.rotate(rx, 0, new OMTVector(0,1,0)); //for aesthetics rotate them about Y to make them seem more random
-		}
-	}
 }

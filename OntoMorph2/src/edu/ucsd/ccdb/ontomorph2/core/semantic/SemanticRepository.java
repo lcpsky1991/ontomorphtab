@@ -71,7 +71,6 @@ public abstract class SemanticRepository {
 			}
 		}
 		SemanticClass s = new SemanticClass(cls, uri);
-		//s.addObserver(SceneObserver.getInstance());
 		return s;
 	}
 

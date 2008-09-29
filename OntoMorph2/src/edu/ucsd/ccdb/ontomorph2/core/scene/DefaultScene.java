@@ -47,12 +47,6 @@ public class DefaultScene extends Scene{
 	
 	TangibleManager manager = null;
 		
-	URL cell3URL = null;
-	URL cell4URL = null;
-	URL cell5URL = null;
-	URL cell6URL = null;
-	URL cell7URL = null;
-	public URL cell11URL = null;	//made public for test-case with context menu to create new cells
 	URL mitoObjURL = null;
 	URL mito2ObjURL = null;
 	URL astroObjURL = null;
@@ -67,12 +61,6 @@ public class DefaultScene extends Scene{
 		manager = TangibleManager.getInstance();
 				
 		try {
-			cell3URL = new File(morphMLDir + "cell1zr.morph.xml").toURI().toURL();
-			cell4URL = new File(morphMLDir + "cell2zr.morph.xml").toURI().toURL();
-			cell5URL = new File(morphMLDir + "cell6zr.morph.xml").toURI().toURL();
-			cell6URL = new File(morphMLDir + "pc1c.morph.xml").toURI().toURL();
-			cell7URL = new File(morphMLDir + "pc2a.morph.xml").toURI().toURL();
-			cell11URL = new File(morphMLDir + "5199202a.morph.xml").toURI().toURL();
 			mitoObjURL = new File(mitoDir + "mito_outer.obj").toURI().toURL();
 			
 			mito2ObjURL = new File(objDir + "mitochondrion.obj").toURI().toURL();
@@ -230,31 +218,29 @@ public class DefaultScene extends Scene{
 		c2.setModelBinormalWithUpVector(OMTVector.UNIT_Y, 0.1f);
 		addSceneObject(c2);
 		
+		
 		NeuronMorphology cell3 = new MorphMLNeuronMorphology("cell1zr", c2, 0.03f, 
 				NeuronMorphology.RENDER_AS_LOD_2, d);
 		cell3.setRelativeScale(0.01f);
 		//semantic thing for hippocampal CA3 neuron
-		
+		cell3.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+		cell3.getMainSemanticInstance();
 		addSceneObject(cell3);
 		
 		NeuronMorphology cell4 = new MorphMLNeuronMorphology("cell2zr", c2, 0.2f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell4.setRelativeScale(0.01f);
-		
+		cell4.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+		cell4.getMainSemanticInstance();
 		addSceneObject(cell4);
 		
 
 		NeuronMorphology cell5 = new MorphMLNeuronMorphology("cell6zr", c2, 0.35f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell5.setRelativeScale(0.01f);
-		
+		cell5.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
+		cell5.getMainSemanticInstance();
 		addSceneObject(cell5);
-		
-		
-			cell3.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
-			cell4.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
-			cell5.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
-
 		
 
 		/** These models have their up vectors pointing in an X direction
@@ -302,11 +288,8 @@ public class DefaultScene extends Scene{
 
 			cell11.setRelativeScale(0.01f);
 			
-			try {
-				cell11.addSemanticClass(GlobalSemanticRepository.getInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
-			} catch (OMTOfflineException e4) {
-				Log.warn(e4.getMessage());
-			}
+			cell11.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
+			cell11.getMainSemanticInstance();
 			
 			addSceneObject(cell11);
 		}

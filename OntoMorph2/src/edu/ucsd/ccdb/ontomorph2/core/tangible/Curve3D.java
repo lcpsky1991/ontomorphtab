@@ -17,6 +17,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
@@ -385,7 +386,7 @@ public class Curve3D extends Tangible{
 			for (int i=0; i < controlPoints.length; i++)
 			{
 				anchors.get(i).i = i;
-				System.out.println(i + ":" + anchors.get(i).getIndex());
+				Log.warn(i + ":" + anchors.get(i).getIndex());
 			}
 			
 			//System.out.println("anchors " + anchors.size());
