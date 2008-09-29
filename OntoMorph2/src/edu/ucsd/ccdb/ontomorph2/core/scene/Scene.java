@@ -136,6 +136,12 @@ public abstract class Scene extends Observable{
 	public abstract void load();
 	
 
+	/**
+	 * Writes a neuroML document that describes the current scene.  Still needs to impliment
+	 * saving slides, saving exact positions of cells with rotation and scale, coordinate systems,
+	 * etc
+	 *
+	 */
 	@SuppressWarnings("unchecked")
 	public void save() {
 		Neuroml scene = new NeuromlImpl();
