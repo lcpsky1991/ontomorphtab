@@ -1,6 +1,9 @@
 package edu.ucsd.ccdb.ontomorph2.core.scene;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Observable;
 import java.util.Set;
@@ -9,11 +12,21 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
+import org.morphml.neuroml.schema.Curves;
 import org.morphml.neuroml.schema.Level3Cells;
 import org.morphml.neuroml.schema.NeuroMLLevel3;
+import org.morphml.neuroml.schema.impl.CurvesImpl;
+import org.morphml.neuroml.schema.impl.Level3CellsImpl;
 import org.morphml.neuroml.schema.impl.NeuroMLLevel3Impl;
 import org.morphml.neuroml.schema.impl.NeuromlImpl;
+import org.w3c.dom.Node;
+
+import com.sun.xml.stream.PropertyManager;
+import com.sun.xml.stream.writers.XMLStreamWriterImpl;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
@@ -124,25 +137,34 @@ public abstract class Scene extends Observable{
 	@SuppressWarnings("unchecked")
 	public void save() {
 		NeuroMLLevel3 scene = new NeuroMLLevel3Impl();
+		Level3Cells cells = new Level3CellsImpl();
 		for (NeuronMorphology nm : getCells()) {
 			if (nm instanceof MorphMLNeuronMorphology) {
 				MorphMLNeuronMorphology mmnm = (MorphMLNeuronMorphology)nm;
-				scene.getCells().getCell().add(mmnm.getMorphMLCell());
+				cells.getCell().add(mmnm.getMorphMLCell());
 			}
 		}
+		scene.setCells(cells);
+		Curves curves = new CurvesImpl();
 		for (Curve3D c : getCurves()) {
-			scene.getCurves().getCurve().add(c.getMorphMLCurve());
+			curves.getCurve().add(c.getMorphMLCurve());
 		}
-		
-		//scene.getPopulations().getPopulation().add();
+		scene.setCurves(curves);
 		
 		try {
 			JAXBContext context = JAXBContext.newInstance("org.morphml.neuroml.schema");
 			
-			//Create the unmarshaller
+			//Create the marshaller
 			final Marshaller marshaller = context.createMarshaller();
+			FileOutputStream file = null;
+			try {
+				file = new FileOutputStream("saved_scene.xml");
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-			marshaller.marshal(scene, System.out);
+			marshaller.marshal(scene, file);
 			//Unmarshall the XML
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block

@@ -319,9 +319,6 @@ public class DefaultScene extends Scene{
 
 		changed(CHANGED_LOAD);
 	}
-
-	public void save() {
-	}
 	
 	public void loadSurfaces() {
 

@@ -52,6 +52,7 @@ public class Curve3D extends Tangible{
 	public Curve3D(String arg0, OMTVector[] arg1) {
 		setName(arg0);
 		morphMLCurve = new CurveImpl();
+		morphMLCurve.setName(arg0);
 		morphMLCurve.setId(new BigInteger(6, rand));
 		setControlPoints(arg1);
 	}
