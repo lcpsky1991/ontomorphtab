@@ -95,7 +95,9 @@ public class LocalSemanticRepository extends SemanticRepository{
 			//projectManager.loadProject(uri);
 			owlModel = (OWLDatabaseModel)p.getKnowledgeBase();
     	} catch (Exception e) {
-    		throw new OMTException("Cannot connect to Local OWL Database!", e);
+    		throw new OMTException("Cannot connect to Local OWL Database!  Make sure there isn't " +
+    				"another instance of the database running and that you have loaded the semantic " +
+    				"database schema!", e);
     	}		
     }
 

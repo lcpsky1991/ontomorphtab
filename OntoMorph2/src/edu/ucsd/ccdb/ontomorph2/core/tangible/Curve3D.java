@@ -1,17 +1,23 @@
 package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
 
-import com.jme.curve.Curve;
+import org.morphml.metadata.schema.Curve;
+import org.morphml.metadata.schema.Point3D;
+import org.morphml.metadata.schema.impl.CurveImpl;
+
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 
+import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
@@ -38,12 +44,16 @@ public class Curve3D extends Tangible{
 	float delta = 0.1f;
 	private Vector3f _modelBinormal = null;
 	OMTVector[] controlPoints = null;
+	Curve morphMLCurve = null;
 	boolean seeAnchorPoints = false;
 	List<CurveAnchorPoint> anchors = null;
+	public static Random rand = new Random();
 	
 	public Curve3D(String arg0, OMTVector[] arg1) {
 		setName(arg0);
-		controlPoints = arg1;
+		morphMLCurve = new CurveImpl();
+		morphMLCurve.setId(new BigInteger(6, rand));
+		setControlPoints(arg1);
 	}
 
 	public Curve3D(String string, OMTVector[] array, CoordinateSystem d) {
@@ -59,8 +69,8 @@ public class Curve3D extends Tangible{
 		if (anchors == null) 
 		{
 			anchors = new ArrayList<CurveAnchorPoint>();
-			for (int i = 0; i< controlPoints.length; i++) {
-				anchors.add(new CurveAnchorPoint(this, controlPoints[i], i));
+			for (int i = 0; i< getControlPoints().length; i++) {
+				anchors.add(new CurveAnchorPoint(this, getControlPoints()[i], i));
 			}
 		}
 		return anchors;
@@ -99,7 +109,7 @@ public class Curve3D extends Tangible{
 	 */
 	public int getAnchorCount()
 	{
-		return controlPoints.length;
+		return getControlPoints().length;
 	}
 	
 	/**
@@ -150,7 +160,7 @@ public class Curve3D extends Tangible{
 	 * @return a copy of this Curve3D
 	 * @see Curve
 	 */
-	public Curve getCurve() {
+	public com.jme.curve.Curve getCurve() {
 		if (theCurve == null) {
 			theCurve = copyBezierCurve();
 		}
@@ -163,7 +173,7 @@ public class Curve3D extends Tangible{
 	private CatmullRomCurve copyBezierCurve()
 	{
 		//BezierCurve copy = new BezierCurve(this.getName(), this.controlPoints);
-		CatmullRomCurve copy = new CatmullRomCurve(this.getName(), this.controlPoints);
+		CatmullRomCurve copy = new CatmullRomCurve(this.getName(), getControlPoints());
 
 		//apply coordinate system to this curve.
 		if (this.getCoordinateSystem() != null) 
@@ -296,11 +306,24 @@ public class Curve3D extends Tangible{
 	 * @param i
 	 * @param pos
 	 */
+	@SuppressWarnings("unchecked")
 	protected void setControlPoint(int i, OMTVector pos) {
+		morphMLCurve.getPoint().set(i, pos.asPoint3D());
+		DataRepository.getInstance().saveFileToDB(morphMLCurve);
 		this.controlPoints[i] =  pos;
 		changed();
 	}
 	
+	@SuppressWarnings("unchecked")
+	protected void setControlPoints(OMTVector[] arg1) {
+
+		for (int i = 0; i < arg1.length; i++) {
+			morphMLCurve.getPoint().add(arg1[i].asPoint3D());
+		}
+		DataRepository.getInstance().saveFileToDB(morphMLCurve);
+		this.controlPoints = arg1;
+		changed();
+	}
 	
 	
 	/**
@@ -311,35 +334,35 @@ public class Curve3D extends Tangible{
 	public void addControlPoint(int index, OMTVector pos)
 	{
 		
-		OMTVector modlist[] = new OMTVector[controlPoints.length+1]; //make the new list one element larger 
+		OMTVector modlist[] = new OMTVector[getControlPoints().length+1]; //make the new list one element larger 
 		
 		//if no index supplied append a new control point
 		if ( index < 0 )
 		{
 			index = 0;	
 		}
-		else if (index >= controlPoints.length)
+		else if (index >= getControlPoints().length)
 		{
-			index = controlPoints.length - 1; //length is a conveiniant way to get the [ (last element index)+1 ]
+			index = getControlPoints().length - 1; //length is a conveiniant way to get the [ (last element index)+1 ]
 		}
 		
 		//copy over the control points for points before index
 		for (int x=0; x < index; x++)
 		{
-			modlist[x] = controlPoints[x];
+			modlist[x] = getControlPoints()[x];
 		}
 		
 		//insert the new control point
 		modlist[index] = pos;		
 		
 		//now append the rest of the points
-		for (int x=index; x < controlPoints.length; x++)
+		for (int x=index; x < getControlPoints().length; x++)
 		{
-			modlist[x+1] = controlPoints[x]; //copy over the values from original into ind+1 of modified list
+			modlist[x+1] = getControlPoints()[x]; //copy over the values from original into ind+1 of modified list
 		}
 		
 		//now copy the list back to be saved
-		controlPoints = modlist;
+		setControlPoints(modlist);
 		
 		anchors = null; //forces recreation of anchor-list next time getAnchors is called
 		anchors = getAnchorPoints();
@@ -363,34 +386,32 @@ public class Curve3D extends Tangible{
 	{
 		if (true) return true;
 		
-		if (controlPoints.length > 2)
+		if (getControlPoints().length > 2)
 		{
-			OMTVector modpoints[] = new OMTVector[controlPoints.length-1];
+			OMTVector modpoints[] = new OMTVector[getControlPoints().length-1];
 			
 			//copy over the points that preceed the index-to-remove
 			for (int i = 0; i < index; i++)
 			{
-				modpoints[i] = controlPoints[i];
+				modpoints[i] = getControlPoints()[i];
 			}
 			
 			//copy over the points that follow the index-to-remove
-			for (int j = index+1; j < controlPoints.length; j++)
+			for (int j = index+1; j < getControlPoints().length; j++)
 			{
-				modpoints[j-1] = controlPoints[j];
+				modpoints[j-1] = getControlPoints()[j];
 			}
-			controlPoints = modpoints.clone();
+			setControlPoints(modpoints.clone());
 			
 			
 			//update the anchor points (their Is)
 			anchors.remove(index);
-			for (int i=0; i < controlPoints.length; i++)
+			for (int i=0; i < getControlPoints().length; i++)
 			{
 				anchors.get(i).i = i;
 				Log.warn(i + ":" + anchors.get(i).getIndex());
 			}
 			
-			//System.out.println("anchors " + anchors.size());
-			//System.out.println("apc " +  getAnchorPoints().size());
 			return true;
 		}		
 		
@@ -434,6 +455,10 @@ public class Curve3D extends Tangible{
 			anchors.get(i).unselect();
 		}
 		reapply();
+	}
+
+	public Curve getMorphMLCurve() {
+		return morphMLCurve;
 	}
 }
 

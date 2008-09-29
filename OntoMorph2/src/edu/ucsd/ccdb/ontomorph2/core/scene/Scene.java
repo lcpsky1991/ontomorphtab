@@ -5,6 +5,16 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
+import org.morphml.neuroml.schema.Level3Cells;
+import org.morphml.neuroml.schema.NeuroMLLevel3;
+import org.morphml.neuroml.schema.impl.NeuroMLLevel3Impl;
+import org.morphml.neuroml.schema.impl.NeuromlImpl;
+
 import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
@@ -14,6 +24,7 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
@@ -110,9 +121,35 @@ public abstract class Scene extends Observable{
 	public abstract void load();
 	
 
-	/*
+	@SuppressWarnings("unchecked")
 	public void save() {
-	}*/
+		NeuroMLLevel3 scene = new NeuroMLLevel3Impl();
+		for (NeuronMorphology nm : getCells()) {
+			if (nm instanceof MorphMLNeuronMorphology) {
+				MorphMLNeuronMorphology mmnm = (MorphMLNeuronMorphology)nm;
+				scene.getCells().getCell().add(mmnm.getMorphMLCell());
+			}
+		}
+		for (Curve3D c : getCurves()) {
+			scene.getCurves().getCurve().add(c.getMorphMLCurve());
+		}
+		
+		//scene.getPopulations().getPopulation().add();
+		
+		try {
+			JAXBContext context = JAXBContext.newInstance("org.morphml.neuroml.schema");
+			
+			//Create the unmarshaller
+			final Marshaller marshaller = context.createMarshaller();
+			
+			marshaller.marshal(scene, System.out);
+			//Unmarshall the XML
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	
 	public Set<Slide> getSlides() {

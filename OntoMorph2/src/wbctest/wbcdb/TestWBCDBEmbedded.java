@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * The beginning of a test case that grows into the GlobalDataRepository
+ * The beginning of a test case that grows into the DataRepository
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *

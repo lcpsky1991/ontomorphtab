@@ -206,7 +206,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if ( SAVE_SCENE.equals(act) )
 		{
-			Log.warn("Feature Not Implemented Yet");
+			OntoMorph2.getCurrentScene().save();
 		}
 		else if ( strCELLS.equals(act) )
 		{

@@ -33,7 +33,7 @@ public class WBCProtocolResolver {
 				//get index of the final slash before the name
 				int lastSlashIndex = proto.getPath().indexOf('/', proto.getPath().indexOf("morphml"));
 				
-				return GlobalDataRepository.getInstance().findMorphMLByName(proto.getPath().substring(lastSlashIndex));
+				return DataRepository.getInstance().findMorphMLByName(proto.getPath().substring(lastSlashIndex));
 			} else if (proto.getPath().indexOf("mesh") > 0) {
 				
 			}

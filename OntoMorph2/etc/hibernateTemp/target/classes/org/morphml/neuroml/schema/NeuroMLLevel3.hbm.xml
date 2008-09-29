@@ -13,6 +13,9 @@
       <discriminator type="org.hibernate.type.StringType">
          <column name="Hjtype"/>
       </discriminator>
+      <many-to-one class="org.morphml.neuroml.schema.Curves" name="Curves">
+         <column name="Curves"/>
+      </many-to-one>
       <many-to-one class="org.morphml.neuroml.schema.Level3Cells" name="Cells">
          <column name="Cells"/>
       </many-to-one>

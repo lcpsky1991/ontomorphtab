@@ -9,25 +9,24 @@ import org.hibernate.cfg.Configuration;
 
 
 /**
- * Wraps a database that stores all the information about current position/rotation/scale of objects.
- * Also keeps track of users, changes, layers, and user preferences.
+ * Wraps a cache that keeps local copies of objects
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class LocalDataRepository {
+public class MemoryCacheRepository {
 
-	static LocalDataRepository repo = null;
+	static MemoryCacheRepository repo = null;
 	SessionFactory sFact = null;
 	Map<String, Object> cache = new HashMap<String, Object>();
 	
-	public static LocalDataRepository getInstance() {
+	public static MemoryCacheRepository getInstance() {
 		if (repo == null) {
-			repo = new LocalDataRepository();
+			repo = new MemoryCacheRepository();
 		}
 		return repo;
 	}
 	
-	protected LocalDataRepository() {
+	protected MemoryCacheRepository() {
 		/*
 		 try {
 			Connection c = DriverManager.getConnection("jdbc:hsqldb:file:db/db", "sa", "");

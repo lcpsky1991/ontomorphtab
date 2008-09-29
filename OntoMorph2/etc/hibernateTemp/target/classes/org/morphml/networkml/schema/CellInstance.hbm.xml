@@ -26,6 +26,9 @@
       <many-to-one class="org.morphml.metadata.schema.Annotation" name="Annotation">
          <column name="Annotation"/>
       </many-to-one>
+      <many-to-one class="org.morphml.networkml.schema.CurveAssociation" name="CurveAssociation">
+         <column name="CurveAssociation"/>
+      </many-to-one>
       <many-to-one class="org.morphml.metadata.schema.Point3D" name="Location">
          <column name="Location_"/>
       </many-to-one>

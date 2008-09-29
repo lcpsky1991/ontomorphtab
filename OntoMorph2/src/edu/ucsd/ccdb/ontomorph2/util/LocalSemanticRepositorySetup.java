@@ -2,7 +2,9 @@ package edu.ucsd.ccdb.ontomorph2.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.ArrayList;
 
+import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.storage.database.DatabaseFrameDb;
 import edu.stanford.smi.protege.storage.database.DatabaseKnowledgeBaseFactory;
 import edu.stanford.smi.protege.util.ApplicationProperties;
@@ -16,6 +18,11 @@ public class LocalSemanticRepositorySetup {
 		JenaOWLModel owlModel  = null;
 		try {
 			owlModel = ProtegeOWL.createJenaOWLModelFromURI("http://purl.org/nif/ontology/nif.owl");	
+			/*
+			Project p = Project.loadProjectFromFile("C:/Documents and Settings/stephen/Desktop/nifSaved/nif.pprj", new ArrayList());
+			owlModel = (JenaOWLModel) p.getKnowledgeBase();
+			*/
+					    			
 		} catch (Exception e) {
 			throw new OMTException("Cannot load NIF ontology!", e);
 		}	

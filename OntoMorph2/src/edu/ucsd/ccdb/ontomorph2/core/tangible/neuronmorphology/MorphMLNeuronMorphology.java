@@ -13,8 +13,8 @@ import org.morphml.neuroml.schema.Level3Cells;
 import org.morphml.neuroml.schema.NeuroMLLevel3;
 import org.morphml.neuroml.schema.impl.NeuromlImpl;
 
-import edu.ucsd.ccdb.ontomorph2.core.data.GlobalDataRepository;
-import edu.ucsd.ccdb.ontomorph2.core.data.LocalDataRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.MemoryCacheRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
@@ -82,8 +82,8 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	public Level3Cell getMorphMLCell() {
 		if (theCell == null) {
 			//try to retrieve file from the cache
-			if (LocalDataRepository.getInstance().isFileCached(this.filename)) {
-				theCell = (Level3Cell) LocalDataRepository.getInstance().getCachedFile(this.filename);
+			if (MemoryCacheRepository.getInstance().isFileCached(this.filename)) {
+				theCell = (Level3Cell) MemoryCacheRepository.getInstance().getCachedFile(this.filename);
 			}
 			if (theCell != null) {
 				Log.warn("Successfully uncached cell " + this.filename + "!");
@@ -92,7 +92,7 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 			
 			try {
 				//search for file in global database by name
-				theCell = (Level3Cell) GlobalDataRepository.getInstance().findMorphMLByName(this.filename);
+				theCell = (Level3Cell) DataRepository.getInstance().findMorphMLByName(this.filename);
 				
 			} catch (Exception e) {
 				Log.warn("Did not find " + this.filename + " neuron morphology in the database.  Trying to load from disk now...");
@@ -100,8 +100,8 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 			
 			if (theCell != null) {
 
-//				store the file in the GlobalDataRepository once it is loaded for the next time.
-				LocalDataRepository.getInstance().cacheFile(this.filename, theCell);
+//				store the file in the DataRepository once it is loaded for the next time.
+				MemoryCacheRepository.getInstance().cacheFile(this.filename, theCell);
 				
 				Log.warn("Successfully loaded cell " + this.filename + " from the DB!");
 				return theCell;
@@ -122,9 +122,9 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 					assert c.getCell().size() == 1;
 					theCell = (Level3Cell)c.getCell().get(0);
 					
-//					store the file in the GlobalDataRepository once it is loaded for the next time.
-					LocalDataRepository.getInstance().cacheFile(this.filename, theCell);
-					GlobalDataRepository.getInstance().saveFileToDB(theCell);
+//					store the file in the DataRepository once it is loaded for the next time.
+					MemoryCacheRepository.getInstance().cacheFile(this.filename, theCell);
+					DataRepository.getInstance().saveFileToDB(theCell);
 					Log.warn("Storing cell " + this.filename + " in the DB");
 				}
 			} catch (Exception e) {

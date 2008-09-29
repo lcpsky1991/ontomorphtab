@@ -18,19 +18,19 @@ import org.morphml.neuroml.schema.Level3Cell;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class GlobalDataRepository {
+public class DataRepository {
 
-	static GlobalDataRepository repo = null;
+	static DataRepository repo = null;
 	SessionFactory sFact = null;
 	
-	public static GlobalDataRepository getInstance() {
+	public static DataRepository getInstance() {
 		if (repo == null) {
-			repo = new GlobalDataRepository();
+			repo = new DataRepository();
 		}
 		return repo;
 	}
 	
-	protected GlobalDataRepository() {
+	protected DataRepository() {
 		/*
 		 try {
 			Connection c = DriverManager.getConnection("jdbc:hsqldb:file:db/db", "sa", "");

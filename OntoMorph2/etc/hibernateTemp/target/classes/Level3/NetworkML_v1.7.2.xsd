@@ -592,15 +592,24 @@
 
         </xs:complexType>
 
+
         <xs:complexType name="CellInstance">
             <xs:annotation>
                 <xs:documentation>An instance of a cell at a the specified location</xs:documentation>
             </xs:annotation>
 
-            <xs:sequence>
-                <xs:group ref="meta:metadata"/>
-                <xs:element name="location" type="meta:Point3D"/>
-            </xs:sequence>
+			<xs:choice>
+            	<xs:sequence>
+                	<xs:group ref="meta:metadata"/>
+                	<xs:element name="location" type="meta:Point3D"/>
+            	</xs:sequence>
+				<!-- Augmented by slarson@ncmir.ucsd.edu -->
+				<xs:element name="curveAssociation" type="CurveAssociation">
+					<xs:annotation>
+						<xs:documentation>Associates this cell instance with a specific time along a specific curve</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
 
             <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
                 <xs:annotation>
@@ -894,7 +903,24 @@
             </xs:restriction>
         </xs:simpleType>
         
-        
+	<!-- Added by slarson@ncmir.ucsd.edu -->
+		<xs:complexType name="CurveAssociation">
+			<xs:annotation>
+				<xs:documentation>Association with a specific time along a specific curve</xs:documentation>
+			</xs:annotation>
+			<xs:attribute name="curveId" type="xs:nonNegativeInteger" use="required">
+				<xs:annotation>
+                    <xs:documentation>A unique non negative integer id that refers to a defined curve</xs:documentation>
+                </xs:annotation>
+			</xs:attribute>
+
+			<xs:attribute name="time" type="xs:double" use="required">
+				<xs:annotation>
+                    <xs:documentation>A double between 0 and 1 that defines where along the curve this instance should be</xs:documentation>
+                </xs:annotation>
+			</xs:attribute>
+
+		</xs:complexType>        
 
         <xs:simpleType name="CellIdInNetwork">
             <xs:annotation>
@@ -916,6 +942,8 @@
                 <xs:element name="potentialSynapticLocation" type="PotentialSynapticLocation" minOccurs="0" maxOccurs="unbounded" />
             </xs:sequence>
         </xs:group>
+
+
 
 
 </xs:schema>
