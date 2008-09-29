@@ -33,7 +33,6 @@ public class BrainRegionView extends TangibleView{
 
 	LightState lightState = null;
 	TriMesh mesh = null;
-	Node parentNode = null;
 	int defaultRenderQueueMode = 0;
 	
 	/**
@@ -42,14 +41,11 @@ public class BrainRegionView extends TangibleView{
 	 * @param br
 	 * @param parentNode
 	 */
-	public BrainRegionView(BrainRegion br, Node parentNode) {
+	public BrainRegionView(BrainRegion br) {
 		super(br);
 		super.setName("BrainRegionView");
-		long tick = Log.tick();
 		
-		this.parentNode = parentNode;
-		
-		this.mesh = br.loadAllenMesh(br);
+		this.mesh = br.getData();
 		this.mesh.setName("Trimesh for brain region: " + br.getAbbreviation());
 		//mesh.setSolidColor(ColorRGBA.blue);
 		mesh.setModelBound(new BoundingBox());
@@ -73,7 +69,6 @@ public class BrainRegionView extends TangibleView{
 		this.pickPriority = P_UNPICKABLE;
 		
 		this.update();
-		Log.tock("Loading BrainRegionView for " + br.getName() + "took ", tick);
 	}
 	
 	public BrainRegion getBrainRegion() {

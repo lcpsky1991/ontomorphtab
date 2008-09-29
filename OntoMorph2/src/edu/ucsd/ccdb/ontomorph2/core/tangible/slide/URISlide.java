@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible.slide;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -8,6 +8,8 @@ import java.net.URI;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 
 /**
  * A slide that refers to some URI.
@@ -31,7 +33,7 @@ public class URISlide extends Slide {
 	
 	public URISlide(URI filePath, float ratio) {
 		this(filePath);
-		this.ratio = ratio;
+		setRatio(ratio);
 	}
 	
 

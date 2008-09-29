@@ -1,8 +1,9 @@
-package edu.ucsd.ccdb.ontomorph2.core.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology;
 
 import java.util.List;
 
 import org.morphml.morphml.schema.Cable;
+
 
 /**
  * Defines a group of segments in a neuron morphology.

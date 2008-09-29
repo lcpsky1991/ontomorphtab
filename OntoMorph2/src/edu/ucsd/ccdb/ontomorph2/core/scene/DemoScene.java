@@ -24,16 +24,16 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.CCDBSlide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.URISlide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLNeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.CCDBSlide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.URISlide;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**

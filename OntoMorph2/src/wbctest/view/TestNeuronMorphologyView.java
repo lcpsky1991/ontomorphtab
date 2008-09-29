@@ -3,8 +3,8 @@ package wbctest.view;
 import com.acarter.scenemonitor.SceneMonitor;
 import com.jme.app.SimpleGame;
 
-import edu.ucsd.ccdb.ontomorph2.core.tangible.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 
 

@@ -1,9 +1,12 @@
-package edu.ucsd.ccdb.ontomorph2.core.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology;
 
 import java.awt.Color;
 import java.math.BigInteger;
 import java.util.List;
 
+import edu.ucsd.ccdb.ontomorph2.core.tangible.ISelectable;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**

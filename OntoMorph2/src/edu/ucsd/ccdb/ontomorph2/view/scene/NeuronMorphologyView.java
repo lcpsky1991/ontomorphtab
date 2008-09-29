@@ -34,10 +34,10 @@ import com.jme.system.DisplaySystem;
 import com.jme.util.AreaUtils;
 import com.jme.util.geom.BufferUtils;
 
-import edu.ucsd.ccdb.ontomorph2.core.tangible.ICable;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.INeuronMorphologyPart;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.ISegment;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.ICable;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.INeuronMorphologyPart;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.ISegment;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;

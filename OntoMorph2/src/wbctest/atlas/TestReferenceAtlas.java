@@ -31,9 +31,11 @@ package wbctest.atlas;
 	 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	 */
 
-	import com.jme.app.SimpleGame;
+	import com.acarter.scenemonitor.SceneMonitor;
+import com.jme.app.SimpleGame;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 
 	/**
@@ -69,7 +71,12 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 		String[] regions = {"OLF"};
 		
 		for (String s : regions) {
-			new BrainRegionView(atlas.getBrainRegion(s), rootNode);
+			BrainRegion br = atlas.getBrainRegion(s);
+			br.setVisibility(BrainRegion.TRANSPARENT);
+			rootNode.attachChild(new BrainRegionView(br));
 		}
+		
+		SceneMonitor.getMonitor().registerNode(rootNode, "Root Node");
+		SceneMonitor.getMonitor().showViewer(true);
 	  }
 	}

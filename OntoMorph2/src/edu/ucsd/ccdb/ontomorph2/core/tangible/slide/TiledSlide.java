@@ -1,9 +1,10 @@
-package edu.ucsd.ccdb.ontomorph2.core.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible.slide;
 
 import java.nio.ByteBuffer;
 
 import com.jme.image.Image;
 
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.tiff.jviewerBufferedImage;
 
 /**

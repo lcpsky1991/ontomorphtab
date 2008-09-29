@@ -21,6 +21,7 @@ import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
 
 /**
  * Defines an anatomical region of the mouse brain.
@@ -46,16 +47,38 @@ public class BrainRegion extends ContainerTangible {
 	private String abbrev;
 	private String parentAbbrev;
 	private int regionId;
-	private Color color;
 	private int visibility = INVISIBLE; // by default
+	
+	private TriMesh data = null;
 	
 	public BrainRegion(String name, String abbrev, String parentAbbrev, Color c, String regionId, CoordinateSystem co){
 		this.abbrev = abbrev;
 		this.parentAbbrev = parentAbbrev;
-		this.color = c;
+		this.setColor(c);
 		this.regionId = Integer.parseInt(regionId);
 		this.setCoordinateSystem(co);
 		this.setName(name);
+	}
+	
+	public void loadData() {
+
+		long tick = Log.tick();
+		data = loadAllenMesh();
+		/*
+		try {
+			data = loadLowDetailMesh();
+		} catch (IOException e) {
+			data = loadAllenMesh();
+		}*/
+
+		Log.tock("Loading BrainRegionView for " + getName() + " took ", tick);
+	}
+	
+	public TriMesh getData() {
+		if (data == null) {
+			loadData();
+		}
+		return data;
 	}
 	
 	/**
@@ -89,23 +112,23 @@ public class BrainRegion extends ContainerTangible {
 		return this.regionId;
 	}
 	
-	protected TriMesh loadAllenMesh(BrainRegion br) {
+	protected TriMesh loadAllenMesh() {
 		TriMesh tMesh = null;
 		AllenAtlasMeshLoader loader = new AllenAtlasMeshLoader();
-		loader.setColor(br.getColor());
-		tMesh = loader.loadTriMeshByAbbreviation(br.getAbbreviation());
+		loader.setColor(getColor());
+		tMesh = loader.loadTriMeshByAbbreviation(getAbbreviation());
 		return tMesh;
 	}
 	
-	protected Node loadLowDetailMesh(BrainRegion br) throws IOException{
-		String urlString = Scene.allenObjMeshDir + "LD_" + br.getAbbreviation() + ".obj";
+	protected TriMesh loadLowDetailMesh() throws IOException{
+		String urlString = Scene.allenObjMeshDir + "LD_" + getAbbreviation() + ".obj";
 		URL url = null;
 		try {
 			url = new File(urlString).toURI().toURL();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		return (Node)loadObjFile(url);
+		return (TriMesh)loadObjFile(url);
 	}
 	
 	private Object loadObjFile(URL model) throws IOException{

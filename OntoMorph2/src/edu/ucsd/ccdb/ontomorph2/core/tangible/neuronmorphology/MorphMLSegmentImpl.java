@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology;
 
 import java.awt.Color;
 import java.math.BigInteger;
@@ -9,6 +9,8 @@ import org.morphml.morphml.schema.Segment;
 import org.morphml.morphml.schema.Cell.SegmentsType;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
@@ -152,7 +154,7 @@ public class MorphMLSegmentImpl extends ContainerTangible implements ISegment{
 
 	/**
 	 * Returns 0 beecause a segment does not have any sub parts 
-	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.INeuronMorphologyPart#getSubPartCount()
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.INeuronMorphologyPart#getSubPartCount()
 	 */
 	public int getSubPartCount() {
 		return 0;
@@ -160,7 +162,7 @@ public class MorphMLSegmentImpl extends ContainerTangible implements ISegment{
 
 	/**
 	 * Returns null becuause a segment does not have any sub parts
-	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.INeuronMorphologyPart#getSubPart(int)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.INeuronMorphologyPart#getSubPart(int)
 	 */
 	public INeuronMorphologyPart getSubPart(int i) {
 		return null;

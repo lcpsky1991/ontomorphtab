@@ -18,9 +18,9 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 

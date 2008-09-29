@@ -20,8 +20,8 @@ import com.jmex.effects.particles.ParticleMesh;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.TiledSlide;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.URISlide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.TiledSlide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.URISlide;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 public class SphereParticlesView extends TangibleView{

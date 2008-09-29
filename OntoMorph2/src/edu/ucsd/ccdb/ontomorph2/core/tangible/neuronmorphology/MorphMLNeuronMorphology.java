@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -20,6 +20,8 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
@@ -58,8 +60,8 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	
 	public MorphMLNeuronMorphology(String name, Curve3D curve, float time, String renderOption) {
 		this(name);
-		_curve = curve;
-		_time = time;
+		setCurve(curve);
+		setTime(time);
 		this.positionAlongCurve(curve, time);
 		setRenderOption(renderOption);
 	}

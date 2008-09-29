@@ -618,7 +618,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	}
 
 	
-	protected void changed(String argument) {
+	public void changed(String argument) {
 		this.setChanged();
 		if (argument == null) {
 			notifyObservers();

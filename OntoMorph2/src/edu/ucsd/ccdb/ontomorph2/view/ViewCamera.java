@@ -173,7 +173,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		float factor = (FastMath.PI / 180);
 		
 		Vector3f posOrig = new Vector3f(this.getLocalTranslation().clone());
-		System.out.println("orig " + posOrig);
+		//System.out.println("orig " + posOrig);
 		
 		//then apply the new rotation to the camera
 		Quaternion rotX = new Quaternion();

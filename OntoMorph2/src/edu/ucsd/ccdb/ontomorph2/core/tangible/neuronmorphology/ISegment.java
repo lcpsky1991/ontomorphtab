@@ -1,6 +1,7 @@
-package edu.ucsd.ccdb.ontomorph2.core.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology;
 
 import java.math.BigInteger;
+
 
 /**
  * Defines the smallest unit of an INeuronMorphology.  A segment has a proximal and a distal point,

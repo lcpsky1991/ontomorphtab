@@ -184,15 +184,6 @@ public class View extends BaseSimpleGame {
 		// We want a cursor to interact with FengGUI
 		MouseInput.get().setCursorVisible(true);
 		
-		
-		//focus = new FocusManager();
-		
-		//(InputActionInterface action, java.lang.String deviceName, int button, int axis, boolean allowRepeats)
-		/*
-    	this.view3DMouseHandler = new View3DMouseHandler();
-        input.addAction(this.view3DMouseHandler , InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_ALL, false );
-        */
-
 		this.view3DMouseListener = new View3DMouseListener(disp, guiInput);
 		MouseInput.get().addListener(this.view3DMouseListener);
 		
@@ -292,9 +283,6 @@ public class View extends BaseSimpleGame {
 		//handleKeyInput();	//should be mvoed to some other handler
 	}
 	
-	
-
-	
     /**
      * This is called every frame in BaseGame.start(), after update()
      * 
@@ -364,8 +352,6 @@ public class View extends BaseSimpleGame {
 	public View3D getView3D() {
 		return view3D;
 	}
-
-
 	
 	public View2D getView2D() {
 		return View2D.getInstance();

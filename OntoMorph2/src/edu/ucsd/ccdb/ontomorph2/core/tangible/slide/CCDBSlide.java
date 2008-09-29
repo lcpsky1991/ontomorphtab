@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible.slide;
 
 import java.net.URL;
 import java.util.List;
@@ -54,6 +54,6 @@ public class CCDBSlide extends URISlide {
 		
 		_imageURL = imageURL;
 		
-		this.ratio = ratio;
+		setRatio(ratio);
 	}
 }

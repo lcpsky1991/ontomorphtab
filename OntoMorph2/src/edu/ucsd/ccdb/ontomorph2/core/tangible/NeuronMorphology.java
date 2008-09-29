@@ -8,6 +8,7 @@ import com.jme.math.Vector3f;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.ICable;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
@@ -42,6 +43,14 @@ public abstract class NeuronMorphology extends ContainerTangible{
 	 */
 	public Curve3D getCurve() {
 		return _curve;
+	}
+	
+	public void setCurve(Curve3D curve) {
+		_curve = curve;
+	}
+	
+	public void setTime(float time) {
+		_time = time;
 	}
 	
 	public abstract String getFilename();

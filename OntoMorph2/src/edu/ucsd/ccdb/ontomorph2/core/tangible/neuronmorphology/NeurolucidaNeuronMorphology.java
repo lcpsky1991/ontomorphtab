@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -19,6 +19,8 @@ import neurolucida.generated.Tree;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 /**
@@ -82,8 +84,8 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	
 	public NeurolucidaNeuronMorphology(URL morphLoc, Curve3D curve, float time, String renderOption) {
 		this(morphLoc);
-		_curve = curve;
-		_time = time;
+		setCurve(curve);
+		setTime(time);
 		this.positionAlongCurve(curve, time);
 		setRenderOption(renderOption);
 	}
@@ -158,9 +160,9 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getSegmentGroups()
 	 */
-	public Set<ICable> getCables() {
-		if (segmentGroupList == null) {
-			segmentGroupList = new HashSet<ICable>();
+	//public Set<ICable> getCables() {
+		//if (segmentGroupList == null) {
+		//	segmentGroupList = new HashSet<ICable>();
 			/*
 			Cables c = theCell.getCables();
 			for(neuroml.generated.Cable cab : c.getCable()) {
@@ -202,9 +204,9 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 					}
 				}
 			}*/
-		}
-		return segmentGroupList;
-	}
+		//}
+		//return segmentGroupList;
+	//}
 	
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getName()

@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology;
 
 import java.awt.Color;
 import java.math.BigInteger;
@@ -20,6 +20,9 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 

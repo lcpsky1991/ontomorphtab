@@ -175,7 +175,11 @@ public class View3D extends Node{
 	public void addBrainRegions(Set<BrainRegion> regions) {
 		
 		for (BrainRegion br: regions) {
-			BrainRegionView brView = new BrainRegionView(br, atlasNode);
+			BrainRegionView brView = (BrainRegionView)TangibleViewManager.getInstance().getTangibleViewFor(br);
+			if (brView == null) {
+				brView = new BrainRegionView(br);
+				atlasNode.attachChild(brView);
+			}
 		}
 	}
 	
