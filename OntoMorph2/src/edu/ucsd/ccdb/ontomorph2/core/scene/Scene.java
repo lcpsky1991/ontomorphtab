@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Set;
@@ -19,6 +20,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.morphml.neuroml.schema.Curves;
 import org.morphml.neuroml.schema.Level3Cells;
 import org.morphml.neuroml.schema.NeuroMLLevel3;
+import org.morphml.neuroml.schema.Neuroml;
 import org.morphml.neuroml.schema.impl.CurvesImpl;
 import org.morphml.neuroml.schema.impl.Level3CellsImpl;
 import org.morphml.neuroml.schema.impl.NeuroMLLevel3Impl;
@@ -136,12 +138,17 @@ public abstract class Scene extends Observable{
 
 	@SuppressWarnings("unchecked")
 	public void save() {
-		NeuroMLLevel3 scene = new NeuroMLLevel3Impl();
+		Neuroml scene = new NeuromlImpl();
+		scene.setLengthUnits("micron");
 		Level3Cells cells = new Level3CellsImpl();
+		Set alreadySaved = new HashSet();
 		for (NeuronMorphology nm : getCells()) {
 			if (nm instanceof MorphMLNeuronMorphology) {
 				MorphMLNeuronMorphology mmnm = (MorphMLNeuronMorphology)nm;
-				cells.getCell().add(mmnm.getMorphMLCell());
+				if (!alreadySaved.contains(mmnm.getName())) {
+					cells.getCell().add(mmnm.getMorphMLCell());
+					alreadySaved.add(mmnm.getName());
+				}
 			}
 		}
 		scene.setCells(cells);
@@ -156,17 +163,21 @@ public abstract class Scene extends Observable{
 			
 			//Create the marshaller
 			final Marshaller marshaller = context.createMarshaller();
-			FileOutputStream file = null;
-			try {
-				file = new FileOutputStream("saved_scene.xml");
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			FileOutputStream file = new FileOutputStream("saved_scene.xml");
+			
 			
 			marshaller.marshal(scene, file);
-			//Unmarshall the XML
+			//marshall the XML
+			file.flush();
+			file.close();
+			
 		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -53,7 +53,7 @@ public class Curve3D extends Tangible{
 		setName(arg0);
 		morphMLCurve = new CurveImpl();
 		morphMLCurve.setName(arg0);
-		morphMLCurve.setId(new BigInteger(6, rand));
+		morphMLCurve.setId(new BigInteger(12, rand));
 		setControlPoints(arg1);
 	}
 
