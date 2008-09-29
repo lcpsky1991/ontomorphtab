@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import java.util.Set;
 
@@ -39,21 +39,6 @@ public class CurveAnchorPoint extends Tangible {
 		return (parentCurve.removeControlPoint(this.i) && super.delete());
 	}
 	
-	/**
-	 * 
-	 * @param dx
-	 * @param dy
-	 * @param constraint
-	 * @deprecated with change to moving tangibles under mouse
-	 */
-	/*
-	public void move(float dx, float dy, OMTVector constraint)
-	{
-		super.move(dx,dy,constraint);
-		
-		parentCurve.setControlPoint(this.i, this.getRelativePosition());
-	}
-	*/
 	
 	/**
 	 * 
@@ -136,10 +121,6 @@ public class CurveAnchorPoint extends Tangible {
 	}
 	
 
-	//stub to prevent execution of this method for CurveAnchorPoint.. perhaps will help performance issues
-	public void updateContainerTangibles(Set<Tangible> containerTangibles) {
-		
-	}
 	
 
 }

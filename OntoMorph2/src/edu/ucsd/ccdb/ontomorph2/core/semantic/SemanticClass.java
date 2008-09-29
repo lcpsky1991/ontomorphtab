@@ -8,9 +8,6 @@ import java.util.List;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
-import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 

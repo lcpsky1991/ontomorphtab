@@ -1,20 +1,15 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import java.math.BigInteger;
 import java.util.Set;
 
-import com.jme.math.Quaternion;
-import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
-import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
-import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
  * Describes the morphology of the cell, independent of different ways of visualizing it.  
@@ -22,7 +17,7 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
-public abstract class NeuronMorphology extends Tangible{
+public abstract class NeuronMorphology extends ContainerTangible{
 
 	public static final String RENDER_AS_LINES = "lines";
 	public static final String RENDER_AS_CYLINDERS = "cylinders";
@@ -78,14 +73,14 @@ public abstract class NeuronMorphology extends Tangible{
 	
 	
 	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getRenderOption()
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getRenderOption()
 	 */
 	public String getRenderOption() {
 		return _renderOption;
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#setRenderOption(java.lang.String)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#setRenderOption(java.lang.String)
 	 */
 	public void setRenderOption(String renderOption) {
 			_renderOption = renderOption;
@@ -180,26 +175,26 @@ public abstract class NeuronMorphology extends Tangible{
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getLookAtPosition()
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getLookAtPosition()
 	 */
 	public PositionVector getLookAtPosition() {
 		return lookAtPosition;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getName()
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getName()
 	 */
 	//public abstract String getName();
 
 	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#setUpVector(com.jme.math.Vector3f)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#setUpVector(com.jme.math.Vector3f)
 	 */
 	public void setUpVector(Vector3f vector3f) {
 		_upVector = vector3f;
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getUpVector()
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getUpVector()
 	 */
 	public Vector3f getUpVector() {
 		if (_upVector != null) {
@@ -209,7 +204,7 @@ public abstract class NeuronMorphology extends Tangible{
 	}
 	
 	/**
-	 * Returns the BrainRegion that this neuron morphology is currently located in
+	 * Returns the AllenMeshBrainRegion that this neuron morphology is currently located in
 	 * @return
 	 */
 	public BrainRegion getEnclosingBrainRegion(){

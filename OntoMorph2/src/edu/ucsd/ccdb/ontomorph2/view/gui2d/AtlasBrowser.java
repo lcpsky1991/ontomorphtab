@@ -19,7 +19,7 @@ import org.fenggui.util.Point;
 import org.fenggui.util.Spacing;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
 
 /**
  * 2D widget that allows interaction with the 3D representation of the atlas. 

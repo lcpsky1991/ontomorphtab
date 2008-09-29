@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 

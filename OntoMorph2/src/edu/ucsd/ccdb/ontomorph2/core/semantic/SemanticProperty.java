@@ -5,7 +5,6 @@ import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protegex.owl.model.RDFProperty;
 import edu.stanford.smi.protegex.owl.model.impl.AbstractOWLProperty;
 import edu.stanford.smi.protegex.owl.model.impl.DefaultRDFProperty;
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 
 /**
  * Represents an OWL Property.

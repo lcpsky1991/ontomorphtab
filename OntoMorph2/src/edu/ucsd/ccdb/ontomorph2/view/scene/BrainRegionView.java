@@ -1,5 +1,8 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +18,9 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
@@ -44,7 +49,7 @@ public class BrainRegionView extends TangibleView{
 		
 		this.parentNode = parentNode;
 		
-		this.mesh = br.getTriMesh();
+		this.mesh = br.loadAllenMesh(br);
 		this.mesh.setName("Trimesh for brain region: " + br.getAbbreviation());
 		//mesh.setSolidColor(ColorRGBA.blue);
 		mesh.setModelBound(new BoundingBox());
@@ -64,11 +69,6 @@ public class BrainRegionView extends TangibleView{
         
         this.setModelBound(new BoundingBox());
         this.updateModelBound();
-           
-		this.parentNode.attachChild(this);
-		
-		
-		
 		
 		this.pickPriority = P_UNPICKABLE;
 		
@@ -85,43 +85,40 @@ public class BrainRegionView extends TangibleView{
 	 *
 	 */
 	public void update() {
-		switch(getBrainRegion().getVisibility()) {
-		case BrainRegion.VISIBLE:
-			makeVisible();
-			makeSolid();
+		if (mesh != null) {
+			switch(getBrainRegion().getVisibility()) {
+			case BrainRegion.VISIBLE:
+				makeVisible();
+				makeSolid();
+				
+				break;
+			case BrainRegion.INVISIBLE:
+				//make invisible
+				this.detachChild(this.mesh);
+				
+				break;
+			case BrainRegion.TRANSPARENT:
+				makeVisible();
+				makeTransparent();
+				break;
+			}
 			
-			break;
-		case BrainRegion.INVISIBLE:
-			//make invisible
-			this.detachChild(this.mesh);
 			
-			break;
-		case BrainRegion.TRANSPARENT:
-			makeVisible();
-			makeTransparent();
-			break;
+			if (getBrainRegion().isSelected()) {
+				this.highlight();
+			} else {
+				this.unhighlight();
+			}
+			
+			
+			this.mesh.updateModelBound();
+			this.mesh.updateRenderState();
+			this.mesh.updateGeometricState(5f, true);
+			
+			this.updateModelBound();
+			this.updateRenderState();
+			this.updateGeometricState(5f, true);
 		}
-		
-	
-		if (getBrainRegion().isSelected()) {
-			this.highlight();
-		} else {
-			this.unhighlight();
-		}
-		
-
-		this.mesh.updateModelBound();
-		this.mesh.updateRenderState();
-		this.mesh.updateGeometricState(5f, true);
-		
-		this.updateModelBound();
-	    this.updateRenderState();
-	    this.updateGeometricState(5f, true);
-	    /*
-		this.parentNode.updateModelBound();
-	    this.parentNode.updateRenderState();
-	    this.parentNode.updateGeometricState(5f, true);
-	    */
 	}
 	
 	private void makeVisible() {
@@ -165,6 +162,51 @@ public class BrainRegionView extends TangibleView{
 		//this.setRenderState(lightState);  	    
 		this.setRenderQueueMode(this.defaultRenderQueueMode);
 	}
+	
+	
+	/*
+	public BatchMesh getMesh() {
+		if (mesh == null) {
+			AllenAtlasMeshLoader loader = new AllenAtlasMeshLoader();
+			loader.setColor(this.color);
+			this.mesh = loader.loadByAbbreviation(this.getAbbreviation());
+
+			if (this.getCoordinateSystem() != null) {
+				if (this.getAbsolutePosition() != null) {
+					this.mesh.setLocalTranslation(this.getAbsolutePosition());
+				} 
+				if (this.getAbsoluteRotation() != null) {
+					this.mesh.setLocalRotation(this.getAbsoluteRotation());
+				}
+				if (this.getAbsoluteScale() != null) {
+					this.mesh.setLocalScale(this.getAbsoluteScale());
+				}
+			}
+		}
+		return mesh;
+	}
+
+	public AreaClodMesh getClodMesh() {
+		if (aMesh == null) {
+			AllenAtlasMeshLoader loader = new AllenAtlasMeshLoader();
+			loader.setColor(this.color);
+			this.aMesh = loader.loadClodMeshByAbbreviation(this.getAbbreviation());
+			if (this.getCoordinateSystem() != null) {
+				if (this.getAbsolutePosition() != null) {
+					this.aMesh.setLocalTranslation(this.getAbsolutePosition());
+				} 
+				if (this.getAbsoluteRotation() != null) {
+					this.aMesh.setLocalRotation(this.getAbsoluteRotation());
+				}
+				if (this.getAbsoluteScale() != null) {
+					this.aMesh.setLocalScale(this.getAbsoluteScale());
+				}
+			}
+		}
+		return aMesh;
+	}*/
+	
+	
 
 	@Override
 	public void doHighlight() {

@@ -12,11 +12,11 @@ import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.TiledSlide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.URISlide;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.TiledSlide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.URISlide;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.tiff.jviewerBufferedImage;
 

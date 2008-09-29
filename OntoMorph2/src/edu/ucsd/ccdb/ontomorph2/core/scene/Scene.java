@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
-import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
@@ -38,6 +38,7 @@ public abstract class Scene extends Observable{
 	public static final String allenDir = baseDir + File.separatorChar + "allen" 
 									+ File.separatorChar;
 	public static final String allenMeshDir = allenDir + "Mesh25" + File.separatorChar;
+	public static final String allenObjMeshDir = objDir + "allen_meshes_low_detail" + File.separatorChar;
 
 	public static final int CHANGED_PART = 1;
 	public static final int CHANGED_LOAD = 0;

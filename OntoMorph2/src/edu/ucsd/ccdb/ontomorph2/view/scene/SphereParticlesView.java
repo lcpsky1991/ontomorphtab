@@ -17,12 +17,11 @@ import com.jme.util.TextureManager;
 import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleMesh;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.SphereParticles;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.TiledSlide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.URISlide;
-import edu.ucsd.ccdb.ontomorph2.misc.TestParticleSystem;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.TiledSlide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.URISlide;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 public class SphereParticlesView extends TangibleView{
@@ -61,7 +60,7 @@ public class SphereParticlesView extends TangibleView{
 		TextureState ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 	    ts.setTexture(
 	        TextureManager.loadTexture(
-	        TestParticleSystem.class.getClassLoader().getResource(
+	        SphereParticlesView.class.getClassLoader().getResource(
 	        "jmetest/data/texture/flaresmall.jpg"),
 	        Texture.MM_LINEAR_LINEAR,
 	        Texture.FM_LINEAR));

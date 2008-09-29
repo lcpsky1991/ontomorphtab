@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.data;
+package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,14 +14,18 @@ import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 import edu.stanford.smi.protegex.owl.model.impl.AbstractOWLProperty;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
 
+/**
+ * Parent class for a semantic repository.  Subclasses may have different locations for where
+ * the database resides.  This wraps around an ontology class and instance store.  
+ * Operations here retrieve objects from the Protege libraries that interact with the ontology store.
+ * 
+ * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ */
 public abstract class SemanticRepository {
 
 	OWLDatabaseModel owlModel = null;

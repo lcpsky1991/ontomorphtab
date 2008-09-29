@@ -1,6 +1,5 @@
 package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
-import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
 
 /**
  * Represents a query that can be presented to the semantic repository to retrieve a set of semantic things.

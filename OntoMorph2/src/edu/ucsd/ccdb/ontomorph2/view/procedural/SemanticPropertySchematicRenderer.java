@@ -1,7 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.view.procedural;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 
 /**
  * Operates on scene objects and creates a visual connection between them that 

@@ -5,14 +5,13 @@ import java.util.List;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 
 /**
- * A base class for the view classes that display Tangibles.
- * 
- * Need to implement right-click bringing up a context menu for each TangibleView
+ * A base class for the view classes that display Tangibles.  
+ * TangibleViews are managed by the TangibleViewManager.  
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
@@ -20,9 +19,6 @@ import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 public abstract class TangibleView extends Node {
 	private Tangible model = null;
 	
-	
-
-
 //	==============================
 //	 Picking Constants
 //	==============================
@@ -119,6 +115,10 @@ public abstract class TangibleView extends Node {
 		for (Geometry gb : b) {
 			this.registerGeometry(gb);
 		}
+	}
+	
+	public boolean equals(Object o) {
+		return this.hashCode() == o.hashCode();
 	}
 	
 	public int hashCode() {

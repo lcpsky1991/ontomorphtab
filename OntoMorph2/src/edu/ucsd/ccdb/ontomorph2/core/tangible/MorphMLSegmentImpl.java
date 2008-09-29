@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import java.awt.Color;
 import java.math.BigInteger;
@@ -18,7 +18,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
  * @see ISemanticsAware
  *
  */
-public class MorphMLSegmentImpl extends Tangible implements ISegment{
+public class MorphMLSegmentImpl extends ContainerTangible implements ISegment{
 	/**************************************************
 	 * Be careful with instances of this class.  The constructor has been made protected
 	 * in order to avoid careless instantiation.  This class is basically
@@ -80,7 +80,7 @@ public class MorphMLSegmentImpl extends Tangible implements ISegment{
 	
 	/*
 	 *  (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.INeuronMorphologyPart#getId()
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.INeuronMorphologyPart#getId()
 	 */
 	public BigInteger getId() {
 		return s.getId();
@@ -152,7 +152,7 @@ public class MorphMLSegmentImpl extends Tangible implements ISegment{
 
 	/**
 	 * Returns 0 beecause a segment does not have any sub parts 
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.INeuronMorphologyPart#getSubPartCount()
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.INeuronMorphologyPart#getSubPartCount()
 	 */
 	public int getSubPartCount() {
 		return 0;
@@ -160,7 +160,7 @@ public class MorphMLSegmentImpl extends Tangible implements ISegment{
 
 	/**
 	 * Returns null becuause a segment does not have any sub parts
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.INeuronMorphologyPart#getSubPart(int)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.INeuronMorphologyPart#getSubPart(int)
 	 */
 	public INeuronMorphologyPart getSubPart(int i) {
 		return null;

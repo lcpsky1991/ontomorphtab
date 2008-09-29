@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.util.BitMath;
 
 public class TestReferenceAtlas2 extends TestCase {

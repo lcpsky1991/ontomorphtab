@@ -11,7 +11,7 @@ import org.fenggui.tree.Tree;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 
 public class InstanceBrowser implements ISelectionChangedListener {
 	

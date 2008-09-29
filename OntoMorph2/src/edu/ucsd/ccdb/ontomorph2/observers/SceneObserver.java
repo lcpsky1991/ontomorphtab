@@ -6,14 +6,15 @@ import java.util.Observer;
 import java.util.Set;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.ICable;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
@@ -176,39 +177,34 @@ public class SceneObserver implements Observer {
 		//catch all method for any leftover tangibles
 		else if (o instanceof Tangible)
 		{
-				Tangible t = (Tangible)o;
-	
-				//get the tangible view manager that holds on to the list of tangible views
-				TangibleViewManager tvm = TangibleViewManager.getInstance();
-				
-				//get the tangible view that corresponds to the current tangible
-				TangibleView tv = tvm.getTangibleViewFor(t);
-				
-				//if we have moved, test to see if any tangibles contain any other tangibles now
-				//this code is required to do containment operations.   We need to find
-				//another way of improving performance beyond commenting it out because it
-				//is core functionality.
-				if (Tangible.CHANGED_MOVE.equals(arg)) 
-				{
-					if (tv != null) 
-					{
-						Set<Tangible> containerTangibles = tvm.getContainerTangibles(tv);
-						t.updateContainerTangibles(containerTangibles);
-					}				
-				}
-				
-				//remove ttangible
-				if (Tangible.CHANGED_DELETE.equals(arg) && tv != null)
-				{
-					tv.detachAllChildren();
-					tv.removeFromParent();
-					//tv = null;
-				}
-				
-				if (tv != null) 
-				{
-					tv.update();
-				}
+			Tangible t = (Tangible)o;
+			
+			//get the tangible view manager that holds on to the list of tangible views
+			TangibleViewManager tvm = TangibleViewManager.getInstance();
+			
+			//get the tangible view that corresponds to the current tangible
+			TangibleView tv = tvm.getTangibleViewFor(t);
+			
+			if (tv == null) { return; }
+			
+			//if we have moved, test to see if any tangibles contain any other tangibles now
+			//this code is required to do containment operations.   We need to find
+			//another way of improving performance beyond commenting it out because it
+			//is core functionality.
+			if (Tangible.CHANGED_MOVE.equals(arg)) 
+			{
+				Set<ContainerTangible> containerTangibles = tvm.getContainerTangibles(tv);
+				t.updateContainment(containerTangibles);				
+			}
+			
+			//remove ttangible
+			if (Tangible.CHANGED_DELETE.equals(arg))
+			{
+				tv.detachAllChildren();
+				tv.removeFromParent();
+			}
+			
+			tv.update();
 		}
 		
 		//probably good to do this on every change

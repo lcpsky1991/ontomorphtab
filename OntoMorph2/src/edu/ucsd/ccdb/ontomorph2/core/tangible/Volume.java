@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.scene.Geometry;
@@ -16,7 +16,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class Volume extends Tangible{
+public class Volume extends ContainerTangible{
 
 	public static final int BOX_SHAPE = 0;
 	public static final int SPHERE_SHAPE = 1;

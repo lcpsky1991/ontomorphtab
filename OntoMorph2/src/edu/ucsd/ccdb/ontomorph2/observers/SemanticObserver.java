@@ -1,21 +1,14 @@
 package edu.ucsd.ccdb.ontomorph2.observers;
 
-import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
 
-import com.jme.scene.Geometry;
-
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
-import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
-import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
  * Updates the semantic repository when changes occur to semantic things.  For example,
@@ -62,16 +55,19 @@ public class SemanticObserver implements Observer {
 	
 					}
 					
-					//for those tangibles that are contained in this tangible, make a 
-					//containment relationship between this instance and that one
-					for (Tangible contained : t.getContainedTangibles()) {
-						t.getMainSemanticInstance().setPropertyValue(containsProp, 
-								contained.getMainSemanticInstance());
-					}
-					
+
 					for (Tangible containers : t.getContainerTangibles()) {
 						containers.getMainSemanticInstance().setPropertyValue(containsProp, 
 								t.getMainSemanticInstance());
+					}
+					
+					if (t instanceof ContainerTangible) {
+						//for those tangibles that are contained in this tangible, make a 
+						//containment relationship between this instance and that one
+						for (Tangible contained : ((ContainerTangible)t).getContainedTangibles()) {
+							t.getMainSemanticInstance().setPropertyValue(containsProp, 
+									contained.getMainSemanticInstance());
+						}
 					}
 					
 					Log.warn("Containment info has changed");
@@ -86,7 +82,7 @@ public class SemanticObserver implements Observer {
 		/*
 		if (o instanceof NeuronMorphology) {
 			NeuronMorphology nm = (NeuronMorphology)o;
-			BrainRegion br = nm.getEnclosingBrainRegion();
+			AllenMeshBrainRegion br = nm.getEnclosingBrainRegion();
 			SemanticInstance brainRegionInstance = br.getSemanticInstance();
 			//does this brain region instance have a property saying
 			//that it has_part the instance from the neuron morphology??

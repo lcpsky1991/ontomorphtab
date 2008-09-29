@@ -2,12 +2,12 @@ package edu.ucsd.ccdb.ontomorph2.core.data;
 
 import java.net.URI;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 
 public class WBCProtocolScheme {
 

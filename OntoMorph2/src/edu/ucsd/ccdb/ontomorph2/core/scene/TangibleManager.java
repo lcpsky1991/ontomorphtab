@@ -16,22 +16,23 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
-import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.LocalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.MorphMLNeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.MultiHashSetMap;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
@@ -315,7 +316,7 @@ public class TangibleManager {
 	 * @param container - the Tangible to discover what it contains
 	 * @return 
 	 */
-	public Set<Tangible> getContainedTangibles(Tangible container) {
+	public Set<Tangible> getContainedTangibles(ContainerTangible container) {
 		Set<Tangible> containedTangibles = new HashSet<Tangible>();
 		Collection c = (Collection)this.tangiblesContainingTangibles.get(container);
 		if (c == null) {
@@ -332,14 +333,16 @@ public class TangibleManager {
 	 * @param contained - the Tangible to discover what it is enclosed by
 	 * @return
 	 */
-	public Set<Tangible> getContainerTangibles(Tangible contained) {
-		Set<Tangible> containerTangibles = new HashSet<Tangible>();
+	public Set<ContainerTangible> getContainerTangibles(Tangible contained) {
+		Set<ContainerTangible> containerTangibles = new HashSet<ContainerTangible>();
 		Collection c = (Collection)this.tangiblesContainedByTangibles.get(contained);
 		if (c == null) {
 			return containerTangibles;
 		}
 		for (Iterator it = c.iterator(); it.hasNext();) {
-			containerTangibles.add((Tangible)it.next());
+			Tangible t = (Tangible)it.next();
+			if ((t instanceof ContainerTangible) == false ) { continue; }
+			containerTangibles.add((ContainerTangible)t);
 		}
 		return containerTangibles;
 	}

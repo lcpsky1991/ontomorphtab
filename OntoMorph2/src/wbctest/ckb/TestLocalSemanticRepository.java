@@ -3,8 +3,8 @@ package wbctest.ckb;
 import java.util.List;
 
 import junit.framework.TestCase;
-import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.LocalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;

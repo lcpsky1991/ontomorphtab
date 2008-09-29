@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -434,12 +434,5 @@ public class Curve3D extends Tangible{
 		}
 		reapply();
 	}
-	
-
-	//stub to prevent execution of this method for Curve3D.. perhaps will help performance issues
-	public void updateContainerTangibles(Set<Tangible> containerTangibles) {
-		
-	}
-
 }
 

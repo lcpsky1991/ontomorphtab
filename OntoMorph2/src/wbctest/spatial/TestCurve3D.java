@@ -7,10 +7,10 @@ import junit.framework.TestCase;
 
 import com.jme.curve.Curve;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 public class TestCurve3D extends TestCase {
@@ -36,7 +36,7 @@ public class TestCurve3D extends TestCase {
 	}
 
 	/*
-	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D.getBezierCurve()'
+	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D.getBezierCurve()'
 	 */
 	public void testGetBezierCurve() {
 		Curve bCurve1 = testCurve1.getCurve();
@@ -96,7 +96,7 @@ public class TestCurve3D extends TestCase {
 	
 	
 	/*
-	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D.getControlPoints()'
+	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D.getControlPoints()'
 	 * 
 	 * This test we try getting anchor points for both curves, then using the "move" method on them,
 	 * then testing to see if they end up where we thing they should.
@@ -173,7 +173,7 @@ public class TestCurve3D extends TestCase {
 
 	
 	/*
-	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible.getRelativePosition()'
+	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible.getRelativePosition()'
 	 */
 	public void testGetRelativePosition() {
 		PositionVector v1 = testCurve1.getRelativePosition();
@@ -185,7 +185,7 @@ public class TestCurve3D extends TestCase {
 	}
 	
 	/*
-	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible.getAbsolutePosition()'
+	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible.getAbsolutePosition()'
 	 */
 	public void testGetAbsolutePosition() {
 		PositionVector v1 = testCurve1.getAbsolutePosition();

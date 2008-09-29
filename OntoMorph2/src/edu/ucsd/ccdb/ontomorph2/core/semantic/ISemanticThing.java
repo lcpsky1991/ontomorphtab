@@ -2,7 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
 import java.util.List;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISelectable;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.ISelectable;
 
 
 /**

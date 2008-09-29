@@ -13,7 +13,7 @@ import com.jme.scene.SceneElement;
 import com.jme.scene.shape.Sphere;
 import com.jme.util.Timer;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.CurveOnceController;
 import edu.ucsd.ccdb.ontomorph2.util.Log;

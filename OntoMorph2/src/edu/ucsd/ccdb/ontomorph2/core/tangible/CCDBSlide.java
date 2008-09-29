@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import java.net.URL;
 import java.util.List;

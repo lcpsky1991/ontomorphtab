@@ -15,9 +15,9 @@ import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.TiledSlide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.URISlide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.TiledSlide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.URISlide;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
@@ -30,7 +30,6 @@ public class SlideView extends TangibleView {
 	
 	Quad quad;
 	Slide _slide = null;
-	private DisplaySystem display = null;
 	
 	public SlideView(Slide slide) {
 		super(slide);
@@ -43,7 +42,6 @@ public class SlideView extends TangibleView {
 		super(slide);
 		quad = new Quad("Slide View");
 		_slide = slide;
-		setDisplay(disp);
 		init();
 	}
 	
@@ -83,18 +81,10 @@ public class SlideView extends TangibleView {
 		
 		quad.setRenderState(zb);
 
-		//quad.setZOrder(9);
-		
 		quad.setModelBound(new BoundingBox());
 		quad.updateModelBound();
 		quad.updateRenderState();
 		quad.updateGeometricState(0.5f, false);
-		
-			
-		//this.setCullMode(SceneElement.CULL_INHERIT);
-
-		//this.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
-		//this.setZOrder(9);
 		
 		if (_slide.isVisible()) {
 			this.attachChild(quad);
@@ -106,11 +96,6 @@ public class SlideView extends TangibleView {
 		this.registerGeometry(quad);
 		
 		this.update();
-	}
-	
-	
-	public void setDisplay(DisplaySystem disp) {
-		this.display = disp;
 	}
 
 	@Override

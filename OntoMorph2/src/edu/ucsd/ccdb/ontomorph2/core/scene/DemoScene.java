@@ -2,6 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.core.scene;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -15,24 +16,24 @@ import com.jme.math.Vector3f;
 import com.jme.scene.shape.Box;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
-import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.CCDBSlide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.MorphMLNeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.URISlide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.CCDBSlide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.MorphMLNeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.URISlide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
@@ -96,17 +97,23 @@ public class DemoScene extends Scene{
 	 */
 	public void load() {
 		
-		DataMesh mesh = new DataMesh();
-
-		mesh.setObjMeshURL(mitoObjURL);
-	
-		mesh.setRelativePosition(new PositionVector(289f, -117f, -179.51f));
-		mesh.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
-		mesh.setRelativeScale(0.0002f);
-		mesh.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.MITOCHONDRION_CLASS));
-		mesh.getMainSemanticInstance(); //get a SemanticInstance loaded into the local repository
-		
-		addSceneObject(mesh);
+		DataMesh mesh;
+		try {
+			mesh = new DataMesh(mitoObjURL);
+			
+			
+			mesh.setRelativePosition(new PositionVector(289f, -117f, -179.51f));
+			mesh.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
+			mesh.setRelativeScale(0.0002f);
+			mesh.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.MITOCHONDRION_CLASS));
+			mesh.getMainSemanticInstance(); //get a SemanticInstance loaded into the local repository
+			
+			addSceneObject(mesh);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		setCameraPosition(Scene.CAMERA_SUBCELLULAR_POSITION);
 		

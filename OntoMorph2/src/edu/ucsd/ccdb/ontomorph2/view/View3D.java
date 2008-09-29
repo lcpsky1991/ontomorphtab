@@ -9,18 +9,18 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.BrainRegion;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.SphereParticles;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Surface;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
-import edu.ucsd.ccdb.ontomorph2.view.scene.MeshViewImpl;
+import edu.ucsd.ccdb.ontomorph2.view.scene.DataMeshView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SphereParticlesView;
@@ -147,12 +147,12 @@ public class View3D extends Node{
 	public void setMeshes(Set<DataMesh> meshes) {
 		meshesNode.detachAllChildren();
 		for(DataMesh mesh : meshes) {
-			MeshViewImpl meshView = (MeshViewImpl)TangibleViewManager.getInstance().getTangibleViewFor(mesh);
+			DataMeshView meshView = (DataMeshView)TangibleViewManager.getInstance().getTangibleViewFor(mesh);
 			if (meshView == null) {
 				//implicitly adds the new TangibleView to the TangibleViewManager
-				meshView = new MeshViewImpl(mesh);
+				meshView = new DataMeshView(mesh);
 			}
-			meshesNode.attachChild(meshView.getNode());
+			meshesNode.attachChild(meshView);
 		}
 		this.updateNode(meshesNode);
 	}

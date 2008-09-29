@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -134,7 +134,7 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	
 	
 	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getName()
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getName()
 	 */
 	public String getFilename() 
 	{
@@ -166,7 +166,7 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 
 	/*
 	 *  (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getCable(java.math.BigInteger)
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getCable(java.math.BigInteger)
 	 */
 	public ICable getCable(BigInteger id) {
 		for (int i = 0; i < getCableCount(); i++) {

@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.data;
+package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,9 +21,6 @@ import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 import edu.stanford.smi.protegex.owl.model.impl.AbstractOWLProperty;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
@@ -31,7 +28,9 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
 
 
 /**
- * Represents a database of semantic things.
+ * Represents a database of semantic things.  This database is stored on the local disk via 
+ * as Hypersonic SQL database
+ * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */

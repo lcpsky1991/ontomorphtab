@@ -34,10 +34,10 @@ import com.jme.system.DisplaySystem;
 import com.jme.util.AreaUtils;
 import com.jme.util.geom.BufferUtils;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ICable;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.INeuronMorphologyPart;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.ISegment;
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.ICable;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.INeuronMorphologyPart;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.ISegment;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
@@ -111,40 +111,6 @@ public class NeuronMorphologyView extends TangibleView{
 		
 		
 	}
-	
-	/* keep this code around for later
-	 public void setX3DNeuron(InputStream input, PositionVector _position, RotationVector _rotation, float _scale) {
-	 try {
-	 X3DLoader converter = new X3DLoader();
-	 Spatial scene = converter.loadScene(input, null, null);
-	 
-	 this.detachAllChildren();
-	 this.attachChild(scene);
-	 
-	 if (_position != null) 
-	 {
-	 this.setLocalTranslation(_position.asVector3f());
-	 }
-	 if (_rotation != null) {
-	 this.setLocalRotation(_rotation.asMatrix3f());
-	 }
-	 if (_scale != 1) {
-	 this.setLocalScale(_scale);
-	 }
-	 } catch (Exception e) {
-	 //logger.logp(Level.SEVERE, this.getClass().toString(), "simpleInitGame()", "Exception", e);
-	  System.exit(0);
-	  }
-	  }
-	  
-	  public void setX3DNeuron(URL structureLoc) {
-	  try {
-	  this.setX3DNeuron(new FileInputStream(structureLoc.getFile()), null, null, 1);
-	  } catch (FileNotFoundException e) {
-	  // TODO Auto-generated catch block
-	   e.printStackTrace();
-	   }
-	   }*/
 	
 	private Node loadscene(NeuronMorphology morph) {
 		long tick = Log.tick();

@@ -1,6 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.core.changes;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 
 /**
  * Defines a revision, which is a unit of change that a user has made within the framework.

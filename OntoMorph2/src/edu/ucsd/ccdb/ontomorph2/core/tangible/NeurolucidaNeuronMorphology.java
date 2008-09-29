@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -104,7 +104,7 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	
 	
 	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getSegments()
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getSegments()
 	 */
 	public List<ISegment> getSegments() {
 		if (segmentList == null) {
@@ -156,7 +156,7 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	
 
 	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getSegmentGroups()
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getSegmentGroups()
 	 */
 	public Set<ICable> getCables() {
 		if (segmentGroupList == null) {
@@ -207,7 +207,7 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.scene.tangible.NeuronMorphology#getName()
+	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getName()
 	 */
 	public String getName() {
 		int len = _morphLoc.getFile().length();

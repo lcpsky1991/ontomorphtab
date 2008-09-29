@@ -34,6 +34,7 @@ package wbctest.atlas;
 	import com.jme.app.SimpleGame;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 
 	/**
 	 * <code>TestAnisotropic</code>
@@ -60,7 +61,7 @@ import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 
 		ReferenceAtlas atlas = ReferenceAtlas.getInstance();
 		/*
-		for (BrainRegion r : atlas.getBrainRegions()) {
+		for (AllenMeshBrainRegion r : atlas.getBrainRegions()) {
 			rootNode.attachChild(r.getMesh());
 		}
 		*/
@@ -68,7 +69,7 @@ import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 		String[] regions = {"OLF"};
 		
 		for (String s : regions) {
-			rootNode.attachChild(atlas.getBrainRegion(s).getClodMesh());
+			new BrainRegionView(atlas.getBrainRegion(s), rootNode);
 		}
 	  }
 	}

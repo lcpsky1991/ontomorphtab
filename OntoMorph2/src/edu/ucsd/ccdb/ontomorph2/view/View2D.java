@@ -1,9 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -25,19 +22,14 @@ import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
-import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.data.LocalSemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
-import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.AtlasBrowser;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.BasicSearchWidget;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.InstanceBrowser;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MenuBar;
-import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.MyTreeModel;
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
 
 
 /**

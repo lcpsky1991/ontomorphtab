@@ -1,4 +1,4 @@
-package edu.ucsd.ccdb.ontomorph2.core.scene.tangible;
+package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -66,7 +66,8 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	private List<SemanticClass> semanticThings = new ArrayList<SemanticClass>();
 	private SemanticClass mainSemanticClass = null;
 	private SemanticInstance mainSemanticInstance = null;
-	private Set<Tangible> previousContainerTangibles = null;
+
+	private Set<ContainerTangible> previousContainerTangibles = null;
 	
 
 	private Color c = null;
@@ -82,6 +83,10 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		//by default, all objects ought to be associated with an instance.
 		//the least specific instance that can be created is one of bfo:entity.
 		//addSemanticThing(GlobalSemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
+	}
+	
+	public Node getSpatial() {
+		return theSpatial;
 	}
 	
 	/**
@@ -137,16 +142,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	
 	public void setRelativePosition(PositionVector pos, boolean flagChanged) {
 		if (pos != null) {
-			Vector3f oldPosition = theSpatial.getLocalTranslation();
 			theSpatial.setLocalTranslation(pos);
-			
-			Vector3f displacement = oldPosition.subtract(pos);
-			//in order for contained objects to travel along with its parent, must
-			//also set their relative positions
-			for (Tangible t: this.getContainedTangibles()) {
-				Vector3f newContainedPosition = t.getRelativePosition().subtract(displacement);
-				t.setRelativePosition(new PositionVector(newContainedPosition));
-			}
 			
 			if (flagChanged) changed(CHANGED_MOVE);
 		}
@@ -281,19 +277,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	}
 
 	
-	public void changed() {
-		changed(null);
-	}
-
-	
-	protected void changed(String argument) {
-		this.setChanged();
-		if (argument == null) {
-			notifyObservers();
-		} else {
-			notifyObservers(argument);
-		}
-	}
 	
 	/**
 	 * Sets the CoordinateSystem by which the relative position, rotation, and scale of this
@@ -435,8 +418,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		changed(CHANGED_SCALE);
 	}
 	
-	
-	
 	/**
 	 * Changes the rotation of this Tangible 
 	 * @param morph the item(s) to be rotated
@@ -531,52 +512,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	}
 	
 	
-	
-	/**
-	 * Changes the local translation this Tangible
-	 * The dimensions of freedom allow the 2D movement of the mouse to map to the 3D movement intended
-	 * @param constraint Specifies what dimensions to allow movement based on mouse input. 
-	 * Will typically range from (0,0,0) to (1,1,1). Where (1,1,0) corresponds to 2D movement on 
-	 * the current X,Y plane
-	 */
-	/*
-	public void move(float dx, float dy, OMTVector constraint)
-	{
-		//get changes in mouse movement
-		//TODO: calculate the viewing angle and apply to constraint
-		
-		dx = dx * constraint.getX();
-		dy = dy * constraint.getY();
-		float dz = dy * constraint.getZ();
-		
-		//get the position, add the change, store the new position
-		PositionVector np = new PositionVector( this.getRelativePosition().asVector3f().add(dx,dy,dz) );
-		//PositionVector np = new PositionVector( this.getAbsolutePosition().asVector3f().add(dx,dy,dz) );
-		
-		//apply the movement
-		this.setRelativePosition( np );
-		changed(CHANGED_MOVE);
-	}
-	*/
-	
-	/*
-	public void move(float dx, float dy, float dz)
-	{
-	//Use setRelative Position instead?
-		//get the position, add the change, store the new position
-		PositionVector np = new PositionVector( this.getRelativePosition().asVector3f().add(dx,dy,dz) );
-				
-		//apply the movement
-		this.setRelativePosition( np );
-		changed(CHANGED_MOVE);
-	}
-	*/
-	
-	
-	public int hashCode() {
-		return super.hashCode() + theSpatial.hashCode();
-	}
-	
 	public String getName() 
 	{
 		String strName = "";
@@ -600,9 +535,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void execPostManipulate(Tangible newTarget)
 	{
 		/** this is NOT meant for an update() or change() **/ //that's not change() we can beleive in, that's more of the same! - Obama '08
-		
-		
-		
+	
 	}
 	
 	public void setName(String name) {
@@ -622,40 +555,40 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		return null;//GlobalSemanticRepository.getInstance().getSemanticInstance("");
 	}
 
-	public void addContainedTangible(Tangible contained) {
-		TangibleManager.getInstance().addContainedTangible(this, contained);
-		changed(CHANGED_CONTAINS);
-	}
-	
-	public Set<Tangible> getContainedTangibles() {
-		return TangibleManager.getInstance().getContainedTangibles(this);
-	}
-	
-	public Set<Tangible> getContainerTangibles() {
+	/**
+	 * Returns a list of ContainerTangibles that this Tangible is contained within
+	 * @return
+	 */
+	public Set<ContainerTangible> getContainerTangibles() {
 		return TangibleManager.getInstance().getContainerTangibles(this);
 	}
 	
-	public void removeContainedTangible(Tangible t) {
-		TangibleManager.getInstance().removeContainedTangible(this, t);
-		changed(CHANGED_CONTAINS);
-	}
-
-	public Set<Tangible> getPreviousContainerTangibles() {
+	/**
+	 * Gets the old list of ContainerTangibles for this Tangible
+	 * @return
+	 */
+	public Set<ContainerTangible> getPreviousContainerTangibles() {
 		return previousContainerTangibles;
 	}
 	
-	public void setPreviousContainerTangibles(Set<Tangible> t) {
+	protected void setPreviousContainerTangibles(Set<ContainerTangible> t) {
 		previousContainerTangibles = t;
 	}
 	
-	public void updateContainerTangibles(Set<Tangible> containerTangibles) 
+	/**
+	 * For this Tangible, update the containment information based on a list of ContainerTangibles that
+	 * are reporting that they contain this Tangible
+	 * @param containerTangibles
+	 */
+	public void updateContainment(Set<ContainerTangible> containerTangibles) 
 	{
-		Set<Tangible> currentContainerTangibles = TangibleManager.getInstance().getContainerTangibles(this);
-		previousContainerTangibles = currentContainerTangibles;
+		Set<ContainerTangible> currentContainerTangibles = 
+			TangibleManager.getInstance().getContainerTangibles(this);
+		setPreviousContainerTangibles(currentContainerTangibles);
 
 		boolean changed = false; //one boolean to test if a change has happened
 		
-		//tangibles to remove contains those elements in the list of current containers
+		//tangiblesToRemove contains those elements in the list of current containers
 		//that do not appear in the update list.  these must go away
 		Set<Tangible> tangiblesToRemove = new HashSet<Tangible>(currentContainerTangibles);
 		tangiblesToRemove.removeAll(containerTangibles);
@@ -664,7 +597,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 			changed = true;
 		}
 		
-		//tangibles to add contains those elements in the update list that do not 
+		//tangiblesToAdd contains those elements in the update list that do not 
 		//appear in the list of current containers.  these must be added.
 		Set<Tangible> tangiblesToAdd = new HashSet<Tangible>(containerTangibles);
 		tangiblesToAdd.removeAll(currentContainerTangibles);
@@ -679,8 +612,26 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 
 	}
 	
-	public Node getSpatial() {
-		return theSpatial;
+
+	public void changed() {
+		changed(null);
 	}
 
+	
+	protected void changed(String argument) {
+		this.setChanged();
+		if (argument == null) {
+			notifyObservers();
+		} else {
+			notifyObservers(argument);
+		}
+	}
+
+	public boolean equals(Object o) {
+		return this.hashCode() == o.hashCode();
+	}
+	
+	public int hashCode() {
+		return super.hashCode() + theSpatial.hashCode();
+	}
 }

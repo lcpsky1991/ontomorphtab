@@ -1,6 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 
 public class QueryResultsView extends TangibleView {
 

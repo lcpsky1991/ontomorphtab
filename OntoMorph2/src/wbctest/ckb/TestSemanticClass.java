@@ -1,7 +1,7 @@
 package wbctest.ckb;
 
 import junit.framework.TestCase;
-import edu.ucsd.ccdb.ontomorph2.core.data.GlobalSemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
