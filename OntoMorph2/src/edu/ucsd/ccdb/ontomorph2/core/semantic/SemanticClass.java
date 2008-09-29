@@ -9,6 +9,7 @@ import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
 /** 
@@ -29,8 +30,10 @@ public class SemanticClass extends SemanticThingImpl {
 	public static final String AXON_CLASS = "sao:sao1770195789";
 	public static final String OBJECT_CLASS = "snap:Object";
 	public static final String INDEPENDENT_CONTINUANT_CLASS = "snap:IndependentContinuant";
+	public static final String CONTINUANT_CLASS = "snap:Continuant";
 	public static final String CELL_CLASS = "sao:sao1813327414";
 	public static final String HIPPOCAMPUS_CLASS = "birn_anat:birnlex_721";
+	public static final String IMAGE_CLASS = "birn_invest:birnlex_2028";
 	
 	public static int counter = 1;
 	
@@ -106,8 +109,7 @@ public class SemanticClass extends SemanticThingImpl {
 		}
 		catch(Exception e)
 		{
-			Log.warn("ERROR: could not create instance");
-			return null;
+			throw new OMTException("ERROR: could not create instance", e);
 		}
 	}
 	

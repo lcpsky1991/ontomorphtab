@@ -58,20 +58,25 @@ public abstract class SemanticRepository {
 	 * @see edu.ucsd.ccdb.ontomorph2.core.data.SemanticRepository#getSemanticClass(java.lang.String)
 	 */
 	public SemanticClass getSemanticClass(String uri) {
-		OWLNamedClass cls = null;
 		if (owlModel != null) {
+			OWLNamedClass cls = null;
 			try {
 				cls = clsFlyweightStore.get(uri);
 				if (cls == null) {
 					cls = owlModel.getOWLNamedClass(uri);
+					
+					if (cls == null) {
+						throw new OMTException("Problem finding URI in semantic repository" + uri);
+					} 
 					clsFlyweightStore.put(uri, cls);
 				}
 			} catch (Exception e ) {
 				throw new OMTException("Problem finding URI in semantic repository" + uri, e);
 			}
+			SemanticClass s = new SemanticClass(cls, uri);
+			return s;
 		}
-		SemanticClass s = new SemanticClass(cls, uri);
-		return s;
+		throw new OMTException("Don't have an OWL Model loaded and cannot return a semantic class!");
 	}
 
 	/* (non-Javadoc)
@@ -79,7 +84,7 @@ public abstract class SemanticRepository {
 	 */
 	public TreeNode getInstanceTree() {
 		TreeNode root = new TreeNode("Instances", null);
-		for (SemanticInstance si : this.getObjectInstances()) {
+		for (SemanticInstance si : this.getContinuantInstances()) {
 			TreeNode node = new TreeNode(si.getId(), si);
 			
 			for (SemanticProperty p : si.getProperties()) {
@@ -138,11 +143,11 @@ public abstract class SemanticRepository {
 	}
 	
 	/**
-	 * Get all instances in the database under the root of BFO Object
+	 * Get all instances in the database under the root of BFO Continuant
 	 * @return a list of SemanticInstances
 	 */
-	public List<SemanticInstance> getObjectInstances() {
-		return getInstancesFromRoot(getSemanticClass(SemanticClass.INDEPENDENT_CONTINUANT_CLASS), false);	
+	public List<SemanticInstance> getContinuantInstances() {
+		return getInstancesFromRoot(getSemanticClass(SemanticClass.CONTINUANT_CLASS), false);	
 	}
 
 	/**
@@ -156,10 +161,6 @@ public abstract class SemanticRepository {
 		if (owlModel != null) {
 			Slot rdfsLabel = owlModel.getSlot("rdfs:label");
 			
-			//Cls root = owlModel.getRootCls();
-			//Cls entity = owlModel.getCls("bfo:Entity");
-			//System.out.println("The root class is: " + entity.getName());
-			//Node rootNode = getTree().addRoot();
 			rdfsLabel = owlModel.getSlot("rdfs:label");
 			label = (String)OWLClass.getDirectOwnSlotValue(rdfsLabel);
 			String prefix = null;//owlModel.getPrefixForResourceName(entity.getName());

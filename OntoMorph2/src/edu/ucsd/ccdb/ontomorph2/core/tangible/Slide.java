@@ -19,6 +19,8 @@ import edu.ucsd.ccdb.ontomorph2.core.data.reader.CCDBFile;
 import edu.ucsd.ccdb.ontomorph2.core.data.reader.CCDBFileType;
 import edu.ucsd.ccdb.ontomorph2.core.data.reader.CCDBModelReader;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
@@ -37,6 +39,11 @@ public abstract class Slide extends Tangible {
 	
 	float ratio = 1f;
 
+	public Slide() {
+		this.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(
+				SemanticClass.IMAGE_CLASS));
+		this.getMainSemanticInstance();
+	}
 
 	public float getRatio() {
 		return ratio;

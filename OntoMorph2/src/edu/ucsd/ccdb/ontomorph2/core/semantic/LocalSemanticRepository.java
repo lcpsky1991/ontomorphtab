@@ -49,7 +49,7 @@ public class LocalSemanticRepository extends SemanticRepository{
 	
 	
 	public void removeWorkspaceInstances() {
-		for (SemanticInstance obj : this.getObjectInstances()) {
+		for (SemanticInstance obj : this.getContinuantInstances()) {
 			obj.removeFromRepository();
 		}
 	}
