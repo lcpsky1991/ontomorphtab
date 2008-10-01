@@ -40,6 +40,8 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	Node visRepresentation = new Node("camera avatar");
 	Node rootNode = new Node("root Node");
 	
+
+
 	
 	InputHandler input = new InputHandler();
 	public ViewCamera() {
@@ -167,10 +169,15 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * @param degreesX
 	 * @param degreesY
 	 */
-	public void rotateCameraAbout(Tangible focus, float degreesX, float degreesY)
+	public void rotateCameraAbout(Vector3f focus, float degreesX, float degreesY)
 	{
-		
+		/**
+		 * FIXME: the problem with this function is that it continually expands the radius on which it's rotating
+		 * this is tough to fix because of the precision with quaternions rotating vectors and vector.getAngleBetween
+		 * can not tell the difference between these tiny movements
+		 */
 		float factor = (FastMath.PI / 180);
+		float theta = 0; //store the change in the rotation of the camera, caused by calling this function
 		
 		Vector3f posOrig = new Vector3f(this.getLocalTranslation().clone());
 		
@@ -191,14 +198,13 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 		Vector3f posTo = new Vector3f(posOrig);
 		posTo = posTo.add(cam.getLeft().mult(-degreesX * 5));
 		posTo = posTo.add(cam.getUp().mult(degreesY));
-
 		
 		//apply the new position and rotation
 		this.setLocalRotation(q);
 		this.setLocalTranslation(posTo);
 		
-		
-		if (focus != null) this.lookAt(focus.getAbsolutePosition(), cam.getUp());
+		//refocus the camera on its focus and align it on the radius
+		if (focus != null) this.lookAt(focus, cam.getUp());
 	}
 	
 	/**

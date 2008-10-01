@@ -67,6 +67,9 @@ public class View3DMouseListener implements MouseInputListener {
 	public static final int METHOD_LOOKAT = 64;
 	public static final int METHOD_MOVE_FREE = 100;	//not constrained by the coordinate system
 	
+	//variables for rotating the camera
+	Vector3f brainCenter = new Vector3f(387.276f,-157.0343f,-239.10233f); //the center of the brain
+	Vector3f focusPoint = new Vector3f(brainCenter);
 	
 	Display disp;
 	View v = new View();
@@ -202,10 +205,18 @@ public class View3DMouseListener implements MouseInputListener {
 			
 			//rotate the camera around the selected tangibles
 			Tangible recent = TangibleManager.getInstance().getSelectedRecent();
-			{
-				View.getInstance().getCameraView().rotateCameraAbout(recent, dX ,dY );
-			}
+			Vector3f ptInterest = null;
 			
+			if (recent != null) 
+			{
+				ptInterest = recent.getAbsolutePosition();
+			}
+			else
+			{
+				ptInterest = brainCenter;
+			}
+			View.getInstance().getCameraView().rotateCameraAbout(ptInterest, dX ,dY );
+						
 		}
 		else if (OMT_MBUTTON_LEFT == button) //left 
 		{
