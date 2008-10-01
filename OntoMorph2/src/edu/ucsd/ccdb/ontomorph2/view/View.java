@@ -151,7 +151,26 @@ public class View extends BaseSimpleGame {
 		rootNode.attachChild(view3D);
 
 		//Remove lighting for rootNode so that it will use our basic colors
+		lightState.detachAll();
+        
+		PointLight light2 = new PointLight();
+        //light.setDiffuse( new ColorRGBA( 0.75f, 0.75f, 0.75f, 0.75f ) );
+        light2.setAmbient( new ColorRGBA( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        light2.setLocation( new Vector3f( 387, -157, -39 ) );
+        
+        light2.setLightMask(LightState.MASK_SPECULAR);
+        
+        light2.setEnabled( true );
+        
+        lightState.attach(light2);
+        
+        lightState.setLightMask(LightState.MASK_SPECULAR);
+        
+        lightState.setSeparateSpecular(true);
+        lightState.setLocalViewer(true);
+        
 		rootNode.setLightCombineMode(LightState.OFF);
+		rootNode.updateRenderState();
 		
 		disp = View2D.getInstance();
 		guiInput = new FengJMEInputHandler(disp);

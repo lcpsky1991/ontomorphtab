@@ -22,9 +22,11 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 /**
- * Defines an anatomical region of the mouse brain.
+ * Defines an anatomical region of the mouse brain.  Contains data about its parent in a 
+ * hierarchy of brain regions, color, abbreviation and name
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
@@ -51,7 +53,8 @@ public class BrainRegion extends ContainerTangible {
 	
 	private TriMesh data = null;
 	
-	public BrainRegion(String name, String abbrev, String parentAbbrev, Color c, String regionId, CoordinateSystem co){
+	public BrainRegion(String name, String abbrev, String parentAbbrev, Color c, 
+			String regionId, CoordinateSystem co){
 		this.abbrev = abbrev;
 		this.parentAbbrev = parentAbbrev;
 		this.setColor(c);
@@ -63,13 +66,15 @@ public class BrainRegion extends ContainerTangible {
 	public void loadData() {
 
 		long tick = Log.tick();
-		data = loadAllenMesh();
-		/* when low detail meshes are working again, we can employ this loading strategy
-		try {
-			data = loadLowDetailMesh();
-		} catch (IOException e) {
-			data = loadAllenMesh();
-		}*/
+		//data = loadAllenMesh();
+		
+		// when low detail meshes are working again, we can employ this loading strategy
+		//try {
+		data = loadHighDetailMesh();
+		//} catch (IOException e) {
+		//	Log.warn("Falling back to Allen Mesh for structure " + this.abbrev);
+		//	data = loadAllenMesh();
+		//}
 
 		Log.tock("Loading BrainRegion for " + getName() + " took ", tick);
 	}
@@ -101,7 +106,9 @@ public class BrainRegion extends ContainerTangible {
 	}
 	
 	public BrainRegion getParent() {
-		return ReferenceAtlas.getInstance().getBrainRegion(this.parentAbbrev);
+		if (this.parentAbbrev != null && !"".equals(this.parentAbbrev))
+			return ReferenceAtlas.getInstance().getBrainRegion(this.parentAbbrev);
+		return null;
 	}
 
 	public String getAbbreviation() {
@@ -112,6 +119,7 @@ public class BrainRegion extends ContainerTangible {
 		return this.regionId;
 	}
 	
+	
 	protected TriMesh loadAllenMesh() {
 		TriMesh tMesh = null;
 		AllenAtlasMeshLoader loader = new AllenAtlasMeshLoader();
@@ -120,15 +128,30 @@ public class BrainRegion extends ContainerTangible {
 		return tMesh;
 	}
 	
-	protected TriMesh loadLowDetailMesh() throws IOException{
-		String urlString = Scene.allenObjMeshDir + "LD_" + getAbbreviation() + ".obj";
-		URL url = null;
+	protected TriMesh loadLowDetailMesh(){
+		TriMesh t = null;
 		try {
-			url = new File(urlString).toURI().toURL();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			String urlString = Scene.allenLowDetailObjMeshDir + "LD_" + getAbbreviation() + ".obj";
+			URL url = new File(urlString).toURI().toURL();
+			
+			t = (TriMesh)loadObjFile(url);
+		} catch (Exception e) {
+			throw new OMTException("Cannot load OBJ file: " + this.getAbbreviation(), e);
 		}
-		return (TriMesh)loadObjFile(url);
+		return t;
+	}
+	
+	protected TriMesh loadHighDetailMesh(){
+		TriMesh t = null;
+		try {
+			String urlString = Scene.allenHighDetailObjMeshDir + getAbbreviation() + ".obj";
+			URL url = new File(urlString).toURI().toURL();
+			
+			t = (TriMesh)loadObjFile(url);
+		} catch (Exception e) {
+			throw new OMTException("Cannot load OBJ file: " + this.getAbbreviation(), e);
+		}
+		return t;
 	}
 	
 	private Object loadObjFile(URL model) throws IOException{

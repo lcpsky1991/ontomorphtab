@@ -102,11 +102,9 @@ public class AllenAtlasMeshLoader {
 	public TriMesh loadTriMeshByAbbreviation(String abbrev) { 
 		try {
 			return loadTriMesh(new File(Scene.allenMeshDir + abbrev + ".msh").toURI().toURL());
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new OMTException("Cannot load allen mesh: " + abbrev, e);
 		}
-		return null;
 	}
 	
 	public TriMesh loadTriMesh(URL filePath) {

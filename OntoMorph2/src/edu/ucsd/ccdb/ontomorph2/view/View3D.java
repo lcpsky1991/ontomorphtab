@@ -59,7 +59,8 @@ public class View3D extends Node{
 		meshesNode.setLightCombineMode(LightState.OFF);
 		volumesNode.setLightCombineMode(LightState.OFF);
 		particlesNode.setLightCombineMode(LightState.OFF);
-		atlasNode.setLightCombineMode(LightState.COMBINE_CLOSEST);
+		//atlasNode.setLightCombineMode(LightState.COMBINE_CLOSEST);
+		atlasNode.setLightCombineMode(LightState.COMBINE_FIRST);
 		
 		this.attachChild(slidesNode);
 		this.attachChild(cellsNode);

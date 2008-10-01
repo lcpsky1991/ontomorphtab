@@ -38,9 +38,16 @@ public class ReferenceAtlas {
 	 */
 	private static ReferenceAtlas instance;
 	private List<BrainRegion> brainRegions;
+
 	
+	private static final String[] basicAtlasAbbrevs = {"Brain", "HY", "TH", "DG", "CA"};
+	
+	/*
 	private static final String[] basicAtlasAbbrevs = {"OLF", "HPF", "STRd", "STRv", "LSX", 
 		"sAMY", "PAL", "TH", "HY", "MBsen", "MBmot", "MBsta", "P", "MY", "CB"};
+	*/
+	
+	//private static final String[] basicAtlasAbbrevs = {"OLF", "FLIP_OLF"};
 
 	/**
 	 * prevents instantiation
@@ -64,9 +71,23 @@ public class ReferenceAtlas {
 			AllenCoordinateSystem sys = new AllenCoordinateSystem();
 			while (br.ready()) {
 				String[] line = br.readLine().split(",");
-				brainRegions.add(new BrainRegion(line[0], line[1], line[2], 
+				
+				//In this file, the brain regions are defined.  Here we pull info
+				//out of the file to construct the brain regions.  however, the meshes here
+				//only refer to the left hemisphere.  so we copy over the info for the 
+				//right hemisphere, which we also have meshes for (will have a complete set soon)
+				
+				BrainRegion leftHemisphere = new BrainRegion(line[0] + ", left hemisphere", line[1], line[2], 
 						new Color(Integer.parseInt(line[3]), Integer.parseInt(line[4]), 
-								Integer.parseInt(line[5])),line[6], sys));
+								Integer.parseInt(line[5])),line[6], sys);
+				
+				
+				BrainRegion rightHemisphereCopy = new BrainRegion(line[0] + ", right hemisphere", "FLIP_" + line[1], "FLIP_" + line[2] + "_right", 
+						new Color(Integer.parseInt(line[3]), Integer.parseInt(line[4]), 
+								Integer.parseInt(line[5])),line[6], sys);
+				
+				brainRegions.add(leftHemisphere);
+				brainRegions.add(rightHemisphereCopy);
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -97,7 +118,7 @@ public class ReferenceAtlas {
 				return r;
 			}
 		}
-		return null;
+		throw new OMTException("Cannot find brain region for " + string);
 	}
 	
 	/**

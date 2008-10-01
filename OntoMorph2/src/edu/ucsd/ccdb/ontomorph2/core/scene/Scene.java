@@ -64,7 +64,8 @@ public abstract class Scene extends Observable{
 	public static final String allenDir = baseDir + File.separatorChar + "allen" 
 									+ File.separatorChar;
 	public static final String allenMeshDir = allenDir + "Mesh25" + File.separatorChar;
-	public static final String allenObjMeshDir = objDir + "allen_meshes_low_detail" + File.separatorChar;
+	public static final String allenLowDetailObjMeshDir = objDir + "allen_meshes_low_detail" + File.separatorChar;
+	public static final String allenHighDetailObjMeshDir = objDir + "allen_meshes_high_detail" + File.separatorChar;
 
 	public static final int CHANGED_PART = 1;
 	public static final int CHANGED_LOAD = 0;

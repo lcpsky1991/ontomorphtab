@@ -97,6 +97,10 @@ public class OntoMorph2 {
 		return wbcProps;
 	}
 	
+	/**
+	 * Saves the wbc.properties file to the root directory where the app is running
+	 *
+	 */
 	public static void saveWBCProperties() {
 		try {
         	getWBCProperties().store(new FileOutputStream("wbc.properties"), "");
@@ -105,6 +109,10 @@ public class OntoMorph2 {
 		}
 	}
 
+	/**
+	 * Convenience method to see if the system is in offline mode
+	 * @return
+	 */
 	public static boolean isOfflineMode() {
 		return TRUE.equals(getWBCProperties().getProperty(OFFLINE_MODE));
 	}
@@ -122,6 +130,10 @@ public class OntoMorph2 {
 		saveWBCProperties();
 	}
 	
+	/**
+	 * Convenience method to see if the application is in debug mode
+	 * @return
+	 */
 	public static boolean isDebugMode() {
 		return TRUE.equals(getWBCProperties().getProperty(DEBUG_MODE));
 	}
