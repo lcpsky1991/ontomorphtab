@@ -40,16 +40,19 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
+import edu.ucsd.ccdb.ontomorph2.core.scene.ParticlesFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticQuery;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ISelectable;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
 import edu.ucsd.ccdb.ontomorph2.view.View3DMouseListener;
 import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
+import edu.ucsd.ccdb.ontomorph2.view.scene.SphereParticlesView;
 
 /**
  * 2D widget that allows a user to type in keywords and issue a keyword search
@@ -73,7 +76,7 @@ public class BasicSearchWidget extends Widget{
 	public BasicSearchWidget(Display d) {
 		
 		this.d = d;
-		root = ReferenceAtlas.getInstance().getBrainRegionTree();
+		//root = ReferenceAtlas.getInstance().getBrainRegionTree();
 		
 		buildWindowFrame();
 		
@@ -148,20 +151,19 @@ public class BasicSearchWidget extends Widget{
  			ListItem<String> item = FengGUI.createListItem(list);
  			item.setText(textInput);
  			item.setPixmap(pixmap);
- 			slideHide();
- 			View.getInstance().indicator(regions.get(textInput));
+ 			//slideHide();
+ 			//View.getInstance().indicator(regions.get(textInput));
  		}
 
  		if(images.isSelected()){
  			list.clear();
  			Iterator i = regions.keySet().iterator();
  			while(i.hasNext()) {
- 				ListItem<String> item = FengGUI.createListItem(list);
+ 				ListItem<Tangible> item = FengGUI.createListItem(list);
  				checkBoxSelection = (String)i.next();
  				item.setText(checkBoxSelection);
  				item.setPixmap(pixmap);
- 				slideHide();
- 				View.getInstance().indicator(regions.get(checkBoxSelection));
+ 				ParticlesFactory.getInstance().createParticles(regions.get(checkBoxSelection));
  			}
  		}
  		
@@ -173,20 +175,20 @@ public class BasicSearchWidget extends Widget{
 				location = regions.get(selected);
 				//System.out.println(location +" "  + selected);
 		 		if(selected.equals("Cerebellum")){
-		 			System.out.println("cerebellum");
+		 			//System.out.println("cerebellum");
 		 			//slideHide();
 		 			View.getInstance().getCameraView().smoothlyZoomToSlideCerebellumView();}
 		 		if(selected.equals("Hippocampus")){
-		 			System.out.println("hippo");
+		 			//System.out.println("hippo");
 		 			//slideHide();
 		 			View.getInstance().getCameraView().smoothlyZoomToSlideView();}
 		 		if(selected.equals("Cells")){
-		 			System.out.println("cells");
+		 			//System.out.println("cells");
 		 			//slideHide();
 		 			View.getInstance().getCameraView().smoothlyZoomToCellView();}
 		 		selected = null;
 		 		
-		 		System.out.println(returnObjectPosition());
+		 		//System.out.println(returnObjectPosition());
 		 		}}
 			);
 	}

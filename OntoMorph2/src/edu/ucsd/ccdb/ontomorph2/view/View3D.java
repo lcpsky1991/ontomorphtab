@@ -58,7 +58,7 @@ public class View3D extends Node{
 		surfacesNode.setLightCombineMode(LightState.OFF);
 		meshesNode.setLightCombineMode(LightState.OFF);
 		volumesNode.setLightCombineMode(LightState.OFF);
-		particlesNode.setLightCombineMode(LightState.OFF);
+		//particlesNode.setLightCombineMode(LightState.OFF);
 		//atlasNode.setLightCombineMode(LightState.COMBINE_CLOSEST);
 		atlasNode.setLightCombineMode(LightState.COMBINE_FIRST);
 		
@@ -168,13 +168,20 @@ public class View3D extends Node{
 	}
 	
 	public void addParticles(Set<SphereParticles> particles){
+		System.out.println("add particles " + particles );
+		//particlesNode.detachAllChildren();
 		for(SphereParticles sp: particles){
+			System.out.println("particles" + sp);
 			SphereParticlesView spView = (SphereParticlesView)TangibleViewManager.getInstance().getTangibleViewFor(sp);
-						
+			if (spView == null) {
+				System.out.println("null spView2");
+				//implicitly adds the new TangibleView to the TangibleViewManager
+				spView = new SphereParticlesView(sp);
+			}
+			particlesNode.attachChild(spView);
 		}
 	}
 	public void addBrainRegions(Set<BrainRegion> regions) {
-		
 		for (BrainRegion br: regions) {
 			BrainRegionView brView = (BrainRegionView)TangibleViewManager.getInstance().getTangibleViewFor(br);
 			if (brView == null) {

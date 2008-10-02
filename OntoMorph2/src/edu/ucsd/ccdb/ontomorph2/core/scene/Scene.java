@@ -36,6 +36,7 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
@@ -97,6 +98,7 @@ public abstract class Scene extends Observable{
 	}
 	
 	protected void addSceneObject(Tangible s) {
+		//System.out.println("addSceneObject" + s);
 		s.setVisible(true);
 	}
 	
@@ -221,5 +223,9 @@ public abstract class Scene extends Observable{
 		return manager.getVolumes();
 	}
 
+	public Set<SphereParticles> getParticles(){
+		System.out.println("get particles from scene.jaba");
+		return manager.getParticles();
+	}
 	
 }

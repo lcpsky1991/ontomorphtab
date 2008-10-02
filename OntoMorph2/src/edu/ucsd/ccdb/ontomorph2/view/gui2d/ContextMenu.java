@@ -478,8 +478,10 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public void menuItemPressed(MenuItemPressedEvent arg0) {
 		
 		String opt = arg0.getItem().getText();
-		MenuItem trigger = arg0.getItem();
 		
+		MenuItem trigger = arg0.getItem();
+		System.out.println(opt + "     " + trigger);
+
 		
 		//====== SETUP ==============
 		//get all of the fields form the MenuItem

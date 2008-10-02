@@ -16,6 +16,7 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
@@ -151,6 +152,16 @@ public class TangibleManager {
 			}
 		}
 		return surfaces;
+	}
+	
+	public Set<SphereParticles> getParticles() {
+		Set<SphereParticles> particles = new HashSet<SphereParticles>();
+		for (Tangible t : this.tangibles) {
+			if (t instanceof SphereParticles) {
+				particles.add((SphereParticles)t);
+			}
+		}
+		return particles;
 	}
 
 	/**

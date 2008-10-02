@@ -47,6 +47,7 @@ public class SlideView extends TangibleView {
 	
 	private TextureState getTextureState() {
 //		create texture state for graph
+		
 		TextureState textureState = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 		Texture t = null;
 		if (_slide instanceof URISlide) {

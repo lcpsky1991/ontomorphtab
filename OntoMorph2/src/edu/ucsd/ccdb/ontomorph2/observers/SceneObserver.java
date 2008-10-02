@@ -13,6 +13,7 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.ICable;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -45,6 +46,8 @@ public class SceneObserver implements Observer {
 			String msg = "";
 			Scene scene = (Scene) o;
 			
+			//System.out.println(" o instance of Scene");
+			_view.getView3D().addParticles(scene.getParticles());
 //			setting arg to not be null simplifies error checking (dont need to check for null cases)
 			if (arg == null) arg = Scene.CHANGED_UNKNOWN;  
 			
@@ -72,6 +75,7 @@ public class SceneObserver implements Observer {
 			}
 			else if (arg.equals(Scene.CHANGED_SLIDE))
 			{
+				//System.out.println("reloading slides");
 				_view.getView3D().setSlides(scene.getSlides());
 				msg = "reloading slides";
 			}
@@ -174,9 +178,20 @@ public class SceneObserver implements Observer {
 				}
 			}
 		}
+		
+		else if (o instanceof SphereParticles){
+			//System.out.println(" o instanceof SphereParticles");
+			TangibleView tv = null;
+			tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
+			if(tv!=null){
+			tv.update();
+			}
+			
+		}
 		//catch all method for any leftover tangibles
 		else if (o instanceof Tangible)
 		{
+			//System.out.println("tangible sceneobserver");
 			Tangible t = (Tangible)o;
 			
 			//get the tangible view manager that holds on to the list of tangible views
@@ -247,7 +262,7 @@ public class SceneObserver implements Observer {
 		_view.getView3D().setCurves(s.getCurves());
 		_view.getView3D().setSurfaces(s.getSurfaces());
 		_view.getView3D().setMeshes(s.getMeshes());
-
+		_view.getView3D().addParticles(s.getParticles());
 		setCamera(s);
 		_view.getView3D().updateNode(_view.getView3D());
 	}
