@@ -1,16 +1,19 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.SceneElement;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
+import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
@@ -45,6 +48,17 @@ public class BrainRegionView extends TangibleView{
 		
 		this.lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
         this.lightState.setEnabled(true);
+        
+        MaterialState ms = View.getInstance().getDisplaySystem().getRenderer().createMaterialState();
+        
+        ColorRGBA brColor = ColorUtil.convertColorToColorRGBA(br.getColor());
+        
+        ms.setDiffuse(brColor);
+        ms.setSpecular(brColor);
+        ms.setAmbient(brColor);
+        ms.setEmissive(brColor);
+        ms.setShininess(0.5f);
+		//mesh.setRenderState(ms);
         
         //register the geometries
 		//update the geometries registry, this is neccessary to enable picking, which is based on geomtry key maps

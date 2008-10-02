@@ -40,14 +40,15 @@ public class ReferenceAtlas {
 	private List<BrainRegion> brainRegions;
 
 	
-	private static final String[] basicAtlasAbbrevs = {"Brain", "HY", "TH", "DG", "CA"};
+	/*private static final String[] basicAtlasAbbrevs = {"Brain", "HY", "TH", "DG", "CA"};*/
 	
 	/*
 	private static final String[] basicAtlasAbbrevs = {"OLF", "HPF", "STRd", "STRv", "LSX", 
 		"sAMY", "PAL", "TH", "HY", "MBsen", "MBmot", "MBsta", "P", "MY", "CB"};
 	*/
 	
-	//private static final String[] basicAtlasAbbrevs = {"OLF", "FLIP_OLF"};
+	private static final String[] basicAtlasAbbrevs = {"Brain", "FLIP_Brain", "HY", 
+		"FLIP_HY", "TH", "FLIP_TH", "DG", "FLIP_DG", "CA", "FLIP_CA"};
 
 	/**
 	 * prevents instantiation
@@ -304,30 +305,5 @@ public class ReferenceAtlas {
 			}
 		}
 		return leaves;
-	}
-
-	public void displayDemoAtlas() {
-		Set<BrainRegion> brs = new HashSet<BrainRegion>();
-		
-		
-		brs.add(this.getBrainRegion("HIP"));
-		BrainRegion hippocampus = this.getBrainRegion("HIP");
-		hippocampus.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.HIPPOCAMPUS_CLASS));
-		hippocampus.setVisibility(BrainRegion.TRANSPARENT);
-		
-		//brs.add(this.getBrainRegion("DG"));
-		//this.getBrainRegion("DG").setVisibility(BrainRegion.TRANSPARENT);
-		
-		//brs.add(this.getBrainRegion("CA"));
-		//this.getBrainRegion("CA").setVisibility(BrainRegion.TRANSPARENT);
-		
-		
-		View.getInstance().getView3D().addBrainRegions(brs);
-	}
-
-	public void hideDemoAtlas() {
-		this.getBrainRegion("HIP").setVisibility(BrainRegion.INVISIBLE);
-		//this.getBrainRegion("DG").setVisibility(BrainRegion.INVISIBLE);
-		//this.getBrainRegion("CA").setVisibility(BrainRegion.INVISIBLE);
 	}
 }

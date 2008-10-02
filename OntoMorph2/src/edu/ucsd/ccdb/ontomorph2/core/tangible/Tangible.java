@@ -335,6 +335,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	}
 	
 	public Color getColor() {
+		if (this.c == null) {
+			this.c = Color.WHITE; // default color if it hasn't been set
+		}
 		return this.c;
 	}
 	

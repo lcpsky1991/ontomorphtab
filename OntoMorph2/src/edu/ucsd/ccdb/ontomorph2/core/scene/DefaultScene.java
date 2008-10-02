@@ -15,6 +15,7 @@ import com.jme.math.Quaternion;
 import com.jme.scene.shape.Box;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
@@ -316,6 +317,8 @@ public class DefaultScene extends Scene{
 		loadSurfaces();
 		
 		loadMeshes();
+		
+		ReferenceAtlas.getInstance().displayBasicAtlas();
 
 		changed(CHANGED_LOAD);
 	}

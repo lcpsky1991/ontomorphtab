@@ -156,18 +156,22 @@ public class View extends BaseSimpleGame {
 		PointLight light2 = new PointLight();
         //light.setDiffuse( new ColorRGBA( 0.75f, 0.75f, 0.75f, 0.75f ) );
         light2.setAmbient( new ColorRGBA( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        light2.setLocation( new Vector3f( 387, -157, -39 ) );
+        light2.setLocation( new Vector3f( 387, -57, -39 ) );
         
-        light2.setLightMask(LightState.MASK_SPECULAR);
+        ColorRGBA min = new ColorRGBA();
+        min.set(0.05f, 0.05f, 0.05f, 1.0f);
+        light2.setDiffuse(new ColorRGBA(min));
+        light2.setSpecular(new ColorRGBA(min));
+        
+        ColorRGBA amb = new ColorRGBA();
+        amb.set(0.5f, 0.5f, 0.5f, 1.0f);
+        light2.setAmbient(amb);
         
         light2.setEnabled( true );
         
         lightState.attach(light2);
         
-        lightState.setLightMask(LightState.MASK_SPECULAR);
-        
         lightState.setSeparateSpecular(true);
-        lightState.setLocalViewer(true);
         
 		rootNode.setLightCombineMode(LightState.OFF);
 		rootNode.updateRenderState();

@@ -269,14 +269,6 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		{
 			ReferenceAtlas.getInstance().hideBasicAtlas();
 		}
-		else if ( DISPLAY_DEMO_ATLAS.equals(act) )
-		{
-			ReferenceAtlas.getInstance().displayDemoAtlas();
-		}
-		else if ( HIDE_DEMO_ATLAS.equals(act) )
-		{
-			ReferenceAtlas.getInstance().hideDemoAtlas();
-		}
 		else if ( SLIDE_VIEW.equals(act) )
 		{
 			View.getInstance().getCameraView().setToSlideView();

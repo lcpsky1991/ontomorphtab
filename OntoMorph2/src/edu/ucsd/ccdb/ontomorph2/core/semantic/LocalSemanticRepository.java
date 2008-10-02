@@ -59,37 +59,6 @@ public class LocalSemanticRepository extends SemanticRepository{
 	private void loadOntology() {
     	try {
 
-    		/*
-    		OWLDatabaseKnowledgeBaseFactory factory = new OWLDatabaseKnowledgeBaseFactory();
-    		ArrayList errors = new ArrayList();
-    		owlModel = (OWLDatabaseModel)factory.createKnowledgeBase(errors);
-    		
-    		
-			String driver = "org.hsqldb.jdbcDriver";
-			String url = "jdbc:hsqldb:db/db";
-			String tableName = "nifontology";			
-			String userName = "sa";
-    		
-			
-			try {
-				DatabaseFrameDb db = new DatabaseFrameDb();
-				db.initialize(owlModel.getFrameFactory(), driver, url, userName, "", tableName, false);
-
-			} catch (Exception e) {
-				throw new OMTException("Problem loading knowledgebase into db! ", e);
-			}
-			
-			*/
-			/*
-            NarrowFrameStore nfs = ((KnowledgeBaseFactory2)factory).createNarrowFrameStore(driver);
-            MergingNarrowFrameStore mergingFrameStore = MergingNarrowFrameStore.get(owlModel);
-            
-            ArrayList uris = new ArrayList();
-            mergingFrameStore.addActiveFrameStore(nfs, uris);
-            */
-			
-    		//factory.loadKnowledgeBase(owlModel, driver, tableName, url, userName, "", errors);
-    		
     		Project p = Project.loadProjectFromFile("etc/NIF/localSemanticRepository.pprj", new ArrayList());
     		
 			//projectManager.loadProject(uri);
