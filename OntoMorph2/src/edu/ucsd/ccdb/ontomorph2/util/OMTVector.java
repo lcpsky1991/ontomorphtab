@@ -26,6 +26,11 @@ public class OMTVector extends Vector3f {
 		super(x,y,f);
 	}
 
+	public OMTVector(double i, double j, double k)
+	{
+		super((float)i,(float)j,(float)k);
+	}
+	
 	public OMTVector(Vector3f v) {
 		this(v.x, v.y, v.z);
 	}
