@@ -55,7 +55,7 @@ public abstract class Slide extends Tangible {
 	        OMTVector pt = new OMTVector(this.getRelativePosition());
 	        
 	        //update the model that is being saved
-	        String r = this._imageURI.toString();
+	        String r = this._imageURI.toURL().toString();
 	        if (r == null) r = this._imageURL.toString();
 		    morphmlSlide.setImageURL(r);
 		    

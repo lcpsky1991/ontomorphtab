@@ -157,6 +157,8 @@ public abstract class Scene extends Observable{
 		}
 		scene.setCurves(curves);
 		
+		
+		
 		try {
 			JAXBContext context = JAXBContext.newInstance("org.morphml.neuroml.schema");
 			

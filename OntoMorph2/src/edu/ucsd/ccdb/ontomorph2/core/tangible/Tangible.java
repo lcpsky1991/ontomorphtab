@@ -625,8 +625,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		} else {
 			notifyObservers(argument);
 		}
-		
-		save();
 	}
 
 	public boolean equals(Object o) {

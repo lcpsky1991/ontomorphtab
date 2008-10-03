@@ -70,6 +70,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_NEW_CELLE = 120;
 	public static final int CTX_ACTION_NEW_CELL = 121;
 	public static final int CTX_ACTION_VISIBLE = 125;
+	public static final int CTX_ACTION_SAVE = 126;
 		
 	//ms stands for Menu String
 	static final String msNEW = "New ...";
@@ -284,9 +285,10 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	        menuItemFactory(mnuModify, "Annotate", CTX_ACTION_ANNOTATE);
 	        menuItemFactory(mnuModify, "Properties", CTX_ACTION_DISPROP);
 	        menuItemFactory(this, "Debug", CTX_ACTION_DEBUG);
+	        menuItemFactory(this, "Save", CTX_ACTION_SAVE);
 	        menuItemFactory(mnuModify, "Delete", CTX_ACTION_DELETE);
 	        menuItemFactory(mnuModify, "Rename", CTX_ACTION_RENAME);
-	        menuItemFactory(mnuModify, "Set inVisibile:" , CTX_ACTION_VISIBLE);
+	        menuItemFactory(mnuModify, "Set Invisibile:" , CTX_ACTION_VISIBLE);
 			
 	        //add new anchor points?
 			if (baseContext instanceof Curve3D || baseContext instanceof CurveAnchorPoint)
@@ -574,6 +576,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					}
 					break;
 				}
+				case CTX_ACTION_SAVE:
+					single.save();
+					break;
 				case CTX_ACTION_PROPOGATE:
 				{
 					try

@@ -353,11 +353,14 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	 */
 	private void debug()
 	{
-		XWBCSlide r = (XWBCSlide) DataRepository.getInstance().findSlideByName("primary");
+		XWBCSlide r = (XWBCSlide) DataRepository.getInstance().findSlideByName("Waldo");
 		System.out.println("results : " + r);
-		System.out.println(r.getImageURL());
-		System.out.println(r.getId());
-		System.out.println(r.getPosition().getX() + ", " + r.getPosition().getY() + " " + r.getPosition().getZ());
+		if ( r != null)
+		{
+			System.out.println(r.getImageURL());
+			System.out.println(r.getId());
+			System.out.println(r.getPosition().getX() + ", " + r.getPosition().getY() + " " + r.getPosition().getZ());
+		}
 		
 	}
 	

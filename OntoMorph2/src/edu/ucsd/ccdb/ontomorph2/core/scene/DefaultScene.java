@@ -55,6 +55,7 @@ public class DefaultScene extends Scene{
 	URI hippo3aURL = null;
 	URI hippo3bURL = null;
 	URI hippo3cURL = null;
+	URI monkey = null;
 	
 	public DefaultScene() {
 		manager = TangibleManager.getInstance();
@@ -88,6 +89,9 @@ public class DefaultScene extends Scene{
 		//temporary hack o load a mockup
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
 
+		//Instantiat the Datarepository
+		DataRepository.getInstance();
+		
 		try 
 		{
 			
@@ -107,32 +111,32 @@ public class DefaultScene extends Scene{
 			Log.warn(e.getMessage() + " Cannot load slide from CCDB Data");
 		}
 		
-        Slide b = new URISlide(hippo2URL, 1.34f);
-        b.setName("Waldo");
-        b.setRelativePosition(new PositionVector(-14,0, 18f));
-        b.setCoordinateSystem(d);
-        //b.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
-        b.setRelativeScale(3.2f);
-		addSceneObject(b);
 		
 		//Mocked up for Ted demo
+		Slide b = null;
 		{
-			XWBCSlide ret = (XWBCSlide) DataRepository.getInstance().findTangible(b.getClass(), b.getName());
+			XWBCSlide ret = (XWBCSlide) DataRepository.getInstance().findSlideByName("Waldo");
 			if (ret != null)
 			{
 				URI place = null;
-				try
-                {
-	                place = new URI(ret.getImageURL());
-                }
-                catch (URISyntaxException e1)
-                {
-	                // TODO Auto-generated catch block
-	                e1.printStackTrace();
-                }
+				place = new File(ret.getImageURL()).toURI();
 				b = new URISlide(place, 1.34f);
 				b.setName(ret.getName());
-				
+				b.setRelativePosition(new PositionVector(-14,0, 18f));
+				b.setCoordinateSystem(d);
+				b.setRelativeScale(3.2f);
+				addSceneObject(b);
+			}
+			else
+			{
+				//this was the default
+				b = new URISlide(hippo2URL, 1.34f);
+		        b.setName("Waldo");
+		        b.setRelativePosition(new PositionVector(-14,0, 18f));
+		        b.setCoordinateSystem(d);
+		        //b.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
+		        b.setRelativeScale(3.2f);
+				addSceneObject(b);
 			}
 		}
 		
