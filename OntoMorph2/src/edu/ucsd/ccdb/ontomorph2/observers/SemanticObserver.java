@@ -43,30 +43,30 @@ public class SemanticObserver implements Observer {
 					
 					//in order to handle the case where we have removed a containment relationship
 					//between tangibles, start out by removing any existing contains property value
-					SemanticInstance containedInstance = t.getMainSemanticInstance().getPropertyValue(containsProp);
+					SemanticInstance containedInstance = t.getSemanticInstance().getPropertyValue(containsProp);
 					if (containedInstance != null) {
-						t.getMainSemanticInstance().removePropertyValue(containsProp, containedInstance);
+						t.getSemanticInstance().removePropertyValue(containsProp, containedInstance);
 					}
 					
 					//look up the container list from before the last update.
 					//start afresh with these guys insofar as instances are concerned
 					for (Tangible previousContainer : t.getPreviousContainerTangibles()) {
-						previousContainer.getMainSemanticInstance().removePropertyValue(containsProp, t.getMainSemanticInstance());
+						previousContainer.getSemanticInstance().removePropertyValue(containsProp, t.getSemanticInstance());
 	
 					}
 					
 
 					for (Tangible containers : t.getContainerTangibles()) {
-						containers.getMainSemanticInstance().setPropertyValue(containsProp, 
-								t.getMainSemanticInstance());
+						containers.getSemanticInstance().setPropertyValue(containsProp, 
+								t.getSemanticInstance());
 					}
 					
 					if (t instanceof ContainerTangible) {
 						//for those tangibles that are contained in this tangible, make a 
 						//containment relationship between this instance and that one
 						for (Tangible contained : ((ContainerTangible)t).getContainedTangibles()) {
-							t.getMainSemanticInstance().setPropertyValue(containsProp, 
-									contained.getMainSemanticInstance());
+							t.getSemanticInstance().setPropertyValue(containsProp, 
+									contained.getSemanticInstance());
 						}
 					}
 					

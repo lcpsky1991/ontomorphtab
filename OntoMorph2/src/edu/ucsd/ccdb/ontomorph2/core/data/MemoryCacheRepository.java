@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 
 
 

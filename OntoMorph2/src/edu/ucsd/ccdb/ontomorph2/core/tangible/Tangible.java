@@ -2,7 +2,6 @@ package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -16,17 +15,16 @@ import com.jme.renderer.Camera;
 import com.jme.scene.Node;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.observers.SemanticObserver;
-import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
@@ -370,7 +368,12 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		changed(CHANGED_REMOVE_SEMANTIC_THING);
 	}
 	
-	public SemanticClass getMainSemanticClass() {
+	/**
+	 * Returns the SemanticClass corresponding to this Tangible.
+	 * If there are multiple semantic classes, pick the first one.
+	 * @return {@link SemanticClass}
+	 */
+	public SemanticClass getSemanticClass() {
 		if (mainSemanticClass != null) {
 			return mainSemanticClass;
 		}
@@ -378,7 +381,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		//if we haven't assigned the main semantic class explicitly
 		//pick the first one from the list of semantic classes
 		//if the semantic classes list is empty, return null
-		for (ISemanticThing thing : getSemanticClasses()) {
+		for (SemanticThing thing : getSemanticClasses()) {
 			if (thing instanceof SemanticClass) {
 				this.mainSemanticClass = (SemanticClass)thing;
 				break;
@@ -388,13 +391,16 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	}
 	
 	/**
-	 * Creates a SemanticInstance of this Tangible in the SemanticRepository
+	 * Creates a SemanticInstance of this Tangible in the SemanticRepository.
+	 * Uses the class that is returned from getSemanticClass()
 	 */
-	public SemanticInstance getMainSemanticInstance() {
+	public SemanticInstance getSemanticInstance() {
 		if (mainSemanticInstance == null) {
 			//if the main semantic instance for this tangible has not yet been defined
 			//then create a new instance for this tangible from the main semantic class
-			mainSemanticInstance = getMainSemanticClass().createInstance();
+			mainSemanticInstance = getSemanticClass().createInstance();
+			//associate the SemanticInstance with this Tangible
+			mainSemanticInstance.addSemanticsAwareAssociation(this);
 		}
 		return mainSemanticInstance;
 	}
@@ -546,17 +552,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		changed(CHANGED_NAME);
 	}
 	
-	/**
-	 * Returns the SemanticClass corresponding to this Tangible.
-	 * @return {@link SemanticClass}
-	 */
-	public SemanticClass getSemanticClass() {
-		return getSemanticInstance().getSemanticClass();
-	}
-
-	public SemanticInstance getSemanticInstance() {
-		return null;//GlobalSemanticRepository.getInstance().getSemanticInstance("");
-	}
 
 	/**
 	 * Returns a list of ContainerTangibles that this Tangible is contained within

@@ -1,12 +1,10 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.MultiHashMap;

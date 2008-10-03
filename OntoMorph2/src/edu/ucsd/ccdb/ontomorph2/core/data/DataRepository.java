@@ -31,17 +31,8 @@ public class DataRepository {
 	}
 	
 	protected DataRepository() {
-		/*
-		 try {
-			Connection c = DriverManager.getConnection("jdbc:hsqldb:file:db/db", "sa", "");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		 Configuration configuration = new Configuration().configure();
 		 sFact = configuration.buildSessionFactory();
-		 
-		 
 	}
 	
 	public void saveFileToDB(Object o){

@@ -5,27 +5,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingSphere;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Geometry;
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.scene.TriMesh;
-import com.jme.scene.lod.AreaClodMesh;
-import com.jme.scene.state.RenderState;
 import com.jme.util.export.binary.BinaryImporter;
 import com.jmex.model.converters.FormatConverter;
 import com.jmex.model.converters.MaxToJme;
 import com.jmex.model.converters.ObjToJme;
 
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
-
 /**
  * Defines a polygonal mesh object that represents a 3D object segmented from 
  * microscopy data. Also is made aware of semantics objects.
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see ISemanticsAware
  */
 public class DataMesh extends ContainerTangible{
 	

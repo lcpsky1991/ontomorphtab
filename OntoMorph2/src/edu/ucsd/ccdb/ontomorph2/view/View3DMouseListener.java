@@ -1,40 +1,28 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 import java.math.BigInteger;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import org.fenggui.Display;
-import org.fenggui.event.mouse.MouseButton;
 
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
 import com.jme.input.MouseInputListener;
-import com.jme.input.action.InputActionEvent;
-import com.jme.input.action.MouseInputAction;
 import com.jme.intersection.PickData;
 import com.jme.intersection.PickResults;
 import com.jme.intersection.TrianglePickResults;
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Geometry;
-import com.jme.scene.Node;
 import com.jme.scene.batch.GeomBatch;
-import com.jme.scene.shape.Sphere;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.ICable;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.INeuronMorphologyPart;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
@@ -366,7 +354,7 @@ public class View3DMouseListener implements MouseInputListener {
 				{
 					//otherwise just select the part itself
 					BigInteger id = nmv.getCableIdFromGeometry(singleResult.getTargetMesh().getParentGeom());
-					ICable c = ((NeuronMorphology)nmv.getModel()).getCable(id);
+					INeuronMorphologyPart c = ((NeuronMorphology)nmv.getModel()).getCable(id);
 					chosenOne = (Tangible) c;
 				}
 			}

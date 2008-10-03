@@ -34,7 +34,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 public class MorphMLNeuronMorphology extends NeuronMorphology{
 	
 	String filename;
-	ICable tempCable = null;
+	MorphMLCable tempCable = null;
 	Level3Cell theCell = null;
 	
 	public MorphMLNeuronMorphology(String name) {
@@ -157,9 +157,9 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	 * calls a set method to make it into the appropriate cable.  Do not add these cables
 	 * to any collections or they will not work correctly.
 	 */
-	public ICable getCable(int i) {
+	public MorphMLCable getCable(int i) {
 		if (this.tempCable == null) {
-			this.tempCable = new MorphMLCableImpl(this, (Cable)getMorphMLCell().getCables().getCable().get(i));
+			this.tempCable = new MorphMLCable(this, (Cable)getMorphMLCell().getCables().getCable().get(i));
 			return this.tempCable;
 		} 
 		tempCable.setMorphMLCable((Cable)getMorphMLCell().getCables().getCable().get(i));
@@ -170,9 +170,9 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	 *  (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getCable(java.math.BigInteger)
 	 */
-	public ICable getCable(BigInteger id) {
+	public MorphMLCable getCable(BigInteger id) {
 		for (int i = 0; i < getCableCount(); i++) {
-			ICable c = getCable(i);
+			MorphMLCable c = getCable(i);
 			if (c.getId().equals(id)) {
 				return c; 
 			}

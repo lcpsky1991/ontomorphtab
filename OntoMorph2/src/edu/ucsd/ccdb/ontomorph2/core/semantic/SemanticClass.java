@@ -8,9 +8,7 @@ import java.util.List;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
-import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
-import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
 /** 
  * Represents an OWL class.
@@ -18,7 +16,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class SemanticClass extends SemanticThingImpl {
+public class SemanticClass extends SemanticThing {
 
 	public static final String DENTATE_GYRUS_GRANULE_CELL_CLASS = "nif_cell:nifext_153";
 	public static final String CA3_PYRAMIDAL_CELL_CLASS = "nif_cell:nifext_158";

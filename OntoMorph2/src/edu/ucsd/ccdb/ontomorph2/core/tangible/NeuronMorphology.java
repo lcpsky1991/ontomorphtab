@@ -6,12 +6,11 @@ import java.util.Set;
 import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
-import edu.ucsd.ccdb.ontomorph2.core.scene.CellFactory;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.ICable;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.INeuronMorphologyPart;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLCable;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
-import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
@@ -32,7 +31,7 @@ public abstract class NeuronMorphology extends ContainerTangible{
 
 	String _renderOption = RENDER_AS_LINES; //default render option
 	
-	Set<ICable> segmentGroupList = null;
+	Set<INeuronMorphologyPart> segmentGroupList = null;
 	PositionVector lookAtPosition = null;
 	
 	Curve3D _curve = null;
@@ -237,13 +236,13 @@ public abstract class NeuronMorphology extends ContainerTangible{
 	 * @param i
 	 * @return
 	 */
-	public abstract ICable getCable(int i);
+	public abstract MorphMLCable getCable(int i);
 	
 	/**
 	 * Get a cable by its id, indepedent of its numerical position
 	 * @param id
 	 * @return
 	 */
-	public abstract ICable getCable(BigInteger id);
+	public abstract MorphMLCable getCable(BigInteger id);
 	
 }

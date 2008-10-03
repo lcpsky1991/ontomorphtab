@@ -1,13 +1,9 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.renderer.Renderer;
-import com.jme.scene.Geometry;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -18,7 +14,6 @@ import com.jme.util.TextureManager;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.TiledSlide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.URISlide;
-import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**

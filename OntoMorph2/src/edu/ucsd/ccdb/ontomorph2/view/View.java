@@ -3,33 +3,20 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 
-import com.jme.animation.SpatialTransformer;
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
-import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
 import com.jme.input.FirstPersonHandler;
-import com.jme.input.InputHandler;
-import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
-import com.jme.input.KeyInputListener;
 import com.jme.input.MouseInput;
-import com.jme.input.action.InputActionEvent;
-import com.jme.input.action.KeyInputAction;
 import com.jme.light.PointLight;
-import com.jme.light.SimpleLightNode;
 import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Ray;
-import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
-import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
-import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Cone;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
@@ -40,18 +27,13 @@ import com.jme.system.DisplaySystem;
 import com.jme.system.PropertiesIO;
 import com.jme.util.TextureManager;
 import com.jme.util.geom.Debugger;
-import com.jmex.effects.glsl.BloomRenderPass;
 import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleMesh;
 import com.jmex.effects.particles.ParticlePoints;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
-import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
-import edu.ucsd.ccdb.ontomorph2.util.Log;
-import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 
 //=========
 

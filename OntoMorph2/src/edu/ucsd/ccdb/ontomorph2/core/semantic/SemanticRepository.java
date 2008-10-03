@@ -7,16 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import edu.stanford.smi.protege.model.Cls;
-import edu.stanford.smi.protege.model.SimpleInstance;
 import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protegex.owl.database.OWLDatabaseModel;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 import edu.stanford.smi.protegex.owl.model.impl.AbstractOWLProperty;
-import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
-import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
 
 /**

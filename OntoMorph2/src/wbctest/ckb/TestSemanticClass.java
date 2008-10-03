@@ -8,7 +8,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 public class TestSemanticClass extends TestCase {
 
 	/*
-	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticThingImpl.getCls()'
+	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticThing.getCls()'
 	 */
 	public void testGetCls() {
 

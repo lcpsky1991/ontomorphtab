@@ -1,13 +1,9 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jme.bounding.BoundingBox;
 import com.jme.intersection.PickResults;
 import com.jme.math.Ray;
-import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.batch.GeomBatch;
 

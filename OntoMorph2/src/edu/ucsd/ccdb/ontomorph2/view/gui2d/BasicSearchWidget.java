@@ -1,58 +1,35 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 import org.fenggui.Button;
 import org.fenggui.CheckBox;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
-import org.fenggui.Label;
-import org.fenggui.LayoutManager;
 import org.fenggui.List;
 import org.fenggui.ListItem;
 import org.fenggui.ScrollContainer;
-import org.fenggui.SplitContainer;
 import org.fenggui.TextEditor;
 import org.fenggui.Widget;
-import org.fenggui.background.PlainBackground;
 import org.fenggui.composites.Window;
 import org.fenggui.event.ButtonPressedEvent;
 import org.fenggui.event.IButtonPressedListener;
 import org.fenggui.event.ISelectionChangedListener;
 import org.fenggui.event.SelectionChangedEvent;
-import org.fenggui.layout.BorderLayout;
 import org.fenggui.layout.RowLayout;
 import org.fenggui.render.Pixmap;
-import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 import org.fenggui.util.Spacing;
 
-import com.jme.input.InputHandler;
-import com.jme.input.KeyInput;
-import com.jme.input.MouseInput;
-import com.jme.input.action.KeyInputAction;
-import com.jme.light.PointLight;
 import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
 
-import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.ParticlesFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticQuery;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.ISelectable;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.view.View;
-import edu.ucsd.ccdb.ontomorph2.view.View2D;
-import edu.ucsd.ccdb.ontomorph2.view.View3DMouseListener;
 import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
-import edu.ucsd.ccdb.ontomorph2.view.scene.SphereParticlesView;
 
 /**
  * 2D widget that allows a user to type in keywords and issue a keyword search

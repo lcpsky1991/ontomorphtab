@@ -35,9 +35,7 @@ import com.jme.util.AreaUtils;
 import com.jme.util.geom.BufferUtils;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.ICable;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.INeuronMorphologyPart;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.ISegment;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTDiscreteLodNode;
@@ -142,7 +140,7 @@ public class NeuronMorphologyView extends TangibleView{
 			//attach the appropriate rendering to the node
 			//map all the geometries to this NeuronMorphologyView
 			for (int i = 0; i < morph.getCableCount(); i++) {
-				ICable part = morph.getCable(i);
+				INeuronMorphologyPart part = morph.getCable(i);
 				
 				renderParts(node, part, renderOption);
 			}
@@ -162,7 +160,7 @@ public class NeuronMorphologyView extends TangibleView{
 		return sceneRoot;
 	}
 	
-	private void renderParts(Node node, ICable part, String renderOption) {
+	private void renderParts(Node node, INeuronMorphologyPart part, String renderOption) {
 		if (renderOption.equals(NeuronMorphology.RENDER_AS_LINES)) {			
 			Geometry g = this.getLine(part);
 			this.registerGeometry(g);
@@ -224,8 +222,8 @@ public class NeuronMorphologyView extends TangibleView{
 		}
 	}
 	
-	//maps and reverse maps a geometry with an ICable
-	private void registerGeometryToCable(Geometry g, ICable part) {
+	//maps and reverse maps a geometry with an INeuronMorphologyPart
+	private void registerGeometryToCable(Geometry g, INeuronMorphologyPart part) {
 		List<Geometry> l = this.subPartMap.get(part.getId());
 		if (l == null) {
 			l = new ArrayList<Geometry>();
@@ -412,7 +410,7 @@ public class NeuronMorphologyView extends TangibleView{
 		List<Geometry> l = new ArrayList<Geometry>();
 		
 		for (int i = 0; i < part.getSubPartCount(); i++) {
-			ISegment seg = (ISegment)part.getSubPart(i);
+			INeuronMorphologyPart seg = (INeuronMorphologyPart)part.getSubPart(i);
 			Cylinder c = this.getCylinder(seg);
 			l.add(c);
 		}	
@@ -452,7 +450,7 @@ public class NeuronMorphologyView extends TangibleView{
 
         // Loop that creates instances for each cable.. could loop over all segments too.
         for (int i = 0; i < morph.getCableCount(); i++) {
-			ICable part = morph.getCable(i);
+			INeuronMorphologyPart part = morph.getCable(i);
 			GeometryBatchInstanceAttributes attributes = new GeometryBatchInstanceAttributes(new Vector3f(), 
 					new Vector3f(), new Vector3f(), ColorRGBA.white);
 			
@@ -504,7 +502,7 @@ public class NeuronMorphologyView extends TangibleView{
 
         // Loop that creates instances for each cable.. could loop over all segments too.
         for (int i = 0; i < morph.getCableCount(); i++) {
-			ICable part = morph.getCable(i);
+			INeuronMorphologyPart part = morph.getCable(i);
                 // Box instance attributes
                 GeometryBatchInstanceAttributes attributes =
                         new GeometryBatchInstanceAttributes(
@@ -570,7 +568,7 @@ public class NeuronMorphologyView extends TangibleView{
 
         // Loop that creates instances for each cable.. could loop over all segments too.
         for (int i = 0; i < morph.getCableCount(); i++) {
-        	ICable part = morph.getCable(i);
+        	INeuronMorphologyPart part = morph.getCable(i);
         	// Box instance attributes
         	GeometryBatchInstanceAttributes attributes =
         		new GeometryBatchInstanceAttributes(

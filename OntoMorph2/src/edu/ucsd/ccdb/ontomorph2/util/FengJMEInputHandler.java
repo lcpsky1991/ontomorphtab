@@ -11,8 +11,6 @@ import com.jme.input.MouseInput;
 import com.jme.input.MouseInputListener;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
-
-import edu.ucsd.ccdb.ontomorph2.view.View3DMouseListener;
  
 public class FengJMEInputHandler extends InputHandler
 {

@@ -15,11 +15,11 @@ import org.morphml.morphml.schema.Segment;
 import org.morphml.morphml.schema.Cell.SegmentsType;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
@@ -27,13 +27,13 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
- * Implements an ICable. 
+ * Defines a group of segments in a neuron morphology.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see ICable
+ * @see INeuronMorphology
  *
  */
-public class MorphMLCableImpl extends ContainerTangible implements ICable{
+public class MorphMLCable extends ContainerTangible implements INeuronMorphologyPart{
 	
 	/**************************************************
 	 * Be careful with instances of this class.  The constructor has been made protected
@@ -46,13 +46,11 @@ public class MorphMLCableImpl extends ContainerTangible implements ICable{
 
 	Cable c = null;
 	MorphMLNeuronMorphology parentCell = null;
-	MorphMLSegmentImpl tempSegment = null;
-	ArrayList<Tangible> containedItems = null;
+	MorphMLSegment tempSegment = null;
 	
-	protected MorphMLCableImpl(MorphMLNeuronMorphology parentCell, Cable c) {
+	protected MorphMLCable(MorphMLNeuronMorphology parentCell, Cable c) {
 		this.parentCell = parentCell;
 		this.c = c;
-		this.containedItems = new ArrayList();
 	}
 	
 	/**
@@ -65,7 +63,7 @@ public class MorphMLCableImpl extends ContainerTangible implements ICable{
 	
 
 	/**
-	 * Sets the underlying model of this MorphMLCableImpl
+	 * Sets the underlying model of this MorphMLCable
 	 * to be cable.
 	 */
 	public void setMorphMLCable(Cable cable) {
@@ -127,8 +125,8 @@ public class MorphMLCableImpl extends ContainerTangible implements ICable{
 	
 	
 	/*
-	public List<ISemanticThing> getAllSemanticThings() {
-		List<ISemanticThing> l = new ArrayList<ISemanticThing>();
+	public List<SemanticThing> getAllSemanticThings() {
+		List<SemanticThing> l = new ArrayList<SemanticThing>();
 		l.addAll(this.getSemanticThings());
 		for (ISegment sg : this.getSegments()) {
 			l.addAll(sg.getAllSemanticThings());
@@ -144,9 +142,9 @@ public class MorphMLCableImpl extends ContainerTangible implements ICable{
 	/**
 	 * Returns the main semantic instance and fills in the has_part relationship to the parent cell
 	 */
-	public SemanticInstance getMainSemanticInstance() {
-		SemanticInstance i = super.getMainSemanticInstance();
-		SemanticInstance parentCell = this.getParent().getMainSemanticInstance();
+	public SemanticInstance getSemanticInstance() {
+		SemanticInstance i = super.getSemanticInstance();
+		SemanticInstance parentCell = this.getParent().getSemanticInstance();
 		
 		SemanticProperty hasPart = SemanticRepository.getAvailableInstance().getSemanticProperty(SemanticProperty.HAS_PART);
 		parentCell.setPropertyValue(hasPart, i);
@@ -172,7 +170,7 @@ public class MorphMLCableImpl extends ContainerTangible implements ICable{
 		}
 		
 		//call select on a copy of this instance, rather than this instance itself.
-		MorphMLCableImpl copy = new MorphMLCableImpl(this.getParent(), this.c);
+		MorphMLCable copy = new MorphMLCable(this.getParent(), this.c);
 		TangibleManager.getInstance().select(copy);
 		copy.changed(CHANGED_SELECT);
 		
@@ -200,8 +198,8 @@ public class MorphMLCableImpl extends ContainerTangible implements ICable{
 		//have to find the tangible that shares the same underlying cable instance
 		//and call unselect on it
 		for (Tangible t : TangibleManager.getInstance().getSelected()) {
-			if (t instanceof MorphMLCableImpl) {
-				MorphMLCableImpl m = (MorphMLCableImpl)t;
+			if (t instanceof MorphMLCable) {
+				MorphMLCable m = (MorphMLCable)t;
 				if (m.getMorphMLCable().equals(this.c)) {
 					TangibleManager.getInstance().unselect(t);
 					t.changed(CHANGED_UNSELECT);
@@ -229,7 +227,7 @@ public class MorphMLCableImpl extends ContainerTangible implements ICable{
 			
 			//this is getting called more times than it should
 			infoString = "";//this.getTags().toString() + "\n";
-			for (ISemanticThing s : this.getSemanticClasses())
+			for (SemanticThing s : this.getSemanticClasses())
 			{
 				infoString += (s.toString() + "\n"); 
 			}
@@ -307,7 +305,7 @@ public class MorphMLCableImpl extends ContainerTangible implements ICable{
 	}
 
 	/**
-	 * Says how many MorphMLSegmentImpls are associated with this MorphMLCableImpl
+	 * Says how many MorphMLSegmentImpls are associated with this MorphMLCable
 	 */
 	public int getSubPartCount() {
 		BigInteger cableId = this.getId();
@@ -337,7 +335,7 @@ public class MorphMLCableImpl extends ContainerTangible implements ICable{
 		if (s != null) {
 			
 			if (this.tempSegment == null) {
-				tempSegment = new MorphMLSegmentImpl(this.getParent(), s);
+				tempSegment = new MorphMLSegment(this.getParent(), s);
 			} else {
 				tempSegment.setMorphMLSegment(s);
 			}
@@ -400,19 +398,4 @@ public class MorphMLCableImpl extends ContainerTangible implements ICable{
 		return segs;
 	}
 
-	public void addTangible(Tangible t) {
-		//should create an instance of this cable in the semantic repository
-		//and assign a relation to the tangible being added
-		//this should add that instance to this cable
-		//that instance should have a contains relationship to 
-		//the instance describing the tangible.
-		
-		t.setCoordinateSystem(this.getCoordinateSystem());
-		t.setRelativePosition(this.getRelativePosition());
-		this.containedItems.add(t);
-	}
-
-	public List<Tangible> getTangibles() {
-		return this.containedItems;
-	}
 }

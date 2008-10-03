@@ -6,16 +6,15 @@ import java.util.Observer;
 import java.util.Set;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.ICable;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.INeuronMorphologyPart;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
@@ -97,9 +96,9 @@ public class SceneObserver implements Observer {
 			Log.warn("Performance Mesg: " + msg);
 		}
 		
-		else if (o instanceof ISemanticThing)
+		else if (o instanceof SemanticThing)
 		{
-			ISemanticThing st = (ISemanticThing) o;
+			SemanticThing st = (SemanticThing) o;
 			for (ISemanticsAware sa : st.getSemanticsAwareAssociations())
 			{
 				if (st.isSelected())
@@ -160,18 +159,18 @@ public class SceneObserver implements Observer {
 			Log.warn("update CurveAnchorPoint");
 		}
 		*/
-		else if (o instanceof ICable) {
+		else if (o instanceof INeuronMorphologyPart) {
 
 			if (Tangible.CHANGED_SELECT.equals(arg)) {
-				ICable cable = (ICable)o;
-				NeuronMorphology parent = ((ICable)o).getParent();
+				INeuronMorphologyPart cable = (INeuronMorphologyPart)o;
+				NeuronMorphology parent = ((INeuronMorphologyPart)o).getParent();
 				NeuronMorphologyView nmv = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor(parent);
 				if (nmv != null) {
 					nmv.highlightCable(cable.getId());
 				}
 			} else if (Tangible.CHANGED_UNSELECT.equals(arg)) {
-				ICable cable = (ICable)o;
-				NeuronMorphology parent = ((ICable)o).getParent();
+				INeuronMorphologyPart cable = (INeuronMorphologyPart)o;
+				NeuronMorphology parent = ((INeuronMorphologyPart)o).getParent();
 				NeuronMorphologyView nmv = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor(parent);
 				if (nmv != null) {
 					nmv.unhighlightCable(cable.getId());

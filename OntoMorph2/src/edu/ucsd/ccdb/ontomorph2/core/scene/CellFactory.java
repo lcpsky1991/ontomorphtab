@@ -99,7 +99,7 @@ public class CellFactory {
 				SemanticRepository.getAvailableInstance().getSemanticClass(
 						this.cellNameToSemanticClass.get(modelURL)));
 		//creates a SemanticInstance of this cell in the SemanticRepository
-		ncell.getMainSemanticInstance();
+		ncell.getSemanticInstance();
 		
 		ncell.setVisible(true);
 		ncell.addObserver(SceneObserver.getInstance()); //add an observer to the new cell

@@ -1,12 +1,10 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -19,25 +17,17 @@ import org.fenggui.menu.MenuItem;
 import org.fenggui.util.Color;
 
 import com.jme.input.KeyInput;
-import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.CellFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.CurveFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLNeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;

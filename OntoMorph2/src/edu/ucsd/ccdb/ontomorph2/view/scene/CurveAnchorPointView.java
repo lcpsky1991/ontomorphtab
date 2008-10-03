@@ -3,12 +3,8 @@
  */
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Geometry;
 import com.jme.scene.shape.Sphere;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;

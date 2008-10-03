@@ -9,11 +9,7 @@ import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
-import edu.stanford.smi.protegex.owl.model.RDFProperty;
-import edu.stanford.smi.protegex.owl.model.impl.AbstractOWLProperty;
 import edu.stanford.smi.protegex.owl.model.impl.DefaultRDFProperty;
-import edu.ucsd.ccdb.ontomorph2.util.Log;
-import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
 
 /**
@@ -22,7 +18,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class SemanticInstance extends SemanticThingImpl {
+public class SemanticInstance extends SemanticThing {
 
 	OWLIndividual instance = null;
 	SemanticClass sc = null;

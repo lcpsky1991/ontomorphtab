@@ -9,8 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
@@ -59,7 +59,7 @@ public class TangibleManager {
 		for (NeuronMorphology n : getCells()) {
 			TreeNode node = new TreeNode(n.getName(), n);
 			
-			for (ISemanticThing t : ((ISemanticsAware)n).getAllSemanticClasses()) {	
+			for (SemanticThing t : ((ISemanticsAware)n).getAllSemanticClasses()) {	
 				node.children.add(new TreeNode(t.toString(), t));
 			}
 			

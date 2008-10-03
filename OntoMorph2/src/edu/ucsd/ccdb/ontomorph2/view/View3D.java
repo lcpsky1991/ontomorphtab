@@ -3,11 +3,8 @@ package edu.ucsd.ccdb.ontomorph2.view;
 import java.util.Set;
 
 import com.acarter.scenemonitor.SceneMonitor;
-import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.state.LightState;
-import com.jme.scene.state.TextureState;
-import com.jme.scene.state.ZBufferState;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;

@@ -4,9 +4,7 @@ import java.io.File;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -33,7 +31,7 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	
 	URL _morphLoc = null;
 	List<Tree> treeList = null;
-	ArrayList<ISegment> segmentList = null;
+	ArrayList<INeuronMorphologyPart> segmentList = null;
 	
 	public NeurolucidaNeuronMorphology(URL morphLoc) {
 		_morphLoc = morphLoc;
@@ -108,9 +106,9 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	/* (non-Javadoc)
 	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getSegments()
 	 */
-	public List<ISegment> getSegments() {
+	public List<INeuronMorphologyPart> getSegments() {
 		if (segmentList == null) {
-			segmentList = new ArrayList<ISegment>();
+			segmentList = new ArrayList<INeuronMorphologyPart>();
 			
 			for (Tree t : treeList) {
 				Point p1 = null;
@@ -167,8 +165,8 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 			Cables c = theCell.getCables();
 			for(neuroml.generated.Cable cab : c.getCable()) {
 				BigInteger id = cab.getId();
-				ArrayList<ISegment> childSegments = new ArrayList<ISegment>();
-				for (ISegment s : this.getSegments()) {
+				ArrayList<INeuronMorphologyPart> childSegments = new ArrayList<INeuronMorphologyPart>();
+				for (INeuronMorphologyPart s : this.getSegments()) {
 					if (id.equals(s.getSegmentGroupId())) {
 						childSegments.add(s);
 					}
@@ -223,13 +221,13 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	}
 
 	@Override
-	public ICable getCable(int i) {
+	public MorphMLCable getCable(int i) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ICable getCable(BigInteger id) {
+	public MorphMLCable getCable(BigInteger id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

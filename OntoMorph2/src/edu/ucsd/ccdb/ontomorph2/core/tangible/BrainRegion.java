@@ -5,23 +5,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.jme.scene.BatchMesh;
-import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
-import com.jme.scene.lod.AreaClodMesh;
-import com.jme.scene.state.MaterialState;
 import com.jme.util.export.binary.BinaryImporter;
 import com.jmex.model.converters.FormatConverter;
 import com.jmex.model.converters.ObjToJme;
-import com.sun.org.apache.xerces.internal.util.URI;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 import edu.ucsd.ccdb.ontomorph2.util.Log;

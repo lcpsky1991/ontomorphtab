@@ -2,12 +2,8 @@ package edu.ucsd.ccdb.ontomorph2.core.scene;
 
 import com.jme.math.Vector3f;
 
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 public class ParticlesFactory {

@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
-import java.util.Observable;
-import java.util.Set;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -17,9 +14,7 @@ import com.jme.scene.shape.Box;
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
@@ -28,8 +23,6 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLNeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.CCDBSlide;
@@ -225,14 +218,14 @@ public class DefaultScene extends Scene{
 		cell3.setRelativeScale(0.01f);
 		//semantic thing for hippocampal CA3 neuron
 		cell3.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
-		cell3.getMainSemanticInstance();
+		cell3.getSemanticInstance();
 		addSceneObject(cell3);
 		
 		NeuronMorphology cell4 = new MorphMLNeuronMorphology("cell2zr", c2, 0.2f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell4.setRelativeScale(0.01f);
 		cell4.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
-		cell4.getMainSemanticInstance();
+		cell4.getSemanticInstance();
 		addSceneObject(cell4);
 		
 
@@ -240,7 +233,7 @@ public class DefaultScene extends Scene{
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell5.setRelativeScale(0.01f);
 		cell5.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
-		cell5.getMainSemanticInstance();
+		cell5.getSemanticInstance();
 		addSceneObject(cell5);
 		
 
@@ -290,7 +283,7 @@ public class DefaultScene extends Scene{
 			cell11.setRelativeScale(0.01f);
 			
 			cell11.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.DENTATE_GYRUS_GRANULE_CELL_CLASS));
-			cell11.getMainSemanticInstance();
+			cell11.getSemanticInstance();
 			
 			addSceneObject(cell11);
 		}

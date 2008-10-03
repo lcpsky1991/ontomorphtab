@@ -1,7 +1,5 @@
 package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.jme.math.Vector3f;

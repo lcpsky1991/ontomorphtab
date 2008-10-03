@@ -6,18 +6,15 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
-import com.jme.scene.CameraNode;
 import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
 import com.jme.scene.shape.Sphere;
 import com.jme.util.Timer;
 
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.CurveOnceController;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
-import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 /**
  * Wraps the camera functionality.
  * 

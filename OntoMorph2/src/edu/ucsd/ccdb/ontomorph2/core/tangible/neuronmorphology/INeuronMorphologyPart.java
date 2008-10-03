@@ -2,15 +2,13 @@ package edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology;
 
 import java.awt.Color;
 import java.math.BigInteger;
-import java.util.List;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ISelectable;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
- * An interface that refers to a part of a NeuronMorphology
+ * An interface that refers to a part of a NeuronMorphology.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @see NeuronMorphology
@@ -97,17 +95,5 @@ public interface INeuronMorphologyPart extends ISelectable{
 	 * @return A unique ID within the parent NeuronMorphology for this Part.
 	 */
 	public BigInteger getId();
-	
-	/**
-	 * Adds a Tangible to this NeuronMorphologyPart. By default its position is moved 
-	 * to the center of this NeuronMorphologyPart and it inherits its coordinate system
-	 * @param t - the tangible to add to it.. 
-	 */
-	public void addTangible(Tangible t);
-
-	/**
-	 * @return - a list of the Tangibles currently associated with this NeuronMorphologyPart
-	 */
-	public List<Tangible> getTangibles();
 	
 }

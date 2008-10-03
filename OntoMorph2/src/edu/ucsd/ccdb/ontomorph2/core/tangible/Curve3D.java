@@ -2,15 +2,12 @@ package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.Vector;
 
 import org.morphml.metadata.schema.Curve;
-import org.morphml.metadata.schema.Point3D;
 import org.morphml.metadata.schema.impl.CurveImpl;
 
 import com.jme.math.FastMath;

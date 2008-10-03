@@ -3,7 +3,6 @@ package edu.ucsd.ccdb.ontomorph2.core.semantic;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protegex.owl.model.RDFProperty;
-import edu.stanford.smi.protegex.owl.model.impl.AbstractOWLProperty;
 import edu.stanford.smi.protegex.owl.model.impl.DefaultRDFProperty;
 
 /**

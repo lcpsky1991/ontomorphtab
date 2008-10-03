@@ -12,23 +12,13 @@ import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
 import org.morphml.neuroml.schema.Curves;
 import org.morphml.neuroml.schema.Level3Cells;
-import org.morphml.neuroml.schema.NeuroMLLevel3;
 import org.morphml.neuroml.schema.Neuroml;
 import org.morphml.neuroml.schema.impl.CurvesImpl;
 import org.morphml.neuroml.schema.impl.Level3CellsImpl;
-import org.morphml.neuroml.schema.impl.NeuroMLLevel3Impl;
 import org.morphml.neuroml.schema.impl.NeuromlImpl;
-import org.w3c.dom.Node;
-
-import com.sun.xml.stream.PropertyManager;
-import com.sun.xml.stream.writers.XMLStreamWriterImpl;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;

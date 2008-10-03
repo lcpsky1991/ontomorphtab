@@ -1,11 +1,5 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-
 import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.renderer.ColorRGBA;
@@ -15,10 +9,6 @@ import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.state.RenderState;
-import com.jme.util.export.binary.BinaryImporter;
-import com.jmex.model.converters.FormatConverter;
-import com.jmex.model.converters.MaxToJme;
-import com.jmex.model.converters.ObjToJme;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
 

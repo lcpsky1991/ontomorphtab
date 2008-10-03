@@ -6,7 +6,6 @@ import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.storage.database.DatabaseFrameDb;
 import edu.stanford.smi.protegex.owl.ProtegeOWL;
 import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
-import edu.stanford.smi.protegex.owl.repository.RepositoryManager;
 
 public class LocalSemanticRepositorySetup {
 

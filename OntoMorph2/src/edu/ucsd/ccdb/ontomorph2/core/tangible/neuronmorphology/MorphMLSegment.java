@@ -8,19 +8,18 @@ import java.util.List;
 import org.morphml.morphml.schema.Segment;
 import org.morphml.morphml.schema.Cell.SegmentsType;
 
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
- * Implementation of ISegment.  
+/**
+ * Defines the smallest unit of an INeuronMorphology.  A segment has a proximal and a distal point,
+ * and each has a radius.
+ * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
- * @see ISegment
- * @see ISemanticsAware
  *
  */
-public class MorphMLSegmentImpl extends ContainerTangible implements ISegment{
+public class MorphMLSegment extends ContainerTangible implements INeuronMorphologyPart{
 	/**************************************************
 	 * Be careful with instances of this class.  The constructor has been made protected
 	 * in order to avoid careless instantiation.  This class is basically
@@ -33,7 +32,7 @@ public class MorphMLSegmentImpl extends ContainerTangible implements ISegment{
 	Segment s = null;
 	MorphMLNeuronMorphology parentCell;
 	
-	protected MorphMLSegmentImpl(MorphMLNeuronMorphology parentCell, Segment s) {
+	protected MorphMLSegment(MorphMLNeuronMorphology parentCell, Segment s) {
 		this.s = s;
 		this.parentCell = parentCell;
 	}
@@ -187,15 +186,4 @@ public class MorphMLSegmentImpl extends ContainerTangible implements ISegment{
 		}
 		return segs;
 	}
-
-	public void addTangible(Tangible t) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public List<Tangible> getTangibles() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

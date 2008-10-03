@@ -3,9 +3,6 @@
  */
 package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
-import java.util.Set;
-
-
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 

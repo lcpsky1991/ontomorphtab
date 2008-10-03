@@ -7,7 +7,6 @@ import com.jme.scene.Node;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
-import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 
 /**
  * A base class for the view classes that display Tangibles.  

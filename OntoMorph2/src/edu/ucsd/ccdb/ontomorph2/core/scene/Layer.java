@@ -52,12 +52,12 @@ public class Layer implements ISemanticsAware{
 		return false;
 	}
 
-	public SemanticClass getMainSemanticClass() {
+	public SemanticClass getSemanticClass() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public SemanticInstance getMainSemanticInstance() {
+	public SemanticInstance getSemanticInstance() {
 		// TODO Auto-generated method stub
 		return null;
 	}

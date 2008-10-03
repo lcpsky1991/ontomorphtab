@@ -41,12 +41,12 @@ public interface ISemanticsAware extends ISelectable{
 	 * Get the main semantic class that describes this object
 	 * @return
 	 */
-	public SemanticClass getMainSemanticClass();
+	public SemanticClass getSemanticClass();
 	
 	/**
 	 * Get the main semantic instance the describes this object.  If it does not exist, 
 	 * instantiate it from the main semantic class
 	 * @return
 	 */
-	public SemanticInstance getMainSemanticInstance();
+	public SemanticInstance getSemanticInstance();
 }
