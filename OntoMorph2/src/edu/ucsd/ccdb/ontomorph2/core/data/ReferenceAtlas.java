@@ -82,8 +82,11 @@ public class ReferenceAtlas {
 						new Color(Integer.parseInt(line[3]), Integer.parseInt(line[4]), 
 								Integer.parseInt(line[5])),line[6], sys);
 				
-				
-				BrainRegion rightHemisphereCopy = new BrainRegion(line[0] + ", right hemisphere", "FLIP_" + line[1], "FLIP_" + line[2] + "_right", 
+				String parent = "";
+				if (line[2] != null && "".equals(line[2]) == false) {
+					parent = "FLIP_" + line[2];
+				}
+				BrainRegion rightHemisphereCopy = new BrainRegion(line[0] + ", right hemisphere", "FLIP_" + line[1], parent, 
 						new Color(Integer.parseInt(line[3]), Integer.parseInt(line[4]), 
 								Integer.parseInt(line[5])),line[6], sys);
 				
@@ -115,7 +118,7 @@ public class ReferenceAtlas {
 
 	public BrainRegion getBrainRegion(String string) {
 		for (BrainRegion r : getBrainRegions()) {
-			if (string.equals(r.getAbbreviation())) {
+			if (r.getAbbreviation().equals(string)) {
 				return r;
 			}
 		}
