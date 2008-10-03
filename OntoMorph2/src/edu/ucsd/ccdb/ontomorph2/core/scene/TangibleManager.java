@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
@@ -22,6 +23,7 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.MultiHashSetMap;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
 
 
@@ -352,5 +354,17 @@ public class TangibleManager {
 	public void removeContainedTangible(Tangible container, Tangible contained) {
 		this.tangiblesContainingTangibles.remove(container, contained);
 		this.tangiblesContainedByTangibles.remove(contained, container);
+	}
+	
+	/**
+	 * Toggle slides on or off
+	 *
+	 */
+	public void toggleSlides() {
+		for (Slide s : getSlides())
+		{
+			s.setVisible(!s.isVisible());
+			OntoMorph2.getCurrentScene().changed(Scene.CHANGED_SLIDE);
+		}
 	}
 }

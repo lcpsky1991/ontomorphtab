@@ -358,13 +358,11 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	
 	public void addSemanticClass(SemanticClass thing) {
 		this.semanticThings.add(thing);
-		thing.addSemanticsAwareAssociation(this);
 		changed(CHANGED_ADD_SEMANTIC_THING);
 	}
 	
 	public void removeSemanticClass(SemanticClass thing) {
 		this.semanticThings.remove(thing);
-		thing.removeSemanticsAwareAssociation(this);
 		changed(CHANGED_REMOVE_SEMANTIC_THING);
 	}
 	
@@ -400,7 +398,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 			//then create a new instance for this tangible from the main semantic class
 			mainSemanticInstance = getSemanticClass().createInstance();
 			//associate the SemanticInstance with this Tangible
-			mainSemanticInstance.addSemanticsAwareAssociation(this);
+			mainSemanticInstance.setSemanticsAwareAssociation(this);
 		}
 		return mainSemanticInstance;
 	}

@@ -1,8 +1,10 @@
 package wbctest.ckb;
 
+import java.util.Collection;
 import java.util.List;
 
 import junit.framework.TestCase;
+import edu.stanford.smi.protegex.owl.model.RDFProperty;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.LocalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
@@ -56,6 +58,15 @@ public class TestLocalSemanticRepository extends TestCase {
 				//assertNotNull(si.getPropertyValue(p));
 			}
 		}
+	}
+	
+	public void testDoSemanticSearch() {
+		RDFProperty property = (RDFProperty)repo.getOWLModel().getSlot("rdfs:label");
+        
+        Collection matches = repo.getOWLModel().getMatchingResources(property, "pyramidal", -1);
+        
+        this.assertFalse(matches.isEmpty());
+        
 	}
 	
 	public void testGetSemanticProperty() {

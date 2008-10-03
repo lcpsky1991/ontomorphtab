@@ -221,12 +221,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if ( strVIEW_SLIDES.equals(act))
 		{
-			//toggle slides on or off
-			for (Slide s : TangibleManager.getInstance().getSlides())
-			{
-				s.setVisible(!s.isVisible());
-				View.getInstance().getScene().changed(edu.ucsd.ccdb.ontomorph2.core.scene.Scene.CHANGED_SLIDE);
-			}
+			TangibleManager.getInstance().toggleSlides();
 		}
 		else if ( strNEW_CELL_A.equals(act) )
 		{

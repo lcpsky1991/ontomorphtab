@@ -36,10 +36,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	//CameraNode camNode;
 	Node visRepresentation = new Node("camera avatar");
 	Node rootNode = new Node("root Node");
-	
 
-
-	
 	InputHandler input = new InputHandler();
 	public ViewCamera() {
 		init();	

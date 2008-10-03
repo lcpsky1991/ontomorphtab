@@ -99,8 +99,10 @@ public class SceneObserver implements Observer {
 		else if (o instanceof SemanticThing)
 		{
 			SemanticThing st = (SemanticThing) o;
-			for (ISemanticsAware sa : st.getSemanticsAwareAssociations())
-			{
+			
+			ISemanticsAware sa = st.getSemanticsAwareAssociation();
+			if (sa != null) {
+				
 				if (st.isSelected())
 				{
 					sa.select();

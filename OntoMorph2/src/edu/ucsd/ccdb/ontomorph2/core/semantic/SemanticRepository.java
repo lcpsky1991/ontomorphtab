@@ -115,18 +115,6 @@ public abstract class SemanticRepository {
 			} else {
 				runningList.add(i);
 			}
-			/*
-			OWLIndividual i = (OWLIndividual)it.next();
-			if (i instanceof SimpleInstance) {
-				SemanticInstance si = new SemanticInstance(i);
-				if (requireLabel) {
-					if (si.getLabel() != null) {
-						runningList.add(si);
-					}
-				} else {
-					runningList.add(si);
-				}
-			}*/
 		}
 		return runningList;
 	}

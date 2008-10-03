@@ -2,6 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.fenggui.Button;
 import org.fenggui.CheckBox;
@@ -26,6 +27,9 @@ import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.ParticlesFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticQuery;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.view.View;
@@ -34,15 +38,14 @@ import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
 /**
  * 2D widget that allows a user to type in keywords and issue a keyword search
  *
+ * @author jrmartin
  */
 public class BasicSearchWidget extends Widget{
     
 	private Display d;
-	private TreeNode root;
-	private String textInput, selected, checkBoxSelection;
+	private String textInput, checkBoxSelection;
 	List<Integer> list;
 	ScrollContainer sc; 
-	HashMap<String, Vector3f> regions;
 	Vector3f location,position;
 	ViewCamera view = new ViewCamera();
 	private CheckBox cells, images, brainRegion;
@@ -56,8 +59,6 @@ public class BasicSearchWidget extends Widget{
 		//root = ReferenceAtlas.getInstance().getBrainRegionTree();
 		
 		buildWindowFrame();
-		
-       
 	}
 
 	public BasicSearchWidget() {
@@ -81,7 +82,6 @@ public class BasicSearchWidget extends Widget{
 		window.setTitle("Search Query"); 
 		window.layout();
 		
-		DB();
         final TextEditor textArea = FengGUI.createTextArea(window.getContentContainer());
         //textArea.setText("Enter Keyword");
         textArea.setSize(100, 20);
@@ -116,93 +116,51 @@ public class BasicSearchWidget extends Widget{
 	}
 	
 	
-	public void search(String searchInput){
+	public void search(String textInput){
 		
-		textInput = searchInput;
+		SemanticQuery query = new SemanticQuery();
+		//perform the query and get the results
+		Set<SemanticInstance> results = query.createSimpleQuery(textInput);
 		
+		//initialize the widget
 		list.clear();
         list.setSize(100, 130);
         list.setPosition(new Point(40,00));
-        
- 		if(regions.containsKey(textInput)){
- 			ListItem<String> item = FengGUI.createListItem(list);
- 			item.setText(textInput);
+        //populate the widget with the results of the query
+        //also create the 3D representation of the query results with SphereParticles
+        for (SemanticInstance result : results){
+        	ListItem<SemanticInstance> item = FengGUI.createListItem(list);
+ 			item.setText(result.getLabel());
+ 			item.setValue(result);
  			item.setPixmap(pixmap);
- 			//slideHide();
- 			//View.getInstance().indicator(regions.get(textInput));
- 		}
-
+ 			ISemanticsAware instance = result.getSemanticsAwareAssociation();
+ 			if (instance != null && instance instanceof Tangible) {
+ 				ParticlesFactory.getInstance().createParticles(((Tangible)instance).getAbsolutePosition());
+ 			}
+        }
+        /*
  		if(images.isSelected()){
  			list.clear();
- 			Iterator i = regions.keySet().iterator();
- 			while(i.hasNext()) {
+ 			for (String region : regions.keySet()) {
  				ListItem<Tangible> item = FengGUI.createListItem(list);
- 				checkBoxSelection = (String)i.next();
+ 				checkBoxSelection = region;
  				item.setText(checkBoxSelection);
  				item.setPixmap(pixmap);
  				ParticlesFactory.getInstance().createParticles(regions.get(checkBoxSelection));
  			}
- 		}
+ 		}*/
  		
  		list.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
+ 			//this method is called every time a different result in the search widget list is clicked.
 			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
 			{
-				//System.out.println("selection");
-				selected = (String)selectionChangedEvent.getToggableWidget().getText();
-				location = regions.get(selected);
-				//System.out.println(location +" "  + selected);
-		 		if(selected.equals("Cerebellum")){
-		 			//System.out.println("cerebellum");
-		 			//slideHide();
-		 			View.getInstance().getCameraView().smoothlyZoomToSlideCerebellumView();}
-		 		if(selected.equals("Hippocampus")){
-		 			//System.out.println("hippo");
-		 			//slideHide();
-		 			View.getInstance().getCameraView().smoothlyZoomToSlideView();}
-		 		if(selected.equals("Cells")){
-		 			//System.out.println("cells");
-		 			//slideHide();
-		 			View.getInstance().getCameraView().smoothlyZoomToCellView();}
-		 		selected = null;
-		 		
-		 		//System.out.println(returnObjectPosition());
-		 		}}
-			);
-	}
-	
-	public void DB(){
-		regions = new HashMap<String, Vector3f>();
-		regions.put("Hippocampus", new Vector3f(-300f, -118f, -180f));
-		//regions.put("Cell", new Vector3f(300f, 180f, -300f));
-		regions.put("Cerebellum", new Vector3f(458.9234f, -118.0f, -253.11566f));
-		regions.put("Cells" , new Vector3f(190f, -118f, -180f));
-				
-	}
-	
-
-	public void slideHide(){
-		
-		System.out.println("slide hide");
-		
-		//TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition();
-		
-		Tangible recent = TangibleManager.getInstance().getSelectedRecent();
-		
-		//do the manipulation to all selected objects
-		//loop over the objects in reverse as to keep order of selected objects relevant
-//		for (int t=TangibleManager.getInstance().getSelected().size() - 1; t >= 0 ; t--)
-		
-		//System.out.println(recent);
-		for (Tangible manip : TangibleManager.getInstance().getSelected())
-		{
-			//System.out.println(recent + " " + manip);
-		}
-		//System.out.println(dx + " " + dy + " " + recent);
-		for (Slide s : TangibleManager.getInstance().getSlides())
-		{
-			s.setVisible(!s.isVisible());
-			View.getInstance().getScene().changed(edu.ucsd.ccdb.ontomorph2.core.scene.Scene.CHANGED_SLIDE);
-		}
+				SemanticInstance ins = (SemanticInstance)selectionChangedEvent.getToggableWidget().getValue();
+				ISemanticsAware instance = ins.getSemanticsAwareAssociation();
+				if (instance != null && instance instanceof Tangible) {
+					View.getInstance().getCameraView().searchZoomTo(((Tangible)instance).getAbsolutePosition());
+				}
+			}
+ 		});
 	}
 	
 	public void absolutePosition(Vector3f position){

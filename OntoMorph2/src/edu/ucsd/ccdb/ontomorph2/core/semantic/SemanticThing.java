@@ -16,19 +16,15 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.ISelectable;
 public abstract class SemanticThing extends Observable implements ISelectable {
 
 	String URI = null;
-	List<ISemanticsAware> semanticsAware = new ArrayList<ISemanticsAware>();
+	ISemanticsAware semanticsAware = null;
 	private boolean selected;	
 
-	public List<ISemanticsAware> getSemanticsAwareAssociations() {
+	public ISemanticsAware getSemanticsAwareAssociation() {
 		return this.semanticsAware;
 	}
 
-	public void addSemanticsAwareAssociation(ISemanticsAware obj) {
-		this.semanticsAware.add(obj);
-	}
-	
-	public void removeSemanticsAwareAssociation(ISemanticsAware obj) {
-		this.semanticsAware.remove(obj);
+	public void setSemanticsAwareAssociation(ISemanticsAware obj) {
+		this.semanticsAware = obj;
 	}
 	
 	public void unselect() {

@@ -22,6 +22,12 @@ public class ParticlesFactory {
 		
 	}
 	
+	/**
+	 * Create particles at the given location
+	 * 
+	 * @param location
+	 * @return
+	 */
 	public SphereParticles createParticles(Vector3f location)
 	{
 		//System.out.println("create Particles");
