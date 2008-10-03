@@ -135,7 +135,8 @@ public class CurveAnchorPoint extends Tangible {
 		//DOes not work well with the end points
 		place = new OMTVector(getParentCurve().getPoint(t+delta));
 
-		getParentCurve().addControlPoint(i, place);
+		CurveAnchorPoint capt =	getParentCurve().addControlPoint(i, place);
+		capt.select();
 		
 		getParentCurve().reapply(); //TODO: remove this line
 	}

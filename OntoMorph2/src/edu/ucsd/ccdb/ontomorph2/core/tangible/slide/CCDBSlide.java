@@ -54,4 +54,7 @@ public class CCDBSlide extends URISlide {
 		
 		setRatio(ratio);
 	}
+	
+	
+	
 }

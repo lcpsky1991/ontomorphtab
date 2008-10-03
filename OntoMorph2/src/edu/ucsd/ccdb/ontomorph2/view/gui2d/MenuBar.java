@@ -9,8 +9,10 @@ import org.fenggui.menu.Menu;
 import org.fenggui.menu.MenuItem;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
+import org.morphml.neuroml.schema.XWBCSlide;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
+import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.CellFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
@@ -62,6 +64,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String strMNU_MANI_PICK = "Pick";
 	public static final String strMNU_MANI_NONE = "Pan Camera";
 	public static final String strMNU_MANI_SCALE = "Re-Scale";
+	public static final String strMNU_DEBUG_TEST = "Test DB";
 	public static final String strNEW_CELL_A = CellFactory.TYPE_CELL_DG_A;
 	public static final String strNEW_CELL_B = CellFactory.TYPE_CELL_PYR_CA3_A;
 	public static final String strNEW_CELL_DISK = "From Disk...";
@@ -155,6 +158,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         Menu mnuDebug = new Menu();
         mB.registerSubMenu(mnuDebug, "Debug");
         makeMenuItem(SHOW_SCENE_MONITOR, mnuDebug);
+        makeMenuItem(strMNU_DEBUG_TEST, mnuDebug);
 
 	}
 	
@@ -334,9 +338,27 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		else if (BASIC_SEARCH.equals(act)) {
 			View2D.getInstance().loadBasicSearchBox();
 		}
+		else if (strMNU_DEBUG_TEST.equals(act))
+		{
+			debug();
+		}
 		else if (SHOW_SCENE_MONITOR.equals(act)) {
 			View.getInstance().getView3D().showSceneMonitor();
 		}
+	}
+	
+	/**
+	 * For development purposes as proof of concept in loading slides, should be removed ASAP
+	 *
+	 */
+	private void debug()
+	{
+		XWBCSlide r = (XWBCSlide) DataRepository.getInstance().findSlideByName("primary");
+		System.out.println("results : " + r);
+		System.out.println(r.getImageURL());
+		System.out.println(r.getId());
+		System.out.println(r.getPosition().getX() + ", " + r.getPosition().getY() + " " + r.getPosition().getZ());
+		
 	}
 	
 }

@@ -20,10 +20,6 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
  */
 public class URISlide extends Slide {
 
-
-	URI _imageURI = null;
-	URL _imageURL = null;
-	
 	public URISlide() {
 		
 	}
@@ -32,7 +28,8 @@ public class URISlide extends Slide {
 		_imageURI = imageURI;
 	}
 	
-	public URISlide(URI filePath, float ratio) {
+	public URISlide(URI filePath, float ratio) 
+	{
 		this(filePath);
 		setRatio(ratio);
 	}
@@ -73,4 +70,7 @@ public class URISlide extends Slide {
 		}
 		return bufImg;
 	}
+	
+
+	
 }

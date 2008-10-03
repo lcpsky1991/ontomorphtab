@@ -5,13 +5,18 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+
+import org.morphml.metadata.schema.Curve;
+import org.morphml.neuroml.schema.XWBCSlide;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.scene.shape.Box;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.data.wsclient.CcdbMicroscopyData;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
@@ -103,11 +108,33 @@ public class DefaultScene extends Scene{
 		}
 		
         Slide b = new URISlide(hippo2URL, 1.34f);
+        b.setName("Waldo");
         b.setRelativePosition(new PositionVector(-14,0, 18f));
         b.setCoordinateSystem(d);
         //b.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
         b.setRelativeScale(3.2f);
 		addSceneObject(b);
+		
+		//Mocked up for Ted demo
+		{
+			XWBCSlide ret = (XWBCSlide) DataRepository.getInstance().findTangible(b.getClass(), b.getName());
+			if (ret != null)
+			{
+				URI place = null;
+				try
+                {
+	                place = new URI(ret.getImageURL());
+                }
+                catch (URISyntaxException e1)
+                {
+	                // TODO Auto-generated catch block
+	                e1.printStackTrace();
+                }
+				b = new URISlide(place, 1.34f);
+				b.setName(ret.getName());
+				
+			}
+		}
 		
 		Slide c = new URISlide(hippo3aURL, 1.33f);
 		c.setRelativePosition(new PositionVector(-34,-5,19f));

@@ -174,7 +174,7 @@ public class CellFactory {
 		{
 			NeuronMorphology copy = createCell(cell.getFilename(),cell.getCurve(), true);	//create a copy of the cells
 			
-			float rx = 0;
+			float rx=0;
 			float ry=0;
 			
 			//if cell is attached to curve have to scale the movement by alot more

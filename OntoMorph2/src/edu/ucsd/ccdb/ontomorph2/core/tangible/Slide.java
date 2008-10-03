@@ -1,7 +1,16 @@
 package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
+import java.net.URI;
+import java.net.URL;
+
+import org.morphml.neuroml.schema.XWBCSlide;
+import org.morphml.neuroml.schema.impl.XWBCSlideImpl;
+
+import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 
 
@@ -9,12 +18,18 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
  * A Panel in 3D space that displays an image of a brain slice.
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
+ * @author caprea
  */
 public abstract class Slide extends Tangible {
 	
 	float ratio = 1f;
 
-	public Slide() {
+	protected URI _imageURI = null;
+	protected URL _imageURL = null;
+	private XWBCSlide morphmlSlide = new XWBCSlideImpl();
+	
+	public Slide() 
+	{
 		this.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(
 				SemanticClass.IMAGE_CLASS));
 		this.getSemanticInstance();
@@ -27,5 +42,35 @@ public abstract class Slide extends Tangible {
 	public void setRatio(float ratio) {
 		this.ratio = ratio;
 	}
+	
+	@Override
+	public void save()
+	{
+	    super.save();
+	    
+	   	//get the appropriate content
+		try
+		{
+	        //convert the position to Point3D
+	        OMTVector pt = new OMTVector(this.getRelativePosition());
+	        
+	        //update the model that is being saved
+	        String r = this._imageURI.toString();
+	        if (r == null) r = this._imageURL.toString();
+		    morphmlSlide.setImageURL(r);
+		    
+		    
+		    morphmlSlide.setName(this.getName());
+		    morphmlSlide.setPosition(pt.asPoint3D());
+		    
+		    DataRepository.getInstance().saveFileToDB(morphmlSlide);
+		    System.out.println("Saved: " + this.getName());
+		}
+		catch(Exception e)
+		{
+			Log.warn(e.getMessage());
+		}
+	}
 
+	
 }

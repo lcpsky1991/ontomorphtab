@@ -22,6 +22,7 @@ import edu.ucsd.ccdb.ontomorph2.core.scene.CellFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.CurveFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
@@ -505,14 +506,18 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	{
 		String info = "";
 		
+		/* debug view and plane
 		OMTVector camDir = new OMTVector(View.getInstance().getCameraView().getCamera().getDirection());
 		OMTVector plane = src.getWorldNormal();
-		
 		info += src.getWorldNormal() + "\n";
 		info += " above: " + OMTUtility.isLookingFromAbove(camDir, plane);
+		*/
+		CoordinateSystem t = src.getCoordinateSystem();
 		
 		
-		Log.warn(info);
+		info += " coordinate system " + t + "\n";
+		info += " demo system" + (new DemoCoordinateSystem());
+		System.out.println(info);
 	}
 	
 	private void doActionOnSelected(int action, Tangible target, double value)

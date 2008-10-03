@@ -147,6 +147,80 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
             </xs:sequence>
     </xs:complexType>
 
+    
+    <!-- Contributed by Christopher Aprea -->
+    <!--
+    <xs:complexType name="xWBCTangible">
+	    <xs:annotation>
+		    <xs:documentation>Shell with extensions for standard objects in Whole Brain Catalog. 
+			</xs:documentation>
+	    </xs:annotation>
+	    <xs:complexContent>
+		    <xs:extension base="Level3Cell">
+			    <xs:sequence>
+				    <xs:element name="test" type="xs:string" minOccurs="0"/>
+			    </xs:sequence>
+		    </xs:extension>
+	    </xs:complexContent>
+    </xs:complexType>
+    -->
+    <xs:complexType name="xWBCTangible">
+	    <xs:annotation>
+		    <xs:documentation>Shell with extensions for standard objects in Whole Brain Catalog. 
+		    </xs:documentation>
+	    </xs:annotation>
+	    
+	    
+	    <xs:sequence>
+		<xs:element name="name" type="xs:string"/>
+		<xs:element name="position" type="meta:Point3D" maxOccurs="1" >
+			<xs:annotation>
+				<xs:documentation>Where it is in space, in absolute JME coordinates</xs:documentation>
+			</xs:annotation>
+		</xs:element>
+		<xs:element name="system" type="xs:string"/>
+		<xs:element name="dummy" type="xs:string"/>	    
+		<xs:element name="id" type="xs:nonNegativeInteger">
+			<xs:annotation>
+				<xs:documentation>ID of the tangible, unique within the document</xs:documentation>
+			</xs:annotation>	
+		</xs:element>
+	</xs:sequence>
+    </xs:complexType>
+    
+    
+    <!-- Definition of a Slide follows. -->  
+    <!-- Contributed by Christopher Aprea -->  
+    <xs:complexType name="xWBCSlide">
+	    <xs:annotation>
+		    <xs:documentation>Describes a Slide for WBC  </xs:documentation>
+	    </xs:annotation>
+	<xs:complexContent>
+		<xs:extension base="xWBCTangible">
+			<xs:sequence>
+				<xs:element name="imageURL" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>The contents of the Slide, probably the URL of the image</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>			
+		</xs:extension>
+	</xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="Slides">
+	    <xs:annotation>
+		    <xs:documentation>Set of Level 3 Slides</xs:documentation>
+	    </xs:annotation>
+	    <xs:sequence>
+		    <xs:element name="slide" type="meta:xWBCSlide" maxOccurs="unbounded">
+			    <xs:annotation>
+				    <xs:documentation>A single curve.</xs:documentation>
+			    </xs:annotation>
+		    </xs:element>
+	    </xs:sequence>
+    </xs:complexType>
+    
 
 </xs:schema>
 

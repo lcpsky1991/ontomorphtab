@@ -8,7 +8,9 @@ import java.util.Random;
 import java.util.Set;
 
 import org.morphml.metadata.schema.Curve;
+import org.morphml.metadata.schema.Point3D;
 import org.morphml.metadata.schema.impl.CurveImpl;
+import org.morphml.metadata.schema.impl.Point3DImpl;
 
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
@@ -54,6 +56,39 @@ public class Curve3D extends Tangible{
 		setControlPoints(arg1);
 	}
 
+	public void getFromDB()
+	{
+		/**
+		 * @see Curve3D(string, OMTVector)
+		 */
+		
+		//get the morphML curve form the DB
+		Curve curRetreive = (Curve) DataRepository.getInstance().findTangible(Curve.class, this.getName()); //experimental
+		
+		if ( curRetreive != null)
+		{
+			this.setName(curRetreive.getName());	//set the name of the model
+			
+			int size = morphMLCurve.getPoint().size();	//get the size of the control points list
+			
+			this.controlPoints = new OMTVector[size];	//make a new list of control points 
+			
+			//convert the 3d points to OMT points
+			for (int i = 0; i < size; i++)
+			{
+				Point3D pt = (Point3D) curRetreive.getPoint().get(i);
+				OMTVector v = new OMTVector(pt.getX(),pt.getY(),pt.getZ());
+				this.addControlPoint(i, v);
+			}
+			 
+			this.setCoordinateSystem(null);
+		}
+		
+		//regardless of whether the retreival was successful, update the morphML model
+		morphMLCurve = curRetreive;
+	}
+	
+	
 	public Curve3D(String string, OMTVector[] array, CoordinateSystem d) {
 		this(string, array);
 		setCoordinateSystem(d);
@@ -328,8 +363,9 @@ public class Curve3D extends Tangible{
 	 * Adds a new anchorpoint to the curve. If index is -1 or less, anchor point will be appended to the end of curve
 	 * @param i the index of which to insert the control point, 
 	 * @param pos
+	 * @return the {@link CurveAnchorPoint} that was just created
 	 */
-	public void addControlPoint(int index, OMTVector pos)
+	public CurveAnchorPoint addControlPoint(int index, OMTVector pos)
 	{
 		
 		OMTVector modlist[] = new OMTVector[getControlPoints().length+1]; //make the new list one element larger 
@@ -366,14 +402,15 @@ public class Curve3D extends Tangible{
 		anchors = getAnchorPoints();
 		
 		//deselect the previous point and select the newly created one
-		CurveAnchorPoint prev = anchors.get(index-1);
+		//CurveAnchorPoint prev = anchors.get(index-1);
 		CurveAnchorPoint curr = anchors.get(index);
-		prev.unselect();
+		//prev.unselect();
 		curr.setVisible(true);
-		curr.select();
+		//curr.select();
 		
 		curr.changed();
 		
+		return curr;	//return the reference tot he most recently created anchor point so that it may be selected or otherwise manipulated
 		//update the scene
 		//changed();
 		

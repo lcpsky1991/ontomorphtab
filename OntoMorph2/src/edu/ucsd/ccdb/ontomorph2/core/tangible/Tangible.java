@@ -95,7 +95,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	{
 		this.changed(CHANGED_DELETE);
 		return TangibleManager.getInstance().removeTangible(this);
-		
 	}
 	
 
@@ -608,19 +607,26 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 
 	}
 	
-
+	public void save()
+	{
+		//nothing
+	}
+	
 	public void changed() {
 		changed(null);
 	}
 
 	
-	public void changed(String argument) {
+	public void changed(String argument) 
+	{
 		this.setChanged();
 		if (argument == null) {
 			notifyObservers();
 		} else {
 			notifyObservers(argument);
 		}
+		
+		save();
 	}
 
 	public boolean equals(Object o) {

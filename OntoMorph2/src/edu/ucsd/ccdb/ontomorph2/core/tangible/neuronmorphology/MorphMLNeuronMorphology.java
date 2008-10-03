@@ -79,8 +79,10 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 	}
 
 
-	public Level3Cell getMorphMLCell() {
-		if (theCell == null) {
+	public Level3Cell getMorphMLCell() 
+	{
+		if (theCell == null) 
+		{
 			//try to retrieve file from the cache
 			if (MemoryCacheRepository.getInstance().isFileCached(this.filename)) {
 				theCell = (Level3Cell) MemoryCacheRepository.getInstance().getCachedFile(this.filename);
@@ -90,16 +92,18 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 				return theCell;
 			}
 			
-			try {
+			try 
+			{
 				//search for file in global database by name
 				theCell = (Level3Cell) DataRepository.getInstance().findMorphMLByName(this.filename);
-				
-			} catch (Exception e) {
+			}
+			catch (Exception e) 
+			{
 				Log.warn("Did not find " + this.filename + " neuron morphology in the database.  Trying to load from disk now...");
 			}
 			
-			if (theCell != null) {
-
+			if (theCell != null) 
+			{
 //				store the file in the DataRepository once it is loaded for the next time.
 				MemoryCacheRepository.getInstance().cacheFile(this.filename, theCell);
 				

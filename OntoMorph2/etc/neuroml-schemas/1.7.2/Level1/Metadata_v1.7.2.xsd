@@ -537,23 +537,23 @@ elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<!-- Definition of a Curve follows. -->  
 	<!-- Augmented by slarson@ncmir.ucsd.edu -->  
 	<xs:complexType name="Curve">
-         <xs:annotation>
-              <xs:documentation>Describes a Catmull-Rom curve.
-              </xs:documentation>
-         </xs:annotation>
+		<xs:annotation>
+			<xs:documentation>Describes a Catmull-Rom curve.
+			</xs:documentation>
+		</xs:annotation>
+	
+			<xs:sequence>
+				<xs:element name="points" type="Point3D" minOccurs="2" maxOccurs="unbounded"/>
+			</xs:sequence>
+	
+		<xs:attribute name="name" type="xs:string" use="required"/>
+	
+		<xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
+			<xs:annotation>
+				<xs:documentation>ID of the curve, unique within the document</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 
-		<xs:sequence>
-			<xs:element name="point" type="Point3D" minOccurs="2" maxOccurs="unbounded"/>
-		</xs:sequence>
-
-        <xs:attribute name="name" type="xs:string" use="required"/>
-
-        <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
-            <xs:annotation>
-                <xs:documentation>ID of the curve, unique within the document</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-
-    </xs:complexType>
+	</xs:complexType>
 
 </xs:schema>

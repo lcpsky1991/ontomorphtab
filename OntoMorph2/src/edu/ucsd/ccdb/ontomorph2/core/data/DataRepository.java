@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core.data;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -8,7 +9,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.morphml.metadata.schema.Curve;
 import org.morphml.neuroml.schema.Level3Cell;
+import org.morphml.neuroml.schema.XMLWBCTangible;
+import org.morphml.neuroml.schema.XWBCSlide;
+import org.morphml.neuroml.schema.XWBCTangible;
+import org.morphml.neuroml.schema.impl.XWBCSlideImpl;
+
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 
 
 
@@ -30,10 +38,12 @@ public class DataRepository {
 		return repo;
 	}
 	
-	protected DataRepository() {
+	protected DataRepository() 
+	{
 		 Configuration configuration = new Configuration().configure();
-		 sFact = configuration.buildSessionFactory();
+		 sFact = configuration.buildSessionFactory(); 
 	}
+	
 	
 	public void saveFileToDB(Object o){
 //		 Open the session
@@ -53,11 +63,99 @@ public class DataRepository {
 	}
 	
 	
+	
+	
+	public Object findCurve(String name)
+	{
+//		TODO: change Tangivle to some neuroML class
+		Object objFound = null;
+		final Session sesLoad = sFact.openSession();	//open connection to DB (SQL)
+		
+		Criteria search = sesLoad.createCriteria(Curve.class);
+		List results = search.list();
+		
+		/**
+		 * pull out all rows formt he db that correspond to the class in question
+		 * and then look through them all and find matching name
+		 */
+		
+		for (int i=0; i < results.size(); i++)
+		{
+			Curve consider =  (Curve) results.get(i);
+			
+		
+			if (consider.getName() != null && consider.getName().equals(name))
+			{
+				objFound = consider;
+				break;	//stop iterating through the rest
+			}
+		}
+		
+		return objFound;
+	}
+	
+	
+	@Deprecated
+	public Object findSlideByName(String name)
+	{
+		Object objFound = null;
+		final Session sesLoad = sFact.openSession();	//open connection to DB (SQL)
+		
+		Criteria search = sesLoad.createCriteria(XWBCSlide.class);
+		List results = search.list();
+		
+		/**
+		 * pull out all rows formt he db that correspond to the class in question
+		 * and then look through them all and find matching name
+		 */
+		
+		for (int i=0; i < results.size(); i++)
+		{
+			XWBCSlide consider =  (XWBCSlide) results.get(i);
+			if (consider.getName() != null && consider.getName().equals(name))
+			{
+				objFound = consider;
+				break;	//stop iterating through the rest
+			}
+		}
+		
+		return objFound;
+	}
+	
+	@Deprecated
+	public XWBCTangible findTangible(Class type, String name)
+	{
+		XWBCTangible objFound = null;
+		final Session sesLoad = sFact.openSession();	//open connection to DB (SQL)
+		
+		Criteria search = sesLoad.createCriteria(type);
+		List results = search.list();
+		
+		/**
+		 * pull out all rows formt he db that correspond to the class in question
+		 * and then look through them all and find matching name
+		 */
+		
+		for (int i=0; i < results.size(); i++)
+		{
+			XWBCTangible consider =  (XWBCTangible) results.get(i);
+			if (consider.getName() != null && consider.getName().equals(name))
+			{
+				objFound = consider;
+				break;	//stop iterating through the rest
+			}
+		}
+		
+		return objFound;
+		
+		
+		
+	}
 	public Object findMorphMLByName(String name) {
 //		 Open the session
 		final Session loadSession = sFact.openSession();
 
-		Object o = null;
+		Object objFound = null;
 		/*
 		final Object loadedObject = 
 			((org.hibernate.classic.Session) loadSession).find("from Cell as cell where cell.name = ?", 
@@ -68,19 +166,24 @@ public class DataRepository {
 		Object o = q.list().get(0);
 		*/
 		
+		
+		/**
+		 * pull out all rows formt he db that correspond to the class in question
+		 * and then look through them all and find matching name
+		 */
 		Criteria crit = loadSession.createCriteria(Level3Cell.class);//.add(Expression.eq("name", name));
 		List l = crit.list();
 		for (int i = 0; i < l.size(); i++) {
 			Level3Cell c = (Level3Cell)l.get(i);
 			if (c.getName() != null && c.getName().equals(name)) {
-				o = c;
+				objFound = c;
 			}
 		}
 		
 //		 Close the session
 		loadSession.close();
 		
-		return o;
+		return objFound;
 		//return loadedObject;
 
 	}
