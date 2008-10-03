@@ -11,7 +11,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.morphml.metadata.schema.Curve;
 import org.morphml.neuroml.schema.Level3Cell;
-import org.morphml.neuroml.schema.XMLWBCTangible;
 import org.morphml.neuroml.schema.XWBCSlide;
 import org.morphml.neuroml.schema.XWBCTangible;
 import org.morphml.neuroml.schema.impl.XWBCSlideImpl;

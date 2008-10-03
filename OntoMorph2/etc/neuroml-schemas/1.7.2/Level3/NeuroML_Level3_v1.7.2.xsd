@@ -213,7 +213,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 		    <xs:documentation>Set of Level 3 Slides</xs:documentation>
 	    </xs:annotation>
 	    <xs:sequence>
-		    <xs:element name="slide" type="meta:xWBCSlide" maxOccurs="unbounded">
+		    <xs:element name="slide" type="xWBCSlide" maxOccurs="unbounded">
 			    <xs:annotation>
 				    <xs:documentation>A single curve.</xs:documentation>
 			    </xs:annotation>

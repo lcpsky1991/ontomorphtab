@@ -543,7 +543,7 @@ elementFormDefault="qualified" attributeFormDefault="unqualified">
 		</xs:annotation>
 	
 			<xs:sequence>
-				<xs:element name="points" type="Point3D" minOccurs="2" maxOccurs="unbounded"/>
+				<xs:element name="point" type="Point3D" minOccurs="2" maxOccurs="unbounded"/>
 			</xs:sequence>
 	
 		<xs:attribute name="name" type="xs:string" use="required"/>
