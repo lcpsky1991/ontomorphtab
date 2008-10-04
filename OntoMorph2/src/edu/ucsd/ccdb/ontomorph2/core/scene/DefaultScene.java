@@ -8,9 +8,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.morphml.metadata.schema.Curve;
+import org.morphml.metadata.schema.*;
+import org.morphml.neuroml.schema.XWBCQuat;
 import org.morphml.neuroml.schema.XWBCSlide;
 
+
+import com.jme.input.MouseInput;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.scene.shape.Box;
@@ -122,10 +125,30 @@ public class DefaultScene extends Scene{
 			if (ret != null)
 			{
 				URI place = null;
-				place = new File(ret.getImageURL()).toURI();
+				
+				try
+                {
+	                place = new URI(ret.getImageURL());
+                }
+                catch (URISyntaxException e1)
+                {
+	                // TODO Auto-generated catch block
+	                e1.printStackTrace();
+                }
+				//place = ret.getImageURL()).toURI();
+				System.out.println(place);
 				b = new URISlide(place, 1.34f);
 				b.setName(ret.getName());
-				b.setRelativePosition(new PositionVector(-14,0, 18f));
+				
+				Point3D pos = ret.getPosition();
+				XWBCQuat rot = ret.getRotation();
+				
+			
+				b.setRelativeRotation(new RotationVector((float)rot.getX(),(float)rot.getY(),(float)rot.getZ(),(float)rot.getW()));
+				b.setRelativePosition((float)pos.getX(), (float)pos.getY(), (float)pos.getZ());
+			
+				System.out.println(b.getRelativePosition());
+				
 				b.setCoordinateSystem(d);
 				b.setRelativeScale(3.2f);
 				addSceneObject(b);
