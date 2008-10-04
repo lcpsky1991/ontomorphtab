@@ -1,9 +1,13 @@
 package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protegex.owl.database.OWLDatabaseModel;
+import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 
@@ -29,8 +33,11 @@ public class LocalSemanticRepository extends SemanticRepository{
 	
 	
 	public void removeWorkspaceInstances() {
-		for (SemanticInstance obj : this.getContinuantInstances()) {
-			obj.removeFromRepository();
+		List<SemanticInstance> si = new ArrayList<SemanticInstance>();
+		Collection c = owlModel.getInstances(getSemanticClass(SemanticClass.CONTINUANT_CLASS).getOWLClass());
+		for (Iterator it = c.iterator(); it.hasNext();) {
+			OWLIndividual ind = (OWLIndividual)it.next();
+			ind.delete();
 		}
 	}
 	
@@ -60,10 +67,4 @@ public class LocalSemanticRepository extends SemanticRepository{
 		}
 		return instance;
 	}
-
-	public SemanticInstance getSemanticInstance(String uri) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

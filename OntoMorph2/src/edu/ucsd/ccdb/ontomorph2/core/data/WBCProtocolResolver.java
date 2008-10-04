@@ -23,7 +23,7 @@ public class WBCProtocolResolver {
 				//get index of the final slash before the name
 				int lastSlashIndex = proto.getPath().indexOf('/', proto.getPath().indexOf("instance"));
 				
-				return repo.getSemanticInstance(proto.getPath().substring(lastSlashIndex));
+				return null;//repo.getSemanticInstance(proto.getPath().substring(lastSlashIndex));
 			}
 		} else if (proto.getPath().startsWith("data")) {
 			if (proto.getPath().indexOf("morphml") > 0) {

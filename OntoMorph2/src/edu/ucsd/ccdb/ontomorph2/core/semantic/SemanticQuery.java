@@ -60,7 +60,7 @@ public class SemanticQuery {
 		for (RDFResource r : resultMap.keySet()) {
 			if (r instanceof DefaultOWLIndividual){
 				//results.addAll(repo.getInstancesFromRoot(new SemanticClass((OWLNamedClass)r), false));
-				results.add(new SemanticInstance((OWLIndividual)r));
+				results.add(SemanticRepository.getAvailableInstance().getSemanticInstance((OWLIndividual)r));
 			}
 		}
 		//return these instances as a list of results.

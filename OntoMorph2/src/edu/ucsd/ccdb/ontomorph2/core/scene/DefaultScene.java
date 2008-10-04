@@ -55,6 +55,8 @@ public class DefaultScene extends Scene{
 	URI hippo3aURL = null;
 	URI hippo3bURL = null;
 	URI hippo3cURL = null;
+	URI hippo22URL = null;
+	URI striatum1URL = null;
 	URI monkey = null;
 	
 	public DefaultScene() {
@@ -72,6 +74,8 @@ public class DefaultScene extends Scene{
 			hippo3aURL = new File(imgDir + "hippo_slice3a.jpg").toURI();
 			hippo3bURL = new File(imgDir + "hippo_slice3b.jpg").toURI();
 			hippo3cURL = new File(imgDir + "hippo_slice3c.jpg").toURI();
+			hippo22URL = new File(imgDir + "hippo2.jpg").toURI();
+			striatum1URL = new File(imgDir + "striatum1.jpg").toURI();
 			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -97,7 +101,6 @@ public class DefaultScene extends Scene{
 			
 			CcdbMicroscopyData hippoImage = CCDBRepository.getInstance().getCCDBData(35);
 			
-			
 			Slide a = new CCDBSlide(hippoImage, 0.87f);
 			a.setRelativePosition(new PositionVector(25,-32,17f));
 			a.setCoordinateSystem(d);
@@ -107,7 +110,7 @@ public class DefaultScene extends Scene{
 			a.setVisible(false); 
 			
 		} 
-		catch (OMTOfflineException e) {
+		catch (Exception e) {
 			Log.warn(e.getMessage() + " Cannot load slide from CCDB Data");
 		}
 		
@@ -160,15 +163,29 @@ public class DefaultScene extends Scene{
 		//e.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
 		e.setRelativeScale(0.75f);
 		addSceneObject(e);
+		
+		Slide f = new URISlide(hippo22URL, 0.87f);
+		f.setName("hippocampus 2");
+		f.setRelativePosition(new PositionVector(319.9474f,-153.3174f,-145.52f));
+		f.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
+		f.setRelativeScale(10f);
+		addSceneObject(f);
+		
+		Slide g = new URISlide(striatum1URL, 1.33f);
+		g.setName("striatum 1");
+		g.setRelativePosition(new PositionVector(213.1435f, -145.5603f, -146.37f));
+		g.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
+		//e.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
+		g.setRelativeScale(10f);
+		addSceneObject(g);
 
 
 		//hide the slides for tedd waitt
 		//TODO: remove this section
 		{
-			b.setVisible(false);
-			c.setVisible(false);
-			ds.setVisible(false);
-			e.setVisible(false);
+			for (Slide s : TangibleManager.getInstance().getSlides()) {
+				s.setVisible(false);
+			}
 		}
 		
 		try {
@@ -177,12 +194,12 @@ public class DefaultScene extends Scene{
 			RotationVector rot = new RotationVector(
 					new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-20,OMTVector.UNIT_Z));
 			
-			Slide f = new CCDBSlide(cerebImage, 1.11f);
-			f.setRelativePosition(new PositionVector(440,-118,-250));
-			f.setRelativeRotation(rot);
-			f.setRelativeScale(4.5F); 
-			addSceneObject(f);
-			f.setVisible(false);	//added for tedd wait demo
+			Slide h = new CCDBSlide(cerebImage, 1.11f);
+			h.setRelativePosition(new PositionVector(440,-118,-250));
+			h.setRelativeRotation(rot);
+			h.setRelativeScale(4.5F); 
+			addSceneObject(h);
+			h.setVisible(false);	//added for tedd wait demo
 		} catch (OMTOfflineException e2) {
 			Log.warn(e2.getMessage());
 		}
@@ -338,9 +355,27 @@ public class DefaultScene extends Scene{
 		cell13.getMorphology().setRenderOption(NeuronMorphology.RENDER_AS_LINES);
 		addSceneObject(cell13);*/
 		
-		loadSurfaces();
+		DataMesh mesh;
+		try {
+			mesh = new DataMesh(mitoObjURL);
+			
+			
+			mesh.setRelativePosition(new PositionVector(289f, -117f, -179.51f));
+			mesh.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
+			mesh.setRelativeScale(0.2f);
+			mesh.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.MITOCHONDRION_CLASS));
+			mesh.getSemanticInstance(); //get a SemanticInstance loaded into the local repository
+			
+			addSceneObject(mesh);
+			
+		} catch (IOException x) {
+			// TODO Auto-generated catch block
+			x.printStackTrace();
+		}
 		
-		loadMeshes();
+		//loadSurfaces();
+		
+		//loadMeshes();
 		
 		ReferenceAtlas.getInstance().displayBasicAtlas();
 
@@ -401,7 +436,7 @@ public class DefaultScene extends Scene{
 		mesh.setRelativeScale(0.0002f);
 		mesh.setCoordinateSystem(d);
 		
-		//addSceneObject(mesh);
+		addSceneObject(mesh);
 		
 		mito2 = new DataMesh(mito2ObjURL);
 		

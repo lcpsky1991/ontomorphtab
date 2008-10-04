@@ -62,23 +62,11 @@ public class SemanticClass extends SemanticThing {
 	 * @return
 	 */
 	public List<SemanticInstance> getInstances() {
-		List<SemanticInstance> l = new ArrayList<SemanticInstance>();
-		Collection instances = OWLClass.getInstances(false);
-		for (Iterator it = instances.iterator(); it.hasNext();) {
-			SemanticInstance si = new SemanticInstance((OWLIndividual)it.next());
-			l.add(si);
-		}
-		return l;
+		return SemanticRepository.getAvailableInstance().getInstances(this);
 	}
 
 	public List<SemanticInstance> getAllInstances(OWLModel owlModel) {
-		List<SemanticInstance> si = new ArrayList<SemanticInstance>();
-		Collection c = owlModel.getInstances(OWLClass);
-		for (Iterator it = c.iterator(); it.hasNext();) {
-			OWLIndividual ind = (OWLIndividual)it.next();
-			si.add(new SemanticInstance(ind));
-		}
-		return si;
+		return SemanticRepository.getAvailableInstance().getAllInstances(this, owlModel);
 	}
 
 	public String getId() {
@@ -103,7 +91,7 @@ public class SemanticClass extends SemanticThing {
 		{
 			assert OWLClass != null;
 		
-			return new SemanticInstance(OWLClass.createOWLIndividual(this.getLabel() + "_00" + counter++));
+			return SemanticRepository.getAvailableInstance().getSemanticInstance(OWLClass.createOWLIndividual(this.getLabel() + "_00" + counter++));
 		}
 		catch(Exception e)
 		{

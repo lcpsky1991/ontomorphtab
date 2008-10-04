@@ -11,17 +11,25 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.ISelectable;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class TreeNode
-{
+public class TreeNode {
+	
+	public ISelectable value = null;
+	public ArrayList<TreeNode> children = new ArrayList<TreeNode>();
+	public String text = null;
+	
 	public TreeNode(String string, ISelectable value)
 	{
 		this.text = string;
 		this.value = value;
 	}
 	
-	public ISelectable value = null;
-	public ArrayList<TreeNode> children = new ArrayList<TreeNode>();
-	public String text = null;
+	public boolean equals(Object o) {
+		if (o != null && o instanceof TreeNode) {
+			TreeNode t = (TreeNode)o;
+			return (this.text.equals(t.text) && this.value.equals(t.value));
+		}
+		return false;
+	}
 	
 	public int hashCode() {
 		int hashCode = 0;

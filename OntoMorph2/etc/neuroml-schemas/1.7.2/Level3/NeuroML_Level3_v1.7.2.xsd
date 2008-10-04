@@ -215,7 +215,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	    <xs:sequence>
 		    <xs:element name="slide" type="xWBCSlide" maxOccurs="unbounded">
 			    <xs:annotation>
-				    <xs:documentation>A single curve.</xs:documentation>
+				    <xs:documentation>A single slide.</xs:documentation>
 			    </xs:annotation>
 		    </xs:element>
 	    </xs:sequence>

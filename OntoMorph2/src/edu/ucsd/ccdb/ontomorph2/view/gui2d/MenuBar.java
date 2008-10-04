@@ -54,7 +54,8 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String ATLAS_MEDIAL_VIEW_SMOOTH = "Smoothly Zoom To Medial Side";
 	public static final String ATLAS_CELL_VIEW_SMOOTH = "Smoothly Zoom To View Hippocampal Cells";
 	public static final String ATLAS_SUBCELL_VIEW_SMOOTH = "Smoothly Zoom To View Subcellular Components";
-	public static final String strVIEW_SLIDES = "Toggle Slides";
+	public static final String strVIEW_SLIDES = "View Slides";
+	public static final String strHIDE_SLIDES = "Hide Slides";
 	public static final String strMNU_MANIPULATE = "Manipulate Object";
 	public static final String strMNU_MANI_ROTATEA = "Rotate (X - Axis)";
 	public static final String strMNU_MANI_ROTATEB = "Rotate (Y - Axis)";
@@ -105,6 +106,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         Menu mnuView = new Menu();
         mB.registerSubMenu(mnuView, "View");
         makeMenuItem(strVIEW_SLIDES, mnuView);
+        makeMenuItem(strHIDE_SLIDES, mnuView);
         makeMenuItem(SLIDE_VIEW_CEREB_SMOOTH, mnuView);
         makeMenuItem(SLIDE_VIEW_SMOOTH, mnuView);
         makeMenuItem(ATLAS_CELL_VIEW_SMOOTH, mnuView);
@@ -225,7 +227,11 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if ( strVIEW_SLIDES.equals(act))
 		{
-			TangibleManager.getInstance().toggleSlides();
+			TangibleManager.getInstance().viewSlides();
+		}
+		else if (strHIDE_SLIDES.equals(act)) 
+		{
+			TangibleManager.getInstance().hideSlides();
 		}
 		else if ( strNEW_CELL_A.equals(act) )
 		{

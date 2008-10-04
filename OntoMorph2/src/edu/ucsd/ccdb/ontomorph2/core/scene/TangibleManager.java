@@ -367,4 +367,20 @@ public class TangibleManager {
 			OntoMorph2.getCurrentScene().changed(Scene.CHANGED_SLIDE);
 		}
 	}
+
+	public void viewSlides() {
+		for (Slide s : getSlides())
+		{
+			s.setVisible(true);
+			OntoMorph2.getCurrentScene().changed(Scene.CHANGED_SLIDE);
+		}
+	}
+
+	public void hideSlides() {
+		for (Slide s : getSlides())
+		{
+			s.setVisible(false);
+			OntoMorph2.getCurrentScene().changed(Scene.CHANGED_SLIDE);
+		}
+	}
 }

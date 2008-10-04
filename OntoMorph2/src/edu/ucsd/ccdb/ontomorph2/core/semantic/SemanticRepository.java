@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +28,7 @@ public abstract class SemanticRepository {
 
 	OWLDatabaseModel owlModel = null;
 	Map<String, OWLNamedClass> clsFlyweightStore = new HashMap<String,OWLNamedClass>();
-	Map<String, OWLIndividual> insFlyweightStore = new HashMap<String,OWLIndividual>();
+	Map<OWLIndividual, SemanticInstance> insFlyweightStore = new HashMap<OWLIndividual,SemanticInstance>();
 	Map<String, AbstractOWLProperty> propFlyweightStore = new HashMap<String,AbstractOWLProperty>();
 	
 	/* (non-Javadoc)
@@ -106,7 +107,7 @@ public abstract class SemanticRepository {
 	public List<SemanticInstance> getInstancesFromRoot(SemanticClass rootClass, boolean requireLabel) {
 		List<SemanticInstance> runningList = new ArrayList<SemanticInstance>();
 		
-		for (Iterator it = rootClass.getAllInstances(owlModel).iterator(); it.hasNext(); ) {
+		for (Iterator it = this.getAllInstances(rootClass, owlModel).iterator(); it.hasNext(); ) {
 			SemanticInstance i = (SemanticInstance)it.next();
 			if (requireLabel) {
 				if (i.getLabel() != null) {
@@ -233,5 +234,40 @@ public abstract class SemanticRepository {
 		return p;
 	}
 	
-	public abstract SemanticInstance getSemanticInstance(String uri);
+	/**
+	 * Retrieves the SemanticInstance associated with the underlying OWLIndividual ind.
+	 * Before creating a new one, will try to retrieve it from a local flyweight store.
+	 * 
+	 * @param ind
+	 * @return
+	 */
+	public SemanticInstance getSemanticInstance(OWLIndividual ind) {
+		SemanticInstance out = this.insFlyweightStore.get(ind);
+		if (out == null) {
+			out = new SemanticInstance(ind);
+			insFlyweightStore.put(ind, out); 
+		}
+		return out;
+	}
+	
+	
+	public List<SemanticInstance> getInstances(SemanticClass c) {
+		List<SemanticInstance> l = new ArrayList<SemanticInstance>();
+		Collection instances = c.getOWLClass().getInstances(false);
+		for (Iterator it = instances.iterator(); it.hasNext();) {
+			SemanticInstance si = getSemanticInstance((OWLIndividual)it.next());
+			l.add(si);
+		}
+		return l;
+	}
+
+	public List<SemanticInstance> getAllInstances(SemanticClass class1, OWLModel owlModel2) {
+		List<SemanticInstance> si = new ArrayList<SemanticInstance>();
+		Collection c = owlModel2.getInstances(class1.getOWLClass());
+		for (Iterator it = c.iterator(); it.hasNext();) {
+			OWLIndividual ind = (OWLIndividual)it.next();
+			si.add(getSemanticInstance(ind));
+		}
+		return si;
+	}
 }

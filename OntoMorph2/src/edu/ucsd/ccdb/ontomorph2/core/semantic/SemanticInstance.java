@@ -97,7 +97,7 @@ public class SemanticInstance extends SemanticThing {
 			Object propValue = instance.getPropertyValue(p.getOWLProperty());
 			if (propValue instanceof OWLIndividual) {
 				OWLIndividual i = (OWLIndividual)propValue;
-				return new SemanticInstance(i);
+				return SemanticRepository.getAvailableInstance().getSemanticInstance(i);
 			} else {
 				//Log.warn("Found a property value for " + p.getOWLProperty().getURI() + " that is not an instance of OWLIndividual! : " + propValue);
 			}
