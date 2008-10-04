@@ -26,6 +26,9 @@
          <column name="Id"/>
          <type name="org.hibernate.type.BigIntegerType"/>
       </property>
+      <many-to-one class="org.morphml.neuroml.schema.XWBCQuat" name="Rotation">
+         <column name="Rotation"/>
+      </many-to-one>
       <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
                 name="System">
          <column name="System_"/>

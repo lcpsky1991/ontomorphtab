@@ -164,6 +164,17 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	    </xs:complexContent>
     </xs:complexType>
     -->
+    <xs:complexType name="xWBCQuat">
+	    <xs:annotation>
+		    <xs:documentation>Defines a Quaternion representing rotation</xs:documentation>
+	    </xs:annotation>
+	    
+	    <xs:attribute name="x" type="xs:double" use="required"/>
+	    <xs:attribute name="y" type="xs:double" use="required"/>
+	    <xs:attribute name="z" type="xs:double" use="required"/>
+	    <xs:attribute name="w" type="xs:double" use="required"/>
+    </xs:complexType>
+    
     <xs:complexType name="xWBCTangible">
 	    <xs:annotation>
 		    <xs:documentation>Shell with extensions for standard objects in Whole Brain Catalog. 
@@ -172,20 +183,23 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	    
 	    
 	    <xs:sequence>
-		<xs:element name="name" type="xs:string"/>
-		<xs:element name="position" type="meta:Point3D" maxOccurs="1" >
-			<xs:annotation>
-				<xs:documentation>Where it is in space, in absolute JME coordinates</xs:documentation>
-			</xs:annotation>
-		</xs:element>
-		<xs:element name="system" type="xs:string"/>
-		<xs:element name="dummy" type="xs:string"/>	    
-		<xs:element name="id" type="xs:nonNegativeInteger">
-			<xs:annotation>
-				<xs:documentation>ID of the tangible, unique within the document</xs:documentation>
-			</xs:annotation>	
-		</xs:element>
-	</xs:sequence>
+		    <xs:element name="name" type="xs:string"/>
+		    
+		    <xs:element name="position" type="meta:Point3D" maxOccurs="1" >
+			    <xs:annotation>
+				    <xs:documentation>Where it is in space, in absolute JME coordinates</xs:documentation>
+			    </xs:annotation>
+		    </xs:element>
+		    
+		    <xs:element name="system" type="xs:string"/>
+		    <xs:element name="rotation" type="xWBCQuat"/>
+		    <xs:element name="dummy" type="xs:string"/>	    
+		    <xs:element name="id" type="xs:nonNegativeInteger">
+			    <xs:annotation>
+				    <xs:documentation>ID of the tangible, unique within the document</xs:documentation>
+			    </xs:annotation>	
+		    </xs:element>
+	    </xs:sequence>
     </xs:complexType>
     
     
@@ -208,14 +222,6 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	</xs:complexContent>
     </xs:complexType>
     
-    <xs:complexType name="quat">
-            <xs:attribute name="x" type="xs:double" use="required"/>
-            <xs:attribute name="y" type="xs:double" use="required"/>
-            <xs:attribute name="z" type="xs:double" use="required"/>
-            <xs:attribute name="w" type="xs:double" use="required"/>
-    </xs:complexType>
-    
-    
     <xs:complexType name="Slides">
 	    <xs:annotation>
 		    <xs:documentation>Set of Level 3 Slides</xs:documentation>
@@ -223,7 +229,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	    <xs:sequence>
 		    <xs:element name="slide" type="xWBCSlide" maxOccurs="unbounded">
 			    <xs:annotation>
-				    <xs:documentation>A single curve.</xs:documentation>
+				    <xs:documentation>A single slide.</xs:documentation>
 			    </xs:annotation>
 		    </xs:element>
 	    </xs:sequence>
