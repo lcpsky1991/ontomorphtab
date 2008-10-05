@@ -2,6 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.view;
 
 import org.fenggui.Display;
 
+import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.KeyInputListener;
 import com.jme.input.MouseInput;
@@ -43,14 +44,24 @@ public class OMTKeyInputListener implements KeyInputListener {
 	 */
 	public void onKey(char character, int keyCode, boolean pressed) {
 		//don't handle if focus manager has another widget focused
-		if (guiInput.wasKeyHandled()) return;
-		
+		if (guiInput.wasKeyHandled()){
+			//Unassigns the keys program from JME
+			KeyBindingManager.getKeyBindingManager().remove("toggle_pause");
+			KeyBindingManager.getKeyBindingManager().remove("step");
+			KeyBindingManager.getKeyBindingManager().remove("toggle_wire");
+			KeyBindingManager.getKeyBindingManager().remove("toggle_lights");
+			KeyBindingManager.getKeyBindingManager().remove("toggle_bounds");
+			KeyBindingManager.getKeyBindingManager().remove("toggle_normals");
+			KeyBindingManager.getKeyBindingManager().remove("camera_out");
+			KeyBindingManager.getKeyBindingManager().remove("mem_report");
+			return;
+
+		}	
 		//don't process any released events for now
 		//may consider implementing handlers that operate in a loop as long
 		//as a button stays pressed later though.  This may need to be done in a
 		//separate thread or using JME's controller mechanism though -SL
-		
-		
+
 		/////////////////////////////////////////////
 		// inside IF statement handles repeating key actions
 		if (!pressed)
@@ -58,6 +69,9 @@ public class OMTKeyInputListener implements KeyInputListener {
 
 			return;
 		}
+		
+		//call to set the JME Action Keys 
+		setJMEActionKeys();
 		
 		switch(keyCode)
 		{
@@ -196,4 +210,32 @@ public class OMTKeyInputListener implements KeyInputListener {
 		return this.keyPressActionRate;
 	}
 		
+	//sets the JME Action keys after they have been disable if there was a fenggui focus
+	public void setJMEActionKeys(){
+		 /** Assign key P to action "toggle_pause". */
+        KeyBindingManager.getKeyBindingManager().set( "toggle_pause",
+                KeyInput.KEY_P );
+        /** Assign key ADD to action "step". */
+        KeyBindingManager.getKeyBindingManager().set( "step",
+                KeyInput.KEY_ADD );
+        /** Assign key T to action "toggle_wire". */
+        KeyBindingManager.getKeyBindingManager().set( "toggle_wire",
+                KeyInput.KEY_T );
+        /** Assign key L to action "toggle_lights". */
+        KeyBindingManager.getKeyBindingManager().set( "toggle_lights",
+                KeyInput.KEY_L );
+        /** Assign key B to action "toggle_bounds". */
+        KeyBindingManager.getKeyBindingManager().set( "toggle_bounds",
+                KeyInput.KEY_B );
+        /** Assign key N to action "toggle_normals". */
+        KeyBindingManager.getKeyBindingManager().set( "toggle_normals",
+                KeyInput.KEY_N );
+        /** Assign key C to action "camera_out". */
+        KeyBindingManager.getKeyBindingManager().set( "camera_out",
+                KeyInput.KEY_C );
+        /** Assign key R to action "mem_report". */
+        KeyBindingManager.getKeyBindingManager().set("mem_report",
+                KeyInput.KEY_R);
+
+	}
 }
