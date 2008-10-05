@@ -25,7 +25,7 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
-/**
+/** .
  * Describes the morphology of the cell, loaded by a MorphML file
  * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
