@@ -55,6 +55,20 @@ public class Curve3D extends Tangible{
 		setControlPoints(controlPoints);
 	}
 
+	public Curve3D(Curve curve) {
+		super(curve.getName());
+		morphMLCurve = curve;
+		setControlPoints(morphMLCurve.getPoint());
+	}
+
+	private void setControlPoints(List point) {
+		int i = 0;
+		controlPoints = new OMTVector[point.size()];
+		for (Iterator it = point.iterator(); it.hasNext();) {
+			controlPoints[i++] = new OMTVector((Point3D)it.next());
+		}
+	}
+
 	public void getFromDB()
 	{
 		/**

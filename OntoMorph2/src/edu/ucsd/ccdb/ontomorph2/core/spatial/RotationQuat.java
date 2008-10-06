@@ -21,10 +21,6 @@ public class RotationQuat extends com.jme.math.Quaternion{
 		
 	}
 	
-	public RotationQuat() {
-		super(0f, 0f, 0f, 0f);
-	}
-	
 	public RotationQuat(Quaternion localRotation) {
 		super(localRotation);
 	}
@@ -35,6 +31,9 @@ public class RotationQuat extends com.jme.math.Quaternion{
 
 	public RotationQuat(XWBCQuat r) {
 		super((float)r.getX(), (float)r.getY(), (float)r.getZ(), (float)r.getW());
+	}
+
+	public RotationQuat() {
 	}
 
 	public Matrix3f asMatrix3f() {

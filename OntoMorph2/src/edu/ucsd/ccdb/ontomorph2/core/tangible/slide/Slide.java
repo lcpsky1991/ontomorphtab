@@ -49,11 +49,21 @@ public class Slide extends Tangible {
         	this.theSpatial = lookup;
         }
 		
-		this.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(
+        this.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(
 				SemanticClass.IMAGE_CLASS));
 		this.getSemanticInstance();
 	}
 	
+
+	public Slide(XWBCSlide slide) {
+		super(slide.getName());
+		this.theSpatial = slide;
+		
+		this.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(
+				SemanticClass.IMAGE_CLASS));
+		this.getSemanticInstance();
+	}
+
 	
 	public Slide(String name, URI imageURI) {
 		this(name);
@@ -71,6 +81,7 @@ public class Slide extends Tangible {
 		setRatio(ratio);
 	}
 	
+
 
 	public float getRatio() {
 		return (float)getMorphMLSlide().getRatio();
@@ -136,13 +147,11 @@ public class Slide extends Tangible {
 	@Override
 	public void save()
 	{
-	    super.save();
-	    
 	   	//get the appropriate content
 		
 	    try
 	    {
-	    	DataRepository.getInstance().saveFileToDB(getMorphMLSlide());
+		    super.save();
 	    	System.out.println("Saved " + this.getName());
 		}
 		catch(Exception e)
@@ -150,6 +159,4 @@ public class Slide extends Tangible {
 			Log.warn(e.getMessage());
 		}
 	}
-
-	
 }

@@ -104,14 +104,20 @@ public class NeuronMorphology extends ContainerTangible{
 	
 	public void setCurve(Curve3D curve) {
 		_curve = curve;
-		curveAssoc = new CurveAssociationImpl();
-		curveAssoc.setCurveId(curve.getMorphMLCurve().getId());
-		curveAssoc.setTime(_time);
+		if (curve == null) {
+			curveAssoc = null;
+		} else {
+			curveAssoc = new CurveAssociationImpl();
+			curveAssoc.setCurveId(curve.getMorphMLCurve().getId());
+			curveAssoc.setTime(_time);
+		}
 	}
 	
 	public void setTime(float time) {
 		_time = time;
-		curveAssoc.setTime(time);
+		if (curveAssoc != null) {
+			curveAssoc.setTime(time);
+		}
 	}
 	
 	/**

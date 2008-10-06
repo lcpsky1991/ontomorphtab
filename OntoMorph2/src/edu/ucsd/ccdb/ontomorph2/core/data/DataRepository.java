@@ -1,7 +1,13 @@
 package edu.ucsd.ccdb.ontomorph2.core.data;
 
+import java.io.File;
 import java.io.Serializable;
+import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -10,8 +16,13 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.morphml.metadata.schema.Curve;
 import org.morphml.neuroml.schema.Level3Cell;
+import org.morphml.neuroml.schema.Neuroml;
 import org.morphml.neuroml.schema.XWBCSlide;
 import org.morphml.neuroml.schema.XWBCTangible;
+import org.morphml.neuroml.schema.impl.NeuromlImpl;
+
+import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 
 
@@ -91,6 +102,38 @@ public class DataRepository {
 		}
 		
 		return objFound;
+	}
+	
+	public Neuroml loadScene() {
+		final Session sesLoad = sFact.openSession();	//open connection to DB (SQL)
+		
+		Criteria search = sesLoad.createCriteria(Neuroml.class);
+		List results = search.list();
+		Neuroml scene = null;
+		if (!results.isEmpty()){
+			scene = (Neuroml)results.get(0);	
+		} else {
+			Log.warn("Did not find a scene in the DB.  Loading it from disk!");
+			long tick = Log.tick();
+			try {
+				URL sceneURL = new File("saved_scene.xml").toURI().toURL();
+				
+				if (sceneURL != null) {
+					JAXBContext context = JAXBContext.newInstance("org.morphml.neuroml.schema");
+					//Create the unmarshaller
+					final Unmarshaller unmarshaller = context.createUnmarshaller();
+					//Unmarshall the XML
+					scene = (NeuromlImpl)unmarshaller.unmarshal(new File(sceneURL.getFile()));
+					
+					//load the scene into the DB
+					DataRepository.getInstance().saveFileToDB(scene);
+				}
+			Log.tock("Finished loading scene from disk and persisting it to the db!", tick);
+			} catch (Exception e) {
+				throw new OMTException("Problem loading scene from XML", e);
+			}
+		}
+		return scene;
 	}
 	
 	public XWBCTangible loadTangible(Class type, String name)

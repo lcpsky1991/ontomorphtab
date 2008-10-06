@@ -5,8 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Set;
@@ -14,8 +16,11 @@ import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
+import org.morphml.metadata.schema.Curve;
 import org.morphml.networkml.schema.CellInstance;
+import org.morphml.networkml.schema.CurveAssociation;
 import org.morphml.networkml.schema.Instances;
 import org.morphml.networkml.schema.Population;
 import org.morphml.networkml.schema.Populations;
@@ -24,16 +29,22 @@ import org.morphml.networkml.schema.impl.InstancesImpl;
 import org.morphml.networkml.schema.impl.PopulationImpl;
 import org.morphml.networkml.schema.impl.PopulationsImpl;
 import org.morphml.neuroml.schema.CurveSet;
+import org.morphml.neuroml.schema.Level3Cell;
 import org.morphml.neuroml.schema.Level3Cells;
+import org.morphml.neuroml.schema.NeuroMLLevel3;
 import org.morphml.neuroml.schema.Neuroml;
 import org.morphml.neuroml.schema.SlideSet;
+import org.morphml.neuroml.schema.XWBCSlide;
 import org.morphml.neuroml.schema.impl.CurveSetImpl;
 import org.morphml.neuroml.schema.impl.Level3CellsImpl;
 import org.morphml.neuroml.schema.impl.NeuromlImpl;
 import org.morphml.neuroml.schema.impl.SlideSetImpl;
 
+import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
+import edu.ucsd.ccdb.ontomorph2.core.data.MemoryCacheRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
@@ -44,6 +55,7 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
 /**
@@ -137,9 +149,7 @@ public abstract class Scene extends Observable{
 	 * @see #loadFromCKB()
 	 *
 	 */
-	public void load() {
-		
-	}
+	public abstract void load();
 	
 
 	/**
@@ -217,8 +227,6 @@ public abstract class Scene extends Observable{
 		SlideSet slides = new SlideSetImpl();
 		for (Slide s: getSlides())
 		{
-			System.out.println("s = " + s.getMorphMLSlide());
-			s.setScale(1f);
 			slides.getSlide().add(s.getMorphMLSlide());
 		}
 		scene.setSlides(slides);

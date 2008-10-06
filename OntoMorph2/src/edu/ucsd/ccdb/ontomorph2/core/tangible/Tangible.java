@@ -553,11 +553,16 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		}
 	}
 
+	
 	public boolean equals(Object o) {
-		return this.hashCode() == o.hashCode();
+		if (o != null && o instanceof Tangible) {
+			Tangible t = (Tangible)o;
+			return getName().equals(t.getName());
+		}
+		return false;
 	}
 	
 	public int hashCode() {
-		return super.hashCode() + theSpatial.hashCode();
+		return getName().hashCode() *31;
 	}
 }

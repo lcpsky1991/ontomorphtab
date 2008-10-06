@@ -23,20 +23,15 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
 public class SlideView extends TangibleView {
 	
 	Quad quad;
-	Slide _slide = null;
 	
 	public SlideView(Slide slide) {
 		super(slide);
 		quad = new Quad("Slide View");
-		_slide = slide;
+		
 		init();
 	}
-	
-	public SlideView(Slide slide, DisplaySystem disp) {
-		super(slide);
-		quad = new Quad("Slide View");
-		_slide = slide;
-		init();
+	private Slide getSlide() {
+		return (Slide)getModel();
 	}
 	
 	private TextureState getTextureState() {
@@ -44,12 +39,12 @@ public class SlideView extends TangibleView {
 		
 		TextureState textureState = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 		Texture t = null;
-		if (_slide instanceof TiledSlide) {
+		if (getSlide() instanceof TiledSlide) {
 			t = new Texture();
 			t.setMipmapState(Texture.MM_LINEAR);
-			t.setImage(((TiledSlide)_slide).getImage());
+			t.setImage(((TiledSlide)getSlide()).getImage());
 		} else {
-			t = TextureManager.loadTexture(((Slide)_slide).getBufferedImage(), 
+			t = TextureManager.loadTexture(((Slide)getSlide()).getBufferedImage(), 
 						Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, 1, true);
 		}
 		
@@ -60,7 +55,7 @@ public class SlideView extends TangibleView {
 	
 
 	private void init() {
-		quad.initialize(20f*_slide.getRatio(),20f);
+		quad.initialize(20f*getSlide().getRatio(),20f);
 		
 		TextureState ts = getTextureState();
 		quad.setRenderState(ts);
@@ -81,7 +76,7 @@ public class SlideView extends TangibleView {
 		quad.updateRenderState();
 		quad.updateGeometricState(0.5f, false);
 		
-		if (_slide.isVisible()) {
+		if (getSlide().isVisible()) {
 			this.attachChild(quad);
 		}
 		

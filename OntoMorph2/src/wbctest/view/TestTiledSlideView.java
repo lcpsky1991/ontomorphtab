@@ -45,7 +45,7 @@ public class TestTiledSlideView extends SimpleGame{
 		slide = new Slide("hippo_slice1", new File(Scene.imgDir + "hippo_slice1.jpg").toURI(), 0.87f);
 		slide.setScale(170);
 		
-		SlideView s = new SlideView(slide, display);
+		SlideView s = new SlideView(slide);
 		
 		rootNode.attachChild(s);
 	}
@@ -61,8 +61,8 @@ public class TestTiledSlideView extends SimpleGame{
 		//slide.setRelativeScale(1);
 		
 		
-		SlideView s = new SlideView(slide1, display);
-		SlideView s2 = new SlideView(slide2, display);
+		SlideView s = new SlideView(slide1);
+		SlideView s2 = new SlideView(slide2);
 		
 		rootNode.attachChild(s);
 		rootNode.attachChild(s2);
@@ -96,7 +96,7 @@ public class TestTiledSlideView extends SimpleGame{
 	
 	protected void test4() {
 		TiledSlide ts = new TiledSlide("ts", null, 1f);
-		SlideView s = new SlideView(ts, display);
+		SlideView s = new SlideView(ts);
 		
 		rootNode.attachChild(s);
 	}
