@@ -12,9 +12,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 
 import org.morphml.metadata.schema.Point3D;
-import org.morphml.neuroml.schema.XWBCQuat;
 import org.morphml.neuroml.schema.XWBCSlide;
-import org.morphml.neuroml.schema.impl.XWBCQuatImpl;
 import org.morphml.neuroml.schema.impl.XWBCSlideImpl;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;

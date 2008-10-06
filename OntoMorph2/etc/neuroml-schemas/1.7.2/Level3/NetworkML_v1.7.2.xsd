@@ -598,10 +598,12 @@
                 <xs:documentation>An instance of a cell at a the specified location</xs:documentation>
             </xs:annotation>
 
+		<xs:sequence>
 			<xs:choice>
             	<xs:sequence>
                 	<xs:group ref="meta:metadata"/>
-                	<xs:element name="location" type="meta:Point3D"/>
+                	<xs:element name="location" type="meta:Point3D" maxOccurs="1"/>
+
             	</xs:sequence>
 				<!-- Augmented by slarson@ncmir.ucsd.edu -->
 				<xs:element name="curveAssociation" type="CurveAssociation">
@@ -610,6 +612,12 @@
 					</xs:annotation>
 				</xs:element>
 			</xs:choice>
+
+			
+				<xs:element name="rotation" type="meta:xWBCQuat" maxOccurs="1"/>
+
+				<xs:element name="scale" type="meta:Point3D" maxOccurs="1"/>
+			</xs:sequence>
 
             <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
                 <xs:annotation>

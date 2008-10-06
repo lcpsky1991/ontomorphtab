@@ -197,14 +197,8 @@ public abstract class Scene extends Observable{
 				populations.getPopulation().add(cellType);
 			}
 			List list = cellType.getInstances().getInstance();
-			CellInstance ci = new CellInstanceImpl();
-			ci.setId(BigInteger.valueOf(list.size()));
-			if (mmnm.getCurveAssociation() != null) {
-				ci.setCurveAssociation(mmnm.getCurveAssociation());
-			} else {
-				ci.setLocation(mmnm.getPosition().toPoint3D());
-			}
-			list.add(ci);
+			
+			list.add(mmnm.getMorphMLCellInstance());
 			cellType.getInstances().setSize(BigInteger.valueOf(list.size()));
 		}
 		scene.setPopulations(populations);

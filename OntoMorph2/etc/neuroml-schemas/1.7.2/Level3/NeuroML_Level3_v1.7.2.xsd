@@ -166,16 +166,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	    </xs:complexContent>
     </xs:complexType>
     -->
-    <xs:complexType name="xWBCQuat">
-	    <xs:annotation>
-		    <xs:documentation>Defines a Quaternion representing rotation</xs:documentation>
-	    </xs:annotation>
-	    
-	    <xs:attribute name="x" type="xs:double" use="required"/>
-	    <xs:attribute name="y" type="xs:double" use="required"/>
-	    <xs:attribute name="z" type="xs:double" use="required"/>
-	    <xs:attribute name="w" type="xs:double" use="required"/>
-    </xs:complexType>
+
     
     <xs:complexType name="xWBCTangible">
 	    <xs:annotation>
@@ -193,7 +184,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 			    </xs:annotation>
 		    </xs:element>
 		    
-		    <xs:element name="rotation" type="xWBCQuat"/>
+		    <xs:element name="rotation" type="meta:xWBCQuat" maxOccurs="1"/>
 
 			<xs:element name="scale" type="meta:Point3D" maxOccurs="1"/>
 

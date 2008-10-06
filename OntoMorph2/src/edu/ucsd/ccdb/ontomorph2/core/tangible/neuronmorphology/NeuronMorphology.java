@@ -9,7 +9,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
 import org.morphml.morphml.schema.Cable;
+import org.morphml.networkml.schema.CellInstance;
 import org.morphml.networkml.schema.CurveAssociation;
+import org.morphml.networkml.schema.impl.CellInstanceImpl;
 import org.morphml.networkml.schema.impl.CurveAssociationImpl;
 import org.morphml.neuroml.schema.Level3Cell;
 import org.morphml.neuroml.schema.Level3Cells;
@@ -29,6 +31,7 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /** .
  * Describes the morphology of the cell, loaded by a MorphML file
@@ -52,7 +55,6 @@ public class NeuronMorphology extends Tangible{
 	PositionVector lookAtPosition = null;
 	
 	CurveAssociation curveAssoc = null;
-	
 
 	Curve3D _curve = null;
 	float _time = 0.0f;
@@ -61,17 +63,28 @@ public class NeuronMorphology extends Tangible{
 	
 	NeuronCable tempCable = null;
 	Level3Cell theCell = null;
+	CellInstance cellInstance = null;
 	
 	public NeuronMorphology(String name) {
-		super(name);
+		this(name, null, null);
+		
 	}
 	
 
 	public NeuronMorphology(String name, PositionVector position, 
 			RotationQuat rotation) {
-		this(name);
-		setPosition(position);
-		setRotation(rotation);
+		super(name);
+		cellInstance = new CellInstanceImpl();
+		if (position != null) {
+			setPosition(position);
+		}
+		if (rotation != null) {
+			setRotation(rotation);
+		}
+		cellInstance.setLocation(getPosition().toPoint3D());
+		cellInstance.setRotation(getRotation().toWBCQuat());
+		cellInstance.setScale(getScale().toPoint3D());
+		save();
 	}
 
 	
@@ -103,15 +116,44 @@ public class NeuronMorphology extends Tangible{
 		return _curve;
 	}
 	
+	
+	public void setPosition(PositionVector pos, boolean flagChanged) {
+		if (pos != null) {
+			cellInstance.setLocation(pos.toPoint3D());
+			if (flagChanged) {
+				this.save();
+				changed(CHANGED_MOVE);
+			}
+		}
+	}
+	
+	public void setRotation(RotationQuat rot) {
+		if (rot != null) {
+			cellInstance.setRotation(rot.toWBCQuat());
+			this.save();
+			changed(CHANGED_ROTATE);
+		}
+	}
+	
+	public void setScale(OMTVector v) {
+		cellInstance.setScale(v.toPoint3D());
+		this.save();
+		changed(CHANGED_SCALE);
+	}
+	
+	
 	public void setCurve(Curve3D curve) {
 		_curve = curve;
 		if (curve == null) {
 			curveAssoc = null;
+			cellInstance.setCurveAssociation(null);
 		} else {
 			curveAssoc = new CurveAssociationImpl();
 			curveAssoc.setCurveId(curve.getMorphMLCurve().getId());
 			curveAssoc.setTime(_time);
+			cellInstance.setCurveAssociation(curveAssoc);
 		}
+		save();
 	}
 	
 	public void setTime(float time) {
@@ -119,6 +161,7 @@ public class NeuronMorphology extends Tangible{
 		if (curveAssoc != null) {
 			curveAssoc.setTime(time);
 		}
+		save();
 	}
 	
 	/**
@@ -388,6 +431,15 @@ public class NeuronMorphology extends Tangible{
 			}
 		}
 		return null;
+	}
+	
+	public void save() {
+		DataRepository.getInstance().saveFileToDB(cellInstance);
+	}
+
+
+	public CellInstance getMorphMLCellInstance() {
+		return this.cellInstance;	
 	}
 
 }

@@ -556,4 +556,15 @@ elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	</xs:complexType>
 
+    <xs:complexType name="xWBCQuat">
+	    <xs:annotation>
+		    <xs:documentation>Defines a Quaternion representing rotation</xs:documentation>
+	    </xs:annotation>
+	    
+	    <xs:attribute name="x" type="xs:double" use="required"/>
+	    <xs:attribute name="y" type="xs:double" use="required"/>
+	    <xs:attribute name="z" type="xs:double" use="required"/>
+	    <xs:attribute name="w" type="xs:double" use="required"/>
+    </xs:complexType>
+
 </xs:schema>

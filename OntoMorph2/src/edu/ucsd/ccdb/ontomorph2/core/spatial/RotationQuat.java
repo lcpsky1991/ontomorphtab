@@ -1,7 +1,8 @@
 package edu.ucsd.ccdb.ontomorph2.core.spatial;
 
-import org.morphml.neuroml.schema.XWBCQuat;
-import org.morphml.neuroml.schema.impl.XWBCQuatImpl;
+
+import org.morphml.metadata.schema.XWBCQuat;
+import org.morphml.metadata.schema.impl.XWBCQuatImpl;
 
 import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
