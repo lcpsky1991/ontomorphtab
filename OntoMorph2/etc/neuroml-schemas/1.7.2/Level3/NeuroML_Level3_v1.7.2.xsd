@@ -217,6 +217,8 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 						<xs:documentation>The contents of the Slide, probably the URL of the image</xs:documentation>
 					</xs:annotation>
 				</xs:element>
+				<xs:element name="ratio" type="xs:double">								
+				</xs:element>
 			</xs:sequence>			
 		</xs:extension>
 	</xs:complexContent>

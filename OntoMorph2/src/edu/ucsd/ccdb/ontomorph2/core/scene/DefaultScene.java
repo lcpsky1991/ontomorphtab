@@ -118,53 +118,18 @@ public class DefaultScene extends Scene{
 		}
 		
 		
-		//Mocked up for Ted demo
-		Slide b = null;
+		
 		{
-			XWBCSlide ret = (XWBCSlide) DataRepository.getInstance().findSlideByName("Waldo");
-			if (ret != null)
-			{
-				URI place = null;
-				
-				try
-                {
-	                place = new URI(ret.getImageURL());
-                }
-                catch (URISyntaxException e1)
-                {
-	                // TODO Auto-generated catch block
-	                e1.printStackTrace();
-                }
-				//place = ret.getImageURL()).toURI();
-				System.out.println(place);
-				b = new URISlide(place, 1.34f);
-				b.setName(ret.getName());
-				
-				Point3D pos = ret.getPosition();
-				XWBCQuat rot = ret.getRotation();
-				
-			
-				b.setRelativeRotation(new RotationVector((float)rot.getX(),(float)rot.getY(),(float)rot.getZ(),(float)rot.getW()));
-				b.setRelativePosition((float)pos.getX(), (float)pos.getY(), (float)pos.getZ());
-			
-				System.out.println(b.getRelativePosition());
-				
-				b.setCoordinateSystem(d);
-				b.setRelativeScale(3.2f);
-				addSceneObject(b);
-			}
-			else
-			{
 				//this was the default
-				b = new URISlide(hippo2URL, 1.34f);
-		        b.setName("Waldo");
-		        b.setRelativePosition(new PositionVector(-14,0, 18f));
-		        b.setCoordinateSystem(d);
-		        //b.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
-		        b.setRelativeScale(3.2f);
-				addSceneObject(b);
-			}
+			Slide b = new URISlide(hippo2URL, 1.34f);
+		    b.setName("Waldo");
+		    b.setRelativePosition(new PositionVector(-14,0, 18f));
+		    //b.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
+		    b.setRelativeScale(3.2f);
+		    b.setCoordinateSystem(d);
+			addSceneObject(b);
 		}
+	
 		
 		Slide c = new URISlide(hippo3aURL, 1.33f);
 		c.setRelativePosition(new PositionVector(-34,-5,19f));
@@ -203,6 +168,15 @@ public class DefaultScene extends Scene{
 		addSceneObject(g);
 
 
+		//RELOAD ALL OF THE SLIDES form DB
+		{
+			for (Slide s : TangibleManager.getInstance().getSlides()) {
+				s.loadFromDB(s.getName());
+			}
+		}
+		
+		
+		
 		//hide the slides for tedd waitt
 		//TODO: remove this section
 		{

@@ -63,7 +63,7 @@ public class Curve3D extends Tangible{
 		 */
 		
 		//get the morphML curve form the DB
-		Curve curRetreive = (Curve) DataRepository.getInstance().findTangible(Curve.class, this.getName()); //experimental
+		Curve curRetreive = (Curve) DataRepository.getInstance().loadTangible(Curve.class, this.getName()); //experimental
 		
 		if ( curRetreive != null)
 		{

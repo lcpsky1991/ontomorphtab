@@ -41,14 +41,20 @@ public class URISlide extends Slide {
 	
 
 	private URL getImageURL() {
-		if (_imageURL != null) {
+		if (_imageURL != null) 
+		{
 			return _imageURL;
 		}
-		try {
-			return this._imageURI.toURL();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if ( this._imageURI != null)
+		{
+			try 
+			{
+				return this._imageURI.toURL();
+			} 
+			catch (Exception e) 
+			{
+				
+			}
 		}
 		return null;
 	}
@@ -56,16 +62,26 @@ public class URISlide extends Slide {
 	public BufferedImage getBufferedImage() {
 //		load image
 		BufferedImage bufImg = null;
-		try {
-			if (this.getImageURI() != null) {
+		try 
+		{
+			if (this.getImageURI() != null) 
+			{
 				
 				bufImg = ImageIO.read(new File(this.getImageURI()));
 				
-			} else {
+			} 
+			else if (this.getImageURL() != null) 
+			{
 				bufImg = ImageIO.read(this.getImageURL());
 			}
-		} catch (IOException e) {
-			Log.warn(this.getImageURL().getFile());
+			else
+			{
+				bufImg =  ImageIO.read(new File("failed"));
+			}
+		} 
+		catch (IOException e) 
+		{
+			Log.warn("Error getting buffered image: " + this.getName());
 			e.printStackTrace();
 		}
 		return bufImg;

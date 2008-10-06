@@ -121,8 +121,8 @@ public class DataRepository {
 		return objFound;
 	}
 	
-	@Deprecated
-	public XWBCTangible findTangible(Class type, String name)
+	
+	public XWBCTangible loadTangible(Class type, String name)
 	{
 		XWBCTangible objFound = null;
 		final Session sesLoad = sFact.openSession();	//open connection to DB (SQL)
