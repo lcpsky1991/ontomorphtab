@@ -458,7 +458,7 @@ public class View3DMouseListener implements MouseInputListener {
 		//Ray mouseRay = new Ray(closePoint, farPoint.subtractLocal(closePoint).normalizeLocal());
 		Ray mouseRay = new Ray(closePoint, dir);
 		
-		View.getInstance().createDebugRay(closePoint, farPoint); //draws a picking ray and possibly a picking cone
+		//View.getInstance().createDebugRay(closePoint, farPoint); //draws a picking ray and possibly a picking cone
 		
 		// Does the mouse's ray intersect the box's world bounds?
 		pr.clear();

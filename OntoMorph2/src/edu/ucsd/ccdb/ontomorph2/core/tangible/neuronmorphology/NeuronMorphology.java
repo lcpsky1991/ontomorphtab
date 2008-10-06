@@ -26,6 +26,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationQuat;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
@@ -35,7 +36,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @see NeuronMorphology
  */
-public class NeuronMorphology extends ContainerTangible{
+public class NeuronMorphology extends Tangible{
 	
 	public static final String RENDER_AS_LINES = "lines";
 	public static final String RENDER_AS_CYLINDERS = "cylinders";

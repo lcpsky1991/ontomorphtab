@@ -81,7 +81,7 @@ public abstract class OMTUtility {
 				s.setLocalTranslation(v);
 				s.setSolidColor(ColorRGBA.red);
 			}
-			View.getInstance().createDebugRay(posa, posb);
+			//View.getInstance().createDebugRay(posa, posb);
 			
 			System.out.println(v + " A " + s.getLocalTranslation() + " B " + s.getWorldTranslation() + " C " + s.getCenter());
 			count++;		//incriment number of vertexs

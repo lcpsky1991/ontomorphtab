@@ -59,7 +59,6 @@ public class DataRepository {
 //		 Open the session
 		final Session saveSession = sFact.openSession();
 		final Transaction transaction = saveSession.beginTransaction();
-
 		
 //		 Save the unmarshalled object into the database
 		saveSession.saveOrUpdate(o);
@@ -133,6 +132,8 @@ public class DataRepository {
 				throw new OMTException("Problem loading scene from XML", e);
 			}
 		}
+		sesLoad.flush();
+		sesLoad.close();
 		return scene;
 	}
 	
