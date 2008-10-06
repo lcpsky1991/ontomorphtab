@@ -22,6 +22,7 @@ public class DataMesh extends ContainerTangible{
 	Object data = null;
 	
 	public DataMesh(URL url) throws IOException {
+		super(url.toString());
 		setObjMeshURL(url);
 		if (getMaxMeshURL() != null) {
 			loadMaxFile(getMaxMeshURL());

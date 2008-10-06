@@ -62,7 +62,7 @@ private AlphaState getAlphaState(){
 		TextureState st = getTextureState();
 		//System.out.println("init");
 		pMesh = ParticleFactory.buildParticles("particles", 500);
-	    pMesh.setOriginOffset(particles.getRelativePosition());
+	    pMesh.setOriginOffset(particles.getPosition());
 	    pMesh.setEmissionDirection(new Vector3f(0,1,0));
 	    pMesh.setInitialVelocity(.006f);
 	    pMesh.setStartSize(2.5f);

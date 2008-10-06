@@ -47,7 +47,7 @@ public class VolumeView {
 				n.attachChild(g);
 			}
 		} else {
-			Vector3f p = _vol.getAbsolutePosition().asVector3f();
+			Vector3f p = _vol.getPosition().asVector3f();
 			if (_vol.getShape() == Volume.BOX_SHAPE) {
 				Box b = new Box("my box", p, 1, 1, 1);
 				n.attachChild(b);

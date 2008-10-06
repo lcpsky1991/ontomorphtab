@@ -32,7 +32,7 @@ public class TestNeuronMorphologyView extends SimpleGame{
 	
 	protected void test1() {
 		NeuronMorphology neuron = new MorphMLNeuronMorphology("cell1zr");
-		neuron.setRelativeScale(0.01f);
+		neuron.setScale(0.01f);
 		neuron.setRenderOption(NeuronMorphology.RENDER_AS_DETAILED_BOXES);
 		//neuron.setRenderOption(NeuronMorphology.RENDER_AS_LOD_2);
 		

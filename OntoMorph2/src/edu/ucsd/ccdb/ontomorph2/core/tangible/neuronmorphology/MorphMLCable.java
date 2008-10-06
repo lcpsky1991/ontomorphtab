@@ -49,6 +49,7 @@ public class MorphMLCable extends ContainerTangible implements INeuronMorphology
 	MorphMLSegment tempSegment = null;
 	
 	protected MorphMLCable(MorphMLNeuronMorphology parentCell, Cable c) {
+		super(parentCell.toString() + " " + c.toString());
 		this.parentCell = parentCell;
 		this.c = c;
 	}

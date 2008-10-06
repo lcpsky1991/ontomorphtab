@@ -16,10 +16,8 @@ import org.morphml.neuroml.schema.impl.NeuromlImpl;
 import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.MemoryCacheRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationQuat;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -33,26 +31,24 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTException;
  */
 public class MorphMLNeuronMorphology extends NeuronMorphology{
 	
-	String filename;
 	MorphMLCable tempCable = null;
 	Level3Cell theCell = null;
 	
 	public MorphMLNeuronMorphology(String name) {
-		this.filename = name;
-		super.setName(name);
+		super(name);
 	}
 	
 
 	public MorphMLNeuronMorphology(String name, PositionVector position, 
-			RotationVector rotation) {
+			RotationQuat rotation) {
 		this(name);
-		setRelativePosition(position);
-		setRelativeRotation(rotation);
+		setPosition(position);
+		setRotation(rotation);
 	}
 
 	
 	public MorphMLNeuronMorphology(String name, PositionVector position, 
-			RotationVector rotation, String renderOption) {
+			RotationQuat rotation, String renderOption) {
 		this(name, position, rotation);
 		setRenderOption(renderOption);
 	}
@@ -66,53 +62,41 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 		setRenderOption(renderOption);
 	}
 	
-	public MorphMLNeuronMorphology(String name, Curve3D curve, float time, 
-			String renderOption, CoordinateSystem c) {
-		this(name, curve, time, renderOption);
-		this.setCoordinateSystem(c);
-	}
-	
-	public MorphMLNeuronMorphology(String url, Curve3D ocurve, float t, String render_as_lod, 
-			DemoCoordinateSystem dcoords) {
-		this(url, ocurve, t, render_as_lod);
-		this.setCoordinateSystem(dcoords);
-	}
-
 
 	public Level3Cell getMorphMLCell() 
 	{
 		if (theCell == null) 
 		{
 			//try to retrieve file from the cache
-			if (MemoryCacheRepository.getInstance().isFileCached(this.filename)) {
-				theCell = (Level3Cell) MemoryCacheRepository.getInstance().getCachedFile(this.filename);
+			if (MemoryCacheRepository.getInstance().isFileCached(getName())) {
+				theCell = (Level3Cell) MemoryCacheRepository.getInstance().getCachedFile(getName());
 			}
 			if (theCell != null) {
-				Log.warn("Successfully uncached cell " + this.filename + "!");
+				Log.warn("Successfully uncached cell " + getName() + "!");
 				return theCell;
 			}
 			
 			try 
 			{
 				//search for file in global database by name
-				theCell = (Level3Cell) DataRepository.getInstance().findMorphMLByName(this.filename);
+				theCell = (Level3Cell) DataRepository.getInstance().findMorphMLByName(getName());
 			}
 			catch (Exception e) 
 			{
-				Log.warn("Did not find " + this.filename + " neuron morphology in the database.  Trying to load from disk now...");
+				Log.warn("Did not find " + getName() + " neuron morphology in the database.  Trying to load from disk now...");
 			}
 			
 			if (theCell != null) 
 			{
 //				store the file in the DataRepository once it is loaded for the next time.
-				MemoryCacheRepository.getInstance().cacheFile(this.filename, theCell);
+				MemoryCacheRepository.getInstance().cacheFile(getName(), theCell);
 				
-				Log.warn("Successfully loaded cell " + this.filename + " from the DB!");
+				Log.warn("Successfully loaded cell " + getName() + " from the DB!");
 				return theCell;
 			}
 			//if not found, search in expected directory for xml file
 			try {
-				URL cellURL = new File(Scene.morphMLDir + this.filename + ".morph.xml").toURI().toURL();
+				URL cellURL = new File(Scene.morphMLDir + getName() + ".morph.xml").toURI().toURL();
 				
 				if (cellURL != null) {
 					JAXBContext context = JAXBContext.newInstance("org.morphml.neuroml.schema");
@@ -127,26 +111,16 @@ public class MorphMLNeuronMorphology extends NeuronMorphology{
 					theCell = (Level3Cell)c.getCell().get(0);
 					
 //					store the file in the DataRepository once it is loaded for the next time.
-					MemoryCacheRepository.getInstance().cacheFile(this.filename, theCell);
+					MemoryCacheRepository.getInstance().cacheFile(getName(), theCell);
 					DataRepository.getInstance().saveFileToDB(theCell);
-					Log.warn("Storing cell " + this.filename + " in the DB");
+					Log.warn("Storing cell " + getName() + " in the DB");
 				}
 			} catch (Exception e) {
-				throw new OMTException("Cannot load " + this.filename + " morphology! ", e);
+				throw new OMTException("Cannot load " + getName() + " morphology! ", e);
 			}
 		}
 		return theCell;
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology#getName()
-	 */
-	public String getFilename() 
-	{
-		return this.filename;
-	}
-	
+	}	
 
 	/**
 	 * Says how many cables are associated with this neuron morphology

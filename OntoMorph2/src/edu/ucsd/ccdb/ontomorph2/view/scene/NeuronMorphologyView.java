@@ -94,14 +94,14 @@ public class NeuronMorphologyView extends TangibleView{
 			_cc.setUpVector(morph.getUpVector());
 			_cc.update(morph.getTime());
 		}
-		if (morph.getAbsolutePosition() != null) {
-			this.setLocalTranslation(morph.getAbsolutePosition().asVector3f());
+		if (morph.getPosition() != null) {
+			this.setLocalTranslation(morph.getPosition().asVector3f());
 		}
-		if (morph.getAbsoluteRotation() != null) {
-			this.setLocalRotation(morph.getAbsoluteRotation().asMatrix3f());
+		if (morph.getRotation() != null) {
+			this.setLocalRotation(morph.getRotation().asMatrix3f());
 		}
-		if (morph.getAbsoluteScale() != null) {
-			this.setLocalScale(morph.getAbsoluteScale());
+		if (morph.getScale() != null) {
+			this.setLocalScale(morph.getScale());
 		}
 		if (morph.getLookAtPosition() != null) {
 			this.lookAt(morph.getLookAtPosition().asVector3f(), Vector3f.UNIT_X);

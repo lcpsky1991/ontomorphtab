@@ -16,9 +16,8 @@ public class SphereParticles extends Tangible {
 	Quad quad;
 	
 	public SphereParticles(String name, Vector3f position) {
-		super();
-		this.setRelativePosition(new PositionVector(position));
-		setName(name);	
+		super(name);
+		this.setPosition(new PositionVector(position));
 	}
 		
 }

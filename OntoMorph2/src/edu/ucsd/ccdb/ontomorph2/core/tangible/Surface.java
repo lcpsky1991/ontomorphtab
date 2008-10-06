@@ -14,8 +14,9 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 public class Surface extends Tangible{
 	BezierMesh bm = null;
 	
-	public Surface(String s, OMTVector[][] array, int levelOfDetail) {
-		this.bm = new BezierMesh(s, new BezierPatch(array, levelOfDetail));
+	public Surface(String name, OMTVector[][] array, int levelOfDetail) {
+		super(name);
+		this.bm = new BezierMesh(name, new BezierPatch(array, levelOfDetail));
 	}
 	
 	public BezierMesh asBezierMesh() {

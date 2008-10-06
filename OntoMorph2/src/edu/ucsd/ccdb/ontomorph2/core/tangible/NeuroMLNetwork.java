@@ -25,6 +25,7 @@ public class NeuroMLNetwork extends Tangible {
 	NetworkmlType network = null;
 	
 	public NeuroMLNetwork(URL morphLoc) {
+		super(morphLoc.toString());
 		Log.warn("Loading NeuroMLNetwork");
 		long tick = Log.tick();
 		loc = morphLoc;

@@ -5,13 +5,9 @@ import java.util.Set;
 
 import com.jme.math.Vector3f;
 
-import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.INeuronMorphologyPart;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLCable;
-import edu.ucsd.ccdb.ontomorph2.util.OMTException;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
  * Describes the morphology of the cell, independent of different ways of visualizing it.  
@@ -38,6 +34,10 @@ public abstract class NeuronMorphology extends ContainerTangible{
 	float _time = 0.0f;
 	private Vector3f _upVector;
 	
+	public NeuronMorphology(String name) {
+		super(name);
+	}
+	
 	/**
 	 * Get the Curve that this NeuronMorphology has been associated with
 	 * @return
@@ -54,8 +54,6 @@ public abstract class NeuronMorphology extends ContainerTangible{
 		_time = time;
 	}
 	
-	public abstract String getFilename();
-	
 	/**
 	 * Disassociates a curve with this morphology and attaches this morphology to a different curve
 	 * @param c
@@ -66,7 +64,6 @@ public abstract class NeuronMorphology extends ContainerTangible{
 		if (c != null)
 		{
 			_curve = c;
-			this.setCoordinateSystem(c.getCoordinateSystem());
 			positionAlongCurve(_curve, _time);
 			return true;
 		}
@@ -141,7 +138,7 @@ public abstract class NeuronMorphology extends ContainerTangible{
 		{
 			//the cell is attached to a curve
 			//move the cell by changing it's time signature on the parent curve
-			PositionVector prev = this.getRelativePosition();
+			PositionVector prev = this.getPosition();
 			
 			this._time += 0.001f * dx; //the dx passed may be negative
 			
@@ -170,7 +167,7 @@ public abstract class NeuronMorphology extends ContainerTangible{
 	{
 		if ( _curve != null)
 		{
-			setRelativePosition(new PositionVector(((Curve3D)c).getPoint(time)));
+			setPosition(new PositionVector(((Curve3D)c).getPoint(time)));
 			return true;
 		}
 		return false;
@@ -218,11 +215,14 @@ public abstract class NeuronMorphology extends ContainerTangible{
 	 * @return
 	 */
 	public BrainRegion getEnclosingBrainRegion(){
+		/*
 		if (this.getCoordinateSystem() != null && this.getCoordinateSystem() instanceof AllenCoordinateSystem) {
-			OMTVector position = this.getRelativePosition();
+			OMTVector position = this.getPosition();
 			return ReferenceAtlas.getInstance().getBrainRegionByVoxel((int)position.x, (int)position.y, (int)position.z);
 		} 
 		throw new OMTException("Cannot get encolosing brain region from a NeuronMorphology that is not set to the AllenCoordinateSystem", null);
+		*/
+		return null;
 	}
 
 	/**

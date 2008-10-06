@@ -1,8 +1,5 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
 import org.fenggui.ScrollContainer;
@@ -14,11 +11,7 @@ import org.fenggui.tree.Tree;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.view.View;
 
 public class InstanceBrowser implements ISelectionChangedListener {
 	

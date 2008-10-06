@@ -10,7 +10,6 @@ import java.util.Set;
 import org.morphml.metadata.schema.Curve;
 import org.morphml.metadata.schema.Point3D;
 import org.morphml.metadata.schema.impl.CurveImpl;
-import org.morphml.metadata.schema.impl.Point3DImpl;
 
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
@@ -19,7 +18,6 @@ import com.jme.math.Vector3f;
 import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -48,12 +46,12 @@ public class Curve3D extends Tangible{
 	List<CurveAnchorPoint> anchors = null;
 	public static Random rand = new Random();
 	
-	public Curve3D(String arg0, OMTVector[] arg1) {
-		setName(arg0);
+	public Curve3D(String name, OMTVector[] controlPoints) {
+		super(name);
 		morphMLCurve = new CurveImpl();
-		morphMLCurve.setName(arg0);
+		morphMLCurve.setName(name);
 		morphMLCurve.setId(new BigInteger(12, rand));
-		setControlPoints(arg1);
+		setControlPoints(controlPoints);
 	}
 
 	public void getFromDB()
@@ -80,18 +78,10 @@ public class Curve3D extends Tangible{
 				OMTVector v = new OMTVector(pt.getX(),pt.getY(),pt.getZ());
 				this.addControlPoint(i, v);
 			}
-			 
-			this.setCoordinateSystem(null);
 		}
 		
 		//regardless of whether the retreival was successful, update the morphML model
 		morphMLCurve = curRetreive;
-	}
-	
-	
-	public Curve3D(String string, OMTVector[] array, CoordinateSystem d) {
-		this(string, array);
-		setCoordinateSystem(d);
 	}
 	
 	/**
@@ -208,11 +198,6 @@ public class Curve3D extends Tangible{
 		//BezierCurve copy = new BezierCurve(this.getName(), this.controlPoints);
 		CatmullRomCurve copy = new CatmullRomCurve(this.getName(), getControlPoints());
 
-		//apply coordinate system to this curve.
-		if (this.getCoordinateSystem() != null) 
-		{
-			this.getCoordinateSystem().applyToSpatial(copy);
-		}
 		return copy;
 	}
 	
@@ -301,7 +286,7 @@ public class Curve3D extends Tangible{
 		//redraw the curve
 		for (CurveAnchorPoint p : getAnchorPoints())
 		{
-			setControlPoint(p.getIndex(), p.getRelativePosition());
+			setControlPoint(p.getIndex(), p.getPosition());
 		}
 		
 	}
@@ -311,7 +296,7 @@ public class Curve3D extends Tangible{
 		Vector3f mean=new Vector3f(0,0,0);
 		for (CurveAnchorPoint p: getAnchorPoints())
 		{
-			mean = mean.add(p.getRelativePosition().asVector3f());
+			mean = mean.add(p.getPosition().asVector3f());
 		}
 		
 		mean = mean.divide(getAnchorCount()); //divie to get eh average
@@ -341,7 +326,7 @@ public class Curve3D extends Tangible{
 	 */
 	@SuppressWarnings("unchecked")
 	protected void setControlPoint(int i, OMTVector pos) {
-		morphMLCurve.getPoint().set(i, pos.asPoint3D());
+		morphMLCurve.getPoint().set(i, pos.toPoint3D());
 		DataRepository.getInstance().saveFileToDB(morphMLCurve);
 		this.controlPoints[i] =  pos;
 		changed();
@@ -351,7 +336,7 @@ public class Curve3D extends Tangible{
 	protected void setControlPoints(OMTVector[] arg1) {
 
 		for (int i = 0; i < arg1.length; i++) {
-			morphMLCurve.getPoint().add(arg1[i].asPoint3D());
+			morphMLCurve.getPoint().add(arg1[i].toPoint3D());
 		}
 		DataRepository.getInstance().saveFileToDB(morphMLCurve);
 		this.controlPoints = arg1;

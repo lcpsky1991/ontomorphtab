@@ -1,5 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core.spatial;
 
+import org.morphml.metadata.schema.Point3D;
+
 import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
@@ -19,6 +21,10 @@ public class PositionVector extends OMTVector {
 	
 	public PositionVector(Vector3f v) {
 		super(v.x, v.y, v.z);
+	}
+	
+	public PositionVector(Point3D p) {
+		super(p);
 	}
 
 	public PositionVector() {

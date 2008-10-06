@@ -6,9 +6,6 @@ package edu.ucsd.ccdb.ontomorph2.core.tangible;
 import com.jme.bounding.BoundingBox;
 import com.jme.scene.Geometry;
 import com.jme.scene.Spatial;
-import com.jme.scene.shape.Box;
-
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 
 /**
  * Defines a volume of space, identified by the boundaries of a box or a sphere.
@@ -24,23 +21,14 @@ public class Volume extends ContainerTangible{
 	int _shape = 0;
 	Geometry _expShape = null;
 		
-	public Volume(Geometry g) {
+	public Volume(String name, Geometry g) {
+		super(name);
 		_expShape = g;
 		_expShape.setModelBound(new BoundingBox());
 		_expShape.updateModelBound();
 		//setPosition(new PositionImpl(_expShape.getLocalTranslation()));
 		//setRotation(new RotationImpl(_expShape.getLocalRotation()));
 	}
-	
-	public Volume() {
-		
-	}
-	
-	public Volume(Box box, CoordinateSystem d) {
-		this(box);
-		this.setCoordinateSystem(d);
-	}
-
 	
 	/**
 	 * 

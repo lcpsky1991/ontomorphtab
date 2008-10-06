@@ -11,7 +11,7 @@ import com.jme.math.FastMath;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationQuat;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
@@ -81,9 +81,9 @@ public class DemoScene extends Scene{
 			mesh = new DataMesh(mitoObjURL);
 			
 			
-			mesh.setRelativePosition(new PositionVector(289f, -117f, -179.51f));
-			mesh.setRelativeRotation(new RotationVector(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
-			mesh.setRelativeScale(0.0002f);
+			mesh.setPosition(new PositionVector(289f, -117f, -179.51f));
+			mesh.setRotation(new RotationQuat(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
+			mesh.setScale(0.0002f);
 			mesh.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.MITOCHONDRION_CLASS));
 			mesh.getSemanticInstance(); //get a SemanticInstance loaded into the local repository
 			

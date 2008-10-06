@@ -33,6 +33,7 @@ public class MorphMLSegment extends ContainerTangible implements INeuronMorpholo
 	MorphMLNeuronMorphology parentCell;
 	
 	protected MorphMLSegment(MorphMLNeuronMorphology parentCell, Segment s) {
+		super(parentCell.toString() + ", " + s.toString());
 		this.s = s;
 		this.parentCell = parentCell;
 	}

@@ -193,7 +193,13 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 		    
 		    <xs:element name="system" type="xs:string"/>
 		    <xs:element name="rotation" type="xWBCQuat"/>
-		    <xs:element name="dummy" type="xs:string"/>	    
+
+			<xs:element name="scale" type="meta:Point3D" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Scale in x, y, and z dimensions</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
 		    <xs:element name="id" type="xs:nonNegativeInteger">
 			    <xs:annotation>
 				    <xs:documentation>ID of the tangible, unique within the document</xs:documentation>

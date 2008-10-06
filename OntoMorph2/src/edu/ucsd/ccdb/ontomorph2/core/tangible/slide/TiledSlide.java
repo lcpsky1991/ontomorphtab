@@ -17,8 +17,8 @@ public class TiledSlide extends Slide{
 
 
 	
-	public TiledSlide(Image i, float ratio) {
-		
+	public TiledSlide(String name, Image i, float ratio) {
+		super(name);
 	}
 
 	public Image getImage() {

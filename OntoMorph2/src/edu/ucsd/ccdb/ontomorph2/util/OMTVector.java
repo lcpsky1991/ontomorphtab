@@ -1,9 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.util;
 
-import org.morphml.metadata.schema.Point;
 import org.morphml.metadata.schema.Point3D;
 import org.morphml.metadata.schema.impl.Point3DImpl;
-import org.morphml.metadata.schema.impl.PointImpl;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -35,15 +33,11 @@ public class OMTVector extends Vector3f {
 		this(v.x, v.y, v.z);
 	}
 
-	public Point asPoint() {
-		Point p = new PointImpl();
-		p.setX(this.x);
-		p.setY(this.y);
-		p.setZ(this.z);
-		return p;
+	public OMTVector(Point3D p) {
+		super((float)p.getX(), (float)p.getY(), (float)p.getZ());
 	}
 	
-	public Point3D asPoint3D() {
+	public Point3D toPoint3D() {
 		Point3D p = new Point3DImpl();
 		p.setX(this.x);
 		p.setY(this.y);

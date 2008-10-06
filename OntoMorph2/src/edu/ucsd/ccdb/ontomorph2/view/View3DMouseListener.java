@@ -197,7 +197,7 @@ public class View3DMouseListener implements MouseInputListener {
 			
 			if (recent != null) 
 			{
-				ptInterest = recent.getAbsolutePosition();
+				ptInterest = recent.getPosition();
 			}
 			else
 			{
@@ -489,8 +489,8 @@ public class View3DMouseListener implements MouseInputListener {
 				{
 					if ( mirror != master) //aply the displacement to all OTHER tangibles (that are not the most recent)
 					{
-						PositionVector goes = new PositionVector(mirror.getRelativePosition().add(dis.asVector3f()));
-						mirror.setRelativePosition(goes);
+						PositionVector goes = new PositionVector(mirror.getPosition().add(dis.asVector3f()));
+						mirror.setPosition(goes);
 					}
 				}
 			}
@@ -528,10 +528,10 @@ public class View3DMouseListener implements MouseInputListener {
 			//widget.absolutePosition(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
 			if (OntoMorph2.isDebugMode()) {
 				Log.warn("selection "  + recent + " manip:" + manip);
-				Log.warn("position" + TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
+				Log.warn("position" + TangibleManager.getInstance().getSelectedRecent().getPosition());
 			}
 
-			widget.absolutePosition(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
+			widget.absolutePosition(TangibleManager.getInstance().getSelectedRecent().getPosition());
 			//check to see where the camera is positioned and compare it to the Tangible's plane
 			//if it is under, reverse the X direction so movement is intuitive
 			boolean reverse = !OMTUtility.isLookingFromAbove(new OMTVector(View.getInstance().getCameraView().getCamera().getDirection()), manip.getWorldNormal()); 
@@ -566,7 +566,7 @@ public class View3DMouseListener implements MouseInputListener {
 				Log.warn("LOOK AT is broken");
 				try
 				{
-					View.getInstance().getCameraView().lookAt(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question	
+					View.getInstance().getCameraView().lookAt(TangibleManager.getInstance().getSelectedRecent().getPosition() , new OMTVector(0,1,0)); //make the camera point a thte object in question	
 				}
 				catch(Exception e){
 					Log.warn(e.getMessage());

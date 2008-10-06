@@ -2,7 +2,6 @@ package edu.ucsd.ccdb.ontomorph2.core.scene;
 
 import com.jme.math.Vector3f;
 
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
@@ -40,7 +39,7 @@ public class CurveFactory {
 	public Curve3D createCurve(Tangible src)
 	{
 		//TODO: rewrite this!
-		OMTVector cent = new OMTVector(src.getRelativePosition());
+		OMTVector cent = new OMTVector(src.getPosition());
 		OMTVector up = null;
 		OMTVector left = null;
 		OMTVector posa = null;
@@ -55,26 +54,15 @@ public class CurveFactory {
 		
 		//if there is a coordinate system, apply this curve to that coordinate system
 		//if no coordinate system make it aligned with the camera
-		CoordinateSystem system = src.getCoordinateSystem();
-		if (system != null)
-		{
-			//cent.subtractLocal(system.getOriginVector());
-			towardcam = new OMTVector(OMTVector.UNIT_Z);
-			up = new OMTVector(OMTVector.UNIT_Y);
-			left = new OMTVector(OMTVector.UNIT_X);
-		}
-		else
-		{
-			//find the coordinate system of the camera on which to draw the curve parallel to, to do this we need three vectors
-			towardcam = new OMTVector(View.getInstance().getCameraView().getCamera().getDirection().normalize().negate().mult(5f)); 
-			left = new OMTVector(View.getInstance().getCameraView().getCamera().getLeft()); //too keep units consistent multiply by -1 so positive is 'right' (a droite)
-			up = new OMTVector(View.getInstance().getCameraView().getCamera().getUp());
-			
-			Vector3f combined = towardcam.normalize().add(left.normalize().add(up).normalize());
-			//adopt the plane of the camera to be the coordinate system
-			//TODO: apply coordinate system
-			
-		}
+		
+		//find the coordinate system of the camera on which to draw the curve parallel to, to do this we need three vectors
+		towardcam = new OMTVector(View.getInstance().getCameraView().getCamera().getDirection().normalize().negate().mult(5f)); 
+		left = new OMTVector(View.getInstance().getCameraView().getCamera().getLeft()); //too keep units consistent multiply by -1 so positive is 'right' (a droite)
+		up = new OMTVector(View.getInstance().getCameraView().getCamera().getUp());
+		
+		Vector3f combined = towardcam.normalize().add(left.normalize().add(up).normalize());
+		//adopt the plane of the camera to be the coordinate system
+		//TODO: apply coordinate system
 		
 		//make two side points that are +/-X and +/-Y
 		posa = new OMTVector(left.add(up).mult(offset));
@@ -93,7 +81,7 @@ public class CurveFactory {
 		//System.out.println("new curve @ " + posa + cent + posb);
 		
 		OMTVector[] pts = {posb, cent, posa};
-		Curve3D cap = new Curve3D("user-created curve", pts, system);	//FIXME: need to set demo coordinates on new curves
+		Curve3D cap = new Curve3D("user-created curve", pts);	//FIXME: need to set demo coordinates on new curves
 		cap.setColor(java.awt.Color.orange);
 		cap.setVisible(true);
 		cap.setModelBinormalWithUpVector(towardcam, 0.01f);	

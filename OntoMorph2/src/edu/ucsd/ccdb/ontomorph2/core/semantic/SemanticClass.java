@@ -1,11 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.core.semantic;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
-import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;

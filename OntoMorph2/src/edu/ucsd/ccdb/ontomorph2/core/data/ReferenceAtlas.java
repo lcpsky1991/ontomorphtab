@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.Stack;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.AllenCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.util.BitMath;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
@@ -67,7 +66,6 @@ public class ReferenceAtlas {
 		try {
 			FileReader fr = new FileReader(new File(Scene.allenDir + "ontology.csv"));
 			BufferedReader br = new BufferedReader(fr);
-			AllenCoordinateSystem sys = new AllenCoordinateSystem();
 			while (br.ready()) {
 				String[] line = br.readLine().split(",");
 				
@@ -78,7 +76,7 @@ public class ReferenceAtlas {
 				
 				BrainRegion leftHemisphere = new BrainRegion(line[0] + ", left hemisphere", line[1], line[2], 
 						new Color(Integer.parseInt(line[3]), Integer.parseInt(line[4]), 
-								Integer.parseInt(line[5])),line[6], sys);
+								Integer.parseInt(line[5])),line[6]);
 				
 				String parent = "";
 				if (line[2] != null && "".equals(line[2]) == false) {
@@ -86,7 +84,7 @@ public class ReferenceAtlas {
 				}
 				BrainRegion rightHemisphereCopy = new BrainRegion(line[0] + ", right hemisphere", "FLIP_" + line[1], parent, 
 						new Color(Integer.parseInt(line[3]), Integer.parseInt(line[4]), 
-								Integer.parseInt(line[5])),line[6], sys);
+								Integer.parseInt(line[5])),line[6]);
 				
 				brainRegions.add(leftHemisphere);
 				brainRegions.add(rightHemisphereCopy);

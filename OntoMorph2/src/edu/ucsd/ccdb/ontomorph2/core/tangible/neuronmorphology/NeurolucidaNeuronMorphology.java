@@ -14,9 +14,8 @@ import javax.xml.bind.Unmarshaller;
 import neurolucida.generated.NeurolucidaData;
 import neurolucida.generated.Point;
 import neurolucida.generated.Tree;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationQuat;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
@@ -34,6 +33,7 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	ArrayList<INeuronMorphologyPart> segmentList = null;
 	
 	public NeurolucidaNeuronMorphology(URL morphLoc) {
+		super(morphLoc.toString());
 		_morphLoc = morphLoc;
 		
 		JAXBContext context;
@@ -55,30 +55,19 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 		return _morphLoc.getFile();
 	}
 	
-	public NeurolucidaNeuronMorphology(URL morphLoc, PositionVector position, RotationVector rotation) {
+	public NeurolucidaNeuronMorphology(URL morphLoc, PositionVector position, RotationQuat rotation) {
 		this(morphLoc);
-		setRelativePosition(position);
-		setRelativeRotation(rotation);
+		setPosition(position);
+		setRotation(rotation);
 	}
 	
-	public NeurolucidaNeuronMorphology(URL morphLoc, PositionVector position, RotationVector rotation, 
-			CoordinateSystem c) {
-		this(morphLoc, position, rotation);
-		this.setCoordinateSystem(c);
-	}
-
 	
 	public NeurolucidaNeuronMorphology(URL morphLoc, PositionVector position, 
-			RotationVector rotation, String renderOption) {
+			RotationQuat rotation, String renderOption) {
 		this(morphLoc, position, rotation);
 		setRenderOption(renderOption);
 	}
 	
-	public NeurolucidaNeuronMorphology(URL morphLoc, PositionVector position, 
-			RotationVector rotation, String renderOption, CoordinateSystem c) {
-		this(morphLoc, position, rotation, renderOption);
-		this.setCoordinateSystem(c);
-	}
 	
 	public NeurolucidaNeuronMorphology(URL morphLoc, Curve3D curve, float time, String renderOption) {
 		this(morphLoc);
@@ -88,12 +77,6 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 		setRenderOption(renderOption);
 	}
 	
-	public NeurolucidaNeuronMorphology(URL morphLoc, Curve3D curve, float time, 
-			String renderOption, CoordinateSystem c) {
-		this(morphLoc, curve, time, renderOption);
-		this.setCoordinateSystem(c);
-	}
-
 	/**
 	 * Get the URL for the MorphML file that corresponds to this INeuronMorphology
 	 * @return - the URL

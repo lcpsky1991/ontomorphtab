@@ -19,18 +19,19 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
  *
  */
 public class URISlide extends Slide {
-
-	public URISlide() {
-		
+	
+	public URISlide(String name){
+		super(name);
 	}
 	
-	public URISlide(URI imageURI) {
+	public URISlide(String name, URI imageURI) {
+		this(name);
 		_imageURI = imageURI;
 	}
 	
-	public URISlide(URI filePath, float ratio) 
+	public URISlide(String name, URI filePath, float ratio) 
 	{
-		this(filePath);
+		this(name, filePath);
 		setRatio(ratio);
 	}
 	

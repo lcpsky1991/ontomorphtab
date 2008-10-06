@@ -85,15 +85,15 @@ public class CellFactory {
 		//create the cell two different ways, depending on whether it's a free-floating or attached cell
 		if (null == crvParent)
 		{	//free float
-			ncell = new MorphMLNeuronMorphology(modelURL, null, t, NeuronMorphology.RENDER_AS_LOD, null);
+			ncell = new MorphMLNeuronMorphology(modelURL, null, t, NeuronMorphology.RENDER_AS_LOD);
 		}
 		else
 		{	//attached
 			ncell = new MorphMLNeuronMorphology(modelURL, crvParent, t, 
-					NeuronMorphology.RENDER_AS_LOD, crvParent.getCoordinateSystem());
+					NeuronMorphology.RENDER_AS_LOD);
 		}
 		
-		ncell.setRelativeScale(0.01f);
+		ncell.setScale(0.01f);
 
 		ncell.addSemanticClass(
 				SemanticRepository.getAvailableInstance().getSemanticClass(
@@ -119,8 +119,7 @@ public class CellFactory {
 			
 		NeuronMorphology nc = createCell(modelURL, null, true);	//create the cell
 		//place the thing in front of the camera
-		nc.setCoordinateSystem(null);
-		nc.setRelativePosition(new PositionVector(dest));
+		nc.setPosition(new PositionVector(dest));
 	}
 	
 
@@ -172,7 +171,7 @@ public class CellFactory {
 	{
 		for (int i = 0; i < howMany; i++)
 		{
-			NeuronMorphology copy = createCell(cell.getFilename(),cell.getCurve(), true);	//create a copy of the cells
+			NeuronMorphology copy = createCell(cell.getName(),cell.getCurve(), true);	//create a copy of the cells
 			
 			float rx=0;
 			float ry=0;
@@ -186,10 +185,10 @@ public class CellFactory {
 			}
 			else
 			{	//put it at the original place
-				copy.setRelativePosition(cell.getRelativePosition());	//start in same place
-				rx = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getRelativePosition().getX();
-				ry = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getRelativePosition().getY();
-				copy.setRelativePosition(rx, ry, copy.getRelativePosition().getZ()); //keep the same Z
+				copy.setPosition(cell.getPosition());	//start in same place
+				rx = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getPosition().getX();
+				ry = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getPosition().getY();
+				copy.setPosition(rx, ry, copy.getPosition().getZ()); //keep the same Z
 			}
 			copy.rotate(rx, 0, new OMTVector(0,1,0)); //for aesthetics rotate them about Y to make them seem more random
 		}

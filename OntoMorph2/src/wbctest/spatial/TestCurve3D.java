@@ -32,7 +32,7 @@ public class TestCurve3D extends TestCase {
 		//testCurve1 has no coordinate system associated with it
 		testCurve1 = new Curve3D("test curve", initialControlPoints);
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
-		testCurve2 = new Curve3D("test curve", initialControlPoints, d);
+		testCurve2 = new Curve3D("test curve", initialControlPoints);
 	}
 
 	/*
@@ -61,27 +61,27 @@ public class TestCurve3D extends TestCase {
 		CurveAnchorPoint capOrig=null;
 		CurveAnchorPoint capDest=null;
 
-		assertEquals(ptsDemo.get(1).getRelativePosition(),ptsNoCoords.get(1).getRelativePosition());
-		assertTrue(!ptsDemo.get(1).getAbsolutePosition().equals(ptsNoCoords.get(1).getAbsolutePosition()));
+		assertEquals(ptsDemo.get(1).getPosition(),ptsNoCoords.get(1).getPosition());
+		assertTrue(!ptsDemo.get(1).getPosition().equals(ptsNoCoords.get(1).getPosition()));
 		
 		//move the anchr points for the demo curve
 		//for ( int i =0; i < ptsDemo.size(); i++)
 		{
 			//try DEMO
 			capOrig = ptsDemo.get(1);
-			orig = capOrig.getAbsolutePosition();
+			orig = capOrig.getPosition();
 			//orig = capOrig.getRelativePosition();
 			//capOrig.move(5f, 10f, new OMTVector(1,1,0));
-			dest = capOrig.getAbsolutePosition();
+			dest = capOrig.getPosition();
 			//dest = capOrig.getRelativePosition();
 			System.out.println("orig: " + orig + "   -->  " + dest);
 			
 			//try NO COORDs
 			capOrig = ptsNoCoords.get(1);
-			orig = capOrig.getAbsolutePosition();
+			orig = capOrig.getPosition();
 			//orig = capOrig.getRelativePosition();
 			//capOrig.move(10f, 10f, new OMTVector(1,1,0));
-			dest = capOrig.getAbsolutePosition();
+			dest = capOrig.getPosition();
 			//dest = capOrig.getRelativePosition();
 			System.out.println("no orig: " + orig + "   -->  " + dest);			
 		}
@@ -109,9 +109,9 @@ public class TestCurve3D extends TestCase {
 		
 		for (int i = 0; i < cPoints1.size(); i++) {
 			//should have the same relative positions
-			assertTrue(cPoints1.get(i).getRelativePosition().equals(cPoints2.get(i).getRelativePosition()));
+			assertTrue(cPoints1.get(i).getPosition().equals(cPoints2.get(i).getPosition()));
 			//should have different absolute positions because of coordinate system differences
-			assertTrue(!cPoints1.get(i).getAbsolutePosition().equals(cPoints2.get(i).getAbsolutePosition()));
+			assertTrue(!cPoints1.get(i).getPosition().equals(cPoints2.get(i).getPosition()));
 		}
 		
 		List<List<CurveAnchorPoint>> temp = new ArrayList<List<CurveAnchorPoint>>();
@@ -126,47 +126,47 @@ public class TestCurve3D extends TestCase {
 			CurveAnchorPoint anchorPoint2 = temp2.get(2);
 			
 			//record original position
-			float oldX1 = anchorPoint1.getRelativePosition().x;
-			float oldY1 = anchorPoint1.getRelativePosition().y;
-			float oldZ1 = anchorPoint1.getRelativePosition().z;
+			float oldX1 = anchorPoint1.getPosition().x;
+			float oldY1 = anchorPoint1.getPosition().y;
+			float oldZ1 = anchorPoint1.getPosition().z;
 			
 			//do move
 			//anchorPoint1.move(0.5f, 0.5f, new OMTVector(1,1,0));
 			
 			//test
 			assertEquals("Testing predicted movement on point 1 of curve " + i, 
-					new PositionVector(oldX1 + 0.5f, oldY1 + 0.5f, oldZ1), temp2.get(1).getRelativePosition());
+					new PositionVector(oldX1 + 0.5f, oldY1 + 0.5f, oldZ1), temp2.get(1).getPosition());
 			
 			//do move
 			//anchorPoint1.move(0.5f, 0.5f, new OMTVector(1,1,0));
 			//test
 			assertEquals("Testing second predicted movement on point 1 of curve " + i, 
-					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1), temp2.get(1).getRelativePosition());
+					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1), temp2.get(1).getPosition());
 			
 			//record original position
-			float oldX2 = anchorPoint2.getRelativePosition().x;
-			float oldY2 = anchorPoint2.getRelativePosition().y;
-			float oldZ2 = anchorPoint2.getRelativePosition().z;
+			float oldX2 = anchorPoint2.getPosition().x;
+			float oldY2 = anchorPoint2.getPosition().y;
+			float oldZ2 = anchorPoint2.getPosition().z;
 			
 			//do move
 			//anchorPoint2.move(0.5f, -0.5f, new OMTVector(1,1,0));
 			
 			//test
 			assertEquals("Testing predicted movement on point 2 of curve " + i, 
-					new PositionVector(oldX2 + 0.5f, oldY2 - 0.5f, oldZ2), temp2.get(2).getRelativePosition());
+					new PositionVector(oldX2 + 0.5f, oldY2 - 0.5f, oldZ2), temp2.get(2).getPosition());
 			//test
 			assertEquals("make sure point one is still where we expect it for curve " +i, 
-					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1), temp2.get(1).getRelativePosition());
+					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1), temp2.get(1).getPosition());
 			
 			//do move
 			//anchorPoint2.move(0.5f, -0.5f, new OMTVector(1,1,0));
 			
 			//test
 			assertEquals("Testing predicted movement on point 2 of curve " + i, 
-					new PositionVector(oldX2 + 1.0f, oldY2 - 1.0f, oldZ2), temp2.get(2).getRelativePosition());
+					new PositionVector(oldX2 + 1.0f, oldY2 - 1.0f, oldZ2), temp2.get(2).getPosition());
 			//test
 			assertEquals("make sure point one is still where we expect it for curve " + i, 
-					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1), temp2.get(1).getRelativePosition());
+					new PositionVector(oldX1 + 1.0f, oldY1 + 1.0f, oldZ1), temp2.get(1).getPosition());
 			i++;
 		}
 	}
@@ -176,8 +176,8 @@ public class TestCurve3D extends TestCase {
 	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible.getRelativePosition()'
 	 */
 	public void testGetRelativePosition() {
-		PositionVector v1 = testCurve1.getRelativePosition();
-		PositionVector v2 = testCurve2.getRelativePosition();
+		PositionVector v1 = testCurve1.getPosition();
+		PositionVector v2 = testCurve2.getPosition();
 		
 		PositionVector test = new PositionVector(0f, 0f, 0f);
 		assertEquals(v1, test);
@@ -188,8 +188,8 @@ public class TestCurve3D extends TestCase {
 	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible.getAbsolutePosition()'
 	 */
 	public void testGetAbsolutePosition() {
-		PositionVector v1 = testCurve1.getAbsolutePosition();
-		PositionVector v2 = testCurve2.getAbsolutePosition();
+		PositionVector v1 = testCurve1.getPosition();
+		PositionVector v2 = testCurve2.getPosition();
 		
 		PositionVector test1 = new PositionVector(0f, 0f, 0f);
 		//second curve should have absolute coordinates corresponding

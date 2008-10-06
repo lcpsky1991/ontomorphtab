@@ -14,6 +14,7 @@ import org.morphml.neuroml.schema.impl.XWBCSlideImpl;
 import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationQuat;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.URISlide;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -36,8 +37,9 @@ public abstract class Slide extends Tangible {
 	protected URL _imageURL = null;
 	protected XWBCSlide morphmlSlide = null; //must be gotten from DB
 	
-	public Slide() 
+	public Slide(String name) 
 	{
+		super(name);
 		this.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(
 				SemanticClass.IMAGE_CLASS));
 		this.getSemanticInstance();
@@ -95,8 +97,8 @@ public abstract class Slide extends Tangible {
 			
 			try
 			{
-				this.setRelativeRotation(new RotationVector((float)rot.getX(),(float)rot.getY(),(float)rot.getZ(),(float)rot.getW()));
-				this.setRelativePosition((float)pos.getX(), (float)pos.getY(), (float)pos.getZ());
+				this.setRotation(new RotationQuat((float)rot.getX(),(float)rot.getY(),(float)rot.getZ(),(float)rot.getW()));
+				this.setPosition((float)pos.getX(), (float)pos.getY(), (float)pos.getZ());
 			}
 			catch(Exception e)
 			{
@@ -131,7 +133,7 @@ public abstract class Slide extends Tangible {
 		try
 		{
 	        //convert the position to Point3D
-	        OMTVector pt = new OMTVector(this.getRelativePosition());
+	        OMTVector pt = new OMTVector(this.getPosition());
 	        
 	        //first instantiate the instance by getting it form the DB
 	        morphmlSlide = (XWBCSlide) DataRepository.getInstance().loadTangible(XWBCSlide.class, this.getName());
@@ -144,15 +146,15 @@ public abstract class Slide extends Tangible {
 		    
 		    
 		    morphmlSlide.setName(this.getName());
-		    morphmlSlide.setPosition(pt.asPoint3D());
+		    morphmlSlide.setPosition(pt.toPoint3D());
 		    morphmlSlide.setRatio(this.getRatio());
 		    
 		    //= === save rotation
 		    XWBCQuat qs = new XWBCQuatImpl();
-		    qs.setW(this.getRelativeRotation().w);
-		    qs.setZ(this.getRelativeRotation().z);
-		    qs.setY(this.getRelativeRotation().y);
-		    qs.setX(this.getRelativeRotation().x);
+		    qs.setW(this.getRotation().w);
+		    qs.setZ(this.getRotation().z);
+		    qs.setY(this.getRotation().y);
+		    qs.setX(this.getRotation().x);
 		    morphmlSlide.setRotation(qs);
 		    //====
 		    DataRepository.getInstance().saveFileToDB(morphmlSlide);

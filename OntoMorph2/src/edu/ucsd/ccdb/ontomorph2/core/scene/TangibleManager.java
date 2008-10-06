@@ -23,7 +23,6 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.MultiHashSetMap;
-import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
 
 
@@ -277,7 +276,7 @@ public class TangibleManager {
 				NeuronMorphology cell3 = new MorphMLNeuronMorphology(fileName, 
 						new PositionVector(289f, -118f, -180f), null, 
 						NeuronMorphology.RENDER_AS_LOD_2);
-				RotationVector v = new RotationVector(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-90, Vector3f.UNIT_Y));
+				RotationQuat v = new RotationQuat(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-90, Vector3f.UNIT_Y));
 				cell3.setRelativeRotation(v);
 				//cell3.setCoordinateSystem(d);
 				cell3.setRelativeScale(0.01f);

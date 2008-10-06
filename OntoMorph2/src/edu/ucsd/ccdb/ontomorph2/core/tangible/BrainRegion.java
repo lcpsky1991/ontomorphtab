@@ -14,7 +14,6 @@ import com.jmex.model.converters.ObjToJme;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
@@ -49,12 +48,12 @@ public class BrainRegion extends ContainerTangible {
 	private TriMesh data = null;
 	
 	public BrainRegion(String name, String abbrev, String parentAbbrev, Color c, 
-			String regionId, CoordinateSystem co){
+			String regionId){
+		super(name);
 		this.abbrev = abbrev;
 		this.parentAbbrev = parentAbbrev;
 		this.setColor(c);
 		this.regionId = Integer.parseInt(regionId);
-		this.setCoordinateSystem(co);
 		this.setName(name);
 	}
 	

@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
+import org.morphml.neuroml.schema.XWBCTangible;
+import org.morphml.neuroml.schema.impl.XWBCTangibleImpl;
+
 import com.jme.math.Quaternion;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
-import com.jme.scene.Node;
 
+import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
@@ -22,9 +25,10 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.CoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
-import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationVector;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationQuat;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.observers.SemanticObserver;
+import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
@@ -54,12 +58,8 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public static final String CHANGED_ADD_PART = "add part";
 	public static final String CHANGED_LOADED = "loaded";
 	public static final String CHANGED_CONTAINS = "contains";
-	
-	
-	private PositionVector _position = new PositionVector();
-	private RotationVector _rotation = new RotationVector();
-	private CoordinateSystem sys = null;
-	private Node theSpatial = new Node();
+
+	private XWBCTangible theSpatial = null;
 	private boolean _visible = false;
 	private List<SemanticClass> semanticThings = new ArrayList<SemanticClass>();
 	private SemanticClass mainSemanticClass = null;
@@ -71,10 +71,20 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	private Color c = null;
 	private Color highlightedColor = Color.yellow;
 	
-	private String name;
 	
-	
-	public Tangible() {
+	/**
+	 * Construct a Tangible.  Must have a name that is unique throughout the system
+	 * @param name
+	 */
+	public Tangible(String name) {
+		if (name == null) {
+			throw new OMTException("Cannot construct a tangible with a null name!");
+		}
+		theSpatial = new XWBCTangibleImpl();
+		theSpatial.setPosition(new PositionVector().toPoint3D());
+		theSpatial.setRotation(new RotationQuat().toWBCQuat());
+		theSpatial.setScale(new OMTVector(1f, 1f, 1f).toPoint3D());
+		this.setName(name);
 		TangibleManager.getInstance().addTangible(this);
 		this.addObserver(SceneObserver.getInstance());
 		this.addObserver(SemanticObserver.getInstance());
@@ -83,9 +93,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		//addSemanticThing(GlobalSemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
 	}
 	
-	public Node getSpatial() {
-		return theSpatial;
-	}
 	
 	/**
 	 * 
@@ -99,16 +106,15 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	
 
 	/**
-	 * get the RotationVector that defines this INeuronMorphology's rotation.
+	 * get the RotationQuat that defines this INeuronMorphology's rotation.
 	 * This is relative to the coordinate system that this ISceneObject has
 	 * associated with it.  By default, the coordinate system is the absolute world
 	 * coordinate system.
-	 * @return - the RotationVector
+	 * @return - the RotationQuat
 	 * @see CoordinateSystem
 	 */
-	public RotationVector getRelativeRotation() {
-		_rotation.set(theSpatial.getLocalRotation());
-		return new RotationVector(_rotation);
+	public RotationQuat getRotation() {
+		return new RotationQuat(theSpatial.getRotation());
 	}
 
 	/**
@@ -119,47 +125,54 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 * @return - the PositionVector
 	 * @see CoordinateSystem
 	 */
-	public PositionVector getRelativePosition()
+	public PositionVector getPosition()
 	{
-		_position.set(theSpatial.getLocalTranslation());
-		return new PositionVector(_position);
+		return new PositionVector(theSpatial.getPosition());
 	}
 
 	/** 
-	 * set the PositionVector for this INeuronMorphology
-	 * This is relative to the coordinate system that this ISceneObject has
+	 * set the position for this Tangible
+	 * This is relative to the coordinate system that this Tangible has
 	 * associated with it.  By default, the coordinate system is the absolute world
 	 * coordinate system.
 	 * @param pos - desired position
 	 * @see CoordinateSystem
 	 */
-	public void setRelativePosition(PositionVector pos) {
-		this.setRelativePosition(pos, true);
-	}
-	
-	public void setRelativePosition(PositionVector pos, boolean flagChanged) {
-		if (pos != null) {
-			theSpatial.setLocalTranslation(pos);
-			
-			if (flagChanged) changed(CHANGED_MOVE);
-		}
-	}
-	
-	public void setRelativePosition(float x, float y, float z) {
-		this.setRelativePosition(new PositionVector(x,y,z));
+	public void setPosition(PositionVector pos) {
+		this.setPosition(pos, true);
 	}
 	
 	/**
-	 * set the RotationVector for this INeuronMorphology
+	 * Set the position, with an option to not fire the changed behavior
+	 * @param pos - new relative position for this Tangible
+	 * @param flagChanged - if true, fire the changed behavior, if false, do not fire.
+	 */
+	public void setPosition(PositionVector pos, boolean flagChanged) {
+		if (pos != null) {
+			theSpatial.setPosition(pos.toPoint3D());
+			if (flagChanged) {
+				this.save();
+				changed(CHANGED_MOVE);
+			}
+		}
+	}
+	
+	public void setPosition(float x, float y, float z) {
+		this.setPosition(new PositionVector(x,y,z));
+	}
+	
+	/**
+	 * set the RotationQuat for this INeuronMorphology
 	 * This is relative to the coordinate system that this ISceneObject has
 	 * associated with it.  By default, the coordinate system is the absolute world
 	 * coordinate system.
 	 * @param rot - desiredRotation
 	 * @see CoordinateSystem
 	 */
-	public void setRelativeRotation(RotationVector rot) {
+	public void setRotation(RotationQuat rot) {
 		if (rot != null) {
-			theSpatial.setLocalRotation(rot);
+			theSpatial.setRotation(rot.toWBCQuat());
+			this.save();
 			changed(CHANGED_ROTATE);
 		}
 	}
@@ -169,8 +182,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 * @param v - scale
 	 * @see CoordinateSystem
 	 */
-	public void setRelativeScale(OMTVector v) {
-		theSpatial.setLocalScale(v);
+	public void setScale(OMTVector v) {
+		theSpatial.setScale(v.toPoint3D());
+		this.save();
 		changed(CHANGED_SCALE);
 	}
 	
@@ -179,9 +193,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 * @param v - scale
 	 * @see CoordinateSystem
 	 */
-	public void setRelativeScale(float f) {
-		theSpatial.setLocalScale(f);
-		changed(CHANGED_SCALE);
+	public void setScale(float f) {
+		OMTVector v = new OMTVector(f, f, f);
+		this.setScale(v);
 	}
 	
 
@@ -195,19 +209,11 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	{
 		OMTVector v = null;
 		
-		CoordinateSystem coords = this.getCoordinateSystem();	//get the coordinate system
 		Quaternion rotOrig = null;
 		
-		//find the rotation of the coordinate system
-		if (coords != null)
-		{
-			rotOrig = coords.getRotationFromAbsolute();	
-		}
-		else
-		{
-			rotOrig = new Quaternion().fromAngleAxis(0, new Vector3f(0,0,0)); //empty quaternion
-		}
 		
+		rotOrig = new Quaternion().fromAngleAxis(0, new Vector3f(0,0,0)); //empty quaternion
+
 		Vector3f xyplane = new Vector3f(0,0,1); //an apopgraph of X.cross(Y), Z is normal
 		
 		//now rotate that vector that is the normal to be aligned with the coordinates system
@@ -216,85 +222,16 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		return v;
 	}
 	
+	protected XWBCTangible getSpatial() {
+		return this.theSpatial;
+	}
+	
 	/**
 	 * 
 	 * @see CoordinateSystem
 	 */
-	public OMTVector getRelativeScale() {
-		return new OMTVector(theSpatial.getLocalScale());
-	}
-	
-	/**
-	 * get the RotationVector that defines this INeuronMorphology's rotation.
-	 * This is always in the absolute world coordinate system.
-	 * @return - the RotationVector
-	 * @see CoordinateSystem
-	 */
-	public RotationVector getAbsoluteRotation() {
-		if (this.getCoordinateSystem() == null) {
-			return this.getRelativeRotation();
-		}
-		Quaternion v = this.getRelativeRotation().multLocal(this.getCoordinateSystem().getRotation((Quaternion)null));
-		if (v != null) {
-			return new RotationVector(v);
-		}
-		return (RotationVector)null;
-	}
-	
-	/**
-	 * get the PositionVector that defines this INeuronMorphology's position
-	 * This is always in the absolute world coordinate system.
-	 * @see CoordinateSystem
-	 */
-	public PositionVector getAbsolutePosition() {
-		
-		if (this.getCoordinateSystem() == null) 
-		{
-			return this.getRelativePosition();
-		}
-		
-		Vector3f v = this.getCoordinateSystem().multPoint(this.getRelativePosition());
-		
-		if (v != null) {
-			return new PositionVector(v);
-		}
-		return (PositionVector)null;
-	}
-
-	public OMTVector getAbsoluteScale() {
-		if (this.getCoordinateSystem() == null) {
-			return this.getRelativeScale();
-		}
-		
-		Vector3f v = this.getRelativeScale().multLocal(this.getCoordinateSystem().getScale(null));
-		if (v != null) {
-			return new OMTVector(v);
-		}
-		return (OMTVector)null;
-	}
-
-	
-	
-	/**
-	 * Sets the CoordinateSystem by which the relative position, rotation, and scale of this
-	 * scene object will be defined.
-	 * 
-	 * @param sys
-	 * @see CoordinateSystem
-	 */
-	public void setCoordinateSystem(CoordinateSystem sys) {
-		this.sys = sys;
-		changed(CHANGED_SET_COORDINATE_SYSTEM);
-	}
-	
-	/**
-	 * Gets the CoordinateSystem by which the relative position, rotation, and scale
-	 * of this scene object will be defined.
-	 * @return
-	 * @see CoordinateSystem
-	 */
-	public CoordinateSystem getCoordinateSystem() {
-		return this.sys;
+	public OMTVector getScale() {
+		return new OMTVector(theSpatial.getScale());
 	}
 	
 	/**
@@ -413,13 +350,13 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	
 		float delta = 0.01f * dx;
 		
-		OMTVector current = this.getRelativeScale();
+		OMTVector current = this.getScale();
 		OMTVector nscale = new OMTVector(current.add(delta,delta,delta));
 		
 		//do NOT scale if the new scale will 'flip' the object
 		if ( !(nscale.getX() < 0 || nscale.getY() < 0 || nscale.getZ() < 0 ) )
 		{
-			this.setRelativeScale(nscale);	
+			this.setScale(nscale);	
 		}
 		changed(CHANGED_SCALE);
 	}
@@ -441,9 +378,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		
 		more.fromAngleAxis(0.1f * delta, constraint); //rotate with horitonzal mouse movement
 		
-		end = this.getRelativeRotation().mult(more);
+		end = this.getRotation().mult(more);
 		
-		this.setRelativeRotation( new RotationVector(end) );
+		this.setRotation( new RotationQuat(end) );
 		changed(CHANGED_ROTATE);
 	}
 	
@@ -461,9 +398,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public PositionVector move(float dx, float dy, int mx, int my)
 	{
 	
-		Vector3f previous = this.getRelativePosition();
+		Vector3f previous = this.getPosition();
 		Vector3f desired = pointUnderMouse(mx,my);
-		this.setRelativePosition(new PositionVector(desired), true); //implicitly calls changed()
+		this.setPosition(new PositionVector(desired), true); //implicitly calls changed()
 		
 		return new PositionVector(desired.subtract(previous));
 	
@@ -483,21 +420,13 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		Vector3f offset = new Vector3f(0,0,0); 			//offset of origin of coordinate system
 		Camera cam = View.getInstance().getCameraView().getCamera();
 		
-		
-		//Find the rotation of the coordinate system and the offset of the origin 
-		//
-		if (manip.getCoordinateSystem() != null) 
-		{
-			rot = manip.getCoordinateSystem().getRotationFromAbsolute();
-			offset = manip.getCoordinateSystem().getOriginVector();
-		}
 		inv = new Quaternion(rot.inverse());	//inverse the rotation to put things into regular world coordinates
 		
 		//if the mouse were at the same z-position (relative to the camera) as the average 
 		//position of all selected objects, 
 		//find its world position in absolute coordinates.
 		
-		Vector3f fromPos = new Vector3f(manip.getAbsolutePosition());
+		Vector3f fromPos = new Vector3f(manip.getPosition());
 		//note: previously used getRelativePosition and inverted its rotation, this caused jumps along Z - dont know why
 		
 		float dist = cam.getScreenCoordinates(fromPos).getZ();
@@ -520,17 +449,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	
 	public String getName() 
 	{
-		String strName = "";
-		
-		if (this.name == null)
-		{
-			strName = "(" + this.getClass().getSimpleName() + ")";
-		}
-		else
-		{	
-			strName = this.name;
-		}
-		return strName;
+		return theSpatial.getName();
 	}
 	
 	/**
@@ -545,7 +464,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	}
 	
 	public void setName(String name) {
-		this.name = name;
+		this.theSpatial.setName(name);
 		changed(CHANGED_NAME);
 	}
 	
@@ -609,7 +528,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	
 	public void save()
 	{
-		//nothing
+		DataRepository.getInstance().saveFileToDB(theSpatial);
 	}
 	
 	public void changed() {

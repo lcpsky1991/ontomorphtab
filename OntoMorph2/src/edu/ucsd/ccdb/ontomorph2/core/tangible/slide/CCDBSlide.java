@@ -21,7 +21,8 @@ public class CCDBSlide extends URISlide {
 
 
 	
-	public CCDBSlide(CcdbMicroscopyData image, float ratio) throws OMTOfflineException{
+	public CCDBSlide(String name, CcdbMicroscopyData image, float ratio) throws OMTOfflineException{
+		super(name);
 		URL imageURL = null;
 		
 		if (OntoMorph2.isOfflineMode()) {

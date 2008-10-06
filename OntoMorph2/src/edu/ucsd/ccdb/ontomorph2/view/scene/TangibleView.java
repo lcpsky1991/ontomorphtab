@@ -89,16 +89,16 @@ public abstract class TangibleView extends Node {
 		
 		//FIXME: setlocals may need to be changed to setWorld
 	   
-		if (this.getModel().getAbsoluteScale() != null) {
-			setLocalScale(this.getModel().getAbsoluteScale());
+		if (this.getModel().getScale() != null) {
+			setLocalScale(this.getModel().getScale());
 		}
 		
-		if (this.getModel().getAbsolutePosition() != null) {
-			setLocalTranslation(this.getModel().getAbsolutePosition());
+		if (this.getModel().getPosition() != null) {
+			setLocalTranslation(this.getModel().getPosition());
 		}
 		
-		if (this.getModel().getAbsoluteRotation() != null) {
-			setLocalRotation(this.getModel().getAbsoluteRotation());
+		if (this.getModel().getRotation() != null) {
+			setLocalRotation(this.getModel().getRotation());
 		}
 			
 		this.updateRenderState();
