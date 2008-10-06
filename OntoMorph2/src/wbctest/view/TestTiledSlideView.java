@@ -12,9 +12,8 @@ import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.TiledSlide;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.URISlide;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.tiff.jviewerBufferedImage;
 
@@ -43,7 +42,7 @@ public class TestTiledSlideView extends SimpleGame{
 	
 	protected void test1() {
 		Slide slide = null;
-		slide = new URISlide("hippo_slice1", new File(Scene.imgDir + "hippo_slice1.jpg").toURI(), 0.87f);
+		slide = new Slide("hippo_slice1", new File(Scene.imgDir + "hippo_slice1.jpg").toURI(), 0.87f);
 		slide.setScale(170);
 		
 		SlideView s = new SlideView(slide, display);
@@ -56,8 +55,8 @@ public class TestTiledSlideView extends SimpleGame{
 		img = new File(Scene.imgDir + "hippo_slice1.jpg").toURI();
 		
 		
-		Slide slide1 = new URISlide("s1", img, 0.87f);
-		Slide slide2 = new URISlide("s2", img, 0.87f);
+		Slide slide1 = new Slide("s1", img, 0.87f);
+		Slide slide2 = new Slide("s2", img, 0.87f);
 		//slide.setRelativeRotation(new RotationQuat(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_Y)));
 		//slide.setRelativeScale(1);
 		

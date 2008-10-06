@@ -15,12 +15,12 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.MultiHashSetMap;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
@@ -273,7 +273,7 @@ public class TangibleManager {
 				//for now can only load files in the /etc/hippocampus directory if they aren't already in the DB
 				CellFactory.getInstance().createFreeCell(fileName);
 				/*
-				NeuronMorphology cell3 = new MorphMLNeuronMorphology(fileName, 
+				NeuronMorphology cell3 = new NeuronMorphology(fileName, 
 						new PositionVector(289f, -118f, -180f), null, 
 						NeuronMorphology.RENDER_AS_LOD_2);
 				RotationQuat v = new RotationQuat(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-90, Vector3f.UNIT_Y));

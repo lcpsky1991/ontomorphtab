@@ -16,6 +16,7 @@ import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.CellFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.View2D;
@@ -358,15 +359,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	 */
 	private void debug()
 	{
-		XWBCSlide r = (XWBCSlide) DataRepository.getInstance().findSlideByName("Waldo");
-		System.out.println("results : " + r);
-		if ( r != null)
-		{
-			System.out.println(r.getImageURL());
-			System.out.println(r.getId());
-			System.out.println(r.getPosition().getX() + ", " + r.getPosition().getY() + " " + r.getPosition().getZ());
-		}
-		
+
 	}
 	
 }

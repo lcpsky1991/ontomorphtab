@@ -313,6 +313,12 @@
         <available file="${lib}/jme.jar" type="file"/>
       </condition>
     </target>
+	
+	<target name="checkOBJsUnzipped">
+		<condition property="objs.unzipped">
+		  <available file="etc/obj/allen_meshes_high_detail/Brain.obj" type="file"/>			
+		</condition>
+	</target>
    
     <target name="useCatalogHome" depends="checkCatalogHome" 
             if="catalog.home.set">
@@ -325,7 +331,7 @@
             unless="catalog.home.set">
        <echo message="Using lib dir to find catalog jars"/>
       <property name="protege.lib" value="${lib}/protege-libs/protege.jar"/>
-      <property name="looks.lib" value="${lib}/lprotege-libs/ooks-2.1.3.jar"/>
+      <property name="looks.lib" value="${lib}/protege-libs/looks-2.1.3.jar"/>
     </target>
 
 
@@ -467,7 +473,8 @@
 	  </javadoc>
 	</target>
 
-    <target name = "install">
+    <target name = "install" depends="unzipOBJs, exportDatabaseSchema">
+      <!--
       <fail message = "set the catalog.home variable to do an install">
          <condition>
             <not>
@@ -475,9 +482,12 @@
             </not>
          </condition>
       </fail>
+      -->
+		<!-- Delete temp directory when finished-->
+		<delete dir="etc/hibernateTemp"/>
    </target>
 	
-	<target name="exportDatabaseSchema" depends="cleanDB">
+	<target name="exportDatabaseSchema" depends="cleanDB, unzipTempClasses">
 		<!-- Hibernate Tools import -->
 		<taskdef name="schemaexport"
 			classname="org.hibernate.tool.hbm2ddl.SchemaExportTask"
@@ -603,6 +613,8 @@
 		<target name="packageGeneratedNeuroMLClasses-1.7.2-hyperjaxb2" depends="compileGeneratedNeuroMLClasses-1.7.2-hyperjaxb2">
 			<jar destfile="lib/HyperJaxb2NeuroML-1.7.2.jar"
 				basedir="etc/hibernateTemp/target/classes"/> 
+			<!-- Delete temp directory -->
+			<delete dir="etc/hibernateTemp"/>
 		</target>
 	
 	<target name="generateNeurolucidaClasses" >
@@ -613,6 +625,14 @@
 			</xjc>
 	</target>
 	
+	<target name="unzipOBJs" depends="checkOBJsUnzipped" unless="objs.unzipped">
+		<unzip src="etc/obj/allen_meshes_high_detail/allen_meshes_high_detail.zip" dest="etc/obj/allen_meshes_high_detail/"/>
+	</target>
+	
+	<target name="unzipTempClasses">
+		<mkdir dir="etc/hibernateTemp/target/classes/"/>
+     	<unzip src="lib/HyperJaxb2NeuroML-1.7.2.jar" dest="etc/hibernateTemp/target/classes/"/>
+	</target>
 	
     <!-- Run targets -->
 

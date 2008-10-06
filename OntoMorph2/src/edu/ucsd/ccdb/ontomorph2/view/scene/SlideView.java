@@ -11,9 +11,8 @@ import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.TiledSlide;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.URISlide;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
@@ -45,13 +44,13 @@ public class SlideView extends TangibleView {
 		
 		TextureState textureState = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 		Texture t = null;
-		if (_slide instanceof URISlide) {
-			t = TextureManager.loadTexture(((URISlide)_slide).getBufferedImage(), 
-						Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, 1, true);
-		} else if (_slide instanceof TiledSlide) {
+		if (_slide instanceof TiledSlide) {
 			t = new Texture();
 			t.setMipmapState(Texture.MM_LINEAR);
 			t.setImage(((TiledSlide)_slide).getImage());
+		} else {
+			t = TextureManager.loadTexture(((Slide)_slide).getBufferedImage(), 
+						Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, 1, true);
 		}
 		
 		textureState.setTexture(t);

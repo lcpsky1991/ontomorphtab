@@ -3,17 +3,20 @@ package edu.ucsd.ccdb.ontomorph2.view;
 import java.util.Set;
 
 import com.acarter.scenemonitor.SceneMonitor;
+import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
+import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.state.LightState;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
@@ -186,6 +189,7 @@ public class View3D extends Node{
 				atlasNode.attachChild(brView);
 			}
 		}
+		updateNode(atlasNode);
 	}
 	
 	
@@ -197,8 +201,8 @@ public class View3D extends Node{
 	}
 	
 	public void updateNode(Node n) {
+		n.updateModelBound();
 		n.updateGeometricState(0.5f, false);
-		n.updateWorldBound();
 		n.updateRenderState();
 	}
 }

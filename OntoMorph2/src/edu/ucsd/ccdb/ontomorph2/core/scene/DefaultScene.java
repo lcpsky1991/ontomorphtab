@@ -27,12 +27,10 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationQuat;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLNeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.CCDBSlide;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.URISlide;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
@@ -94,9 +92,6 @@ public class DefaultScene extends Scene{
 		//temporary hack o load a mockup
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
 
-		//Instantiat the Datarepository
-		DataRepository.getInstance();
-		
 		try 
 		{
 			
@@ -118,7 +113,7 @@ public class DefaultScene extends Scene{
 		
 		{
 
-			Slide b = new URISlide("hippo2", hippo2URL, 1.34f);
+			Slide b = new Slide("hippo2", hippo2URL, 1.34f);
 		    b.setName("Waldo");
 		    b.setPosition(new PositionVector(-14,0, 18f));
 		    //b.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
@@ -127,32 +122,32 @@ public class DefaultScene extends Scene{
 		}
 	
 		
-		Slide c = new URISlide("hippo3a", hippo3aURL, 1.33f);
+		Slide c = new Slide("hippo3a", hippo3aURL, 1.33f);
 		c.setPosition(new PositionVector(-34,-5,19f));
 		//c.setRelativeRotation(new RotationQuat(d.getRotationFromAbsolute()));
 		c.setScale(0.75f);
 		addSceneObject(c);
 		
-		Slide ds = new URISlide("hippo3b", hippo3bURL, 1.31f);
+		Slide ds = new Slide("hippo3b", hippo3bURL, 1.31f);
 		ds.setPosition(new PositionVector(-15f,-1.5f,19.1f));
 		//ds.setRelativeRotation(new RotationQuat(d.getRotationFromAbsolute()));
 		ds.setScale(0.75f);
 		addSceneObject(ds);
 		
-		Slide e = new URISlide("hippo3c", hippo3cURL, 1.33f);
+		Slide e = new Slide("hippo3c", hippo3cURL, 1.33f);
 		e.setPosition(new PositionVector(4,-1f,19.2f));
 		//e.setRelativeRotation(new RotationQuat(d.getRotationFromAbsolute()));
 		e.setScale(0.75f);
 		addSceneObject(e);
 		
-		Slide f = new URISlide("hippo22", hippo22URL, 0.87f);
+		Slide f = new Slide("hippo22", hippo22URL, 0.87f);
 		f.setName("hippocampus 2");
 		f.setPosition(new PositionVector(319.9474f,-153.3174f,-145.52f));
 		f.setRotation(new RotationQuat(d.getRotationFromAbsolute()));
 		f.setScale(10f);
 		addSceneObject(f);
 		
-		Slide g = new URISlide("striatum1", striatum1URL, 1.33f);
+		Slide g = new Slide("striatum1", striatum1URL, 1.33f);
 		g.setName("striatum 1");
 		g.setPosition(new PositionVector(213.1435f, -145.5603f, -146.37f));
 		g.setRotation(new RotationQuat(d.getRotationFromAbsolute()));
@@ -251,7 +246,7 @@ public class DefaultScene extends Scene{
 		addSceneObject(c2);
 		
 		
-		NeuronMorphology cell3 = new MorphMLNeuronMorphology("cell1zr", c2, 0.03f, 
+		NeuronMorphology cell3 = new NeuronMorphology("cell1zr", c2, 0.03f, 
 				NeuronMorphology.RENDER_AS_LOD_2);
 		cell3.setScale(0.01f);
 		//semantic thing for hippocampal CA3 neuron
@@ -259,7 +254,7 @@ public class DefaultScene extends Scene{
 		cell3.getSemanticInstance();
 		addSceneObject(cell3);
 		
-		NeuronMorphology cell4 = new MorphMLNeuronMorphology("cell2zr", c2, 0.2f, 
+		NeuronMorphology cell4 = new NeuronMorphology("cell2zr", c2, 0.2f, 
 				NeuronMorphology.RENDER_AS_LOD);
 		cell4.setScale(0.01f);
 		cell4.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
@@ -267,7 +262,7 @@ public class DefaultScene extends Scene{
 		addSceneObject(cell4);
 		
 
-		NeuronMorphology cell5 = new MorphMLNeuronMorphology("cell6zr", c2, 0.35f, 
+		NeuronMorphology cell5 = new NeuronMorphology("cell6zr", c2, 0.35f, 
 				NeuronMorphology.RENDER_AS_LOD);
 		cell5.setScale(0.01f);
 		cell5.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
@@ -281,7 +276,7 @@ public class DefaultScene extends Scene{
 		 */
 
 		/*
-		NeuronMorphology cell6 = new MorphMLNeuronMorphology(cell6URL, c2, 0.8f, 
+		NeuronMorphology cell6 = new NeuronMorphology(cell6URL, c2, 0.8f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		//NeuronMorphology cell6 = new NeuronMorphology(cell6URL, null, null, NeuronMorphology.RENDER_AS_LOD);
 		cell6.setRelativeScale(0.02f);
@@ -292,7 +287,7 @@ public class DefaultScene extends Scene{
 				
 		
 
-		NeuronMorphology cell7 = new MorphMLNeuronMorphology(cell7URL, c2, 0.91f, 
+		NeuronMorphology cell7 = new NeuronMorphology(cell7URL, c2, 0.91f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell7.setRelativeScale(0.02f);
 		//cell7.setUpVector(new OMTVector(1,0,0));
@@ -316,7 +311,7 @@ public class DefaultScene extends Scene{
 
 		int numCells = 15;
 		for (int i = 1; i < numCells; i++) {
-			NeuronMorphology cell11 = new MorphMLNeuronMorphology("5199202a", curve1, ((float)i)/numCells-0.01f, NeuronMorphology.RENDER_AS_LOD);
+			NeuronMorphology cell11 = new NeuronMorphology("5199202a", curve1, ((float)i)/numCells-0.01f, NeuronMorphology.RENDER_AS_LOD);
 
 			cell11.setScale(0.01f);
 			

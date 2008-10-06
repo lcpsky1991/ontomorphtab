@@ -19,7 +19,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class MorphMLSegment extends ContainerTangible implements INeuronMorphologyPart{
+public class NeuronSegment extends ContainerTangible implements INeuronMorphologyPart{
 	/**************************************************
 	 * Be careful with instances of this class.  The constructor has been made protected
 	 * in order to avoid careless instantiation.  This class is basically
@@ -30,9 +30,9 @@ public class MorphMLSegment extends ContainerTangible implements INeuronMorpholo
 	 ***************************************************/
 
 	Segment s = null;
-	MorphMLNeuronMorphology parentCell;
+	NeuronMorphology parentCell;
 	
-	protected MorphMLSegment(MorphMLNeuronMorphology parentCell, Segment s) {
+	protected NeuronSegment(NeuronMorphology parentCell, Segment s) {
 		super(parentCell.toString() + ", " + s.toString());
 		this.s = s;
 		this.parentCell = parentCell;
@@ -108,7 +108,7 @@ public class MorphMLSegment extends ContainerTangible implements INeuronMorpholo
 		return this.getParent().getCable(this.getCableId()).isSelected();
 	}
 
-	public MorphMLNeuronMorphology getParent() {
+	public NeuronMorphology getParent() {
 		return this.parentCell;
 	}
 	

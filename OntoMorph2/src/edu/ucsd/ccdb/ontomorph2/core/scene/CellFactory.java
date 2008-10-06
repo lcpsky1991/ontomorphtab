@@ -9,9 +9,9 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLNeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
@@ -85,11 +85,11 @@ public class CellFactory {
 		//create the cell two different ways, depending on whether it's a free-floating or attached cell
 		if (null == crvParent)
 		{	//free float
-			ncell = new MorphMLNeuronMorphology(modelURL, null, t, NeuronMorphology.RENDER_AS_LOD);
+			ncell = new NeuronMorphology(modelURL, null, t, NeuronMorphology.RENDER_AS_LOD);
 		}
 		else
 		{	//attached
-			ncell = new MorphMLNeuronMorphology(modelURL, crvParent, t, 
+			ncell = new NeuronMorphology(modelURL, crvParent, t, 
 					NeuronMorphology.RENDER_AS_LOD);
 		}
 		

@@ -1,11 +1,13 @@
 package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import java.awt.Color;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
+import java.util.Random;
 import java.util.Set;
 
 import org.morphml.neuroml.schema.XWBCTangible;
@@ -59,7 +61,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public static final String CHANGED_LOADED = "loaded";
 	public static final String CHANGED_CONTAINS = "contains";
 
-	private XWBCTangible theSpatial = null;
+	protected XWBCTangible theSpatial = null;
 	private boolean _visible = false;
 	private List<SemanticClass> semanticThings = new ArrayList<SemanticClass>();
 	private SemanticClass mainSemanticClass = null;
@@ -80,17 +82,22 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		if (name == null) {
 			throw new OMTException("Cannot construct a tangible with a null name!");
 		}
-		theSpatial = new XWBCTangibleImpl();
-		theSpatial.setPosition(new PositionVector().toPoint3D());
-		theSpatial.setRotation(new RotationQuat().toWBCQuat());
-		theSpatial.setScale(new OMTVector(1f, 1f, 1f).toPoint3D());
-		this.setName(name);
+		initializeTangible(name, new XWBCTangibleImpl());
 		TangibleManager.getInstance().addTangible(this);
 		this.addObserver(SceneObserver.getInstance());
 		this.addObserver(SemanticObserver.getInstance());
 		//by default, all objects ought to be associated with an instance.
 		//the least specific instance that can be created is one of bfo:entity.
 		//addSemanticThing(GlobalSemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
+	}
+	
+	protected void initializeTangible(String name, XWBCTangible t) {
+		theSpatial = t;
+		theSpatial.setPosition(new PositionVector().toPoint3D());
+		theSpatial.setRotation(new RotationQuat().toWBCQuat());
+		theSpatial.setScale(new OMTVector(1f, 1f, 1f).toPoint3D());
+		theSpatial.setName(name);
+		theSpatial.setId(BigInteger.valueOf(new Random().nextLong()));
 	}
 	
 	

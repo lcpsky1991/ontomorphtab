@@ -1,6 +1,9 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
+import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.SceneElement;
@@ -41,7 +44,6 @@ public class BrainRegionView extends TangibleView{
 		this.mesh.setName("Trimesh for brain region: " + br.getAbbreviation());
 		//mesh.setSolidColor(ColorRGBA.blue);
 		mesh.setModelBound(new BoundingBox());
-		mesh.updateModelBound();
 		VBOInfo nfo = new VBOInfo(true);
 		mesh.setVBOInfo(nfo);
 		mesh.setCullMode(SceneElement.CULL_DYNAMIC);
@@ -66,9 +68,6 @@ public class BrainRegionView extends TangibleView{
         
         this.defaultRenderQueueMode = this.getRenderQueueMode();
         
-        this.setModelBound(new BoundingBox());
-        this.updateModelBound();
-		
 		this.pickPriority = P_UNPICKABLE;
 		
 		this.update();
@@ -109,11 +108,10 @@ public class BrainRegionView extends TangibleView{
 				this.unhighlight();
 			}
 			
-			
+
 			this.mesh.updateModelBound();
 			this.mesh.updateRenderState();
-			this.mesh.updateGeometricState(5f, true);
-
+			this.mesh.updateGeometricState(0.5f, true);
 		}
 	}
 	

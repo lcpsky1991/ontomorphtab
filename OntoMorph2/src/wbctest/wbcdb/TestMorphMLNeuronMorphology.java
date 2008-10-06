@@ -1,7 +1,7 @@
 package wbctest.wbcdb;
 
 import junit.framework.TestCase;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLNeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 
 public class TestMorphMLNeuronMorphology extends TestCase {
 
@@ -30,7 +30,7 @@ public class TestMorphMLNeuronMorphology extends TestCase {
 	 * Test method for 'edu.ucsd.ccdb.ontomorph2.core.tangible.MorphMLNeuronMorphology.MorphMLNeuronMorphology(String)'
 	 */
 	public void testMorphMLNeuronMorphologyString() {
-		MorphMLNeuronMorphology neuron = new MorphMLNeuronMorphology("cell1zr");
+		NeuronMorphology neuron = new NeuronMorphology("cell1zr");
 		neuron.getMorphMLCell();
 	}
 

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.math.BigInteger;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ISelectable;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**

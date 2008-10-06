@@ -93,35 +93,6 @@ public class DataRepository {
 		return objFound;
 	}
 	
-	
-	@Deprecated
-	public Object findSlideByName(String name)
-	{
-		Object objFound = null;
-		final Session sesLoad = sFact.openSession();	//open connection to DB (SQL)
-		
-		Criteria search = sesLoad.createCriteria(XWBCSlide.class);
-		List results = search.list();
-		
-		/**
-		 * pull out all rows formt he db that correspond to the class in question
-		 * and then look through them all and find matching name
-		 */
-		
-		for (int i=0; i < results.size(); i++)
-		{
-			XWBCSlide consider =  (XWBCSlide) results.get(i);
-			if (consider.getName() != null && consider.getName().equals(name))
-			{
-				objFound = consider;
-				break;	//stop iterating through the rest
-			}
-		}
-		
-		return objFound;
-	}
-	
-	
 	public XWBCTangible loadTangible(Class type, String name)
 	{
 		XWBCTangible objFound = null;
@@ -185,5 +156,12 @@ public class DataRepository {
 		return objFound;
 		//return loadedObject;
 
+	}
+
+	public void delete(Object lookup) {
+//		 Open the session
+		final Session loadSession = sFact.openSession();
+		loadSession.delete(lookup);
+		loadSession.close();
 	}
 }

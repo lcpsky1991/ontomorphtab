@@ -21,7 +21,6 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticProperty;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
@@ -33,7 +32,7 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
  * @see INeuronMorphology
  *
  */
-public class MorphMLCable extends ContainerTangible implements INeuronMorphologyPart{
+public class NeuronCable extends ContainerTangible implements INeuronMorphologyPart{
 	
 	/**************************************************
 	 * Be careful with instances of this class.  The constructor has been made protected
@@ -45,10 +44,10 @@ public class MorphMLCable extends ContainerTangible implements INeuronMorphology
 	 ***************************************************/
 
 	Cable c = null;
-	MorphMLNeuronMorphology parentCell = null;
-	MorphMLSegment tempSegment = null;
+	NeuronMorphology parentCell = null;
+	NeuronSegment tempSegment = null;
 	
-	protected MorphMLCable(MorphMLNeuronMorphology parentCell, Cable c) {
+	protected NeuronCable(NeuronMorphology parentCell, Cable c) {
 		super(parentCell.toString() + " " + c.toString());
 		this.parentCell = parentCell;
 		this.c = c;
@@ -64,7 +63,7 @@ public class MorphMLCable extends ContainerTangible implements INeuronMorphology
 	
 
 	/**
-	 * Sets the underlying model of this MorphMLCable
+	 * Sets the underlying model of this NeuronCable
 	 * to be cable.
 	 */
 	public void setMorphMLCable(Cable cable) {
@@ -136,7 +135,7 @@ public class MorphMLCable extends ContainerTangible implements INeuronMorphology
 	}*/
 
 
-	public MorphMLNeuronMorphology getParent() {
+	public NeuronMorphology getParent() {
 		return this.parentCell;
 	}
 	
@@ -171,7 +170,7 @@ public class MorphMLCable extends ContainerTangible implements INeuronMorphology
 		}
 		
 		//call select on a copy of this instance, rather than this instance itself.
-		MorphMLCable copy = new MorphMLCable(this.getParent(), this.c);
+		NeuronCable copy = new NeuronCable(this.getParent(), this.c);
 		TangibleManager.getInstance().select(copy);
 		copy.changed(CHANGED_SELECT);
 		
@@ -199,8 +198,8 @@ public class MorphMLCable extends ContainerTangible implements INeuronMorphology
 		//have to find the tangible that shares the same underlying cable instance
 		//and call unselect on it
 		for (Tangible t : TangibleManager.getInstance().getSelected()) {
-			if (t instanceof MorphMLCable) {
-				MorphMLCable m = (MorphMLCable)t;
+			if (t instanceof NeuronCable) {
+				NeuronCable m = (NeuronCable)t;
 				if (m.getMorphMLCable().equals(this.c)) {
 					TangibleManager.getInstance().unselect(t);
 					t.changed(CHANGED_UNSELECT);
@@ -306,7 +305,7 @@ public class MorphMLCable extends ContainerTangible implements INeuronMorphology
 	}
 
 	/**
-	 * Says how many MorphMLSegmentImpls are associated with this MorphMLCable
+	 * Says how many MorphMLSegmentImpls are associated with this NeuronCable
 	 */
 	public int getSubPartCount() {
 		BigInteger cableId = this.getId();
@@ -336,7 +335,7 @@ public class MorphMLCable extends ContainerTangible implements INeuronMorphology
 		if (s != null) {
 			
 			if (this.tempSegment == null) {
-				tempSegment = new MorphMLSegment(this.getParent(), s);
+				tempSegment = new NeuronSegment(this.getParent(), s);
 			} else {
 				tempSegment.setMorphMLSegment(s);
 			}

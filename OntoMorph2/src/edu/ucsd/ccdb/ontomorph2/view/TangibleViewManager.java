@@ -14,8 +14,8 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 

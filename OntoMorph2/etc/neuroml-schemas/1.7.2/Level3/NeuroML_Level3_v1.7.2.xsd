@@ -58,7 +58,9 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 
             <xs:group ref="net:CoreNetworkElements" minOccurs="0"/>
 
-			<xs:element name="curves" type="Curves" minOccurs="0"/>
+			<xs:element name="curves" type="CurveSet" minOccurs="0"/>
+			
+			<xs:element name="slides" type="SlideSet" minOccurs="0"/>
 
         </xs:sequence>
 
@@ -134,7 +136,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
             </xs:complexContent>
     </xs:complexType>
 
- 	<xs:complexType name="Curves">
+ 	<xs:complexType name="CurveSet">
             <xs:annotation>
                     <xs:documentation>Set of Level 3 curves</xs:documentation>
             </xs:annotation>
@@ -191,14 +193,9 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 			    </xs:annotation>
 		    </xs:element>
 		    
-		    <xs:element name="system" type="xs:string"/>
 		    <xs:element name="rotation" type="xWBCQuat"/>
 
-			<xs:element name="scale" type="meta:Point3D" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Scale in x, y, and z dimensions</xs:documentation>
-				</xs:annotation>
-			</xs:element>
+			<xs:element name="scale" type="meta:Point3D" maxOccurs="1"/>
 
 		    <xs:element name="id" type="xs:nonNegativeInteger">
 			    <xs:annotation>
@@ -230,7 +227,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	</xs:complexContent>
     </xs:complexType>
     
-    <xs:complexType name="Slides">
+    <xs:complexType name="SlideSet">
 	    <xs:annotation>
 		    <xs:documentation>Set of Level 3 Slides</xs:documentation>
 	    </xs:annotation>

@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
+import com.jme.math.Vector3f;
 import com.jme.scene.TriMesh;
 import com.jme.util.export.binary.BinaryImporter;
 import com.jmex.model.converters.FormatConverter;
@@ -14,6 +17,7 @@ import com.jmex.model.converters.ObjToJme;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationQuat;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
@@ -50,6 +54,10 @@ public class BrainRegion extends ContainerTangible {
 	public BrainRegion(String name, String abbrev, String parentAbbrev, Color c, 
 			String regionId){
 		super(name);
+		
+		Quaternion q = new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180,Vector3f.UNIT_X);
+		this.setRotation(new RotationQuat(q));
+		
 		this.abbrev = abbrev;
 		this.parentAbbrev = parentAbbrev;
 		this.setColor(c);

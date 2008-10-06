@@ -17,7 +17,6 @@ import neurolucida.generated.Tree;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationQuat;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 /**
@@ -204,13 +203,13 @@ public class NeurolucidaNeuronMorphology extends NeuronMorphology{
 	}
 
 	@Override
-	public MorphMLCable getCable(int i) {
+	public NeuronCable getCable(int i) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public MorphMLCable getCable(BigInteger id) {
+	public NeuronCable getCable(BigInteger id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

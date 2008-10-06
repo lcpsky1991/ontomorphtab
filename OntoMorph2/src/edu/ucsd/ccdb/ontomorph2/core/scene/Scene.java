@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
@@ -13,24 +15,34 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.morphml.neuroml.schema.Curves;
+import org.morphml.networkml.schema.CellInstance;
+import org.morphml.networkml.schema.Instances;
+import org.morphml.networkml.schema.Population;
+import org.morphml.networkml.schema.Populations;
+import org.morphml.networkml.schema.impl.CellInstanceImpl;
+import org.morphml.networkml.schema.impl.InstancesImpl;
+import org.morphml.networkml.schema.impl.PopulationImpl;
+import org.morphml.networkml.schema.impl.PopulationsImpl;
+import org.morphml.neuroml.schema.CurveSet;
 import org.morphml.neuroml.schema.Level3Cells;
 import org.morphml.neuroml.schema.Neuroml;
-import org.morphml.neuroml.schema.impl.CurvesImpl;
+import org.morphml.neuroml.schema.SlideSet;
+import org.morphml.neuroml.schema.impl.CurveSetImpl;
 import org.morphml.neuroml.schema.impl.Level3CellsImpl;
 import org.morphml.neuroml.schema.impl.NeuromlImpl;
+import org.morphml.neuroml.schema.impl.SlideSetImpl;
 
 import edu.ucsd.ccdb.ontomorph2.core.semantic.GlobalSemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.Slide;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.MorphMLNeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
 
@@ -121,12 +133,13 @@ public abstract class Scene extends Observable{
 	
 	/**
 	 * Loads objects into the scene.  Currently this is done manually mostly from
-	 * files on the client.  This is being transitioned to the loadFromCKB method
-	 * where we are loading data from the cellular knowledge base
+	 * files on the client.
 	 * @see #loadFromCKB()
 	 *
 	 */
-	public abstract void load();
+	public void load() {
+		
+	}
 	
 
 	/**
@@ -139,24 +152,76 @@ public abstract class Scene extends Observable{
 	public void save() {
 		Neuroml scene = new NeuromlImpl();
 		scene.setLengthUnits("micron");
+		
+		//=======================================
+		// set cells
+		//=======================================
 		Level3Cells cells = new Level3CellsImpl();
 		Set alreadySaved = new HashSet();
-		for (NeuronMorphology nm : getCells()) {
-			if (nm instanceof MorphMLNeuronMorphology) {
-				MorphMLNeuronMorphology mmnm = (MorphMLNeuronMorphology)nm;
-				if (!alreadySaved.contains(mmnm.getName())) {
-					cells.getCell().add(mmnm.getMorphMLCell());
-					alreadySaved.add(mmnm.getName());
-				}
+		for (NeuronMorphology mmnm : getCells()) 
+		{
+			if (!alreadySaved.contains(mmnm.getName())) 
+			{
+				cells.getCell().add(mmnm.getMorphMLCell());
+				alreadySaved.add(mmnm.getName());
 			}
 		}
 		scene.setCells(cells);
-		Curves curves = new CurvesImpl();
-		for (Curve3D c : getCurves()) {
+		//------------------------------------------
+		
+        //=======================================
+		// set cell instances
+		//=======================================
+		Populations populations = new PopulationsImpl();
+		HashMap<String, Population> m = new HashMap<String, Population>();
+		for (NeuronMorphology mmnm : getCells()) 
+		{
+			Population cellType = m.get(mmnm.getName());
+			if (cellType == null) {
+				cellType = new PopulationImpl();
+				cellType.setName(mmnm.getName());
+				cellType.setCellType(mmnm.getName());
+				Instances i = new InstancesImpl();
+				cellType.setInstances(i);
+				m.put(mmnm.getName(), cellType);
+				populations.getPopulation().add(cellType);
+			}
+			List list = cellType.getInstances().getInstance();
+			CellInstance ci = new CellInstanceImpl();
+			ci.setId(BigInteger.valueOf(list.size()));
+			if (mmnm.getCurveAssociation() != null) {
+				ci.setCurveAssociation(mmnm.getCurveAssociation());
+			} else {
+				ci.setLocation(mmnm.getPosition().toPoint3D());
+			}
+			list.add(ci);
+			cellType.getInstances().setSize(BigInteger.valueOf(list.size()));
+		}
+		scene.setPopulations(populations);
+		
+		
+		//=======================================
+		// set curves
+		//=======================================
+		CurveSet curves = new CurveSetImpl();
+		for (Curve3D c : getCurves()) 
+		{
 			curves.getCurve().add(c.getMorphMLCurve());
 		}
 		scene.setCurves(curves);
 		
+		//=======================================
+		// set slides
+		//=======================================
+		
+		SlideSet slides = new SlideSetImpl();
+		for (Slide s: getSlides())
+		{
+			System.out.println("s = " + s.getMorphMLSlide());
+			s.setScale(1f);
+			slides.getSlide().add(s.getMorphMLSlide());
+		}
+		scene.setSlides(slides);
 		
 		
 		try {

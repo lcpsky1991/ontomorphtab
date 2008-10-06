@@ -19,6 +19,7 @@ import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
@@ -327,7 +328,7 @@ public class Curve3D extends Tangible{
 	@SuppressWarnings("unchecked")
 	protected void setControlPoint(int i, OMTVector pos) {
 		morphMLCurve.getPoint().set(i, pos.toPoint3D());
-		DataRepository.getInstance().saveFileToDB(morphMLCurve);
+		save();
 		this.controlPoints[i] =  pos;
 		changed();
 	}
@@ -338,9 +339,13 @@ public class Curve3D extends Tangible{
 		for (int i = 0; i < arg1.length; i++) {
 			morphMLCurve.getPoint().add(arg1[i].toPoint3D());
 		}
-		DataRepository.getInstance().saveFileToDB(morphMLCurve);
+		save();
 		this.controlPoints = arg1;
 		changed();
+	}
+	
+	public void save() {
+		DataRepository.getInstance().saveFileToDB(morphMLCurve);
 	}
 	
 	

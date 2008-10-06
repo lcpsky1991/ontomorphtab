@@ -17,7 +17,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTOfflineException;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class CCDBSlide extends URISlide {
+public class CCDBSlide extends Slide {
 
 
 	
@@ -50,8 +50,7 @@ public class CCDBSlide extends URISlide {
 		} catch (Exception e) {
 			throw new OMTException("Unable to load CCDB data!", e);
 		}
-		
-		_imageURL = imageURL;
+		this.setURL(imageURL);
 		
 		setRatio(ratio);
 	}
