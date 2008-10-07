@@ -284,14 +284,16 @@ public class DefaultScene extends Scene{
 		addSceneObject(c2);
 		
 		
-		NeuronMorphology cell3 = new MorphMLNeuronMorphology("cell1zr", c2, 0.03f, 
+
+
+		NeuronMorphology cell3 = new MorphMLNeuronMorphology("cell1zr", c2, 0.05f, 
 				NeuronMorphology.RENDER_AS_LOD_2, d);
 		cell3.setRelativeScale(0.01f);
-		//semantic thing for hippocampal CA3 neuron
+//		semantic thing for hippocampal CA3 neuron
 		cell3.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.CA3_PYRAMIDAL_CELL_CLASS));
 		cell3.getSemanticInstance();
 		addSceneObject(cell3);
-		
+
 		NeuronMorphology cell4 = new MorphMLNeuronMorphology("cell2zr", c2, 0.2f, 
 				NeuronMorphology.RENDER_AS_LOD, d);
 		cell4.setRelativeScale(0.01f);
@@ -308,45 +310,6 @@ public class DefaultScene extends Scene{
 		addSceneObject(cell5);
 		
 
-		/** These models have their up vectors pointing in an X direction
-		 *  Need to implement a way to have a curve properly rotate these guys.
-		 *  Curve may need different model vectors for different NeuronMorphologies
-		 */
-
-		/*
-		NeuronMorphology cell6 = new MorphMLNeuronMorphology(cell6URL, c2, 0.8f, 
-				NeuronMorphology.RENDER_AS_LOD, d);
-		//NeuronMorphology cell6 = new NeuronMorphology(cell6URL, null, null, NeuronMorphology.RENDER_AS_LOD);
-		cell6.setRelativeScale(0.02f);
-		//cell6.setUpVector(new OMTVector(1,0,0));
-		cell6.setUpVector(new OMTVector(0,0,1));
-		cell6.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA1_PYRAMIDAL_CELL_CLASS));
-		addSceneObject(cell6);
-				
-		
-
-		NeuronMorphology cell7 = new MorphMLNeuronMorphology(cell7URL, c2, 0.91f, 
-				NeuronMorphology.RENDER_AS_LOD, d);
-		cell7.setRelativeScale(0.02f);
-		//cell7.setUpVector(new OMTVector(1,0,0));
-		cell7.setUpVector(new OMTVector(0,0,1));
-		cell7.addSemanticThing(SemanticRepository.getInstance().getSemanticClass(SemanticClass.CA1_PYRAMIDAL_CELL_CLASS));
-		addSceneObject(cell7);
-		*/
-		
-		/*
-		
-		URL cell8URL = Scene.class.getClassLoader().getResource("etc/morphml/hippocampus/cb27e.morph.xml");
-		addSceneObject(cell8);
-		
-		URL cell9URL = Scene.class.getClassLoader().getResource("etc/morphml/hippocampus/cb27g.morph.xml");
-		addSceneObject(cell9);
-		
-		URL cell10URL = Scene.class.getClassLoader().getResource("etc/morphml/hippocampus/cd1152.morph.xml");
-		addSceneObject(cell10); */
-		
-
-
 		int numCells = 15;
 		for (int i = 1; i < numCells; i++) {
 			NeuronMorphology cell11 = new MorphMLNeuronMorphology("5199202a", curve1, ((float)i)/numCells-0.01f, NeuronMorphology.RENDER_AS_LOD, d);
@@ -359,33 +322,16 @@ public class DefaultScene extends Scene{
 			addSceneObject(cell11);
 		}
 		
-		/*
-		NeuronMorphology cell12 = new NeuronMorphology(); 
-		URL cell12URL = Scene.class.getClassLoader().getResource("etc/morphml/hippocampus/pv08d.morph.xml");
-		cell12.setMorphologyViaURL(cell12URL);
-		cell12.getMorphology().setPosition(new PositionImpl(-25,0,20));
-		//cell3.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new OMTVector(0,1,0)));
-		cell12.getMorphology().setScale(0.01f);
-		cell12.getMorphology().setRenderOption(NeuronMorphology.RENDER_AS_LINES);
-		addSceneObject(cell12);
-		
-		NeuronMorphology cell13 = new NeuronMorphology(); 
-		URL cell13URL = Scene.class.getClassLoader().getResource("etc/morphml/hippocampus/pv22b.morph.xml");
-		cell13.setMorphologyViaURL(cell13URL);
-		cell13.getMorphology().setPosition(new PositionImpl(25,0,20));
-		//cell3.getMorphology().setRotation(new RotationImpl(FastMath.DEG_TO_RAD*-90, new OMTVector(0,1,0)));
-		cell13.getMorphology().setScale(0.01f);
-		cell13.getMorphology().setRenderOption(NeuronMorphology.RENDER_AS_LINES);
-		addSceneObject(cell13);*/
-		
+
+
 		DataMesh mesh;
 		try {
 			mesh = new DataMesh(mitoObjURL);
 			
-			
-			mesh.setRelativePosition(new PositionVector(289f, -117f, -179.51f));
+			mesh.setRelativePosition(new PositionVector(277.73f, -116f, -179.51f));
 			mesh.setRelativeRotation(new RotationVector(d.getRotationFromAbsolute()));
-			mesh.setRelativeScale(0.2f);
+			mesh.setRelativeScale(0.0002f);
+
 			mesh.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.MITOCHONDRION_CLASS));
 			mesh.getSemanticInstance(); //get a SemanticInstance loaded into the local repository
 			

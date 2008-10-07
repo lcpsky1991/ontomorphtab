@@ -9,6 +9,7 @@ import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
+import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
 /**
  * Updates the semantic repository when changes occur to semantic things.  For example,
@@ -77,18 +78,9 @@ public class SemanticObserver implements Observer {
 		}
 		catch (Exception e)
 		{
-			Log.warn("ERROR: Could not update() in SemanticObserver");
+			throw new OMTException("Could not update() in SemanticObserver!", e);
+			//Log.warn("ERROR: Could not update() in SemanticObserver");
 		}
-		/*
-		if (o instanceof NeuronMorphology) {
-			NeuronMorphology nm = (NeuronMorphology)o;
-			AllenMeshBrainRegion br = nm.getEnclosingBrainRegion();
-			SemanticInstance brainRegionInstance = br.getSemanticInstance();
-			//does this brain region instance have a property saying
-			//that it has_part the instance from the neuron morphology??
-			//if so, do nothing
-			//if not, add it!
-		}*/
 	}
 
 }

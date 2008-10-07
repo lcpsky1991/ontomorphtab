@@ -31,6 +31,10 @@ public class SemanticClass extends SemanticThing {
 	public static final String CONTINUANT_CLASS = "snap:Continuant";
 	public static final String CELL_CLASS = "sao:sao1813327414";
 	public static final String HIPPOCAMPUS_CLASS = "birn_anat:birnlex_721";
+	public static final String BRAIN_CLASS = "birn_anat:birnlex_796";
+	public static final String HYPOTHALAMUS_CLASS = "birn_anat:birnlex_734";
+	public static final String THALAMUS_CLASS = "birn_anat:birnlex_954";
+	public static final String DENTATE_GYRUS_CLASS = "birn_anat:birnlex_1178";
 	public static final String IMAGE_CLASS = "birn_invest:birnlex_2028";
 	
 	public static int counter = 1;

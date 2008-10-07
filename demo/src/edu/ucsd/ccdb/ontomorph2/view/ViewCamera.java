@@ -375,7 +375,8 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	
 	public void smoothlyZoomToSubcellularView() {
 
-		Vector3f loc = new Vector3f(278.8373f, -116.61807f, -179.73985f);
+		Vector3f loc = new Vector3f(272.94843f, -116.61807f, -179.7385f);
+		//Vector3f loc = new Vector3f(278.8373f, -116.61807f, -179.73985f);
 		Vector3f position = new Vector3f(298.8373f, -116.61807f, -179.73985f);
 		//Quaternion rotation = new Quaternion(-0.05305708f,0.60644495f, 0.06914531f, 0.7903347f);
 
@@ -384,7 +385,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	}
 	
 	public void setToSubcellularView() {
-		Vector3f loc = new Vector3f(298.8373f, -116.61807f, -179.73985f);
+		Vector3f loc = new Vector3f(272.94843f, -116.61807f, -179.7385f);
 		this.setLocalTranslation(loc);
 		this.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y));
 	}
