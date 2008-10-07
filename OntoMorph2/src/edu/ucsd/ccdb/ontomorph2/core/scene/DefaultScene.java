@@ -95,28 +95,34 @@ public class DefaultScene extends Scene{
 		Neuroml scene = DataRepository.getInstance().loadScene();
 		
 		//load tangibles for curves
-		for (Iterator it = scene.getCurves().getCurve().iterator(); it.hasNext();) {
-			this.addSceneObject(new Curve3D((Curve)it.next()));
+		if (scene.getCurves() != null) {
+			for (Iterator it = scene.getCurves().getCurve().iterator(); it.hasNext();) {
+				this.addSceneObject(new Curve3D((Curve)it.next()));
+			}
 		}
 		
 //		load tangibles for slides
-		for (Iterator it = scene.getSlides().getSlide().iterator(); it.hasNext();) {
-			this.addSceneObject(new Slide((XWBCSlide)it.next()));
+		if (scene.getSlides() != null ) {
+			for (Iterator it = scene.getSlides().getSlide().iterator(); it.hasNext();) {
+				this.addSceneObject(new Slide((XWBCSlide)it.next()));
+			}
 		}
 		
-		
 //		load tangibles for cell instances
-		for (Iterator it = scene.getPopulations().getPopulation().iterator(); it.hasNext();) 
-		{
-			Population p = (Population) it.next();
-			
-			
-			//for (Iterator it2 = p.getInstances().getInstance().iterator(); it2.hasNext();)
-			for (int n = 0; n < p.getInstances().getInstance().size(); n++)
+		if (scene.getPopulations() != null) { 
+			for (Iterator it = scene.getPopulations().getPopulation().iterator(); it.hasNext();) 
 			{
-				CellInstance ci = (CellInstance) p.getInstances().getInstance().get(n);
-				//CellInstance ci = (CellInstance)it2.next();
-				NeuronMorphology instance = new NeuronMorphology(p.getCellType());	
+				Population p = (Population) it.next();
+
+
+				//for (Iterator it2 = p.getInstances().getInstance().iterator(); it2.hasNext();)
+				for (int n = 0; n < p.getInstances().getInstance().size(); n++)
+				{
+					CellInstance ci = (CellInstance) p.getInstances().getInstance().get(n);
+					//CellInstance ci = (CellInstance)it2.next();
+					//NeuronMorphology instance = new NeuronMorphology(p.getCellType());
+					NeuronMorphology instance = new NeuronMorphology(p.getCellType(), ci);
+					/*
 				CurveAssociation ca = ci.getCurveAssociation();
 				if (ca != null) 
 				{
@@ -132,24 +138,22 @@ public class DefaultScene extends Scene{
 				else 
 				{
 					instance.setPosition(new PositionVector(ci.getLocation()));
+				}*/
+
+					//for loading all cells, regardless of association, put their scales and rotations on
+					{
+						//set the rotation and such
+						//System.out.println(instance.getName() + " has " + instance.getRotation());
+						//System.out.println(instance.getName() + " has scale " + instance.getScale());					
+						System.out.println(ci + " has scale " + ci.getScale());
+						System.out.println(ci + " has rot " + ci.getRotation());
+					}
+
+					this.addSceneObject(instance);	
 				}
-				
-				//for loading all cells, regardless of association, put their scales and rotations on
-				{
-					//set the rotation and such
-					//System.out.println(instance.getName() + " has " + instance.getRotation());
-					//System.out.println(instance.getName() + " has scale " + instance.getScale());					
-					System.out.println(ci + " has scale " + ci.getScale());
-					System.out.println(ci + " has rot " + ci.getRotation());
-				}
-				
-				this.addSceneObject(instance);	
 			}
-				
-			
-			
-			ReferenceAtlas.getInstance().displayBasicAtlas();
 		}
+		ReferenceAtlas.getInstance().displayBasicAtlas();
 		changed(CHANGED_LOAD);
 		Log.tock("Finished loading scene from db! ", tick);
 	}

@@ -109,9 +109,13 @@ public class DataRepository {
 		Criteria search = sesLoad.createCriteria(Neuroml.class);
 		List results = search.list();
 		Neuroml scene = null;
-		if (!results.isEmpty()){
+		if (false)
+		//if (!results.isEmpty())
+		{
 			scene = (Neuroml)results.get(0);	
-		} else {
+		}
+		else 
+		{
 			Log.warn("Did not find a scene in the DB.  Loading it from disk!");
 			long tick = Log.tick();
 			try {

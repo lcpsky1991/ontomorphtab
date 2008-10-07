@@ -600,17 +600,16 @@
 
 		<xs:sequence>
             <xs:group ref="meta:metadata"/>
-			<xs:choice>
 
-                <xs:element name="location" type="meta:Point3D" maxOccurs="1"/>
+                <xs:element name="location" type="meta:Point3D" minOccurs="0" maxOccurs="1"/>
 
 				<!-- Augmented by slarson@ncmir.ucsd.edu -->
-				<xs:element name="curveAssociation" type="CurveAssociation">
+				<xs:element name="curveAssociation" type="CurveAssociation" minOccurs="0">
 					<xs:annotation>
 						<xs:documentation>Associates this cell instance with a specific time along a specific curve</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-			</xs:choice>
+
 
 			
 				<xs:element name="rotation" type="meta:xWBCQuat" minOccurs="0" maxOccurs="1"/>
