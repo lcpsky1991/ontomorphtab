@@ -87,6 +87,7 @@ public class Slide extends Tangible {
 	
 	public void setRatio(float ratio) {
 		getMorphMLSlide().setRatio(ratio);
+		save();
 	}
 	
 	
@@ -114,13 +115,11 @@ public class Slide extends Tangible {
 		} 
 		catch (MalformedURLException e) 
 		{
-			// TODO Auto-generated catch block
 			s = url;
 		}
 		
-		System.out.println("from url " + url + " to " + s);
 		getMorphMLSlide().setImageURL(s);
-		
+		save();
 		changed(Tangible.CHANGED_COLOR);
 	}
 	
@@ -150,8 +149,6 @@ public class Slide extends Tangible {
 		}
 		catch (MalformedURLException e) 
 		{
-			Log.warn("Error: Could not resolve URL :" + e.getMessage());
-
 			//if there is nothing attatched to the front of it, it is a relative path, append CWD
 			try 
 			{
@@ -159,12 +156,11 @@ public class Slide extends Tangible {
 			}
 			catch (MalformedURLException e1) 
 			{
-				
+				//do nothing
 			}
 		}
 		
-		System.out.println(where + " resolved to to " + place);
-		
+		Log.warn(where + " resolved to to " + place);
 		return place;
 	}
 	

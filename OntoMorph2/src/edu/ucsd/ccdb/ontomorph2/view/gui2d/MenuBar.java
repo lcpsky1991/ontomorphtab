@@ -359,7 +359,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	 */
 	private void debug()
 	{
-		//test commit
+		View.getInstance().getScene().load();
 	}
 	
 }

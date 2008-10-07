@@ -11,6 +11,8 @@ import java.util.Iterator;
 
 import org.morphml.metadata.schema.Curve;
 import org.morphml.metadata.schema.Point3D;
+import org.morphml.metadata.schema.XWBCQuat;
+import org.morphml.metadata.schema.impl.XWBCQuatImpl;
 import org.morphml.networkml.schema.CellInstance;
 import org.morphml.networkml.schema.CurveAssociation;
 import org.morphml.networkml.schema.Population;
@@ -86,48 +88,71 @@ public class DefaultScene extends Scene{
 		}
 	}
 
-//	public void load() {
-//		Log.warn("Loading scene from DB");
-//		long tick = Log.tick();
-//		Neuroml scene = DataRepository.getInstance().loadScene();
-//		
-//		//load tangibles for curves
-//		for (Iterator it = scene.getCurves().getCurve().iterator(); it.hasNext();) {
-//			this.addSceneObject(new Curve3D((Curve)it.next()));
-//		}
-//		
-////		load tangibles for slides
-//		for (Iterator it = scene.getSlides().getSlide().iterator(); it.hasNext();) {
-//			this.addSceneObject(new Slide((XWBCSlide)it.next()));
-//		}
-//		
-////		load tangibles for cell instances
-//		for (Iterator it = scene.getPopulations().getPopulation().iterator(); it.hasNext();) {
-//			Population p = (Population) it.next();
-//			NeuronMorphology instance = new NeuronMorphology(p.getCellType());
-//			
-//			for (Iterator it2 = p.getInstances().getInstance().iterator(); it2.hasNext();) {
-//				CellInstance ci = (CellInstance)it2.next();
-//				CurveAssociation ca = ci.getCurveAssociation();
-//				if (ca != null) {
-//					for (Curve3D curve : getCurves()) {
-//						if (curve.getMorphMLCurve().getId().equals(ca.getCurveId())) {
-//							instance.setCurve(curve);
-//							instance.positionAlongCurve(curve, (float)ca.getTime());
-//						}
-//					}
-//				} else {
-//					instance.setPosition(new PositionVector(ci.getLocation()));
-//				}
-//			}
-//			
-//			this.addSceneObject(instance);
-//			
-//			ReferenceAtlas.getInstance().displayBasicAtlas();
-//		}
-//		changed(CHANGED_LOAD);
-//		Log.tock("Finished loading scene from db! ", tick);
-//	}
+	public void load() 
+	{
+		Log.warn("Loading scene from DB");
+		long tick = Log.tick();
+		Neuroml scene = DataRepository.getInstance().loadScene();
+		
+		//load tangibles for curves
+		for (Iterator it = scene.getCurves().getCurve().iterator(); it.hasNext();) {
+			this.addSceneObject(new Curve3D((Curve)it.next()));
+		}
+		
+//		load tangibles for slides
+		for (Iterator it = scene.getSlides().getSlide().iterator(); it.hasNext();) {
+			this.addSceneObject(new Slide((XWBCSlide)it.next()));
+		}
+		
+		
+//		load tangibles for cell instances
+		for (Iterator it = scene.getPopulations().getPopulation().iterator(); it.hasNext();) 
+		{
+			Population p = (Population) it.next();
+			
+			
+			//for (Iterator it2 = p.getInstances().getInstance().iterator(); it2.hasNext();)
+			for (int n = 0; n < p.getInstances().getInstance().size(); n++)
+			{
+				CellInstance ci = (CellInstance) p.getInstances().getInstance().get(n);
+				//CellInstance ci = (CellInstance)it2.next();
+				NeuronMorphology instance = new NeuronMorphology(p.getCellType());	
+				CurveAssociation ca = ci.getCurveAssociation();
+				if (ca != null) 
+				{
+					for (Curve3D curve : getCurves()) 
+					{
+						if (curve.getMorphMLCurve().getId().equals(ca.getCurveId())) 
+						{
+							instance.setCurve(curve);
+							instance.positionAlongCurve(curve, (float)ca.getTime());
+						}
+					}
+				} 
+				else 
+				{
+					instance.setPosition(new PositionVector(ci.getLocation()));
+				}
+				
+				//for loading all cells, regardless of association, put their scales and rotations on
+				{
+					//set the rotation and such
+					//System.out.println(instance.getName() + " has " + instance.getRotation());
+					//System.out.println(instance.getName() + " has scale " + instance.getScale());					
+					System.out.println(ci + " has scale " + ci.getScale());
+					System.out.println(ci + " has rot " + ci.getRotation());
+				}
+				
+				this.addSceneObject(instance);	
+			}
+				
+			
+			
+			ReferenceAtlas.getInstance().displayBasicAtlas();
+		}
+		changed(CHANGED_LOAD);
+		Log.tock("Finished loading scene from db! ", tick);
+	}
 	/**
 	 * Loads objects into the scene.  Currently this is done manually mostly from
 	 * files on the client.  This is being transitioned to the loadFromCKB method
@@ -135,7 +160,8 @@ public class DefaultScene extends Scene{
 	 * @see #loadFromCKB()
 	 *
 	 */
-	public void load() {
+	@Deprecated
+	public void old_load() {
 		//temporary hack o load a mockup
 		DemoCoordinateSystem d = new DemoCoordinateSystem();
 

@@ -3,6 +3,7 @@ package edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology;
 import java.io.File;
 import java.math.BigInteger;
 import java.net.URL;
+import java.util.Random;
 import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
@@ -16,8 +17,10 @@ import org.morphml.networkml.schema.impl.CurveAssociationImpl;
 import org.morphml.neuroml.schema.Level3Cell;
 import org.morphml.neuroml.schema.Level3Cells;
 import org.morphml.neuroml.schema.NeuroMLLevel3;
+import org.morphml.neuroml.schema.XWBCTangible;
 import org.morphml.neuroml.schema.impl.NeuromlImpl;
 
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
@@ -65,31 +68,37 @@ public class NeuronMorphology extends Tangible{
 	Level3Cell theCell = null;
 	CellInstance cellInstance = null;
 	
-	public NeuronMorphology(String name) {
+	public NeuronMorphology(String name)
+	{
+		//try to look it up in the DB first?
 		this(name, null, null);
 		
 	}
 	
 
-	public NeuronMorphology(String name, PositionVector position, 
-			RotationQuat rotation) {
+	public NeuronMorphology(String name, PositionVector position, RotationQuat rotation) 
+	{
 		super(name);
 		cellInstance = new CellInstanceImpl();
-		if (position != null) {
+		if (position != null)
+		{
 			setPosition(position);
 		}
-		if (rotation != null) {
+		if (rotation != null) 
+		{
 			setRotation(rotation);
 		}
+		
 		cellInstance.setLocation(getPosition().toPoint3D());
 		cellInstance.setRotation(getRotation().toWBCQuat());
 		cellInstance.setScale(getScale().toPoint3D());
-		save();
+		cellInstance.setId((BigInteger.valueOf(new Random().nextLong())));
+		
 	}
 
 	
-	public NeuronMorphology(String name, PositionVector position, 
-			RotationQuat rotation, String renderOption) {
+	public NeuronMorphology(String name, PositionVector position, RotationQuat rotation, String renderOption) 
+	{
 		this(name, position, rotation);
 		setRenderOption(renderOption);
 	}
@@ -117,17 +126,21 @@ public class NeuronMorphology extends Tangible{
 	}
 	
 	
-	public void setPosition(PositionVector pos, boolean flagChanged) {
-		if (pos != null) {
+	public void n_setPosition(PositionVector pos, boolean flagChanged)
+	{
+		
+		if (pos != null) 
+		{
 			cellInstance.setLocation(pos.toPoint3D());
-			if (flagChanged) {
+			if (flagChanged) 
+			{
 				this.save();
 				changed(CHANGED_MOVE);
 			}
 		}
 	}
 	
-	public void setRotation(RotationQuat rot) {
+	public void n_setRotation(RotationQuat rot) {
 		if (rot != null) {
 			cellInstance.setRotation(rot.toWBCQuat());
 			this.save();
@@ -135,7 +148,9 @@ public class NeuronMorphology extends Tangible{
 		}
 	}
 	
-	public void setScale(OMTVector v) {
+	public void n_setScale(OMTVector v) 
+	{
+		super.setScale(v);
 		cellInstance.setScale(v.toPoint3D());
 		this.save();
 		changed(CHANGED_SCALE);
@@ -156,7 +171,8 @@ public class NeuronMorphology extends Tangible{
 		save();
 	}
 	
-	public void setTime(float time) {
+	public void setTime(float time)
+	{
 		_time = time;
 		if (curveAssoc != null) {
 			curveAssoc.setTime(time);
@@ -433,12 +449,21 @@ public class NeuronMorphology extends Tangible{
 		return null;
 	}
 	
-	public void save() {
+	public void save()
+	{
+		super.save();
 		DataRepository.getInstance().saveFileToDB(cellInstance);
+		
 	}
 
 
-	public CellInstance getMorphMLCellInstance() {
+	public CellInstance getMorphMLCellInstance() 
+	{
+		//mirrors all of the parts in theSpatial over to the cellInstance (whcih is usedin saving and loading)
+		cellInstance.setLocation(theSpatial.getPosition());
+		cellInstance.setRotation(theSpatial.getRotation());
+		cellInstance.setScale(theSpatial.getScale());
+		
 		return this.cellInstance;	
 	}
 

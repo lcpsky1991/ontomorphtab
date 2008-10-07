@@ -155,7 +155,8 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 * @param flagChanged - if true, fire the changed behavior, if false, do not fire.
 	 */
 	public void setPosition(PositionVector pos, boolean flagChanged) {
-		if (pos != null) {
+		if (pos != null) 
+		{
 			theSpatial.setPosition(pos.toPoint3D());
 			if (flagChanged) {
 				this.save();

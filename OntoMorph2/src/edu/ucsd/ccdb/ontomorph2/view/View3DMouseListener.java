@@ -142,7 +142,7 @@ public class View3DMouseListener implements MouseInputListener {
 			//if statement prohibiting mouse movements on scene to interfere with FengGUI windows
 			if(!this.guiInput.wasMouseHandled()){
 				float dx = Math.abs(MouseInput.get().getWheelDelta());
-				dx= (float) Math.log(1 + (3 * dx)); //scale it by some factor so it's less jumpy
+				dx= (float) Math.log(1 + (50.0f * dx)); //scale it by some factor so it's less jumpy
 			
 			
 				if ( wheelDelta < 0 ) dx = (-dx);	//exponents always produce positive results, allows for reverse zoom
@@ -546,7 +546,6 @@ public class View3DMouseListener implements MouseInputListener {
 				//do nothing
 				break;
 			case METHOD_MOVE:
-				
 				if ( recent == manip ) //only move the most recent, do not apply movement to all selected
 				{
 					complicatedMultiMove(recent, dx, dy, mx, my);

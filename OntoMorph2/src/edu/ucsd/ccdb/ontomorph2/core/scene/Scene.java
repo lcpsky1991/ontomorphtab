@@ -198,7 +198,10 @@ public abstract class Scene extends Observable{
 			}
 			List list = cellType.getInstances().getInstance();
 			
-			list.add(mmnm.getMorphMLCellInstance());
+			
+			CellInstance debug = mmnm.getMorphMLCellInstance(); 
+			System.out.println(debug);
+			list.add(debug);
 			cellType.getInstances().setSize(BigInteger.valueOf(list.size()));
 		}
 		scene.setPopulations(populations);
