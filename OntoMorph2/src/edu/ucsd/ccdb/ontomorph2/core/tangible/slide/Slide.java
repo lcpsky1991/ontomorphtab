@@ -15,6 +15,7 @@ import org.morphml.metadata.schema.Point3D;
 import org.morphml.neuroml.schema.XWBCSlide;
 import org.morphml.neuroml.schema.impl.XWBCSlideImpl;
 
+import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
@@ -40,10 +41,13 @@ public class Slide extends Tangible {
 		DataRepository repo = DataRepository.getInstance();
 		 //first instantiate the instance by getting it form the DB
 		XWBCSlide lookup = (XWBCSlide) repo.loadTangible(XWBCSlide.class, name);
-        if (lookup == null) {
+        if (lookup == null) 
+        {
         	super.initializeTangible(name, new XWBCSlideImpl());
         	setRatio(1f);
-        } else {
+        } 
+        else
+        {
         	this.theSpatial = lookup;
         }
 		
@@ -63,14 +67,10 @@ public class Slide extends Tangible {
 	}
 
 	
-	public Slide(String name, URI imageURI) {
+	public Slide(String name, URI imageURI) 
+	{
 		this(name);
-		try {
-			this.setURL(imageURI.toURL());
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.setURL(imageURI.toString());
 	}
 	
 	public Slide(String name, URI filePath, float ratio) 
@@ -96,27 +96,76 @@ public class Slide extends Tangible {
 		return (theSpatial != null);
 	}
 	
-	public XWBCSlideImpl getMorphMLSlide()
+	//should maybe be an Impl?
+	public XWBCSlide getMorphMLSlide()
 	{
-		return (XWBCSlideImpl)theSpatial;
+		return (XWBCSlide)theSpatial;
 	}
 	
-	public void setURL(URL imageURL) {
-		getMorphMLSlide().setImageURL(imageURL.toExternalForm());
-	}
-	
-	public URL getURL() {
-		try {
-			return new URL(getMorphMLSlide().getImageURL());
-		} catch (MalformedURLException e) {
+	public void setURL(String url) 
+	{
+		
+		URL madeURL = null;
+		String s = null;
+		try 
+		{
+			madeURL = new URL(url);
+			s = madeURL.getPath();
+		} 
+		catch (MalformedURLException e) 
+		{
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			s = url;
 		}
-		return null;
+		
+		System.out.println("from url " + url + " to " + s);
+		getMorphMLSlide().setImageURL(s);
+		
+		changed(Tangible.CHANGED_COLOR);
 	}
 	
-	private URL getImageURL() {
-		return this.getURL();
+	public String getURL() {
+		return (getMorphMLSlide().getImageURL());
+	}
+	
+	/**
+	 * The job of this function is to return a path that is appoproaite given the string stored in the model.
+	 * If the stored string is a relative path, this returns an absolute path (for this machine)
+	 * if the stored string is on the WEB, it returns it untouched
+	 * If the stored string is absolute -- thats dumb
+	 * @return the absolute path to the image resource (which was previously specified as relative)
+	 */
+	private URL resolveURL()
+	{
+		URL place = null;
+		String curDir = System.getProperty("user.dir"); //get the current working directory
+		String where = this.getURL();
+		
+		
+		try 
+		{
+			place = new URL(where);
+			//do nothing with the protocol, it's already good to go as an internet thing
+			//determine whether this is a local resource or an internet resource
+		}
+		catch (MalformedURLException e) 
+		{
+			Log.warn("Error: Could not resolve URL :" + e.getMessage());
+
+			//if there is nothing attatched to the front of it, it is a relative path, append CWD
+			try 
+			{
+				place = new URL("file:" + curDir + where);
+			}
+			catch (MalformedURLException e1) 
+			{
+				
+			}
+		}
+		
+		System.out.println(where + " resolved to to " + place);
+		
+		return place;
 	}
 	
 	public BufferedImage getBufferedImage() {
@@ -124,9 +173,12 @@ public class Slide extends Tangible {
 		BufferedImage bufImg = null;
 		try 
 		{
-			if (this.getImageURL() != null) 
+			
+			if (this.resolveURL() != null) 
 			{
-				bufImg = ImageIO.read(this.getImageURL());
+				//append the current working directory to the front of the filename?
+				//if its on the web load this way
+				bufImg = ImageIO.read(resolveURL());
 			}
 			else
 			{
@@ -136,7 +188,6 @@ public class Slide extends Tangible {
 		catch (IOException e) 
 		{
 			Log.warn("Error getting buffered image: " + this.getName());
-			e.printStackTrace();
 		}
 		return bufImg;
 	}

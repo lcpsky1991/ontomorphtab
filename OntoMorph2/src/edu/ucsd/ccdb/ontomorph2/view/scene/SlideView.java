@@ -34,6 +34,11 @@ public class SlideView extends TangibleView {
 		return (Slide)getModel();
 	}
 	
+	public void redrawTexture()
+	{
+		init();
+	}
+	
 	private TextureState getTextureState() {
 //		create texture state for graph
 		

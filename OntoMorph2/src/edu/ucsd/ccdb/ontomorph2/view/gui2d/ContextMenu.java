@@ -1,5 +1,6 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -68,6 +69,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_NEW_CELL = 121;
 	public static final int CTX_ACTION_VISIBLE = 125;
 	public static final int CTX_ACTION_SAVE = 126;
+	public static final int CTX_ACTION_SETURL = 127;
 		
 	//ms stands for Menu String
 	static final String msNEW = "New ...";
@@ -313,6 +315,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				//build slide special menu
 				menuItemFactory(mnuNew_Cell, "DG Cell", CTX_ACTION_NEW_CELLE);
 				menuItemFactory(mnuNew_Cell, "From Disk...", CTX_ACTION_NEW_CELL);
+				menuItemFactory(mnuModify, "Change URL", CTX_ACTION_SETURL);
 			}
 			
 			
@@ -620,6 +623,12 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 							}
 						}
 					}
+					break;
+				
+				case CTX_ACTION_SETURL:
+					Slide myself = (Slide) single;
+					strReply = JOptionPane.showInputDialog(frmDialog, "Set URL '" + single.getName() + "' to:", myself.getURL());
+					if (strReply != null) myself.setURL(strReply);
 					break;
 				case CTX_ACTION_RENAME:
 					strReply = JOptionPane.showInputDialog(frmDialog, "Rename '" + single.getName() + "' to:", single.getName());

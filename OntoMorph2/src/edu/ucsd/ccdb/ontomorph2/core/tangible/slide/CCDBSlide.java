@@ -50,7 +50,7 @@ public class CCDBSlide extends Slide {
 		} catch (Exception e) {
 			throw new OMTException("Unable to load CCDB data!", e);
 		}
-		this.setURL(imageURL);
+		this.setURL(imageURL.toString());
 		
 		setRatio(ratio);
 	}

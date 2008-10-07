@@ -15,11 +15,13 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.INeuronMorphologyPart;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
@@ -223,6 +225,17 @@ public class SceneObserver implements Observer {
 			tv.update();
 		}
 		
+		
+		if (o instanceof Slide)
+		{
+			SlideView sv = (SlideView) TangibleViewManager.getInstance().getTangibleViewFor((Slide)o);
+			
+			if ( sv != null && Tangible.CHANGED_COLOR.equals(arg))
+			{
+				sv.redrawTexture();
+			}
+			
+		}
 		//probably good to do this on every change
 		//_view.getView3D().updateRoot(); //commented out to drasticly improve curve reloading performance
 	}
