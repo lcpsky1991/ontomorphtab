@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.channelml.schema.RateConstantEqn]"
+          name="org.morphml.channelml.schema.RateConstantEqn"
+          table="RateConstantEqn">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Type">
+         <column name="Type_"/>
+         <type name="org.hibernate.type.StringType"/>
+      </property>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Parameter"
+            table="RateConstantEqn_Parameter_">
+         <key>
+            <column name="RateConstantEqn_Parameter__H_0"/>
+         </key>
+         <list-index>
+            <column name="RateConstantEqn_Parameter__H_1"/>
+         </list-index>
+         <one-to-many class="org.morphml.channelml.schema.Parameter"/>
+      </list>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Expr">
+         <column name="Expr"/>
+         <type name="org.hibernate.type.StringType"/>
+      </property>
+      <subclass discriminator-value="org.morphml.channelml.schema.RateConstantEqn"
+                name="org.morphml.channelml.schema.impl.RateConstantEqnImpl"/>
+   </class>
+</hibernate-mapping>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.channelml.schema.IntegrateAndFire]"
+          name="org.morphml.channelml.schema.IntegrateAndFire"
+          table="IntegrateAndFire">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Threshold">
+         <column name="Threshold"/>
+         <type name="org.hibernate.type.DoubleType"/>
+      </property>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="VReset">
+         <column name="VReset"/>
+         <type name="org.hibernate.type.DoubleType"/>
+      </property>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="GRefrac">
+         <column name="GRefrac"/>
+         <type name="org.hibernate.type.DoubleType"/>
+      </property>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="TRefrac">
+         <column name="TRefrac"/>
+         <type name="org.hibernate.type.DoubleType"/>
+      </property>
+      <subclass discriminator-value="org.morphml.channelml.schema.IntegrateAndFire"
+                name="org.morphml.channelml.schema.impl.IntegrateAndFireImpl"/>
+   </class>
+</hibernate-mapping>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.w3._2001.xmlschema.AnyType]"
+          name="org.w3._2001.xmlschema.AnyType"
+          table="AnyType">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Content"
+            table="AnyType_Content">
+         <key>
+            <column name="AnyType_Content_Hjid"/>
+         </key>
+         <list-index>
+            <column name="AnyType_Content_Hjindex"/>
+         </list-index>
+         <many-to-any id-type="org.hibernate.type.LongType">
+            <column name="AnyType_Content_Hjclass"/>
+            <column name="AnyType_Content_Hjchildid"/>
+         </many-to-any>
+      </list>
+      <subclass discriminator-value="org.w3._2001.xmlschema.AnyType"
+                name="org.w3._2001.xmlschema.impl.AnyTypeImpl"/>
+   </class>
+</hibernate-mapping>

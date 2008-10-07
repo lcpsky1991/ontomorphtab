@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.networkml.schema.SynapticLocation]"
+          name="org.morphml.networkml.schema.SynapticLocation"
+          table="SynapticLocation">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="FractionAlong">
+         <column name="FractionAlong"/>
+         <type name="org.hibernate.type.DoubleType"/>
+      </property>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="SegmentId">
+         <column name="SegmentId"/>
+         <type name="org.hibernate.type.BigIntegerType"/>
+      </property>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="CellId">
+         <column name="CellId"/>
+         <type name="org.hibernate.type.BigIntegerType"/>
+      </property>
+      <subclass discriminator-value="org.morphml.networkml.schema.SynapticLocation"
+                name="org.morphml.networkml.schema.impl.SynapticLocationImpl"/>
+   </class>
+</hibernate-mapping>

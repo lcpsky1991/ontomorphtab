@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <subclass discriminator-value="[org.morphml.neuroml.schema.XWBCSlide]"
+             extends="org.morphml.neuroml.schema.XWBCTangible"
+             name="org.morphml.neuroml.schema.XWBCSlide">
+      <join table="XWBCSlide">
+         <key>
+            <column name="Hjid"/>
+         </key>
+         <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                   name="ImageURL">
+            <column name="ImageURL"/>
+            <type name="org.hibernate.type.StringType"/>
+         </property>
+      </join>
+      <subclass discriminator-value="org.morphml.neuroml.schema.XWBCSlide"
+                name="org.morphml.neuroml.schema.impl.XWBCSlideImpl"/>
+   </subclass>
+</hibernate-mapping>

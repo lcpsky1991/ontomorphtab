@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <class discriminator-value="[org.morphml.morphml.schema.CableGroup]"
+          name="org.morphml.morphml.schema.CableGroup"
+          table="CableGroup">
+      <id access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+          name="Hjid"
+          type="org.hibernate.type.LongType">
+         <generator class="native"/>
+      </id>
+      <discriminator type="org.hibernate.type.StringType">
+         <column name="Hjtype"/>
+      </discriminator>
+      <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                name="Name">
+         <column name="Name_"/>
+         <type name="org.hibernate.type.StringType"/>
+      </property>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="InhomogeneousParam"
+            table="CableGroup_InhomogeneousParam">
+         <key>
+            <column name="CableGroup_InhomogeneousPara_0"/>
+         </key>
+         <list-index>
+            <column name="CableGroup_InhomogeneousPara_1"/>
+         </list-index>
+         <one-to-many class="org.morphml.morphml.schema.InhomogeneousParam"/>
+      </list>
+      <list access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.ListAccessor"
+            name="Cable"
+            table="CableGroup_Cable">
+         <key>
+            <column name="CableGroup_Cable_Hjid"/>
+         </key>
+         <list-index>
+            <column name="CableGroup_Cable_Hjindex"/>
+         </list-index>
+         <one-to-many class="org.morphml.morphml.schema.CableGroup$CableType"/>
+      </list>
+      <subclass discriminator-value="org.morphml.morphml.schema.CableGroup"
+                name="org.morphml.morphml.schema.impl.CableGroupImpl"/>
+   </class>
+</hibernate-mapping>

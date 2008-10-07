@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+  PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="false" default-cascade="all-delete-orphan" default-lazy="false">
+   <subclass discriminator-value="[org.morphml.networkml.schema.LocalSynapticProperties]"
+             extends="org.morphml.networkml.schema.SynapseInternalProperties"
+             name="org.morphml.networkml.schema.LocalSynapticProperties">
+      <join table="LocalSynapticProperties">
+         <key>
+            <column name="Hjid"/>
+         </key>
+         <property access="org.jvnet.hyperjaxb2.runtime.hibernate.accessor.CheckingPropertyAccessor"
+                   name="SynapseType">
+            <column name="SynapseType"/>
+            <type name="org.hibernate.type.StringType"/>
+         </property>
+      </join>
+      <subclass discriminator-value="org.morphml.networkml.schema.LocalSynapticProperties"
+                name="org.morphml.networkml.schema.impl.LocalSynapticPropertiesImpl"/>
+   </subclass>
+</hibernate-mapping>
