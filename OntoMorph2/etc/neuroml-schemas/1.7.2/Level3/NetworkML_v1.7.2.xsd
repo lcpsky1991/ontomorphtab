@@ -599,12 +599,11 @@
             </xs:annotation>
 
 		<xs:sequence>
+            <xs:group ref="meta:metadata"/>
 			<xs:choice>
-            	<xs:sequence>
-                	<xs:group ref="meta:metadata"/>
-                	<xs:element name="location" type="meta:Point3D" maxOccurs="1"/>
 
-            	</xs:sequence>
+                <xs:element name="location" type="meta:Point3D" maxOccurs="1"/>
+
 				<!-- Augmented by slarson@ncmir.ucsd.edu -->
 				<xs:element name="curveAssociation" type="CurveAssociation">
 					<xs:annotation>
@@ -614,9 +613,9 @@
 			</xs:choice>
 
 			
-				<xs:element name="rotation" type="meta:xWBCQuat" maxOccurs="1"/>
+				<xs:element name="rotation" type="meta:xWBCQuat" minOccurs="0" maxOccurs="1"/>
 
-				<xs:element name="scale" type="meta:Point3D" maxOccurs="1"/>
+				<xs:element name="scale" type="meta:Point3D" minOccurs="0" maxOccurs="1"/>
 			</xs:sequence>
 
             <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
