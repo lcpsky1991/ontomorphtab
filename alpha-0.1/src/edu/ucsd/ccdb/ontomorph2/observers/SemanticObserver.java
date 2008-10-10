@@ -78,8 +78,8 @@ public class SemanticObserver implements Observer {
 		}
 		catch (Exception e)
 		{
-			throw new OMTException("Could not update() in SemanticObserver!", e);
-			//Log.warn("ERROR: Could not update() in SemanticObserver");
+			//throw new OMTException("Could not update() in SemanticObserver!", e);
+			Log.warn("ERROR: Could not update() in SemanticObserver");
 		}
 	}
 
