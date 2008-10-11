@@ -49,7 +49,7 @@ public class View extends BaseSimpleGame {
 	private static View instance = null;
 	private Scene _scene = null;
 
-	//=================================
+	//================================= 
 	// Global Interface-Objects
 	//=================================
 	private ViewCamera viewNode;					//thisobject needed for manipulating the camera in a simple way
