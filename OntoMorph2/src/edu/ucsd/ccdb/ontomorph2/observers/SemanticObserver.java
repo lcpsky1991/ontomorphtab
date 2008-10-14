@@ -79,16 +79,6 @@ public class SemanticObserver implements Observer {
 		{
 			Log.warn("ERROR: Could not update() in SemanticObserver");
 		}
-		/*
-		if (o instanceof NeuronMorphology) {
-			NeuronMorphology nm = (NeuronMorphology)o;
-			AllenMeshBrainRegion br = nm.getEnclosingBrainRegion();
-			SemanticInstance brainRegionInstance = br.getSemanticInstance();
-			//does this brain region instance have a property saying
-			//that it has_part the instance from the neuron morphology??
-			//if so, do nothing
-			//if not, add it!
-		}*/
 	}
 
 }

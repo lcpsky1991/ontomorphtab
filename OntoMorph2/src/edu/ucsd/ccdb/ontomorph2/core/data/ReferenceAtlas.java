@@ -16,6 +16,8 @@ import java.util.Set;
 import java.util.Stack;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticClass;
+import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticRepository;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.util.BitMath;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
@@ -267,15 +269,34 @@ public class ReferenceAtlas {
 	public void displayBasicAtlas() {
 		Set<BrainRegion> brs = new HashSet<BrainRegion>();
 		
-		for (String abbrev : basicAtlasAbbrevs) {
-			brs.add(this.getBrainRegion(abbrev));
-			this.getBrainRegion(abbrev).setVisibility(BrainRegion.TRANSPARENT);
+
+		String[] basicAtlasAbbrevs = {"Brain", "FLIP_Brain", "HY", 
+			"FLIP_HY", "TH", "FLIP_TH", "DG", "FLIP_DG", "CA", "FLIP_CA"};
+		
+		SemanticRepository repo = SemanticRepository.getAvailableInstance();
+		SemanticClass[] basicAtlasClasses = {
+				repo.getSemanticClass(SemanticClass.BRAIN_CLASS), repo.getSemanticClass(SemanticClass.BRAIN_CLASS), 
+				repo.getSemanticClass(SemanticClass.HYPOTHALAMUS_CLASS), repo.getSemanticClass(SemanticClass.HYPOTHALAMUS_CLASS),
+				repo.getSemanticClass(SemanticClass.THALAMUS_CLASS), repo.getSemanticClass(SemanticClass.THALAMUS_CLASS),
+				repo.getSemanticClass(SemanticClass.DENTATE_GYRUS_CLASS), repo.getSemanticClass(SemanticClass.DENTATE_GYRUS_CLASS),
+				repo.getSemanticClass(SemanticClass.HIPPOCAMPUS_CLASS), repo.getSemanticClass(SemanticClass.HIPPOCAMPUS_CLASS), 
+		};
+		
+		for (int i = 0; i < basicAtlasAbbrevs.length; i++) {
+			BrainRegion region = this.getBrainRegion(basicAtlasAbbrevs[i]);
+			brs.add(region);
+			region.setVisibility(BrainRegion.TRANSPARENT);
+			region.addSemanticClass(basicAtlasClasses[i]);
 		}
 		
 		View.getInstance().getView3D().addBrainRegions(brs);
 	}
 	
 	public void hideBasicAtlas() {
+
+		String[] basicAtlasAbbrevs = {"Brain", "FLIP_Brain", "HY", 
+				"FLIP_HY", "TH", "FLIP_TH", "DG", "FLIP_DG", "CA", "FLIP_CA"};
+		
 		for (String abbrev : basicAtlasAbbrevs) {
 			this.getBrainRegion(abbrev).setVisibility(BrainRegion.INVISIBLE);
 		}

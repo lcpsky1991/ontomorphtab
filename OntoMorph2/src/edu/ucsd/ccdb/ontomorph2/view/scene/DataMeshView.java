@@ -25,7 +25,7 @@ public class DataMeshView extends TangibleView{
 	public DataMeshView(DataMesh mesh) {
 		super(mesh);
 		super.setName("DataMeshView for " + this.getModel().getName());
-		
+		init();
 		this.pickPriority = TangibleView.P_HIGHEST;
 	}
 	
@@ -42,7 +42,7 @@ public class DataMeshView extends TangibleView{
 			this.registerGeometry(mesh);
 			mesh.setModelBound(new BoundingBox());
 			mesh.updateModelBound();
-			standinObject.attachChild(mesh);
+			this.attachChild(mesh);
 			
 		} else if (o instanceof Node) {
 			Node n = (Node)o;
@@ -50,13 +50,18 @@ public class DataMeshView extends TangibleView{
 			for(Spatial s : n.getChildren()) {
 				if (s instanceof Geometry) {
 					this.registerGeometry((Geometry)s);
+					
+					((Geometry)s).setModelBound(new BoundingBox());
+					((Geometry)s).updateModelBound();
+					
+					this.attachChild((Geometry)s);
 				}
 			}
-			n.setModelBound(new BoundingBox());
-			n.updateModelBound();
+			//n.setModelBound(new BoundingBox());
+			//n.updateModelBound();
 			standinObject = n;
 		}
-		this.attachChild(standinObject);
+		//this.attachChild(thi);
 		this.update();
 	}
 	
@@ -80,21 +85,24 @@ public class DataMeshView extends TangibleView{
         return acm;
 	}
 
+	
 	@Override
 	public void doHighlight() {
+		/*
 		for (Spatial s : standinObject.getChildren()) {
 			if (s instanceof Geometry) {
 				((Geometry)s).setSolidColor(ColorRGBA.yellow);
 			}
-		}
+		}*/
 	}
 
 	@Override
 	public void doUnhighlight() {
+		/*
 		for (Spatial s : standinObject.getChildren()) {
 			if (s instanceof Geometry) {
 				((Geometry)s).setSolidColor(ColorRGBA.orange);
 			}
-		}
+		}*/
 	}
 }
