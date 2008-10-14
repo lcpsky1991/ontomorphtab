@@ -2,9 +2,11 @@ edu.ucsd.ccdb.ontomorph2.app
 edu.ucsd.ccdb.ontomorph2.core.changes
 edu.ucsd.ccdb.ontomorph2.core.data
 edu.ucsd.ccdb.ontomorph2.core.scene
-edu.ucsd.ccdb.ontomorph2.core.scene.tangible
 edu.ucsd.ccdb.ontomorph2.core.semantic
 edu.ucsd.ccdb.ontomorph2.core.spatial
+edu.ucsd.ccdb.ontomorph2.core.tangible
+edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology
+edu.ucsd.ccdb.ontomorph2.core.tangible.slide
 edu.ucsd.ccdb.ontomorph2.observers
 edu.ucsd.ccdb.ontomorph2.util
 edu.ucsd.ccdb.ontomorph2.view
