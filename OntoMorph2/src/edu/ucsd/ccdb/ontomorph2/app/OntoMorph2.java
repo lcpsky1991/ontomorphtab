@@ -47,11 +47,9 @@ public class OntoMorph2 {
 		
 		SceneObserver obs = SceneObserver.getInstance();
 		obs.setView(view);
-		if ("demo".equals(getWBCProperties().getProperty(SCENE))) {
-			_scene = new DemoScene();
-		} else {
-			_scene = new DefaultScene();
-		}
+
+		
+		_scene = new DefaultScene();
 		_scene.addObserver(obs);
 		
 		//since the view takes over the thread after it is started

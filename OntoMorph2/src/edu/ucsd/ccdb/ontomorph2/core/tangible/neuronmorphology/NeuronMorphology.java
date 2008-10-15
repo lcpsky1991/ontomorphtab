@@ -116,16 +116,19 @@ public class NeuronMorphology extends Tangible{
 	public NeuronMorphology(String name, CellInstance ci) {
 		super(name);
 		this.cellInstance = ci;
-		if (ci.getCurveAssociation() != null) {
+		if (ci.getCurveAssociation() != null) 
+		{
 			this.curveAssoc = ci.getCurveAssociation();
 			for (Curve3D curve : OntoMorph2.getCurrentScene().getCurves()) 
 			{
-				if (curve.getMorphMLCurve().getId().equals(this.curveAssoc.getCurveId())) 
+				if ( curve.getMorphMLCurve().getId().equals(ci.getCurveAssociation().getCurveId()))
 				{
+					float t = (float)curveAssoc.getTime();
+					System.out.println("Created NM with time " + t + " on " + curveAssoc.getCurveId().toString());
 					this.setCurve(curve);
-					this.setTime((float)this.curveAssoc.getTime());
-					this.positionAlongCurve(curve, (float)this.curveAssoc.getTime());
-					break;
+					this.setTime(t);
+					this.positionAlongCurve(curve, this.getTime());
+					return;
 				}
 			}
 		}

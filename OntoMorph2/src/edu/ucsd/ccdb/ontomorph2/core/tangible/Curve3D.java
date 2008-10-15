@@ -41,8 +41,8 @@ public class Curve3D extends Tangible{
 	//BezierCurve theCurve = null;
 	float delta = 0.1f;
 	private Vector3f _modelBinormal = null;
-	OMTVector[] controlPoints = null;
-	Curve morphMLCurve = null;
+	//OMTVector[] controlPoints = null;
+	Curve morphMLCurve = null;		//this is the real model
 	boolean seeAnchorPoints = false;
 	List<CurveAnchorPoint> anchors = null;
 	public static Random rand = new Random();
@@ -52,6 +52,8 @@ public class Curve3D extends Tangible{
 		morphMLCurve = new CurveImpl();
 		morphMLCurve.setName(name);
 		morphMLCurve.setId(new BigInteger(12, rand));
+		
+
 		setControlPoints(controlPoints);
 	}
 
@@ -61,12 +63,26 @@ public class Curve3D extends Tangible{
 		setControlPoints(morphMLCurve.getPoint());
 	}
 
-	private void setControlPoints(List point) {
+	private void setControlPoints(List point) 
+	{
+		
+		int size = 0;
+		size = point.size();
+		for (int i = 0; i < size; i++)
+		{
+			Point3D p = (Point3D) point.get(i);
+			OMTVector v = new OMTVector(p);
+			setControlPoint(i, v);
+		}
+		
+		/*
 		int i = 0;
 		controlPoints = new OMTVector[point.size()];
-		for (Iterator it = point.iterator(); it.hasNext();) {
+		for (Iterator it = point.iterator(); it.hasNext();) 
+		{
 			controlPoints[i++] = new OMTVector((Point3D)it.next());
 		}
+		*/
 	}
 
 	public void getFromDB()
@@ -84,7 +100,6 @@ public class Curve3D extends Tangible{
 			
 			int size = morphMLCurve.getPoint().size();	//get the size of the control points list
 			
-			this.controlPoints = new OMTVector[size];	//make a new list of control points 
 			
 			//convert the 3d points to OMT points
 			for (int i = 0; i < size; i++)
@@ -330,8 +345,21 @@ public class Curve3D extends Tangible{
 	 * Gives the control points that define this curve
 	 * @return an array of OMTVectors with all the control points in order.
 	 */
-	protected OMTVector[] getControlPoints() {
-		return this.controlPoints;
+	protected OMTVector[] getControlPoints() 
+	{
+		//new code//
+		//purpose to remove any references to a mirrored copy of the control points
+		int size = morphMLCurve.getPoint().size();
+		OMTVector points[] = new OMTVector[size];
+		for (int i=0; i < size; i++)
+		{
+			points[i] = new OMTVector(((Point3D) morphMLCurve.getPoint().get(i)));
+		}
+		return points;
+		//=============
+		
+		//old code//
+		//return this.controlPoints;
 	}
 
 	/**
@@ -343,18 +371,17 @@ public class Curve3D extends Tangible{
 	protected void setControlPoint(int i, OMTVector pos) {
 		morphMLCurve.getPoint().set(i, pos.toPoint3D());
 		save();
-		this.controlPoints[i] =  pos;
 		changed();
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected void setControlPoints(OMTVector[] arg1) {
-
-		for (int i = 0; i < arg1.length; i++) {
+	protected void setControlPoints(OMTVector[] arg1) 
+	{
+		for (int i = 0; i < arg1.length; i++) 
+		{
 			morphMLCurve.getPoint().add(arg1[i].toPoint3D());
 		}
 		save();
-		this.controlPoints = arg1;
 		changed();
 	}
 	

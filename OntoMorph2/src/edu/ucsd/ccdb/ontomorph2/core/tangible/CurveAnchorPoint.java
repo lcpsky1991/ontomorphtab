@@ -84,7 +84,7 @@ public class CurveAnchorPoint extends Tangible {
 	 */
 	public float aproxTime()
 	{
-		float count = parentCurve.controlPoints.length;
+		float count = parentCurve.getControlPoints().length;
 		return ((float) i / count);
 	}
 	/**

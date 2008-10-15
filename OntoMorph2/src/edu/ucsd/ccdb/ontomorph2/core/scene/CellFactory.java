@@ -89,11 +89,10 @@ public class CellFactory {
 		}
 		else
 		{	//attached
-			ncell = new NeuronMorphology(modelURL, crvParent, t, 
-					NeuronMorphology.RENDER_AS_LOD);
+			ncell = new NeuronMorphology(modelURL, crvParent, t, NeuronMorphology.RENDER_AS_LOD);
 		}
 		
-		ncell.setScale(0.01f);
+		ncell.setScale(0.71f);
 
 		ncell.addSemanticClass(
 				SemanticRepository.getAvailableInstance().getSemanticClass(

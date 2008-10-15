@@ -121,6 +121,7 @@ public abstract class Scene extends Observable{
 	 * Loads data from the cellular knowledge base, which is a
 	 * metadata warehouse.  Once the metadata is sorted through,
 	 * the raw data is retrieved from the CCDB and other sources.
+	 * @deprecated
 	 */
 	public void loadFromCKB() {
 		try {
@@ -159,7 +160,8 @@ public abstract class Scene extends Observable{
 	 *
 	 */
 	@SuppressWarnings("unchecked")
-	public void save() {
+	public void save() 
+	{
 		Neuroml scene = new NeuromlImpl();
 		scene.setLengthUnits("micron");
 		
@@ -199,7 +201,7 @@ public abstract class Scene extends Observable{
 			List list = cellType.getInstances().getInstance();
 			
 			
-			CellInstance debug = mmnm.getMorphMLCellInstance(); 
+			String debug = mmnm.getMorphMLCellInstance().toString() +  " " + mmnm.getMorphMLCellInstance().getLocation(); 
 			System.out.println(debug);
 			list.add(debug);
 			cellType.getInstances().setSize(BigInteger.valueOf(list.size()));

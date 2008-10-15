@@ -109,7 +109,8 @@ public class DefaultScene extends Scene{
 		}
 		
 //		load tangibles for cell instances
-		if (scene.getPopulations() != null) { 
+		if (scene.getPopulations() != null) 
+		{ 
 			for (Iterator it = scene.getPopulations().getPopulation().iterator(); it.hasNext();) 
 			{
 				Population p = (Population) it.next();

@@ -107,8 +107,10 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 */
 	public boolean delete()
 	{
-		this.changed(CHANGED_DELETE);
-		return TangibleManager.getInstance().removeTangible(this);
+		System.out.println("Deleting disabled");
+		//this.changed(CHANGED_DELETE);
+		//return TangibleManager.getInstance().removeTangible(this);
+		return true;
 	}
 	
 
@@ -554,16 +556,25 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		}
 	}
 
-	
-	public boolean equals(Object o) {
-		if (o != null && o instanceof Tangible) {
+	/**
+	 * 
+	 * @return True if both the name and the spatial information are the same
+	 */
+	public boolean equals(Object o) 
+	{
+		if (o != null && o instanceof Tangible) 
+		{
+			boolean same = false;
 			Tangible t = (Tangible)o;
-			return getName().equals(t.getName());
+			same = getName().equals(t.getName()) && this.theSpatial.equals(t.theSpatial);
+			return same;
 		}
 		return false;
 	}
 	
-	public int hashCode() {
-		return getName().hashCode() *31;
+	public int hashCode() 
+	{
+		int h = this.getName().hashCode() * this.theSpatial.hashCode() * 31;
+		return h;
 	}
 }
