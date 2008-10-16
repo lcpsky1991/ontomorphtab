@@ -92,14 +92,10 @@ public class CellFactory {
 			ncell = new NeuronMorphology(modelURL, crvParent, t, NeuronMorphology.RENDER_AS_LOD);
 		}
 		
-		ncell.setScale(0.71f);
-
-		ncell.addSemanticClass(
-				SemanticRepository.getAvailableInstance().getSemanticClass(
-						this.cellNameToSemanticClass.get(modelURL)));
+		ncell.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(this.cellNameToSemanticClass.get(modelURL)));
+		
 		//creates a SemanticInstance of this cell in the SemanticRepository
 		ncell.getSemanticInstance();
-		
 		ncell.setVisible(true);
 		ncell.addObserver(SceneObserver.getInstance()); //add an observer to the new cell
 		
@@ -189,7 +185,12 @@ public class CellFactory {
 				ry = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getPosition().getY();
 				copy.setPosition(rx, ry, copy.getPosition().getZ()); //keep the same Z
 			}
-			copy.rotate(rx, 0, new OMTVector(0,1,0)); //for aesthetics rotate them about Y to make them seem more random
+			
+			copy.setScale(cell.getScale()); //make their scales match
+			
+			//copy.rotate(rx, 0, new OMTVector(0,1,0)); //for aesthetics rotate them about Y to make them seem more random
+			
+			
 		}
 	}
 

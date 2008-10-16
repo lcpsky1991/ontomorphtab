@@ -187,21 +187,4 @@ public class Slide extends Tangible {
 		}
 		return bufImg;
 	}
-	
-	
-	@Override
-	public void save()
-	{
-	   	//get the appropriate content
-		
-	    try
-	    {
-		    super.save();
-	    	System.out.println("Saved " + this.getName());
-		}
-		catch(Exception e)
-		{
-			Log.warn(e.getMessage());
-		}
-	}
 }

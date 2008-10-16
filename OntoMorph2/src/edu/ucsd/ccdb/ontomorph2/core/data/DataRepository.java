@@ -133,7 +133,8 @@ public class DataRepository {
 				
 				URL sceneURL = new File(strFile).toURI().toURL();
 				
-				if (sceneURL != null) {
+				if (sceneURL != null) 
+				{
 					JAXBContext context = JAXBContext.newInstance("org.morphml.neuroml.schema");
 					//Create the unmarshaller
 					final Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -142,9 +143,11 @@ public class DataRepository {
 					
 					//load the scene into the DB
 					DataRepository.getInstance().saveFileToDB(scene);
-			}
+				}
 			Log.tock("Finished loading scene from disk and persisting it to the db!", tick);
-			} catch (Exception e) {
+			} 
+			catch (Exception e) 
+			{
 				throw new OMTException("Problem loading scene from XML", e);
 			}
 		}

@@ -106,12 +106,7 @@ public class View3D extends Node{
 			if (cellView == null) 
 			{
 				//implicitly adds the new TangibleView to the TangibleViewManager
-				System.out.println("Making view for " + cell.getName());
 				cellView = new NeuronMorphologyView(cell);
-			}
-			else
-			{
-				System.out.println("View exists for " + cell.getName());
 			}
 			
 			Node n = cellView.getNode();

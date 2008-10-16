@@ -86,6 +86,7 @@ public class NeuronMorphology extends Tangible{
 
 		cellInstance.setLocation(super.getPosition().toPoint3D());
 		cellInstance.setRotation(super.getRotation().toWBCQuat());
+		cellInstance.setScale(super.getScale().toPoint3D());
 		cellInstance.setId((BigInteger.valueOf(new Random().nextLong())));
 		
 		if (position != null)
@@ -98,15 +99,17 @@ public class NeuronMorphology extends Tangible{
 		}
 	}
 
-	
+	/*
 	public NeuronMorphology(String name, PositionVector position, RotationQuat rotation, String renderOption) 
 	{
 		this(name, position, rotation);
 		setRenderOption(renderOption);
 	}
+	*/
 	
 	
-	public NeuronMorphology(String name, Curve3D curve, float time, String renderOption) {
+	public NeuronMorphology(String name, Curve3D curve, float time, String renderOption) 
+	{
 		this(name);
 		setCurve(curve);
 		setTime(time);
@@ -125,7 +128,6 @@ public class NeuronMorphology extends Tangible{
 				if ( curve.getMorphMLCurve().getId().equals(ci.getCurveAssociation().getCurveId()))
 				{
 					float t = (float)curveAssoc.getTime();
-					System.out.println("Created NM with time " + t + " on " + curveAssoc.getCurveId().toString());
 					this.setCurve(curve);
 					this.setTime(t);
 					this.positionAlongCurve(curve, this.getTime());

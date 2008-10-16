@@ -38,13 +38,14 @@ public class CurveAnchorPoint extends Tangible {
 	
 	/**
 	 * 
-	 */
+	
 	public PositionVector move(float dx, float dy, int mx, int my)
 	{
 		PositionVector p = super.move(dx, dy, mx, my);
 		//parentCurve.setControlPoint(this.i, this.getRelativePosition());
 		return p;
 	}
+	*/
 	
 	public void execPostManipulate(Tangible target)
 	{

@@ -15,7 +15,8 @@ import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public abstract class TangibleView extends Node {
+public abstract class TangibleView extends Node 
+{
 	private Tangible model = null;
 	
 //	==============================
@@ -93,7 +94,8 @@ public abstract class TangibleView extends Node {
 			setLocalScale(this.getModel().getScale());
 		}
 		
-		if (this.getModel().getPosition() != null) {
+		if (this.getModel().getPosition() != null) 
+		{
 			setLocalTranslation(this.getModel().getPosition());
 		}
 		
@@ -123,11 +125,13 @@ public abstract class TangibleView extends Node {
 		}
 	}
 	
-	public boolean equals(Object o) {
+	public boolean equals(Object o) 
+	{
 		return this.hashCode() == o.hashCode();
 	}
 	
-	public int hashCode() {
+	public int hashCode() 
+	{
 		return super.hashCode() + getModel().hashCode();
 	}
 }

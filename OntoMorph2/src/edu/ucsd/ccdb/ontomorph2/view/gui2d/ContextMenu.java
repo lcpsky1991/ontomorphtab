@@ -582,8 +582,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					{
 						strReply = JOptionPane.showInputDialog(frmDialog, "Propagate how many cells?", "How many?", JOptionPane.QUESTION_MESSAGE);
 						if ( strReply != null) ival = Integer.parseInt(strReply);
-						if (single instanceof NeuronMorphology) {
-							CellFactory.getInstance().propagate(((NeuronMorphology)single),ival);	
+						if (single instanceof NeuronMorphology) 
+						{
+							CellFactory.getInstance().propagate( ((NeuronMorphology) single ), ival);	
 						}
 					}
 					catch (NumberFormatException e)

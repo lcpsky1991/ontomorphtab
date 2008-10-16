@@ -45,7 +45,9 @@ public class CurveView extends TangibleView {
 		if (curve.getAnchorPointsVisibility())
 		{
 			renderAnchorPoints(curve);
-		} else {
+		}
+		else
+		{
 			this.detachChild(anchors);
 			anchors = null;
 		}

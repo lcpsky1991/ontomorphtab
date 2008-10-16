@@ -203,7 +203,11 @@ public class SceneObserver implements Observer {
 			//get the tangible view that corresponds to the current tangible
 			TangibleView tv = tvm.getTangibleViewFor(t);
 			
-			if (tv == null) { return; }
+			if (tv == null) 
+			{
+				Log.warn(("TV for " + t.getName() + " not found"));
+				return; 
+			}
 			
 			//if we have moved, test to see if any tangibles contain any other tangibles now
 			//this code is required to do containment operations.   We need to find

@@ -156,13 +156,15 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 * @param pos - new relative position for this Tangible
 	 * @param flagChanged - if true, fire the changed behavior, if false, do not fire.
 	 */
-	public void setPosition(PositionVector pos, boolean flagChanged) {
+	public void setPosition(PositionVector pos, boolean flagChanged) 
+	{
 		if (pos != null) 
 		{
 			theSpatial.setPosition(pos.toPoint3D());
-			if (flagChanged) {
-				this.save();
+			if (flagChanged) 
+			{
 				changed(CHANGED_MOVE);
+				this.save();
 			}
 		}
 	}
@@ -555,25 +557,4 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		}
 	}
 
-	/**
-	 * 
-	 * @return True if both the name and the spatial information are the same
-	 */
-	public boolean equals(Object o) 
-	{
-		if (o != null && o instanceof Tangible) 
-		{
-			boolean same = false;
-			Tangible t = (Tangible)o;
-			same = getName().equals(t.getName()) && this.theSpatial.equals(t.theSpatial);
-			return same;
-		}
-		return false;
-	}
-	
-	public int hashCode() 
-	{
-		int h = this.getName().hashCode() * this.theSpatial.hashCode() * 31;
-		return h;
-	}
 }
