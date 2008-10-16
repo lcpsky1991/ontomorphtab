@@ -36,6 +36,7 @@ public class OntoMorph2 {
 	public static final String DEBUG_MODE = "debugMode";
 	public static final String SCENE = "scene";
 	
+	
 	public static void main(String[] args) {
         //		set global log level to warning
 		//useful link on this:

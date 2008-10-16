@@ -160,8 +160,9 @@ public abstract class Scene extends Observable{
 	 *
 	 */
 	@SuppressWarnings("unchecked")
-	public void save() 
+	public void save(String strFileOut) 
 	{
+		System.out.println("Attempting to save file to " + strFileOut);
 		Neuroml scene = new NeuromlImpl();
 		scene.setLengthUnits("micron");
 		
@@ -200,10 +201,7 @@ public abstract class Scene extends Observable{
 			}
 			List list = cellType.getInstances().getInstance();
 			
-			
-			String debug = mmnm.getMorphMLCellInstance().toString() +  " " + mmnm.getMorphMLCellInstance().getLocation(); 
-			System.out.println(debug);
-			list.add(debug);
+			list.add(mmnm.getMorphMLCellInstance());
 			cellType.getInstances().setSize(BigInteger.valueOf(list.size()));
 		}
 		scene.setPopulations(populations);
@@ -231,20 +229,21 @@ public abstract class Scene extends Observable{
 		scene.setSlides(slides);
 		
 		
-		try {
+		try 
+		{
 			JAXBContext context = JAXBContext.newInstance("org.morphml.neuroml.schema");
 			
 			//Create the marshaller
 			final Marshaller marshaller = context.createMarshaller();
-			FileOutputStream file = new FileOutputStream("saved_scene.xml");
+			FileOutputStream file = new FileOutputStream(strFileOut);
 			
 			
 			marshaller.marshal(scene, file);
 			//marshall the XML
 			file.flush();
 			file.close();
-			
-		} catch (JAXBException e) {
+		} 
+		catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
@@ -254,6 +253,8 @@ public abstract class Scene extends Observable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		Log.warn("Finished saving " + strFileOut);
 		
 	}
 	

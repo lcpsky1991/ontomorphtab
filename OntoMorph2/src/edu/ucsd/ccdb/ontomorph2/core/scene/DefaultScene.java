@@ -23,6 +23,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.scene.shape.Box;
 
+import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.CCDBRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
@@ -92,7 +93,7 @@ public class DefaultScene extends Scene{
 	{
 		Log.warn("Loading scene from DB");
 		long tick = Log.tick();
-		Neuroml scene = DataRepository.getInstance().loadScene();
+		Neuroml scene = DataRepository.getInstance().loadScene(OntoMorph2.getWBCProperties().getProperty(OntoMorph2.SCENE));
 		
 		//load tangibles for curves
 		if (scene.getCurves() != null) {
@@ -146,8 +147,8 @@ public class DefaultScene extends Scene{
 						//set the rotation and such
 						//System.out.println(instance.getName() + " has " + instance.getRotation());
 						//System.out.println(instance.getName() + " has scale " + instance.getScale());					
-						System.out.println(ci + " has scale " + ci.getScale());
-						System.out.println(ci + " has rot " + ci.getRotation());
+						System.out.println(ci + " has scale " + ci.getScale().toString());
+						System.out.println(ci + " has rot " + ci.getRotation().getW());
 					}
 
 					this.addSceneObject(instance);	

@@ -201,7 +201,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	/**
 	 * Set the scale for this INeuronMorphology using a float
 	 * @param v - scale
-	 * @see CoordinateSystem
 	 */
 	public void setScale(float f) {
 		OMTVector v = new OMTVector(f, f, f);

@@ -37,8 +37,10 @@ import edu.ucsd.ccdb.ontomorph2.view.View3DMouseListener;
  */
 public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPressedListener{
 	
-	public static final String LOAD_SCENE = "Import File...";
-	public static final String SAVE_SCENE = "Save Scene...";
+	public static final String IMPORT_SCENE = "Import File...";
+	public static final String SAVE_SCENE = "Save";
+	public static final String SAVE_SCENE_AS = "Save Scene As ...";
+	public static final String LOAD_SCENE_AS = "Load From ...";
 	public static final String strCELLS = "Cells...";
 	public static final String VOLUMES = "Volumes...";
 	public static final String SEMANTICS = "Semantics...";
@@ -95,16 +97,16 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         //=[  FILE  ]=
         Menu mnuFile = new Menu();
         mB.registerSubMenu(mnuFile, "File");
-        makeMenuItem(LOAD_SCENE, mnuFile);
+        makeMenuItem(IMPORT_SCENE, mnuFile);
         makeMenuItem(SAVE_SCENE, mnuFile);
-        
+        makeMenuItem(SAVE_SCENE_AS, mnuFile);
+        makeMenuItem(LOAD_SCENE_AS, mnuFile);
         
         //=[ SEARCH ]=
         Menu mnuSearch = new Menu();
         mB.registerSubMenu(mnuSearch, "Search");
         makeMenuItem(BASIC_SEARCH, mnuSearch);
         
-
         //=[  VIEW  ]=
         Menu mnuView = new Menu();
         mB.registerSubMenu(mnuView, "View");
@@ -125,14 +127,12 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         mB.registerSubMenu(mnuObjects, "Objects");
         makeMenuItem(strCELLS, mnuObjects);
         
-        
         mnuObjects.registerSubMenu(mnuObjects_New, strNEW);
         makeMenuItem(strNEW_CELL_A, mnuObjects_New);
         makeMenuItem(strNEW_CELL_B, mnuObjects_New);
         makeMenuItem(strNEW_CELL_DISK, mnuObjects_New);
         //makeMenuItem(VOLUMES, mnuObjects);
         //makeMenuItem(SEMANTICS, mnuObjects);
-        
         
         //=[  CKB  ]=
         Menu mnuCKB = new Menu();
@@ -204,17 +204,25 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		//FIXME: replace this string business with references to objects
 		String act = arg0.getItem().getText(); //action to perform
 		
-		if ( LOAD_SCENE.equals(act) )
+		if ( IMPORT_SCENE.equals(act) )
 		{
 			//get file
 			File nfile = View2D.getInstance().showFileChooser();
 			//load that file
 			TangibleManager.getInstance().loadFile(nfile);
-			
+		}
+		else if (SAVE_SCENE_AS.equals(act))
+		{
+			String strFile = "extra.xml";
+			OntoMorph2.getCurrentScene().save(strFile);
 		}
 		else if ( SAVE_SCENE.equals(act) )
 		{
-			OntoMorph2.getCurrentScene().save();
+			OntoMorph2.getCurrentScene().save("saved_scene.xml");
+		}
+		else if ( LOAD_SCENE_AS.equals(act))
+		{
+			OntoMorph2.getCurrentScene().load();
 		}
 		else if ( strCELLS.equals(act) )
 		{

@@ -9,6 +9,8 @@ import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import org.morphml.metadata.schema.Point3D;
+import org.morphml.metadata.schema.impl.Point3DImpl;
 import org.morphml.morphml.schema.Cable;
 import org.morphml.networkml.schema.CellInstance;
 import org.morphml.networkml.schema.CurveAssociation;
@@ -84,7 +86,6 @@ public class NeuronMorphology extends Tangible{
 
 		cellInstance.setLocation(super.getPosition().toPoint3D());
 		cellInstance.setRotation(super.getRotation().toWBCQuat());
-		cellInstance.setScale(super.getScale().toPoint3D());
 		cellInstance.setId((BigInteger.valueOf(new Random().nextLong())));
 		
 		if (position != null)
@@ -493,9 +494,11 @@ public class NeuronMorphology extends Tangible{
 	public CellInstance getMorphMLCellInstance() 
 	{
 		//mirrors all of the parts in theSpatial over to the cellInstance (whcih is usedin saving and loading)
-		cellInstance.setLocation(theSpatial.getPosition());
-		cellInstance.setRotation(theSpatial.getRotation());
-		cellInstance.setScale(theSpatial.getScale());
+		//cellInstance.setLocation(theSpatial.getPosition());
+		//cellInstance.setRotation(theSpatial.getRotation());
+		//cellInstance.setScale(theSpatial.getScale());
+		
+		
 		
 		return this.cellInstance;	
 	}

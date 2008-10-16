@@ -21,6 +21,7 @@ import org.morphml.neuroml.schema.XWBCSlide;
 import org.morphml.neuroml.schema.XWBCTangible;
 import org.morphml.neuroml.schema.impl.NeuromlImpl;
 
+import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 
@@ -103,7 +104,8 @@ public class DataRepository {
 		return objFound;
 	}
 	
-	public Neuroml loadScene() {
+	public Neuroml loadScene(String strFile) 
+	{
 		final Session sesLoad = sFact.openSession();	//open connection to DB (SQL)
 		
 		Criteria search = sesLoad.createCriteria(Neuroml.class);
@@ -118,8 +120,18 @@ public class DataRepository {
 		{
 			Log.warn("Did not find a scene in the DB.  Loading it from disk!");
 			long tick = Log.tick();
-			try {
-				URL sceneURL = new File("saved_scene.xml").toURI().toURL();
+			try 
+			{
+				//get the default scene filepath form the properties
+				if (strFile == null)
+				{	
+					//and if the default property isn't enabled then use hardcoded
+					strFile = "saved_scene.xml";
+				}
+				
+				Log.warn("Loading scene from " + strFile);
+				
+				URL sceneURL = new File(strFile).toURI().toURL();
 				
 				if (sceneURL != null) {
 					JAXBContext context = JAXBContext.newInstance("org.morphml.neuroml.schema");
@@ -130,7 +142,7 @@ public class DataRepository {
 					
 					//load the scene into the DB
 					DataRepository.getInstance().saveFileToDB(scene);
-				}
+			}
 			Log.tock("Finished loading scene from disk and persisting it to the db!", tick);
 			} catch (Exception e) {
 				throw new OMTException("Problem loading scene from XML", e);
