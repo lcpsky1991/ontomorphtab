@@ -526,7 +526,8 @@ public class View3DMouseListener implements MouseInputListener {
 		{
 		
 			//widget.absolutePosition(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
-			if (OntoMorph2.isDebugMode()) {
+			if (OntoMorph2.isDebugMode()) 
+			{
 				Log.warn("selection "  + recent + " manip:" + manip);
 				Log.warn("position" + TangibleManager.getInstance().getSelectedRecent().getPosition());
 			}

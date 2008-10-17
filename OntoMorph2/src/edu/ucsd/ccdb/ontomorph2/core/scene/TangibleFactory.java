@@ -9,6 +9,7 @@ import com.jme.math.Vector3f;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationQuat;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
@@ -157,7 +158,42 @@ public class TangibleFactory
 		return particles;
 
 	}
+	/**
+	 * Create a new anchor point at a location relative to this point.
+	 *
+	 */
+	public CurveAnchorPoint createPoint(Curve3D trgCurve, int index)
+	{
 	
+		
+		int i = index;				//where the new point will go
+		OMTVector place = null;
+		OMTVector posPrev = null;
+		OMTVector posNext = null;
+		
+		float delta = 0.15f;
+		float t = 0;					//the approximate time of the originating AnchorPoint
+		
+		if ( index > 0)
+		{
+			CurveAnchorPoint ptPrev = trgCurve.getAnchorPoints().get(index); //get the previous point
+			t = ptPrev.aproxTime();		//get the time of source AnchorPoint
+		}
+		
+		
+		//find the tangent of the current index by getting the position of the prev and post
+		posPrev = trgCurve.getPoint(t-delta);
+		posNext = trgCurve.getPoint(t+delta);
+			
+		//the new location is the last point, plus the difference between 2 imaginary points around it
+		//place = Point(t) + (Next - Prev)
+		place = new OMTVector(trgCurve.getPoint(t).add( posNext.subtract(posPrev) ));
+		
+
+		CurveAnchorPoint capt =	trgCurve.addControlPoint(i, place);
+		trgCurve.reapply(); //TODO: remove this line
+		return capt;
+	}
 	private TangibleFactory()
 	{
 		

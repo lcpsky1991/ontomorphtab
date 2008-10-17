@@ -551,8 +551,25 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					TangibleFactory.getInstance().createCurve(single);
 					break;
 				case CTX_ACTION_NEW_ANCHOR:
-					if (single instanceof CurveAnchorPoint) {
-						((CurveAnchorPoint)single).createPoint();
+					System.out.println("Attempting new crv anc pt");
+					/*
+					  
+					 if (single instanceof Curve3D)
+					{
+						//convert the Curve to be the last AnchorPoint on the Curve 
+						//make 'single' (the object to be operated on)
+						Curve3D orig = (Curve3D) single;
+						single = orig.getAnchorPoints().get(orig.getAnchorCount()-1); //get the last anchorpoint
+						//now proceed with creating a point as usual
+					}*/
+					
+					if (single instanceof CurveAnchorPoint) 
+					{
+						CurveAnchorPoint cap = ((CurveAnchorPoint)single); 
+						cap = TangibleFactory.getInstance().createPoint(cap.getParentCurve(), cap.getIndex());
+						cap.select(); 
+						//NOTE: by selecting the anchorpoint it not only makes it obvious, it also
+						//makes it so no furthur anchorpoints are created
 					}
 					break;
 				case CTX_ACTION_VISIBLE:
@@ -577,23 +594,12 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					single.save();
 					break;
 				case CTX_ACTION_PROPOGATE:
-				{
-					try
-					{
-						strReply = JOptionPane.showInputDialog(frmDialog, "Propagate how many cells?", "How many?", JOptionPane.QUESTION_MESSAGE);
-						if ( strReply != null) ival = Integer.parseInt(strReply);
+						ival = (int)OMTDialog.getInstance().inputNumber("Propagate how many cells?", 1);
 						if (single instanceof NeuronMorphology) 
 						{
 							CellFactory.getInstance().propagate( ((NeuronMorphology) single ), ival);	
 						}
-					}
-					catch (NumberFormatException e)
-					{
-						//user did not enter a valid number, do nothing
-					}
-				}
-				
-				break;
+						break;
 				case CTX_ACTION_NEW_CELLE:
 					CellFactory.getInstance().createCellOn(single, CellFactory.TYPE_CELL_DG_A);
 					Log.warn("Attempting to create " + CellFactory.TYPE_CELL_DG_A + " on " + single.getName());

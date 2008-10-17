@@ -117,29 +117,7 @@ public class CurveAnchorPoint extends Tangible {
 		return info;	//if it has a name return it
 	}
 	
-	/**
-	 * Create a new anchor point at a location relative to this point.
-	 *
-	 */
-	public void createPoint()
-	{
-		int i = getIndex() + 1;
-		float t = aproxTime();
-		float delta = 0.05f;
-		OMTVector place = null;
-		
-		
-		//place = new OMTVector(src.getRelativePosition()); //original
-		//find out what 'time' the current point is at, incriment that ammount a small ammount
-		//find out the tangent of the current point, then add the tangent unit to the position
-		//DOes not work well with the end points
-		place = new OMTVector(getParentCurve().getPoint(t+delta));
-
-		CurveAnchorPoint capt =	getParentCurve().addControlPoint(i, place);
-		capt.select();
-		
-		getParentCurve().reapply(); //TODO: remove this line
-	}
+	
 	
 
 }

@@ -95,7 +95,7 @@ public class CellFactory {
 		//creates a SemanticInstance of this cell in the SemanticRepository
 		ncell.getSemanticInstance();
 		ncell.setVisible(true);
-		ncell.setScale(0.02f);
+		ncell.setScale(0.01f);							//set default scale of cells to be appropriate
 		ncell.addObserver(SceneObserver.getInstance()); //add an observer to the new cell
 		
 		
@@ -180,8 +180,8 @@ public class CellFactory {
 			else
 			{	//put it at the original place
 				copy.setPosition(cell.getPosition());	//start in same place
-				rx = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getPosition().getX();
-				ry = (float)OMTUtility.randomNumberGuassian(0, 10) + copy.getPosition().getY();
+				rx = (float)OMTUtility.randomNumber(0, 10) + copy.getPosition().getX();
+				ry = (float)OMTUtility.randomNumber(0, 10) + copy.getPosition().getY();
 				copy.setPosition(rx, ry, copy.getPosition().getZ()); //keep the same Z
 			}
 			
