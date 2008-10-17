@@ -51,8 +51,7 @@ public class Slide extends Tangible {
         	this.theSpatial = lookup;
         }
 		
-        this.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(
-				SemanticClass.IMAGE_CLASS));
+        this.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.IMAGE_CLASS));
 		this.getSemanticInstance();
 	}
 	
@@ -160,7 +159,7 @@ public class Slide extends Tangible {
 			}
 		}
 		
-		Log.warn(where + " resolved to to " + place);
+		//Log.warn(where + " resolved to to " + place);
 		return place;
 	}
 	

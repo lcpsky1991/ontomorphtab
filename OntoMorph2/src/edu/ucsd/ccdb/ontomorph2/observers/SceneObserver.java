@@ -182,15 +182,6 @@ public class SceneObserver implements Observer {
 			}
 		}
 		
-		else if (o instanceof SphereParticles){
-			//System.out.println(" o instanceof SphereParticles");
-			TangibleView tv = null;
-			tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
-			if(tv!=null){
-			tv.update();
-			}
-			
-		}
 		//catch all method for any leftover tangibles
 		else if (o instanceof Tangible)
 		{

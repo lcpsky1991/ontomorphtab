@@ -78,8 +78,10 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 * Construct a Tangible.  Must have a name that is unique throughout the system
 	 * @param name
 	 */
-	public Tangible(String name) {
-		if (name == null) {
+	public Tangible(String name) 
+	{
+		if (name == null) 
+		{
 			throw new OMTException("Cannot construct a tangible with a null name!");
 		}
 		initializeTangible(name, new XWBCTangibleImpl());

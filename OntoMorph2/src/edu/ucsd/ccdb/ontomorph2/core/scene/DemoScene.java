@@ -74,7 +74,8 @@ public class DemoScene extends Scene{
 	 * @see #loadFromCKB()
 	 *
 	 */
-	public void load() {
+	public void load(String filename) 
+	{
 		
 		DataMesh mesh;
 		try {

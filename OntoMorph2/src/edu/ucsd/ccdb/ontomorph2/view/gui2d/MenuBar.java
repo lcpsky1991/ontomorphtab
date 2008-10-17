@@ -1,6 +1,8 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.fenggui.background.PlainBackground;
 import org.fenggui.event.IMenuItemPressedListener;
@@ -17,6 +19,7 @@ import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.CellFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.DemoScene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
@@ -74,6 +77,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String strNEW_CELL_A = CellFactory.TYPE_CELL_DG_A;
 	public static final String strNEW_CELL_B = CellFactory.TYPE_CELL_PYR_CA3_A;
 	public static final String strNEW_CELL_DISK = "From Disk...";
+	public static final String strNEW_SLIDE = "Slide";
 	
 	public static final String strNEW = "New ...";
 	public static final String BASIC_SEARCH = "Basic Search...";
@@ -128,6 +132,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
         makeMenuItem(strCELLS, mnuObjects);
         
         mnuObjects.registerSubMenu(mnuObjects_New, strNEW);
+        makeMenuItem(strNEW_SLIDE, mnuObjects_New);
         makeMenuItem(strNEW_CELL_A, mnuObjects_New);
         makeMenuItem(strNEW_CELL_B, mnuObjects_New);
         makeMenuItem(strNEW_CELL_DISK, mnuObjects_New);
@@ -213,7 +218,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if (SAVE_SCENE_AS.equals(act))
 		{
-			String strFile = "extra.xml";
+			String strFile = OMTDialog.getInstance().inputText("Enter filename to save this scene as ...", "extra.xml");
 			OntoMorph2.getCurrentScene().save(strFile);
 		}
 		else if ( SAVE_SCENE.equals(act) )
@@ -222,11 +227,36 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 		}
 		else if ( LOAD_SCENE_AS.equals(act))
 		{
-			OntoMorph2.getCurrentScene().load();
+			OntoMorph2.getCurrentScene().load(null);
 		}
 		else if ( strCELLS.equals(act) )
 		{
 			View2D.getInstance().loadCellChooser();
+		}
+		else if ( strNEW_SLIDE.equals(act))
+		{
+				String strReply = null;
+				URI imgURI= null;
+				
+				do
+				{
+					strReply = OMTDialog.getInstance().inputText("Enter URL for new Slide", "/etc/img/striatum1.jpg");
+					try 
+					{
+						imgURI = new URI(strReply);
+					}
+					catch (URISyntaxException e) 
+					{
+						Log.warn("Bad URI '" + strReply + "'");
+					}
+				}
+				while ( imgURI == null && strReply != null);
+			
+			//get the filename and URL
+			if ( imgURI != null)
+			{
+					TangibleFactory.getInstance().createSlide("user-created Slide", imgURI);
+			}
 		}
 		else if ( VOLUMES.equals(act) )
 		{
@@ -370,7 +400,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	 */
 	private void debug()
 	{
-		View.getInstance().getScene().load();
+		View.getInstance().getScene().load(null);
 	}
 	
 }

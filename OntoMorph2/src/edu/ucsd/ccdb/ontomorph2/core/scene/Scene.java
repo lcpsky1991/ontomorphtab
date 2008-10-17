@@ -150,7 +150,7 @@ public abstract class Scene extends Observable{
 	 * @see #loadFromCKB()
 	 *
 	 */
-	public abstract void load();
+	public abstract void load(String filename);
 	
 
 	/**

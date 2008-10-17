@@ -11,11 +11,9 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
-import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
-import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
@@ -97,6 +95,7 @@ public class CellFactory {
 		//creates a SemanticInstance of this cell in the SemanticRepository
 		ncell.getSemanticInstance();
 		ncell.setVisible(true);
+		ncell.setScale(0.02f);
 		ncell.addObserver(SceneObserver.getInstance()); //add an observer to the new cell
 		
 		
@@ -138,7 +137,7 @@ public class CellFactory {
 		}
 		else if ( src != null)
 		{
-			ocurve = CurveFactory.getInstance().createCurve(src);
+			ocurve = TangibleFactory.getInstance().createCurve(src);
 			//ocurve = null;
 		}
 		else

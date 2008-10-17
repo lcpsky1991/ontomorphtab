@@ -68,7 +68,7 @@ public class OntoMorph2 {
 	public static void initialization() {
 		//scene can't be loaded before View has been initializaed
 		try {
-			_scene.load();
+			_scene.load(OntoMorph2.getWBCProperties().getProperty(OntoMorph2.SCENE));
 		} catch (Exception e) {
 			Log.error("SEVERE ERROR ATTEMPTING TO LOAD SCENE");
 			e.printStackTrace();

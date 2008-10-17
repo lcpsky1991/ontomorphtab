@@ -23,7 +23,7 @@ import org.fenggui.util.Spacing;
 
 import com.jme.math.Vector3f;
 
-import edu.ucsd.ccdb.ontomorph2.core.scene.ParticlesFactory;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleFactory;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticQuery;
@@ -131,7 +131,7 @@ public class BasicSearchWidget extends Widget{
  			item.setPixmap(pixmap);
  			ISemanticsAware instance = result.getSemanticsAwareAssociation();
  			if (instance != null && instance instanceof Tangible) {
- 				ParticlesFactory.getInstance().createParticles(((Tangible)instance).getPosition());
+ 				TangibleFactory.getInstance().createParticles(((Tangible)instance).getPosition());
  			}
         }
         /*

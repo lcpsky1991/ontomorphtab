@@ -89,11 +89,11 @@ public class DefaultScene extends Scene{
 		}
 	}
 
-	public void load() 
+	public void load(String filename) 
 	{
 		Log.warn("Loading scene from DB");
 		long tick = Log.tick();
-		Neuroml scene = DataRepository.getInstance().loadScene(OntoMorph2.getWBCProperties().getProperty(OntoMorph2.SCENE));
+		Neuroml scene = DataRepository.getInstance().loadScene(filename);
 		
 		//load tangibles for curves
 		if (scene.getCurves() != null) {

@@ -20,8 +20,8 @@ import org.fenggui.util.Color;
 import com.jme.input.KeyInput;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.CellFactory;
-import edu.ucsd.ccdb.ontomorph2.core.scene.CurveFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleFactory;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
@@ -548,7 +548,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					Log.warn("animate: " + single);
 					break;
 				case CTX_ACTION_NEW_CURVE:
-					CurveFactory.getInstance().createCurve(single);
+					TangibleFactory.getInstance().createCurve(single);
 					break;
 				case CTX_ACTION_NEW_ANCHOR:
 					if (single instanceof CurveAnchorPoint) {

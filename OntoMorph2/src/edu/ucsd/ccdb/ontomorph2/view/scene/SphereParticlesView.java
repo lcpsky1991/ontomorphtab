@@ -44,8 +44,9 @@ private AlphaState getAlphaState(){
 	    
 	    return as1;
 	}
-	private TextureState getTextureState() {
-		System.out.println("texture staet");
+	private TextureState getTextureState() 
+	{
+		//System.out.println("texture staet");
 		TextureState ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 	    ts.setTexture(
 	        TextureManager.loadTexture(
