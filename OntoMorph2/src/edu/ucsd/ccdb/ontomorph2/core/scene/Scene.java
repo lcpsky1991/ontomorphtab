@@ -289,7 +289,6 @@ public abstract class Scene extends Observable{
 	}
 
 	public Set<SphereParticles> getParticles(){
-		System.out.println("get particles from scene.jaba");
 		return manager.getParticles();
 	}
 	

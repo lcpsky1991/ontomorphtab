@@ -13,6 +13,8 @@ import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 import org.morphml.neuroml.schema.XWBCSlide;
 
+import com.jme.scene.state.LightState;
+
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
@@ -255,7 +257,8 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 			//get the filename and URL
 			if ( imgURI != null)
 			{
-					TangibleFactory.getInstance().createSlide("user-created Slide", imgURI);
+				Slide s = TangibleFactory.getInstance().createSlide("user-created Slide", imgURI);
+				if (s!=null) s.select();
 			}
 		}
 		else if ( VOLUMES.equals(act) )
@@ -400,7 +403,8 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	 */
 	private void debug()
 	{
-		View.getInstance().getScene().load(null);
+		View.getInstance().getView3D().setLightCombineMode(LightState.OFF);
+		
 	}
 	
 }

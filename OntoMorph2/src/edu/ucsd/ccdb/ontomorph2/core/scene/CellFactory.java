@@ -186,7 +186,7 @@ public class CellFactory {
 			}
 			
 			copy.setScale(cell.getScale()); //make their scales match
-			
+			copy.setRotation(cell.getRotation());
 			//copy.rotate(rx, 0, new OMTVector(0,1,0)); //for aesthetics rotate them about Y to make them seem more random
 			
 			
