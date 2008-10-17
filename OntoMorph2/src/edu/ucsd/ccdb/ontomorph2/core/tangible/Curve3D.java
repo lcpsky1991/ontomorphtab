@@ -377,6 +377,7 @@ public class Curve3D extends Tangible{
 	@SuppressWarnings("unchecked")
 	protected void setControlPoints(OMTVector[] arg1) 
 	{
+		morphMLCurve.getPoint().clear();
 		for (int i = 0; i < arg1.length; i++) 
 		{
 			morphMLCurve.getPoint().add(arg1[i].toPoint3D());
