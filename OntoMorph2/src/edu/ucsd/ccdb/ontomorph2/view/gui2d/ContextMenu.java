@@ -552,16 +552,15 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					break;
 				case CTX_ACTION_NEW_ANCHOR:
 					System.out.println("Attempting new crv anc pt");
-					/*
 					  
-					 if (single instanceof Curve3D)
+					if (single instanceof Curve3D)
 					{
 						//convert the Curve to be the last AnchorPoint on the Curve 
 						//make 'single' (the object to be operated on)
 						Curve3D orig = (Curve3D) single;
 						single = orig.getAnchorPoints().get(orig.getAnchorCount()-1); //get the last anchorpoint
 						//now proceed with creating a point as usual
-					}*/
+					}
 					
 					if (single instanceof CurveAnchorPoint) 
 					{

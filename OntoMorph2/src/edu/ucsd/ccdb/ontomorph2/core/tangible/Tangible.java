@@ -165,8 +165,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 			theSpatial.setPosition(pos.toPoint3D());
 			if (flagChanged) 
 			{
-				changed(CHANGED_MOVE);
 				this.save();
+				changed(CHANGED_MOVE);
+				
 			}
 		}
 	}

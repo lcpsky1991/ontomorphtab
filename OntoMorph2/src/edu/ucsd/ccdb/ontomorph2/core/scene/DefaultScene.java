@@ -124,32 +124,7 @@ public class DefaultScene extends Scene{
 					//CellInstance ci = (CellInstance)it2.next();
 					//NeuronMorphology instance = new NeuronMorphology(p.getCellType());
 					NeuronMorphology instance = new NeuronMorphology(p.getCellType(), ci);
-					/*
-				CurveAssociation ca = ci.getCurveAssociation();
-				if (ca != null) 
-				{
-					for (Curve3D curve : getCurves()) 
-					{
-						if (curve.getMorphMLCurve().getId().equals(ca.getCurveId())) 
-						{
-							instance.setCurve(curve);
-							instance.positionAlongCurve(curve, (float)ca.getTime());
-						}
-					}
-				} 
-				else 
-				{
-					instance.setPosition(new PositionVector(ci.getLocation()));
-				}*/
-
-					//for loading all cells, regardless of association, put their scales and rotations on
-					{
-						//set the rotation and such
-						//System.out.println(instance.getName() + " has " + instance.getRotation());
-						//System.out.println(instance.getName() + " has scale " + instance.getScale());					
-						System.out.println(ci + " has scale " + ci.getScale().toString());
-						System.out.println(ci + " has rot " + ci.getRotation().getW());
-					}
+					
 
 					this.addSceneObject(instance);	
 				}

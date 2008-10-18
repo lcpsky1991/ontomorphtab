@@ -174,6 +174,7 @@ public class NeuronMorphology extends Tangible{
 				this.save();
 				changed(CHANGED_MOVE);
 			}
+			
 		}
 	}
 	
@@ -487,21 +488,14 @@ public class NeuronMorphology extends Tangible{
 	
 	public void save()
 	{
+		Log.warn("Saving " + this.getName());
 		super.save();
 		DataRepository.getInstance().saveFileToDB(cellInstance);
-		
 	}
 
 
 	public CellInstance getMorphMLCellInstance() 
-	{
-		//mirrors all of the parts in theSpatial over to the cellInstance (whcih is usedin saving and loading)
-		//cellInstance.setLocation(theSpatial.getPosition());
-		//cellInstance.setRotation(theSpatial.getRotation());
-		//cellInstance.setScale(theSpatial.getScale());
-		
-		
-		
+	{		
 		return this.cellInstance;	
 	}
 

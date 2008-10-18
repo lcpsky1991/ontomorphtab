@@ -295,7 +295,8 @@ public class Curve3D extends Tangible{
 	 * @param time - 0 to 1 representation of the length of the Curve from beginning to end
 	 * @return a PositionVector on this Curve3D at time.
 	 */
-	public PositionVector getPoint(float time) {
+	public PositionVector getPoint(float time) 
+	{
 		return new PositionVector(getCurve().getPoint(time));
 	}
 
@@ -409,7 +410,7 @@ public class Curve3D extends Tangible{
 		}
 		else if (index >= getControlPoints().length)
 		{
-			index = getControlPoints().length - 1; //length is a conveiniant way to get the [ (last element index)+1 ]
+			index = getControlPoints().length; //length is a conveiniant way to get the [ (last element index)+1 ]
 		}
 		
 		//copy over the control points for points before index

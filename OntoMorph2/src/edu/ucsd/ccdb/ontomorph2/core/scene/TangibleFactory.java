@@ -166,12 +166,12 @@ public class TangibleFactory
 	{
 	
 		
-		int i = index;				//where the new point will go
+		int i = index + 1;				//where the new point will go
 		OMTVector place = null;
 		OMTVector posPrev = null;
 		OMTVector posNext = null;
 		
-		float delta = 0.15f;
+		float delta = 0.05f;
 		float t = 0;					//the approximate time of the originating AnchorPoint
 		
 		if ( index > 0)
@@ -184,10 +184,11 @@ public class TangibleFactory
 		//find the tangent of the current index by getting the position of the prev and post
 		posPrev = trgCurve.getPoint(t-delta);
 		posNext = trgCurve.getPoint(t+delta);
-			
+		
+		
 		//the new location is the last point, plus the difference between 2 imaginary points around it
-		//place = Point(t) + (Next - Prev)
-		place = new OMTVector(trgCurve.getPoint(t).add( posNext.subtract(posPrev) ));
+		place = new OMTVector( posPrev.subtract(posPrev).mult(3) );	//this is the difference
+		place = new OMTVector(trgCurve.getPoint(t).add( place ));
 		
 
 		CurveAnchorPoint capt =	trgCurve.addControlPoint(i, place);
