@@ -297,6 +297,8 @@ public class Curve3D extends Tangible{
 	 */
 	public PositionVector getPoint(float time) 
 	{
+		if (time <= 0 ) time = 0.00001f;
+		if (time >= 1 ) time = 0.99999f;
 		return new PositionVector(getCurve().getPoint(time));
 	}
 

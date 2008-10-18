@@ -173,11 +173,14 @@ public class TangibleFactory
 		
 		float delta = 0.05f;
 		float t = 0;					//the approximate time of the originating AnchorPoint
+		float diff = 0;
 		
 		if ( index > 0)
 		{
-			CurveAnchorPoint ptPrev = trgCurve.getAnchorPoints().get(index); //get the previous point
-			t = ptPrev.aproxTime();		//get the time of source AnchorPoint
+			CurveAnchorPoint ptcurr = trgCurve.getAnchorPoints().get(index); //get the previous point
+			t = ptcurr.aproxTime();		//get the time of source AnchorPoint
+			
+			delta = ( t - trgCurve.getAnchorPoints().get(index-1).aproxTime()) / 2;
 		}
 		
 		
@@ -187,8 +190,8 @@ public class TangibleFactory
 		
 		
 		//the new location is the last point, plus the difference between 2 imaginary points around it
-		place = new OMTVector( posPrev.subtract(posPrev).mult(3) );	//this is the difference
-		place = new OMTVector(trgCurve.getPoint(t).add( place ));
+		place = new OMTVector( posNext.subtract(posPrev) );	//this is the difference
+		place = new OMTVector(trgCurve.getPoint(t).add( place.mult(1f) ));
 		
 
 		CurveAnchorPoint capt =	trgCurve.addControlPoint(i, place);
