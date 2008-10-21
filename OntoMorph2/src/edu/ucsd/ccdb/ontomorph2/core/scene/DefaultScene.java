@@ -130,6 +130,8 @@ public class DefaultScene extends Scene{
 				}
 			}
 		}
+		loadMeshes();
+		//loadFunStuff();
 		ReferenceAtlas.getInstance().displayBasicAtlas();
 		changed(CHANGED_LOAD);
 		Log.tock("Finished loading scene from db! ", tick);
@@ -395,19 +397,22 @@ public class DefaultScene extends Scene{
 		addSceneObject(cell13);*/
 		
 		DataMesh mesh;
-		try {
+		try 
+		{
 			mesh = new DataMesh(mitoObjURL);
 			
 			
 			mesh.setPosition(new PositionVector(289f, -117f, -179.51f));
 			mesh.setRotation(new RotationQuat(d.getRotationFromAbsolute()));
-			mesh.setScale(0.2f);
+			mesh.setScale(1.2f);
 			mesh.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(SemanticClass.MITOCHONDRION_CLASS));
 			mesh.getSemanticInstance(); //get a SemanticInstance loaded into the local repository
 			
 			addSceneObject(mesh);
 			
-		} catch (IOException x) {
+		}
+		catch (IOException x) 
+		{
 			// TODO Auto-generated catch block
 			x.printStackTrace();
 		}
@@ -459,10 +464,25 @@ public class DefaultScene extends Scene{
 		//manager.addSurface(surf2);
 	}
 	
-	public void loadMeshes() {
-
-		DemoCoordinateSystem d = new DemoCoordinateSystem();
+	public void loadFunStuff()
+	{
+		try
+		{
+			URL gurl = new File(objDir + "guitar.obj").toURI().toURL();
+			DataMesh guitar = new DataMesh(gurl); 
+			guitar.setScale(1f);
+			addSceneObject(guitar);
+		}
+		catch (Exception e)
+		{
+			Log.warn("Unable to load fun meshes");
+		}
 		
+	}
+	
+	public void loadMeshes() 
+	{
+
 		
 		DataMesh mesh, mito2;
 		try {

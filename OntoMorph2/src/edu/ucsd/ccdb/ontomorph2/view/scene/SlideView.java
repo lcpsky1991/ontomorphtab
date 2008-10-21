@@ -24,7 +24,8 @@ public class SlideView extends TangibleView {
 	
 	Quad quad;
 	
-	public SlideView(Slide slide) {
+	public SlideView(Slide slide) 
+	{
 		super(slide);
 		quad = new Quad("Slide View");
 		
@@ -81,9 +82,7 @@ public class SlideView extends TangibleView {
 		quad.updateRenderState();
 		quad.updateGeometricState(0.5f, false);
 		
-		if (getSlide().isVisible()) {
-			this.attachChild(quad);
-		}
+		this.attachChild(quad);
 		
 		this.updateRenderState();
 		
@@ -93,14 +92,17 @@ public class SlideView extends TangibleView {
 		this.update();
 	}
 
+	
 	@Override
-	public void doHighlight() {
+	public void doHighlight() 
+	{
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void doUnhighlight() {
+	public void doUnhighlight() 
+	{
 		// TODO Auto-generated method stub
 		
 	}

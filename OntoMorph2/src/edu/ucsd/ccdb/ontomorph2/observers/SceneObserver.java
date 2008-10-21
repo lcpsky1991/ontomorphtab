@@ -6,6 +6,7 @@ import java.util.Observer;
 import java.util.Set;
 
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
@@ -153,16 +154,7 @@ public class SceneObserver implements Observer {
 				if (tv != null)	tv.update();
 			}
 		}
-		
-		/*else if (o instanceof CurveAnchorPoint)
-		{
-			CurveAnchorPoint ap = (CurveAnchorPoint) o;
-			TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) ap);
-			
-			if ( tv != null) tv.update();
-			Log.warn("update CurveAnchorPoint");
-		}
-		*/
+
 		else if (o instanceof INeuronMorphologyPart) {
 
 			if (Tangible.CHANGED_SELECT.equals(arg)) {
@@ -213,8 +205,11 @@ public class SceneObserver implements Observer {
 			//remove ttangible
 			if (Tangible.CHANGED_DELETE.equals(arg))
 			{
+				TangibleManager.getInstance().removeTangible(t);
+				TangibleViewManager.getInstance().removeTangibleView(tv);
 				tv.detachAllChildren();
 				tv.removeFromParent();
+				t = null;
 			}
 			
 			tv.update();
@@ -231,6 +226,7 @@ public class SceneObserver implements Observer {
 			}
 			
 		}
+		
 		//probably good to do this on every change
 		//_view.getView3D().updateRoot(); //commented out to drasticly improve curve reloading performance
 	}

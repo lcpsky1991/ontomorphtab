@@ -574,7 +574,6 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				case CTX_ACTION_VISIBLE:
 					//TODO: generalize to all tangibles
 					single.setVisible(!single.isVisible());
-					View.getInstance().getScene().changed(Scene.CHANGED_SLIDE); //hacked for Ted Waitt, must be generalized
 					break;
 				case CTX_ACTION_MODE:
 				{

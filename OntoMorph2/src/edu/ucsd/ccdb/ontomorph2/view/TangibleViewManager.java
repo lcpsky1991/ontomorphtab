@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,6 +63,17 @@ public class TangibleViewManager {
 	}
 	
 
+	public void removeTangibleView(TangibleView tv)
+	{
+		tangibleToTangibleView.remove(tv.getModel());
+		ArrayList<Geometry> plist = (ArrayList) tangibleViewToGeometry.remove(tv);
+		for ( Geometry g : plist)
+		{
+			geometryToTangibleView.remove(g);	
+		}
+		
+	}
+	
 	/**
 	 * Returns the TangibleView that has this Tangible as a model if one exists.
 	 * @param t - the Tangible to search for.

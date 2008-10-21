@@ -32,7 +32,9 @@ import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.observers.SemanticObserver;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
+import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
  * Defines an object that can be viewed in the scene.  This object can be made relative
@@ -62,7 +64,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public static final String CHANGED_CONTAINS = "contains";
 
 	protected XWBCTangible theSpatial = null;
-	private boolean _visible = false;
+	private boolean _visible = true;
 	private List<SemanticClass> semanticThings = new ArrayList<SemanticClass>();
 	private SemanticClass mainSemanticClass = null;
 	private SemanticInstance mainSemanticInstance = null;
@@ -109,8 +111,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	 */
 	public boolean delete()
 	{
-		System.out.println("Deleting disabled");
-		//this.changed(CHANGED_DELETE);
+		//System.out.println("Deleting disabled");
+		//remove all the view instances of this tangible, first
+		this.changed(CHANGED_DELETE);
 		//return TangibleManager.getInstance().removeTangible(this);
 		return true;
 	}

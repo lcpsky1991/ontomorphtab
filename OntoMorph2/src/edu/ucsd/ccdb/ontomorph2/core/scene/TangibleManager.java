@@ -355,23 +355,11 @@ public class TangibleManager {
 		this.tangiblesContainedByTangibles.remove(contained, container);
 	}
 	
-	/**
-	 * Toggle slides on or off
-	 *
-	 */
-	public void toggleSlides() {
-		for (Slide s : getSlides())
-		{
-			s.setVisible(!s.isVisible());
-			OntoMorph2.getCurrentScene().changed(Scene.CHANGED_SLIDE);
-		}
-	}
 
 	public void viewSlides() {
 		for (Slide s : getSlides())
 		{
 			s.setVisible(true);
-			OntoMorph2.getCurrentScene().changed(Scene.CHANGED_SLIDE);
 		}
 	}
 
@@ -379,7 +367,6 @@ public class TangibleManager {
 		for (Slide s : getSlides())
 		{
 			s.setVisible(false);
-			OntoMorph2.getCurrentScene().changed(Scene.CHANGED_SLIDE);
 		}
 	}
 }

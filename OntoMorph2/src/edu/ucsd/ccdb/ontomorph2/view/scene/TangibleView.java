@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
+import com.jme.scene.SceneElement;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
@@ -103,8 +104,19 @@ public abstract class TangibleView extends Node
 			setLocalRotation(this.getModel().getRotation());
 		}
 			
-		this.updateRenderState();
+		//make it invisible if needbe
+		if ( this.getModel().isVisible() )
+		{
+			this.setCullMode(SceneElement.CULL_DYNAMIC); //visible
+		}
+		else
+		{
+			this.setCullMode(SceneElement.CULL_ALWAYS); //inviisble
+		}
+		
+		
 		this.updateModelBound();
+		this.updateRenderState();
 		this.updateGeometricState(0.5f, false);
 	}
 	

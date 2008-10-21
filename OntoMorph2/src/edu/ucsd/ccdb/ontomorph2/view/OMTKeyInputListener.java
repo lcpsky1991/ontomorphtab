@@ -44,18 +44,10 @@ public class OMTKeyInputListener implements KeyInputListener {
 	 */
 	public void onKey(char character, int keyCode, boolean pressed) {
 		//don't handle if focus manager has another widget focused
-		if (guiInput.wasKeyHandled()){
-			//Unassigns the keys program from JME
-			KeyBindingManager.getKeyBindingManager().remove("toggle_pause");
-			KeyBindingManager.getKeyBindingManager().remove("step");
-			KeyBindingManager.getKeyBindingManager().remove("toggle_wire");
-			KeyBindingManager.getKeyBindingManager().remove("toggle_lights");
-			KeyBindingManager.getKeyBindingManager().remove("toggle_bounds");
-			KeyBindingManager.getKeyBindingManager().remove("toggle_normals");
-			KeyBindingManager.getKeyBindingManager().remove("camera_out");
-			KeyBindingManager.getKeyBindingManager().remove("mem_report");
+		if (guiInput.wasKeyHandled())
+		{
+			unsetJMEActionKeys();
 			return;
-
 		}	
 		//don't process any released events for now
 		//may consider implementing handlers that operate in a loop as long
@@ -141,9 +133,6 @@ public class OMTKeyInputListener implements KeyInputListener {
 				}
 			}
 			break;
-		case KeyInput.KEY_A:
-			View.getInstance().getCameraView().rotateCameraAbout(null, 90f,0);
-			break;
 		case KeyInput.KEY_BACK:
 			{
 				//delete
@@ -177,7 +166,8 @@ public class OMTKeyInputListener implements KeyInputListener {
 			break;
 		case KeyInput.KEY_I:
 			//info + mem_report
-			if (OntoMorph2.isDebugMode()) {
+			if (OntoMorph2.isDebugMode()) 
+			{
 				Vector3f unit = new Vector3f(0f,0f,1f);
 				
 				ViewCamera camNode = View.getInstance().getCameraView();
@@ -209,9 +199,23 @@ public class OMTKeyInputListener implements KeyInputListener {
 	{
 		return this.keyPressActionRate;
 	}
-		
+	
+	public void unsetJMEActionKeys()
+	{
+		//Unassigns the keys program from JME
+		KeyBindingManager.getKeyBindingManager().remove("toggle_pause");
+		KeyBindingManager.getKeyBindingManager().remove("step");
+		KeyBindingManager.getKeyBindingManager().remove("toggle_wire");
+		KeyBindingManager.getKeyBindingManager().remove("toggle_lights");
+		KeyBindingManager.getKeyBindingManager().remove("toggle_bounds");
+		KeyBindingManager.getKeyBindingManager().remove("toggle_normals");
+		KeyBindingManager.getKeyBindingManager().remove("camera_out");
+		KeyBindingManager.getKeyBindingManager().remove("mem_report");	
+	}
+	
 	//sets the JME Action keys after they have been disable if there was a fenggui focus
-	public void setJMEActionKeys(){
+	public void setJMEActionKeys()
+	{
 		 /** Assign key P to action "toggle_pause". */
         KeyBindingManager.getKeyBindingManager().set( "toggle_pause",
                 KeyInput.KEY_P );
@@ -236,6 +240,5 @@ public class OMTKeyInputListener implements KeyInputListener {
         /** Assign key R to action "mem_report". */
         KeyBindingManager.getKeyBindingManager().set("mem_report",
                 KeyInput.KEY_R);
-
 	}
 }
