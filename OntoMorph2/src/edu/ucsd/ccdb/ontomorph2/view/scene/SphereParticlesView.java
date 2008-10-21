@@ -5,6 +5,7 @@ import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.TextureState;
@@ -12,6 +13,7 @@ import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jmex.effects.particles.ParticleFactory;
+import com.jmex.effects.particles.ParticleGeometry;
 import com.jmex.effects.particles.ParticleMesh;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
@@ -22,11 +24,13 @@ public class SphereParticlesView extends TangibleView{
 
 	SphereParticles particles = null;
 	private DisplaySystem display = null;
-	ParticleMesh pMesh;
+	ParticleGeometry pMesh;
 	Quad quad;
 	
-	public SphereParticlesView(SphereParticles particles) {
+	public SphereParticlesView(SphereParticles particles) 
+	{
 		super(particles);
+		this.pickPriority = TangibleView.P_HIGHEST;
 		//System.out.println("sphere particles");
 		this.particles = particles;
 		init();
@@ -59,7 +63,9 @@ private AlphaState getAlphaState(){
 	}
 	private void init() {
 		//System.out.println(" init sphereparticleview");
-		this.detachChild(this.pMesh);
+	    if (particles.isVisible()) {
+			this.detachChild(pMesh);
+		}		
 		TextureState st = getTextureState();
 		//System.out.println("init");
 		pMesh = ParticleFactory.buildParticles("particles", 500);
@@ -83,16 +89,14 @@ private AlphaState getAlphaState(){
 	    pMesh.setModelBound(new BoundingSphere());
 	    pMesh.updateModelBound();
 	    
-	    if (particles.isVisible()) {
-			this.attachChild(pMesh);
-		}
-		
+	    
+	    this.attachChild(pMesh);
 		this.updateRenderState();
 		
 //		update the geometries registry, this is neccessary to enable picking, which is based on geomtry key maps
 		this.registerGeometry(pMesh);
 		
-		this.update();
+		//this.update();
 	}
 	
 	public void setDisplay(DisplaySystem disp) {
@@ -102,15 +106,12 @@ private AlphaState getAlphaState(){
 	
 	@Override
 	public void doHighlight() {
-		System.out.println("do highlight");
 		// TODO Auto-generated method stub
-		this.pMesh.setSolidColor(TangibleViewManager.highlightSelectedColor);
 	}
 
 	@Override
 	public void doUnhighlight() {
 		// TODO Auto-generated method stub
-		this.pMesh.setSolidColor(ColorUtil.convertColorToColorRGBA(this.getModel().getColor()));
 
 	}
 }
