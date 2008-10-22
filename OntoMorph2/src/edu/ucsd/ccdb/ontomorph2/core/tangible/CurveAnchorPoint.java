@@ -4,6 +4,7 @@
 package edu.ucsd.ccdb.ontomorph2.core.tangible;
 
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
@@ -47,9 +48,16 @@ public class CurveAnchorPoint extends Tangible {
 	}
 	*/
 	
+	//update the position of the line and the cells
 	public void execPostManipulate(Tangible target)
 	{
+		
 		this.parentCurve.reapply();
+		
+		for ( NeuronMorphology cell: this.parentCurve.getChildrenCells())
+		{
+			cell.positionAlongCurve(cell.getCurve(), cell.getTime());
+		}
 	}
 	
 	public PositionVector getDeltafromCenter()

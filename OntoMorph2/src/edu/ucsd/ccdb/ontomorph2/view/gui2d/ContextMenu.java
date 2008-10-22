@@ -620,12 +620,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				case CTX_ACTION_DELETE:
 					{
 						ival = JOptionPane.showConfirmDialog(frmDialog, "Are you sure you wish to delete " + single.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
-						if (ival == JOptionPane.YES_OPTION) 
+						//if (ival == JOptionPane.YES_OPTION) 
 						{
-							if (!single.delete())
-							{
-								JOptionPane.showMessageDialog(null, "Unable to delete " + single.getName());
-							}
+							single.delete();
 						}
 					}
 					break;

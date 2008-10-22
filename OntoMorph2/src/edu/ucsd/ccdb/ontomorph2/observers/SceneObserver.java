@@ -135,6 +135,7 @@ public class SceneObserver implements Observer {
 			}
 		}
 		
+		/*
 		else if (o instanceof Curve3D)
 		{
 			Curve3D changed = (Curve3D)o;
@@ -154,6 +155,7 @@ public class SceneObserver implements Observer {
 				if (tv != null)	tv.update();
 			}
 		}
+		*/
 
 		else if (o instanceof INeuronMorphologyPart) {
 
@@ -210,6 +212,8 @@ public class SceneObserver implements Observer {
 				tv.detachAllChildren();
 				tv.removeFromParent();
 				t = null;
+				tv = null;			
+				return; //do not execute the update() as usual because the object is null
 			}
 			
 			tv.update();

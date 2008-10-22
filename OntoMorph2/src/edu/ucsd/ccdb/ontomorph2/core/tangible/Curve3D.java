@@ -41,7 +41,6 @@ public class Curve3D extends Tangible{
 	//BezierCurve theCurve = null;
 	float delta = 0.1f;
 	private Vector3f _modelBinormal = null;
-	//OMTVector[] controlPoints = null;
 	Curve morphMLCurve = null;		//this is the real model
 	boolean seeAnchorPoints = false;
 	List<CurveAnchorPoint> anchors = null;
@@ -57,6 +56,20 @@ public class Curve3D extends Tangible{
 		setControlPoints(controlPoints);
 	}
 
+	
+	@Override
+	public boolean delete() 
+	{
+		
+		anchors = null; //clear the anchor points
+		morphMLCurve = null;
+		theCurve = null;
+		
+		// TODO Auto-generated method stub
+		return super.delete();
+	}
+	
+	
 	public Curve3D(Curve curve) {
 		super(curve.getName());
 		morphMLCurve = curve;
@@ -454,10 +467,6 @@ public class Curve3D extends Tangible{
 	
 	public boolean removeControlPoint(int index)
 	{
-		if (true) return true;
-		
-		if (getControlPoints().length > 2)
-		{
 			OMTVector modpoints[] = new OMTVector[getControlPoints().length-1];
 			
 			//copy over the points that preceed the index-to-remove
@@ -483,9 +492,6 @@ public class Curve3D extends Tangible{
 			}
 			
 			return true;
-		}		
-		
-		return true;
 	}
 	
 	
