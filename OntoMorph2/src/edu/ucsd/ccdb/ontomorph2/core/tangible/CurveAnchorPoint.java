@@ -37,29 +37,11 @@ public class CurveAnchorPoint extends Tangible {
 		//return (parentCurve.removeControlPoint(this.i) && super.delete());
 		
 	}
-	
-	
-	/**
-	 * 
-	
-	public PositionVector move(float dx, float dy, int mx, int my)
-	{
-		PositionVector p = super.move(dx, dy, mx, my);
-		//parentCurve.setControlPoint(this.i, this.getRelativePosition());
-		return p;
-	}
-	*/
-	
+		
 	//update the position of the line and the cells
 	public void execPostManipulate(Tangible target)
 	{
-		
 		this.parentCurve.reapply();
-		
-		for ( NeuronMorphology cell: this.parentCurve.getChildrenCells())
-		{
-			cell.positionAlongCurve(cell.getCurve(), cell.getTime());
-		}
 	}
 	
 	public PositionVector getDeltafromCenter()
@@ -114,20 +96,4 @@ public class CurveAnchorPoint extends Tangible {
 	public void scale(float dx, float dy, OMTVector constraint) {
 		//CurveAnchorPoints shouldn't scale
 	}
-	
-	public String getName()
-	{
-		String info="";
-		info = super.getName();
-		
-		if (info == null || info == "")
-		{
-			return "P" + this.i + " of " + this.getParentCurve().getName();
-		}
-		return info;	//if it has a name return it
-	}
-	
-	
-	
-
 }

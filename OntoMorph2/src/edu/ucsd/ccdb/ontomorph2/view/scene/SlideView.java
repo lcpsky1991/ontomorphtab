@@ -49,9 +49,10 @@ public class SlideView extends TangibleView {
 			t = new Texture();
 			t.setMipmapState(Texture.MM_LINEAR);
 			t.setImage(((TiledSlide)getSlide()).getImage());
-		} else {
-			t = TextureManager.loadTexture(((Slide)getSlide()).getBufferedImage(), 
-						Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, 1, true);
+		} 
+		else 
+		{
+			t = TextureManager.loadTexture( getSlide().getBufferedImage(), Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, 1, true);
 		}
 		
 		textureState.setTexture(t);

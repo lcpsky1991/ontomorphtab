@@ -124,7 +124,6 @@ public class DefaultScene extends Scene{
 					//CellInstance ci = (CellInstance)it2.next();
 					//NeuronMorphology instance = new NeuronMorphology(p.getCellType());
 					NeuronMorphology instance = new NeuronMorphology(p.getCellType(), ci);
-					
 
 					this.addSceneObject(instance);	
 				}
@@ -490,7 +489,7 @@ public class DefaultScene extends Scene{
 		
 		//mesh.loadMaxFile("etc/mito/mito_outer.3ds");
 		//mesh.setRelativePosition(new PositionVector(0.49f, -3.5f, 20.01f));
-		mesh.setPosition(new PositionVector(0.49f, -3.3f, 20.01f));
+		mesh.setPosition(new PositionVector(276f, -113, -176f));
 		mesh.setRotation(new RotationQuat(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
 		mesh.setScale(0.0002f);
 		
@@ -498,7 +497,7 @@ public class DefaultScene extends Scene{
 		
 		mito2 = new DataMesh(mito2ObjURL);
 		
-		mito2.setPosition(new PositionVector(0.49f, -3.3f, 20.03f));
+		mito2.setPosition(new PositionVector(279f, -113f, -176f));
 		mito2.setRotation(new RotationQuat(FastMath.DEG_TO_RAD*90, OMTVector.UNIT_X));
 		mito2.setScale(0.0002f);
 		

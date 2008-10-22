@@ -19,6 +19,7 @@ import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.CellFactory;
+import edu.ucsd.ccdb.ontomorph2.core.scene.DefaultScene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.DemoScene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleFactory;
@@ -75,7 +76,7 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	public static final String strMNU_MANI_PICK = "Pick";
 	public static final String strMNU_MANI_NONE = "Pan Camera";
 	public static final String strMNU_MANI_SCALE = "Re-Scale";
-	public static final String strMNU_DEBUG_TEST = "Test DB";
+	public static final String strMNU_DEBUG_TEST = "Debug - Misc";
 	public static final String strNEW_CELL_A = CellFactory.TYPE_CELL_DG_A;
 	public static final String strNEW_CELL_B = CellFactory.TYPE_CELL_PYR_CA3_A;
 	public static final String strNEW_CELL_DISK = "From Disk...";
@@ -403,8 +404,9 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	 */
 	private void debug()
 	{
-		View.getInstance().getView3D().setLightCombineMode(LightState.OFF);
-		
+		DefaultScene s = (DefaultScene)View.getInstance().getScene();
+		s.loadFunStuff();
+		s.changed(Scene.CHANGED_MESHES);
 	}
 	
 }

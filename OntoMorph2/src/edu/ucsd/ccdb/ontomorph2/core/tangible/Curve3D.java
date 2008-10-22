@@ -52,8 +52,6 @@ public class Curve3D extends Tangible{
 		morphMLCurve = new CurveImpl();
 		morphMLCurve.setName(name);
 		morphMLCurve.setId(new BigInteger(12, rand));
-		
-
 		setControlPoints(controlPoints);
 	}
 
@@ -67,7 +65,6 @@ public class Curve3D extends Tangible{
 		{
 			cell.setCurve(null);
 		}
-
 		return super.delete();
 	}
 	
@@ -345,6 +342,13 @@ public class Curve3D extends Tangible{
 		{
 			setControlPoint(p.getIndex(), p.getPosition());
 		}
+		
+		//update the cells, too
+		for ( NeuronMorphology cell: getChildrenCells())
+		{
+			cell.positionAlongCurve(cell.getCurve(), cell.getTime());
+		}
+		
 		
 	}
 	

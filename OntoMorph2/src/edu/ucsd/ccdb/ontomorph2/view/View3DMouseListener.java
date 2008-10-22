@@ -257,7 +257,7 @@ public class View3DMouseListener implements MouseInputListener {
 			if (targets.size() > 0)	ontop = targets.get(0);
 			
 			//Execute code for post-dragging of anchorpionts
-			if (last instanceof CurveAnchorPoint)
+			if (last != null)
 			{
 				last.execPostManipulate(ontop);
 			}

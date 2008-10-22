@@ -107,10 +107,21 @@ public class Slide extends Tangible {
 		
 		URL madeURL = null;
 		String s = null;
+		
+		//first make a string-URL based on what was input
 		try 
 		{
 			madeURL = new URL(url);
-			s = madeURL.getPath();
+			
+			//if that string-URL was a local or relative path, trim off the beginning
+			if ( madeURL.getProtocol().equals("file"))
+			{
+				s = madeURL.getPath();
+			}
+			else
+			{
+				s = madeURL.toString();
+			}
 		} 
 		catch (MalformedURLException e) 
 		{
@@ -166,14 +177,15 @@ public class Slide extends Tangible {
 	public BufferedImage getBufferedImage() {
 //		load image
 		BufferedImage bufImg = null;
+		
 		try 
 		{
-			
-			if (this.resolveURL() != null) 
+			URL imgloc = this.resolveURL();
+			if (imgloc != null) 
 			{
 				//append the current working directory to the front of the filename?
 				//if its on the web load this way
-				bufImg = ImageIO.read(resolveURL());
+				bufImg = ImageIO.read(imgloc);
 			}
 			else
 			{

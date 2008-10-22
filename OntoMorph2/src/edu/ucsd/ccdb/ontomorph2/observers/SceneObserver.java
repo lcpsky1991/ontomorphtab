@@ -75,6 +75,11 @@ public class SceneObserver implements Observer {
 				msg = "reloading part (all)";
 				reloadAll(scene);
 			}
+			else if ( arg.equals(Scene.CHANGED_MESHES))
+			{
+				msg = "reloading meshes";
+				_view.getView3D().setMeshes(scene.getMeshes());
+			}
 			else if (arg.equals(Scene.CHANGED_SLIDE))
 			{
 				//System.out.println("reloading slides");
