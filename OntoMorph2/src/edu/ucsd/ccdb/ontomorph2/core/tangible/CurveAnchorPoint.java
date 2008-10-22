@@ -33,7 +33,9 @@ public class CurveAnchorPoint extends Tangible {
 	
 	public boolean delete()
 	{
-		return (parentCurve.removeControlPoint(this.i) && super.delete());
+		return (parentCurve.removeControlPoint(this.i));
+		//return (parentCurve.removeControlPoint(this.i) && super.delete());
+		
 	}
 	
 	

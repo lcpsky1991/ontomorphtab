@@ -131,31 +131,10 @@ public class SceneObserver implements Observer {
 			        .getInstance().getTangibleViewFor((BrainRegion) o);
 				} 
 				
-				brv.update();
+				//brv.update(); //will be called as the code falls-through to Tangible case
 			}
 		}
 		
-		/*
-		else if (o instanceof Curve3D)
-		{
-			Curve3D changed = (Curve3D)o;
-			TangibleView tv = null; //used for updating 
-
-			//changed.reapply(); //recalculate the curve
-			
-			//now update the anchorpoint itself
-			tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
-			if ( tv != null) tv.update();	//update the anchorpoint
-			
-			//update the cells on this curve
-			for ( NeuronMorphology c: changed.getChildrenCells())
-			{
-				c.positionAlongCurve(c.getCurve(), c.getTime());
-				tv = TangibleViewManager.getInstance().getTangibleViewFor(c);
-				if (tv != null)	tv.update();
-			}
-		}
-		*/
 
 		else if (o instanceof INeuronMorphologyPart) {
 
@@ -175,9 +154,19 @@ public class SceneObserver implements Observer {
 				}
 			}
 		}
+		else if (o instanceof Slide)
+		{
+			SlideView sv = (SlideView) TangibleViewManager.getInstance().getTangibleViewFor((Slide)o);
+			
+			if ( sv != null && Tangible.CHANGED_COLOR.equals(arg))
+			{
+				sv.redrawTexture();
+			}
+		}
+		
 		
 		//catch all method for any leftover tangibles
-		else if (o instanceof Tangible)
+		if (o instanceof Tangible)
 		{
 			//System.out.println("tangible sceneobserver");
 			Tangible t = (Tangible)o;
@@ -211,25 +200,15 @@ public class SceneObserver implements Observer {
 				TangibleViewManager.getInstance().removeTangibleView(tv);
 				tv.detachAllChildren();
 				tv.removeFromParent();
-				t = null;
-				tv = null;			
-				return; //do not execute the update() as usual because the object is null
+				//t = null;
+				//tv = null;			
+				//return; //do not execute the update() as usual because the object is null
 			}
 			
 			tv.update();
 		}
 		
 		
-		if (o instanceof Slide)
-		{
-			SlideView sv = (SlideView) TangibleViewManager.getInstance().getTangibleViewFor((Slide)o);
-			
-			if ( sv != null && Tangible.CHANGED_COLOR.equals(arg))
-			{
-				sv.redrawTexture();
-			}
-			
-		}
 		
 		//probably good to do this on every change
 		//_view.getView3D().updateRoot(); //commented out to drasticly improve curve reloading performance

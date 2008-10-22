@@ -14,6 +14,7 @@ import org.morphml.metadata.schema.impl.CurveImpl;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
+import com.jme.system.JmeException;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
@@ -60,17 +61,19 @@ public class Curve3D extends Tangible{
 	@Override
 	public boolean delete() 
 	{
-		
-		anchors = null; //clear the anchor points
-		morphMLCurve = null;
-		theCurve = null;
-		
-		// TODO Auto-generated method stub
+		//dis-associate the cells
+		//make free-floating all of the cells that were on this curve
+		for (NeuronMorphology cell: getChildrenCells())
+		{
+			cell.setCurve(null);
+		}
+
 		return super.delete();
 	}
 	
 	
-	public Curve3D(Curve curve) {
+	public Curve3D(Curve curve)
+	{
 		super(curve.getName());
 		morphMLCurve = curve;
 		setControlPoints(morphMLCurve.getPoint());
@@ -239,7 +242,15 @@ public class Curve3D extends Tangible{
 	private CatmullRomCurve copyBezierCurve()
 	{
 		//BezierCurve copy = new BezierCurve(this.getName(), this.controlPoints);
-		CatmullRomCurve copy = new CatmullRomCurve(this.getName(), getControlPoints());
+		CatmullRomCurve copy = null;
+		try
+		{
+			copy = new CatmullRomCurve(this.getName(), getControlPoints());	
+		}
+		catch(JmeException err)
+		{
+			copy = new CatmullRomCurve(this.getName(), null);
+		}
 
 		return copy;
 	}
@@ -310,8 +321,8 @@ public class Curve3D extends Tangible{
 	 */
 	public PositionVector getPoint(float time) 
 	{
-		if (time <= 0 ) time = 0.00001f;
-		if (time >= 1 ) time = 0.99999f;
+		if (time <= 0 ) time = 0.0000001f;
+		if (time >= 1 ) time = 0.9999999f;
 		return new PositionVector(getCurve().getPoint(time));
 	}
 
@@ -402,7 +413,8 @@ public class Curve3D extends Tangible{
 		changed();
 	}
 	
-	public void save() {
+	public void save() 
+	{
 		DataRepository.getInstance().saveFileToDB(morphMLCurve);
 	}
 	
@@ -459,14 +471,13 @@ public class Curve3D extends Tangible{
 		curr.changed();
 		
 		return curr;	//return the reference tot he most recently created anchor point so that it may be selected or otherwise manipulated
-		//update the scene
-		//changed();
-		
 	}
 	
 	
 	public boolean removeControlPoint(int index)
 	{
+		if ( getControlPoints().length > 2)
+		{
 			OMTVector modpoints[] = new OMTVector[getControlPoints().length-1];
 			
 			//copy over the points that preceed the index-to-remove
@@ -488,10 +499,11 @@ public class Curve3D extends Tangible{
 			for (int i=0; i < getControlPoints().length; i++)
 			{
 				anchors.get(i).i = i;
-				Log.warn(i + ":" + anchors.get(i).getIndex());
 			}
 			
 			return true;
+		}
+		return false;	//unable to delete control points if there are less than or equal to 2
 	}
 	
 	
@@ -516,7 +528,7 @@ public class Curve3D extends Tangible{
 		
 		for (int i=0; i < anchors.size(); i++)
 		{
-			anchors.get(i).select();
+			//anchors.get(i).select(); //dont select the anchor points
 		}
 		//puts the curve as the most recently selected item		
 		TangibleManager.getInstance().setMultiSelect(ms);	//restore multiselect to however it was befpre
@@ -530,7 +542,7 @@ public class Curve3D extends Tangible{
 		{
 			anchors.get(i).unselect();
 		}
-		reapply();
+		//reapply();
 	}
 
 	public Curve getMorphMLCurve() {
