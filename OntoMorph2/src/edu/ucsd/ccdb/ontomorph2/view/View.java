@@ -375,67 +375,7 @@ public class View extends BaseSimpleGame {
 	public Node getMainViewRootNode() {
 		return rootNode;
 	}
-	
-	public boolean indicator(Vector3f location){
-		boolean state = false;
 		
-		/*Sphere s = new Sphere("Sphere", location,30,30,2);
-		s.setModelBound(new BoundingSphere());
-        s.updateModelBound();
-
-		rootNode.attachChild(s);
-		
-	    pPoints.setPointSize(10);
-	    pPoints.setAntialiased(true);
-	    pPoints.setEmissionDirection(new Vector3f(0, 1, 0));
-	    pPoints.setOriginOffset(location);
-	    pPoints.setInitialVelocity(.006f);
-	    
-	    rootNode.attachChild(pPoints);*/
-		AlphaState as1 = display.getRenderer().createAlphaState();
-	    as1.setBlendEnabled(true);
-	    as1.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-	    as1.setDstFunction(AlphaState.DB_ONE);
-	    as1.setTestEnabled(true);
-	    as1.setTestFunction(AlphaState.TF_GREATER);
-	    as1.setEnabled(true);
-
-	    TextureState ts = display.getRenderer().createTextureState();
-	    ts.setTexture(
-	        TextureManager.loadTexture(
-	        jmetest.effects.TestParticleSystem.class.getClassLoader().getResource(
-	        "jmetest/data/texture/flaresmall.jpg"),
-	        Texture.MM_LINEAR_LINEAR,
-	        Texture.FM_LINEAR));
-	    ts.setEnabled(true);
-
-	    pMesh = ParticleFactory.buildParticles("particles", 500);
-	    pMesh.setOriginOffset(location);
-	    pMesh.setEmissionDirection(new Vector3f(0,1,0));
-	    pMesh.setInitialVelocity(.006f);
-	    pMesh.setStartSize(2.5f);
-	    pMesh.setEndSize(2.5f);
-	    pMesh.setMinimumLifeTime(1200f);
-	    pMesh.setMaximumLifeTime(1400f);
-	    pMesh.setStartColor(new ColorRGBA(1, 1, 1, 1));
-	    pMesh.setEndColor(new ColorRGBA(0, 1, 1, 0));
-	    pMesh.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
-	    pMesh.getParticleController().setControlFlow(false);
-	    pMesh.warmUp(60);
-	    rootNode.setRenderState(ts);
-	    rootNode.setRenderState(as1);
-	                ZBufferState zstate = display.getRenderer().createZBufferState();
-	                zstate.setEnabled(false);
-	                pMesh.setRenderState(zstate);
-	    pMesh.setModelBound(new BoundingSphere());
-	    pMesh.updateModelBound();
-
-	    rootNode.attachChild(pMesh);
-	    
-	    return state;
-	}
-	
-	
 }
 
 
