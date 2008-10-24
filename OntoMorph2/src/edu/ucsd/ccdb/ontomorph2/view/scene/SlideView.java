@@ -108,6 +108,7 @@ public class SlideView extends TangibleView
 	@Override
 	public void doHighlight() 
 	{
+	
 		// TODO Auto-generated method stub
 		/*
 		Vector3f cen = (this.getModel().getPosition().asVector3f()); //put the box in the right place
@@ -128,23 +129,23 @@ public class SlideView extends TangibleView
         //==== Create the color
          * 
          */
-        ColorRGBA clrSel = TangibleViewManager.highlightSelectedColor;
-        clrSel.a = 0.55f; //adjust the alpha to be less than usual
+        //ColorRGBA clrSel = TangibleViewManager.highlightSelectedColor;
+        //clrSel.a = 0.55f; //adjust the alpha to be less than usual
         //bound.setSolidColor(clrSel);
 		//
         
         //=== Create the mnaterial state
-        MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer().createMaterialState();
+        //MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer().createMaterialState();
 		//ms.setEmissive(clrSel);
 		//ms.setDiffuse(clrSel);
 		//ms.setAmbient(clrSel);
-		ms.setSpecular(clrSel);
-		ms.setEnabled(true);
+		//ms.setSpecular(clrSel);
+		//ms.setEnabled(true);
 		//ms.setColorMaterial(MaterialState.;
 		//ms.setColorMaterial(MaterialState.CM_EMISSIVE);
-		ms.setMaterialFace(MaterialState.MF_FRONT_AND_BACK);
-		this.setRenderState(ms);
-		this.updateRenderState();
+		//ms.setMaterialFace(MaterialState.MF_FRONT_AND_BACK);
+		//this.setRenderState(ms);
+		//this.updateRenderState();
 		
         //===== set the alpha state
        
@@ -168,10 +169,11 @@ public class SlideView extends TangibleView
 	@Override
 	public void doUnhighlight() 
 	{
-		// TODO Auto-generated method stub
-		nEffects.detachAllChildren();
 		
-		this.setRenderState(null);
-		this.updateRenderState();
+		// TODO Auto-generated method stub
+		//nEffects.detachAllChildren();
+		
+		//this.setRenderState(null);
+		//this.updateRenderState();
 	}
 }
