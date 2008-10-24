@@ -19,6 +19,7 @@ import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 public abstract class TangibleView extends Node 
 {
 	private Tangible model = null;
+	Node nEffects = new Node("effects");	//for cursor over, highlighting, animation, etc
 	
 //	==============================
 //	 Picking Constants
@@ -38,8 +39,13 @@ public abstract class TangibleView extends Node
 		super("Tangible View for " + model.getName());
 		this.setModel(model);
 		pickPriority = P_UNKNOWN;
+		
 		//register this instance with the TangibleViewManager
 		TangibleViewManager.getInstance().addTangibleView(this);
+		
+		//add the effects node to this
+		this.attachChild(nEffects);
+		
 	}
 	/**
 	 * Sets the model that corresponds to this TangibleView

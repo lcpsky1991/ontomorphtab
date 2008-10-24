@@ -68,6 +68,12 @@ public class Curve3D extends Tangible{
 		return super.delete();
 	}
 	
+	@Override
+	public PositionVector getPosition() 
+	{
+		// TODO Auto-generated method stub
+		return this.getCenterPoint();
+	}
 	
 	public Curve3D(Curve curve)
 	{

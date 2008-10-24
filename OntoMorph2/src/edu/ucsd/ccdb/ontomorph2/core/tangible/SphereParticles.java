@@ -9,13 +9,11 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 
 
 
-public class SphereParticles extends Tangible {
-	SphereParticles particles = null;
-	private DisplaySystem display = null;
-	ParticleMesh pMesh;
-	Quad quad;
+public class SphereParticles extends Tangible 
+{
 	
-	public SphereParticles(String name, Vector3f position) {
+	public SphereParticles(String name, Vector3f position) 
+	{
 		super(name);
 		this.setPosition(new PositionVector(position));
 	}

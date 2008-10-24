@@ -315,6 +315,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				//build slide special menu
 				menuItemFactory(mnuNew_Cell, "DG Cell", CTX_ACTION_NEW_CELLE);
 				menuItemFactory(mnuNew_Cell, "From Disk...", CTX_ACTION_NEW_CELL);
+			}
+			if (baseContext instanceof Slide)
+			{
 				menuItemFactory(mnuModify, "Change URL", CTX_ACTION_SETURL);
 			}
 			

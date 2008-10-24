@@ -184,7 +184,7 @@ public class SceneObserver implements Observer {
 			
 			if (tv == null) 
 			{
-				Log.warn(("TV for " + t.getName() + " not found"));
+				//Log.warn(("TV for " + t.getName() + " not found"));
 				return; 
 			}
 			

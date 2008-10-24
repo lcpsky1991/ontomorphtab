@@ -1,8 +1,11 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
+import java.awt.Canvas;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import javax.swing.JFrame;
 
 import org.fenggui.background.PlainBackground;
 import org.fenggui.event.IMenuItemPressedListener;
@@ -11,9 +14,15 @@ import org.fenggui.menu.Menu;
 import org.fenggui.menu.MenuItem;
 import org.fenggui.util.Color;
 import org.fenggui.util.Point;
+import org.lwjgl.LWJGLException;
 import org.morphml.neuroml.schema.XWBCSlide;
 
 import com.jme.scene.state.LightState;
+import com.jme.system.DisplaySystem;
+import com.jme.system.lwjgl.LWJGLDisplaySystem;
+import com.jmex.awt.JMECanvas;
+import com.jmex.awt.SimpleCanvasImpl;
+import com.jmex.awt.lwjgl.LWJGLCanvas;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
@@ -404,9 +413,24 @@ public class MenuBar extends org.fenggui.menu.MenuBar implements IMenuItemPresse
 	 */
 	private void debug()
 	{
-		DefaultScene s = (DefaultScene)View.getInstance().getScene();
-		s.loadFunStuff();
-		s.changed(Scene.CHANGED_MESHES);
+		//DefaultScene s = (DefaultScene)View.getInstance().getScene();
+		//s.loadFunStuff();
+		//s.changed(Scene.CHANGED_MESHES);
+		
+		//checking for Canvas for Volumentric rendering
+
+		
+		LWJGLCanvas glCanvas = null;
+		
+		//initialize
+		glCanvas = OntoMorph2.getCanvas();
+		glCanvas.setSize(200,200);
+		
+		
+		System.out.println("canvas is " + glCanvas);
+		
+		//now display it
+		
 	}
 	
 }

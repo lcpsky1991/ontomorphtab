@@ -11,7 +11,6 @@ import com.jme.input.FirstPersonHandler;
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
 import com.jme.light.PointLight;
-import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -21,11 +20,9 @@ import com.jme.scene.shape.Cone;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
-import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.PropertiesIO;
-import com.jme.util.TextureManager;
 import com.jme.util.geom.Debugger;
 import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleMesh;
@@ -44,7 +41,8 @@ import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  * @author caprea
  */
-public class View extends BaseSimpleGame {
+public class View extends BaseSimpleGame 
+{
 	
 	private static View instance = null;
 	private Scene _scene = null;
@@ -66,7 +64,6 @@ public class View extends BaseSimpleGame {
 	
 	FengJMEInputHandler guiInput;
 	ParticlePoints pPoints = ParticleFactory.buildPointParticles("particles", 50); 
-	private ParticleMesh pMesh;
 	/**
 	 * Returns the singleton instance.
 	 @return	the singleton instance
@@ -108,9 +105,12 @@ public class View extends BaseSimpleGame {
 	}
 
 	
-	protected void simpleInitGame() {
+	protected void simpleInitGame() 
+	{
 		this.viewNode = new ViewCamera();
 		this.cam = viewNode.getCamera();
+		
+		display.setTitle("Whole Brain Catalog");
 		
 		rootNode.attachChild(viewNode);
 		
@@ -119,17 +119,7 @@ public class View extends BaseSimpleGame {
 		  
 		OntoMorph2.initialization();
 		display.getRenderer().setBackgroundColor(ColorRGBA.black); //Set a black background.
-		
-		//ugly hack
-		if ("demo".equals(OntoMorph2.getWBCProperties().getProperty(OntoMorph2.SCENE))) 
-		{
-			display.setTitle("Spatial and Semantic Representations");
-		}
-		else 
-		{
-			display.setTitle("Whole Brain Catalog");
-		}
-		
+				
 		rootNode.attachChild(view3D);
 
 		//Remove lighting for rootNode so that it will use our basic colors
@@ -259,7 +249,7 @@ public class View extends BaseSimpleGame {
 	    wand.updateRenderState();
 	    
     	rootNode.attachChild(debugRay);
-    	rootNode.attachChild(wand);
+    	//rootNode.attachChild(wand);
     	
      }
      
@@ -295,7 +285,8 @@ public class View extends BaseSimpleGame {
      *            unused in this implementation
      * @see AbstractGame#render(float interpolation)
      */
-    protected final void render(float interpolation) {
+    protected final void render(float interpolation) 
+    {
         super.render(interpolation);
        
         this.getCameraView().getCamera().update();
