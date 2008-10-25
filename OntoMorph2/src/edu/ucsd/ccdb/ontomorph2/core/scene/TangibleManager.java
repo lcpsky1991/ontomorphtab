@@ -161,7 +161,6 @@ public class TangibleManager {
 		Set<SphereParticles> particles = new HashSet<SphereParticles>();
 		for (Tangible t : this.tangibles) {
 			if (t instanceof SphereParticles) {
-				System.out.println(" t instance of speherparticels");
 				particles.add((SphereParticles)t);
 			}
 		}

@@ -149,7 +149,6 @@ public class TangibleFactory
 	 */
 	public SphereParticles createParticles(String name, Vector3f location)
 	{
-		System.out.println("create Particles");
 		SphereParticles particles = new SphereParticles(name, location);
 		particles.setColor(java.awt.Color.blue);
 		particles.setVisible(true);

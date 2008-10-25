@@ -269,8 +269,7 @@ public class View2D extends Display{
 
 
 	public void loadBasicSearchBox() {
-		if (basicSearch == null) {
 			basicSearch = new BasicSearchWidget(this);
-		}
+
 	}
 }

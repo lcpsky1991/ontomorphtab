@@ -81,38 +81,38 @@ private AlphaState getAlphaState(){
 		return ts;
 	}
 	private void init() {
-		this.detachChild(pMesh);
+		this.detachChild(this.pMesh);
 	
+		System.out.println("init");
 		TextureState st = getTextureState();
 		//System.out.println("init");
-		pMesh = ParticleFactory.buildParticles("particles", 500);
-	    pMesh.setOriginOffset(particles.getPosition());
-	    pMesh.setEmissionDirection(new Vector3f(0,1,0));
-	    pMesh.setInitialVelocity(.006f);
-	    pMesh.setStartSize(2.5f);
-	    pMesh.setEndSize(2.5f);
-	    pMesh.setMinimumLifeTime(1200f);
-	    pMesh.setMaximumLifeTime(1400f);
-	    pMesh.setStartColor(new ColorRGBA(1, 1, 1, 1));
-	    pMesh.setEndColor(new ColorRGBA(0, 1, 1, 0));
-	    pMesh.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
-	    pMesh.getParticleController().setControlFlow(false);
-	    pMesh.warmUp(60);
+		this.pMesh = ParticleFactory.buildParticles("particles", 500);
+	    this.pMesh.setOriginOffset(particles.getPosition());
+	    this.pMesh.setEmissionDirection(new Vector3f(0,1,0));
+	    this.pMesh.setInitialVelocity(.006f);
+	    this.pMesh.setStartSize(2.5f);
+	    this.pMesh.setEndSize(2.5f);
+	    this.pMesh.setMinimumLifeTime(1200f);
+	    this.pMesh.setMaximumLifeTime(1400f);
+	    this.pMesh.setStartColor(new ColorRGBA(1, 1, 1, 1));
+	    this.pMesh.setEndColor(new ColorRGBA(0, 1, 1, 0));
+	    this.pMesh.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
+	    this.pMesh.getParticleController().setControlFlow(false);
+	    this.pMesh.warmUp(60);
 	    this.setRenderState(st);
 	    this.setRenderState(getAlphaState());
 	                ZBufferState zstate = DisplaySystem.getDisplaySystem().getRenderer().createZBufferState();
 	                zstate.setEnabled(false);
-	                pMesh.setRenderState(zstate);
-	    pMesh.setModelBound(new BoundingSphere());
-	    pMesh.updateModelBound();
+	                this.pMesh.setRenderState(zstate);
+	    this.pMesh.setModelBound(new BoundingSphere());
+	    this.pMesh.updateModelBound();
 	    
 //		update the geometries registry, this is neccessary to enable picking, which is based on geomtry key maps
 
-		
-	    this.registerGeometry(pMesh);
-	    this.attachChild(pMesh);
+	    this.registerGeometry(this.pMesh);
+	    this.attachChild(this.pMesh);
+	    this.updateRenderState();
 
-		this.updateRenderState();
 		//this.update();
 	}
 	

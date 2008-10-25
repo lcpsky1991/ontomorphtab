@@ -26,6 +26,7 @@ import org.fenggui.event.ISelectionChangedListener;
 import org.fenggui.event.SelectionChangedEvent;
 import org.fenggui.layout.BorderLayout;
 import org.fenggui.layout.RowLayout;
+import org.fenggui.layout.StaticLayout;
 import org.fenggui.render.Pixmap;
 import org.fenggui.text.TextView;
 import org.fenggui.util.Color;
@@ -165,7 +166,6 @@ public class BasicSearchWidget extends Widget{
  				item.setText(checkBoxSelection);
  				item.setPixmap(pixmap);
  				TangibleFactory.getInstance().createParticles(checkBoxSelection,regions.get(checkBoxSelection));
- 				System.out.println("TangibleManager.getInstance().getParticles() +++ sdfsdfsdfsd");
  			}
  		}
  		

@@ -75,6 +75,8 @@ public class SceneObserver implements Observer {
 			}
 			else if (arg.equals(Scene.CHANGED_PART))
 			{
+				System.out.println("reload all");
+
 				msg = "reloading part (all)";
 				reloadAll(scene);
 			}
@@ -109,7 +111,6 @@ public class SceneObserver implements Observer {
 		
 		else if (o instanceof BrainRegion)
 		{
-			System.out.println("inside o instanceof brainregion");
 			BrainRegionView brv = (BrainRegionView) TangibleViewManager
 			        .getInstance().getTangibleViewFor((BrainRegion) o);
 			if (Tangible.CHANGED_VISIBLE.equals(arg))
@@ -157,7 +158,8 @@ public class SceneObserver implements Observer {
 		}
 		
 
-		/*else if (o instanceof SphereParticles){
+		else if (o instanceof SphereParticles){
+
 			if(Tangible.CHANGED_VISIBLE.equals(arg)){
 				System.out.println(" o instanceof SphereParticles");
 				TangibleView tv = null;
@@ -167,12 +169,13 @@ public class SceneObserver implements Observer {
 					tv.update();
 				}
 			}
-		}*/
+		}
 
 
 		//catch all method for any leftover tangibles
 		if (o instanceof Tangible)
 		{
+
 			//System.out.println("tangible sceneobserver");
 			Tangible t = (Tangible)o;
 			
@@ -201,6 +204,7 @@ public class SceneObserver implements Observer {
 			//remove ttangible
 			if (Tangible.CHANGED_DELETE.equals(arg))
 			{
+
 				TangibleManager.getInstance().removeTangible(t);
 				TangibleViewManager.getInstance().removeTangibleView(tv);
 				tv.detachAllChildren();
@@ -248,13 +252,13 @@ public class SceneObserver implements Observer {
 
 	public void reloadAll(Scene s)
 	{
-		
 		_view.getView3D().setSlides(s.getSlides());
 		_view.getView3D().setVolumes(s.getVolumes());
 		_view.getView3D().setCells(s.getCells());
 		_view.getView3D().setCurves(s.getCurves());
 		_view.getView3D().setSurfaces(s.getSurfaces());
 		_view.getView3D().setMeshes(s.getMeshes());
+		_view.getView3D().addParticles(s.getParticles());
 		setCamera(s);
 		_view.getView3D().updateNode(_view.getView3D());
 	}

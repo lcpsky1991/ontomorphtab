@@ -317,7 +317,6 @@ public class View3DMouseListener implements MouseInputListener {
 		//get the tangible picked
 		ArrayList<Tangible> pickedlist = psuedoPick(KeyInput.get().isControlDown(), true);   
 		
-		System.out.println(pickedlist + " pickedlist");
 		boolean shift = KeyInput.get().isShiftDown();
 		
 		//enable multiselect if shift is down
@@ -331,7 +330,6 @@ public class View3DMouseListener implements MouseInputListener {
 		}
 		else if (pickedlist.size() > 0)
 		{			
-			System.out.println(" pickedlist is bigger than zero");
 			pickedlist.get(0).select();	//select the closest one
 		}
 		

@@ -24,9 +24,7 @@ import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.PropertiesIO;
 import com.jme.util.geom.Debugger;
-import com.jmex.effects.particles.ParticleFactory;
-import com.jmex.effects.particles.ParticleMesh;
-import com.jmex.effects.particles.ParticlePoints;
+
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
@@ -63,7 +61,6 @@ public class View extends BaseSimpleGame
 	private OMTKeyInputListener OMTKeyListener;
 	
 	FengJMEInputHandler guiInput;
-	ParticlePoints pPoints = ParticleFactory.buildPointParticles("particles", 50); 
 	/**
 	 * Returns the singleton instance.
 	 @return	the singleton instance
@@ -322,7 +319,6 @@ public class View extends BaseSimpleGame
      */
     protected final void update(float interpolation) {
         super.update(interpolation);
-        pPoints.getParticleController().update(interpolation);
 
         if ( !pause ) {
             /** Call simpleUpdate in any derived classes of SimpleGame. */

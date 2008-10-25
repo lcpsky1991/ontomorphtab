@@ -43,7 +43,7 @@ public class SphereParticles extends Tangible{
 	public void select()
 	{
 		super.select();
-		if(this.isVisible()){
+		/*if(this.isVisible()){
 			this.setVisible(false);
 			previousSelected = this;
 		}		
@@ -52,9 +52,9 @@ public class SphereParticles extends Tangible{
 			//previousSelected = selected.getSelectedRecent();
 			System.out.println(previousSelected.getName());
 			this.previousSelected.setVisible(true);
-		}
+		}*/
 
-		View.getInstance().getCameraView().searchZoomTo(TangibleManager.getInstance().getSelectedRecent().getPosition());
+		View.getInstance().getCameraView().searchZoomTo(this.getPosition());
 	}
 	
 

@@ -171,7 +171,7 @@ public class View3D extends Node{
 	
 	public void addParticles(Set<SphereParticles> particles){
 		//System.out.println("add particles " + particles );
-		//particlesNode.detachAllChildren();
+		particlesNode.detachAllChildren();
 		for(SphereParticles sp: particles){
 			System.out.println("particles" + sp);
 			SphereParticlesView spView = (SphereParticlesView)TangibleViewManager.getInstance().getTangibleViewFor(sp);
