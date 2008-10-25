@@ -3,7 +3,18 @@ package edu.ucsd.ccdb.ontomorph2.view;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
 import org.fenggui.Display;
+import org.fenggui.Label;
+import org.fenggui.layout.ILayoutData;
+import org.fenggui.layout.RowLayout;
+import org.fenggui.layout.StaticLayout;
+import org.fenggui.text.TextView;
+import org.fenggui.util.Color;
+import org.fenggui.util.Point;
+import org.fenggui.util.Spacing;
 
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
@@ -20,9 +31,11 @@ import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.INeuronMorphologyPart;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
@@ -30,6 +43,7 @@ import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.BasicSearchWidget;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.SphereParticlesView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 /**
@@ -63,7 +77,7 @@ public class View3DMouseListener implements MouseInputListener {
 	View v = new View();
 	FengJMEInputHandler guiInput;
 	BasicSearchWidget widget = new BasicSearchWidget();	
-	
+	Tangible rollOver = null, previousRollOver =null;
 	/**
 	 * Seriously, can we set the default to be move for all objects?  It is 
 	 * pretty unintuitive to have to select move from the menu.  
@@ -266,6 +280,10 @@ public class View3DMouseListener implements MouseInputListener {
 	
 	private void onMouseDouble(int buttonIndex)
 	{
+		/*if(recent instanceof SphereParticles){
+			View.getInstance().getCameraView().searchZoomTo(recent.getPosition());
+			System.out.println(" recent is of type " + recent);
+		}*/
 		if (OMT_MBUTTON_LEFT == buttonIndex) //left 
 		{
 			doPick();
@@ -279,6 +297,8 @@ public class View3DMouseListener implements MouseInputListener {
 	 */
 	private void onMouseMove()
 	{	
+		mouseRollOver();
+		//System.out.println(pickedlist + " pickresults");
 		/*
 		 * ca: I can't think of anything that would be appropriate here, except a poem
 		 * 
@@ -297,6 +317,7 @@ public class View3DMouseListener implements MouseInputListener {
 		//get the tangible picked
 		ArrayList<Tangible> pickedlist = psuedoPick(KeyInput.get().isControlDown(), true);   
 		
+		System.out.println(pickedlist + " pickedlist");
 		boolean shift = KeyInput.get().isShiftDown();
 		
 		//enable multiselect if shift is down
@@ -310,6 +331,7 @@ public class View3DMouseListener implements MouseInputListener {
 		}
 		else if (pickedlist.size() > 0)
 		{			
+			System.out.println(" pickedlist is bigger than zero");
 			pickedlist.get(0).select();	//select the closest one
 		}
 		
@@ -358,6 +380,7 @@ public class View3DMouseListener implements MouseInputListener {
 					chosenOne = (Tangible) c;
 				}
 			}
+			
 			else if ( tv != null)
 			{//CATCH ALL case for all other TangibleViews
 				chosenOne = tv.getModel();
@@ -598,5 +621,38 @@ public class View3DMouseListener implements MouseInputListener {
 	{
 		manipulation = m;
 		Log.warn("Manipulation method set to: " + m);
+	}
+	
+	public void mouseRollOver(){
+		ArrayList<Tangible> pickedlist = psuedoPick(KeyInput.get().isControlDown(), true);   
+		if (pickedlist.size() > 0)
+		{			
+			//System.out.println(" pickedlist is bigger than zero");
+			rollOver = pickedlist.get(0).selectRollover();	//select the closest one
+			//System.out.println("rollover " + rollOver);
+			//System.out.println("previousrollover " + this.previousRollOver);
+			//System.out.println("are they equal " + rollOver.equals(this.previousRollOver));
+			if(!(rollOver.equals(this.previousRollOver))){
+				if(rollOver instanceof SphereParticles){
+					createNameTag(rollOver.getName(), rollOver.getPosition());
+				}
+			
+				else{
+					//System.out.println("not sp");
+				}
+			
+				this.previousRollOver = rollOver;
+			}
+		}
+	}
+	
+	//TODO: Create a new class to take care of NameTagLabels and move function there
+	public void createNameTag(String name, Vector3f location){
+		View2D.getInstance().setInfoText(name);
+		/*Label nameTag = new Label(name);
+		System.out.println((int)location.getX() + " x " + ((int)location.getY() + 240));
+		nameTag.setPosition(new Point((int)location.getX(), (int)(location.getY()+ 240)));
+		nameTag.getAppearance().setTextColor(Color.RED );
+		disp.addWidget(nameTag);*/
 	}
 }

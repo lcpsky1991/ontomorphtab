@@ -2,6 +2,7 @@ package edu.ucsd.ccdb.ontomorph2.view;
 
 import com.jme.bounding.BoundingSphere;
 import com.jme.input.InputHandler;
+import com.jme.input.MouseInput;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -312,7 +313,7 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         float distance = points[0].distance(points[1]);
         CatmullRomCurve curve = new CatmullRomCurve("Curve", points);
         
-        Vector3f up = new Vector3f(0.0f,0.1f,0.0f).normalize();
+        Vector3f up = new Vector3f(0.0f,1f,0.0f).normalize();
         CurveOnceController cc = new CurveOnceController(curve, this, objectPosition);
         cc.setActive(false);
         this.addController(cc);

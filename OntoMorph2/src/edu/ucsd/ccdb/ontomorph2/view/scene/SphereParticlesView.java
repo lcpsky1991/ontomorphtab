@@ -1,7 +1,19 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import org.fenggui.Widget;
+import org.fenggui.render.Binding;
+import org.fenggui.render.Cursor;
+import org.fenggui.render.CursorFactory;
+import org.fenggui.text.TextView;
+import org.fenggui.util.Point;
+
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
+import com.jme.input.MouseInput;
+import com.jme.input.MouseInputListener;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -16,16 +28,23 @@ import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleGeometry;
 import com.jmex.effects.particles.ParticleMesh;
 
+import edu.ucsd.ccdb.ontomorph2.core.spatial.ICoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.util.ColorUtil;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
-
+import edu.ucsd.ccdb.ontomorph2.view.gui2d.BasicSearchWidget;
+/**
+ * Creates Texture and Particles to be displayed as search query indicators.
+ * @author jrmartin
+ *
+ */
 public class SphereParticlesView extends TangibleView{
 
 	SphereParticles particles = null;
 	private DisplaySystem display = null;
 	ParticleGeometry pMesh;
 	Quad quad;
+	BasicSearchWidget basic = new BasicSearchWidget();
 	
 	public SphereParticlesView(SphereParticles particles) 
 	{
@@ -62,10 +81,8 @@ private AlphaState getAlphaState(){
 		return ts;
 	}
 	private void init() {
-		//System.out.println(" init sphereparticleview");
-	    if (particles.isVisible()) {
-			this.detachChild(pMesh);
-		}		
+		this.detachChild(pMesh);
+	
 		TextureState st = getTextureState();
 		//System.out.println("init");
 		pMesh = ParticleFactory.buildParticles("particles", 500);
@@ -89,13 +106,13 @@ private AlphaState getAlphaState(){
 	    pMesh.setModelBound(new BoundingSphere());
 	    pMesh.updateModelBound();
 	    
-	    
-	    this.attachChild(pMesh);
-		this.updateRenderState();
-		
 //		update the geometries registry, this is neccessary to enable picking, which is based on geomtry key maps
-		this.registerGeometry(pMesh);
+
 		
+	    this.registerGeometry(pMesh);
+	    this.attachChild(pMesh);
+
+		this.updateRenderState();
 		//this.update();
 	}
 	
@@ -104,14 +121,20 @@ private AlphaState getAlphaState(){
 		System.out.println("display");
 	}
 	
-	@Override
-	public void doHighlight() {
-		// TODO Auto-generated method stub
+	
+	//Will do highlight when Mouse Rollover is on top of SphereParticles
+	public void doHighlight() 
+	{
+		this.pMesh.setStartColor(ColorRGBA.orange);
+		this.pMesh.setStartColor(ColorRGBA.orange);
 	}
 
-	@Override
-	public void doUnhighlight() {
-		// TODO Auto-generated method stub
 
+	//Will do unhighlist when Mouse is not Rollover on top of SphereParticles
+	public void doUnhighlight() 
+	{
+		this.pMesh.setSolidColor(ColorUtil.convertColorToColorRGBA(this.getModel().getColor()));
+		//this.b.setDefaultColor(ColorUtil.convertColorToColorRGBA(((Curve3D)getModel()).getHighlightedColor()));
 	}
+	
 }

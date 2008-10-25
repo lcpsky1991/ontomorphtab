@@ -36,9 +36,11 @@ import edu.ucsd.ccdb.ontomorph2.view.gui2d.TreeNode;
 public class TangibleManager {
 
 	private ArrayList<Tangible> selectedThings = null; 
+	private Tangible selectedRollover = null;
 	ArrayList<Tangible> tangibles = null;
 	MultiHashSetMap tangiblesContainingTangibles = null;
 	boolean multiSelect = false;
+	boolean isRollover = false;
 	MultiHashSetMap tangiblesContainedByTangibles = null;
 	
 	/**
@@ -159,6 +161,7 @@ public class TangibleManager {
 		Set<SphereParticles> particles = new HashSet<SphereParticles>();
 		for (Tangible t : this.tangibles) {
 			if (t instanceof SphereParticles) {
+				System.out.println(" t instance of speherparticels");
 				particles.add((SphereParticles)t);
 			}
 		}
@@ -194,6 +197,12 @@ public class TangibleManager {
 			selectedThings.add(thing);	
 		}
 		Log.warn("Currently selected: " + selectedThings.toString());
+	}
+	
+	public Tangible selectRollover(Tangible thing)
+	{
+			this.selectedRollover = thing;	
+			return this.selectedRollover;
 	}
 	
 	public void setMultiSelect(boolean multi) {

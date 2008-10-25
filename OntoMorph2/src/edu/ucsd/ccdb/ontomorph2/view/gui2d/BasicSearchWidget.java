@@ -1,47 +1,72 @@
 package edu.ucsd.ccdb.ontomorph2.view.gui2d;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.fenggui.Button;
 import org.fenggui.CheckBox;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
+import org.fenggui.Label;
+import org.fenggui.LayoutManager;
 import org.fenggui.List;
 import org.fenggui.ListItem;
 import org.fenggui.ScrollContainer;
+import org.fenggui.SplitContainer;
 import org.fenggui.TextEditor;
 import org.fenggui.Widget;
+import org.fenggui.background.PlainBackground;
 import org.fenggui.composites.Window;
 import org.fenggui.event.ButtonPressedEvent;
 import org.fenggui.event.IButtonPressedListener;
 import org.fenggui.event.ISelectionChangedListener;
 import org.fenggui.event.SelectionChangedEvent;
+import org.fenggui.layout.BorderLayout;
 import org.fenggui.layout.RowLayout;
 import org.fenggui.render.Pixmap;
+import org.fenggui.text.TextView;
+import org.fenggui.util.Color;
 import org.fenggui.util.Point;
 import org.fenggui.util.Spacing;
 
+import com.jme.input.InputHandler;
+import com.jme.input.KeyInput;
+import com.jme.input.MouseInput;
+import com.jme.input.action.KeyInputAction;
+import com.jme.light.PointLight;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 
+import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleFactory;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticInstance;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticQuery;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.ISelectable;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
+import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
 import edu.ucsd.ccdb.ontomorph2.view.View;
+import edu.ucsd.ccdb.ontomorph2.view.View2D;
+import edu.ucsd.ccdb.ontomorph2.view.View3DMouseListener;
 import edu.ucsd.ccdb.ontomorph2.view.ViewCamera;
+import edu.ucsd.ccdb.ontomorph2.view.scene.SphereParticlesView;
 
 /**
  * 2D widget that allows a user to type in keywords and issue a keyword search
  *
- * @author jrmartin
  */
 public class BasicSearchWidget extends Widget{
     
 	private Display d;
-	private String textInput, checkBoxSelection;
+	private TreeNode root;
+	private String textInput, selected, checkBoxSelection;
 	List<Integer> list;
 	ScrollContainer sc; 
+	HashMap<String, Vector3f> regions;
 	Vector3f location,position;
 	ViewCamera view = new ViewCamera();
 	private CheckBox cells, images, brainRegion;
@@ -55,6 +80,8 @@ public class BasicSearchWidget extends Widget{
 		//root = ReferenceAtlas.getInstance().getBrainRegionTree();
 		
 		buildWindowFrame();
+		
+       
 	}
 
 	public BasicSearchWidget() {
@@ -78,6 +105,7 @@ public class BasicSearchWidget extends Widget{
 		window.setTitle("Search Query"); 
 		window.layout();
 		
+		DB();
         final TextEditor textArea = FengGUI.createTextArea(window.getContentContainer());
         //textArea.setText("Enter Keyword");
         textArea.setSize(100, 20);
@@ -112,51 +140,68 @@ public class BasicSearchWidget extends Widget{
 	}
 	
 	
-	public void search(String textInput){
+	public void search(String searchInput){
 		
-		SemanticQuery query = new SemanticQuery();
-		//perform the query and get the results
-		Set<SemanticInstance> results = query.createSimpleQuery(textInput);
+		textInput = searchInput;
 		
-		//initialize the widget
 		list.clear();
         list.setSize(100, 130);
         list.setPosition(new Point(40,00));
-        //populate the widget with the results of the query
-        //also create the 3D representation of the query results with SphereParticles
-        for (SemanticInstance result : results){
-        	ListItem<SemanticInstance> item = FengGUI.createListItem(list);
- 			item.setText(result.getLabel());
- 			item.setValue(result);
+        
+ 		if(regions.containsKey(textInput)){
+ 			ListItem<String> item = FengGUI.createListItem(list);
+ 			item.setText(textInput);
  			item.setPixmap(pixmap);
- 			ISemanticsAware instance = result.getSemanticsAwareAssociation();
- 			if (instance != null && instance instanceof Tangible) {
- 				TangibleFactory.getInstance().createParticles(((Tangible)instance).getPosition());
- 			}
-        }
-        /*
+ 			//slideHide();
+ 			//View.getInstance().indicator(regions.get(textInput));
+ 		}
+
  		if(images.isSelected()){
  			list.clear();
- 			for (String region : regions.keySet()) {
+ 			Iterator i = regions.keySet().iterator();
+ 			while(i.hasNext()) {
  				ListItem<Tangible> item = FengGUI.createListItem(list);
- 				checkBoxSelection = region;
+ 				checkBoxSelection = (String)i.next();
  				item.setText(checkBoxSelection);
  				item.setPixmap(pixmap);
- 				ParticlesFactory.getInstance().createParticles(regions.get(checkBoxSelection));
+ 				TangibleFactory.getInstance().createParticles(checkBoxSelection,regions.get(checkBoxSelection));
+ 				System.out.println("TangibleManager.getInstance().getParticles() +++ sdfsdfsdfsd");
  			}
- 		}*/
+ 		}
  		
  		list.getToggableWidgetGroup().addSelectionChangedListener(new ISelectionChangedListener() {
- 			//this method is called every time a different result in the search widget list is clicked.
 			public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
 			{
-				SemanticInstance ins = (SemanticInstance)selectionChangedEvent.getToggableWidget().getValue();
-				ISemanticsAware instance = ins.getSemanticsAwareAssociation();
-				if (instance != null && instance instanceof Tangible) {
-					View.getInstance().getCameraView().searchZoomTo(((Tangible)instance).getPosition());
-				}
-			}
- 		});
+				//System.out.println("selection");
+				selected = (String)selectionChangedEvent.getToggableWidget().getText();
+				location = regions.get(selected);
+				//System.out.println(location +" "  + selected);
+		 		if(selected.equals("Cerebellum")){
+		 			//System.out.println("cerebellum");
+		 			//slideHide();
+		 			View.getInstance().getCameraView().smoothlyZoomToSlideCerebellumView();}
+		 		if(selected.equals("Hippocampus")){
+		 			//System.out.println("hippo");
+		 			//slideHide();
+		 			View.getInstance().getCameraView().smoothlyZoomToSlideView();}
+		 		if(selected.equals("Cells")){
+		 			//System.out.println("cells");
+		 			//slideHide();
+		 			View.getInstance().getCameraView().smoothlyZoomToCellView();}
+		 		selected = null;
+		 		
+		 		//System.out.println(returnObjectPosition());
+		 		}}
+			);
+	}
+	
+	public void DB(){
+		regions = new HashMap<String, Vector3f>();
+		regions.put("Hippocampus", new Vector3f(-300f, -118f, -180f));
+		//regions.put("Cell", new Vector3f(300f, 180f, -300f));
+		regions.put("Cerebellum", new Vector3f(458.9234f, -118.0f, -253.11566f));
+		regions.put("Cells" , new Vector3f(190f, -118f, -180f));
+				
 	}
 	
 	public void absolutePosition(Vector3f position){
@@ -166,5 +211,7 @@ public class BasicSearchWidget extends Widget{
 	public Vector3f returnObjectPosition(){
 		return this.position;
 	}
+	
+	
 
 }

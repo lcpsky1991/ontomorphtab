@@ -8,7 +8,6 @@ import java.util.Set;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.semantic.ISemanticsAware;
-import edu.ucsd.ccdb.ontomorph2.core.semantic.SemanticThing;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
@@ -49,7 +48,6 @@ public class SceneObserver implements Observer {
 			Scene scene = (Scene) o;
 			
 			//System.out.println(" o instance of Scene");
-			_view.getView3D().addParticles(scene.getParticles());
 //			setting arg to not be null simplifies error checking (dont need to check for null cases)
 			if (arg == null) arg = Scene.CHANGED_UNKNOWN;  
 			
@@ -58,6 +56,11 @@ public class SceneObserver implements Observer {
 			{
 				_view.getView3D().setCurves(scene.getCurves());
 				msg = "reloading curves";
+			}
+			
+			else if (arg.equals(Scene.CHANGED_PARTICLE)){
+				_view.getView3D().addParticles(scene.getParticles());
+				msg = "loading particles";
 			}
 				//============ LOAD ==============
 			else if (arg.equals(Scene.CHANGED_LOAD) ) 
@@ -104,25 +107,9 @@ public class SceneObserver implements Observer {
 			Log.warn("Performance Mesg: " + msg);
 		}
 		
-		else if (o instanceof SemanticThing)
-		{
-			SemanticThing st = (SemanticThing) o;
-			
-			ISemanticsAware sa = st.getSemanticsAwareAssociation();
-			if (sa != null) {
-				
-				if (st.isSelected())
-				{
-					sa.select();
-				}
-				else if (!st.isSelected())
-				{
-					sa.unselect();
-				}
-			}
-		}
 		else if (o instanceof BrainRegion)
 		{
+			System.out.println("inside o instanceof brainregion");
 			BrainRegionView brv = (BrainRegionView) TangibleViewManager
 			        .getInstance().getTangibleViewFor((BrainRegion) o);
 			if (Tangible.CHANGED_VISIBLE.equals(arg))
@@ -169,7 +156,20 @@ public class SceneObserver implements Observer {
 			}
 		}
 		
-		
+
+		/*else if (o instanceof SphereParticles){
+			if(Tangible.CHANGED_VISIBLE.equals(arg)){
+				System.out.println(" o instanceof SphereParticles");
+				TangibleView tv = null;
+				tv = TangibleViewManager.getInstance().getTangibleViewFor((Tangible) o);
+				if(tv!=null){
+					System.out.println("tv.null");
+					tv.update();
+				}
+			}
+		}*/
+
+
 		//catch all method for any leftover tangibles
 		if (o instanceof Tangible)
 		{
@@ -255,7 +255,6 @@ public class SceneObserver implements Observer {
 		_view.getView3D().setCurves(s.getCurves());
 		_view.getView3D().setSurfaces(s.getSurfaces());
 		_view.getView3D().setMeshes(s.getMeshes());
-		_view.getView3D().addParticles(s.getParticles());
 		setCamera(s);
 		_view.getView3D().updateNode(_view.getView3D());
 	}

@@ -260,6 +260,12 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		changed(CHANGED_SELECT);
 	}
 	
+	public Tangible selectRollover(){
+		Tangible rollover  = TangibleManager.getInstance().selectRollover(this);
+		//changed(CHANGED_SELECT);
+		return rollover;
+	}
+	
 	public boolean isSelected() 
 	{
 		return TangibleManager.getInstance().isSelected(this);
@@ -278,6 +284,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void setVisible(boolean b) {
 		_visible = b;
 		changed(CHANGED_VISIBLE);
+		System.out.println("set Visible");
 	}
 	
 	public void setColor(Color c) {

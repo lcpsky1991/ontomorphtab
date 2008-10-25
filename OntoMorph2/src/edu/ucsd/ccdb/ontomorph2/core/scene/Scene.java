@@ -89,7 +89,11 @@ public abstract class Scene extends Observable{
 	public static final int CHANGED_CELL = 4;
 	public static final int CHANGED_CURVE = 5;
 	public static final int CHANGED_SURFACE = 6;
+
+	public static final int CHANGED_PARTICLE = 8;
+
 	public static final int CHANGED_MESHES = 7;
+
 	public static final int CHANGED_UNKNOWN = -1;
 	public static final int CHANGED_TEST = -2;
 	

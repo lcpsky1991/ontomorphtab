@@ -147,14 +147,15 @@ public class TangibleFactory
 	 * @param location
 	 * @return
 	 */
-	public SphereParticles createParticles(Vector3f location)
+	public SphereParticles createParticles(String name, Vector3f location)
 	{
 		System.out.println("create Particles");
-		SphereParticles particles = new SphereParticles("Go Here Particles", location);
+		SphereParticles particles = new SphereParticles(name, location);
 		particles.setColor(java.awt.Color.blue);
 		particles.setVisible(true);
 		particles.addObserver(SceneObserver.getInstance());
 		
+		View.getInstance().getScene().changed(Scene.CHANGED_PARTICLE);
 		return particles;
 
 	}
