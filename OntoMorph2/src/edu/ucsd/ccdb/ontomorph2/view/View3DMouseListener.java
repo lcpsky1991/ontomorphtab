@@ -631,13 +631,16 @@ public class View3DMouseListener implements MouseInputListener {
 			//System.out.println("previousrollover " + this.previousRollOver);
 			//System.out.println("are they equal " + rollOver.equals(this.previousRollOver));
 			if(!(rollOver.equals(this.previousRollOver))){
+					
 				if(rollOver instanceof SphereParticles){
-					createNameTag(rollOver.getName(), rollOver.getPosition());
+					String name = "To ".concat(rollOver.getName());  
+					createNameTag(name, rollOver.getPosition());
 				}
-			
+				
 				else{
+					createNameTag(rollOver.getName(), rollOver.getPosition());
+				}	
 					//System.out.println("not sp");
-				}
 			
 				this.previousRollOver = rollOver;
 			}
