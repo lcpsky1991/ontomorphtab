@@ -284,7 +284,6 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	public void setVisible(boolean b) {
 		_visible = b;
 		changed(CHANGED_VISIBLE);
-		System.out.println("set Visible");
 	}
 	
 	public void setColor(Color c) {
