@@ -20,7 +20,6 @@ public class TestSimpleGL extends JFrame
 	  {
 		    TestSimpleGL app = new TestSimpleGL();
 		    Canvas glCanvas = null;
-		    
 		    Canvas regCanvas = new Canvas();
 		    JNIResolutionVolume jniCanvas = new JNIResolutionVolume();
 		    
@@ -28,7 +27,7 @@ public class TestSimpleGL extends JFrame
 		    //get good coords for size and location
 		    Toolkit sysTools = Toolkit.getDefaultToolkit();	    
 		    int mid = (int)sysTools.getScreenSize().getHeight()/2;
-		    
+		    jniCanvas.init(); 
 		    //LWJGLDisplaySystem glDisplay = (LWJGLDisplaySystem) DisplaySystem.getDisplaySystem(LWJGLSystemProvider.LWJGL_SYSTEM_IDENTIFIER);
 		
 		    

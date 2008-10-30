@@ -4,6 +4,8 @@
 #include "JNIResolutionVolume.h"
 #include "vvvirtexrendmngr.h"
 #include <stdio.h>
+#include <vvgltools.h>
+
 
 JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_getVolume (JNIEnv *env, jobject, jstring)
 {
@@ -13,6 +15,31 @@ JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_getVolume
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_init (JNIEnv *env, jobject)
 {
+	 vvStopwatch *sw = new vvStopwatch(); // create new stop watch instance
+	 sw->start();                        // reset counter
+
+	int argc = 1;
+	glutInit(&argc, "tester");
+	
+	/*
+	// Initialize components
+	  g_rendererManager = new vvVirTexMultiRendMngr();
+	  g_rendererManager->setCameraAspect(float(WinX)/float(WinY));
+	  g_rendererManager->load(argv[1]); 	//name of file
+	*/
+
+	// Initialize components
+	vvVirTexMultiRendMngr *g_rendererManager = new vvVirTexMultiRendMngr();
+
+	  g_rendererManager->setCameraAspect(float(WinX)/float(WinY));
+
+
+	  g_rendererManager->load("/home/caprea/Documents/meshTester/meshData/config.txt"); 	//name of file
+	
+
+
+
+
 	printf("Resolution volume initilized\n");
 }
 

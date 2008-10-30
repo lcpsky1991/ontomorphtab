@@ -1,2 +1,8 @@
- 
-g++ JNIResolutionVolume.cpp -o libmultiresvol.so -fpic -shared -I/home/caprea/workspace/wbc/src/edu/ucsd/ccdb/glvolume/virvosrc -I/home/caprea/workspace/wbc/src/edu/ucsd/ccdb/glvolume/meshsrc
+
+for compiling jvrm:
+
+g++ JNIResolutionVolume.cpp /home/caprea/workspace/wbc/lib/libmultivolume.so -o /home/caprea/workspace/wbc/lib/libjmrv.so -fPIC -shared -I/home/caprea/workspace/wbc/src/edu/ucsd/ccdb/glvolume/virvosrc -I/home/caprea/workspace/wbc/src/edu/ucsd/ccdb/glvolume/meshsrc -L/home/caprea/workspace/wbc/lib/ -static-libgcc   
+
+for compiling libmultivolume:
+
+g++ -shared -static-libgcc -fPIC *.o /home/caprea/Documents/deskvox/trunk/virvo/src/libvirvo.a /usr/lib/libGL.so /usr/lib/libglut.so /usr/lib/libGLU.so
