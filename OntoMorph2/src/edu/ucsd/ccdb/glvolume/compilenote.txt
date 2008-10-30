@@ -1,0 +1,2 @@
+ 
+g++ JNIResolutionVolume.cpp -o libmultiresvol.so -fpic -shared -I/home/caprea/workspace/wbc/src/edu/ucsd/ccdb/glvolume/virvosrc -I/home/caprea/workspace/wbc/src/edu/ucsd/ccdb/glvolume/meshsrc

@@ -31,7 +31,7 @@ public class JNIResolutionVolume
 	 * 		but dont give a package name
 	 */
 	
-	private static String VIRVOLIB = "coVirvo";
+	private static String VIRVOLIB = "jmrv";
 	
 	static 
 	{
@@ -46,7 +46,7 @@ public class JNIResolutionVolume
 		}
 		catch(UnsatisfiedLinkError e)
 		{
-			System.err.println("Unable to load the library. (Check the path library)");
+			System.err.println("Unable to load the library. (File not found, check the path)");
 			System.err.println("Java Library path is: " + System.getProperty("java.library.path")); //most browsers do not support this, except Opera
 			e.printStackTrace(System.err);
 		}
