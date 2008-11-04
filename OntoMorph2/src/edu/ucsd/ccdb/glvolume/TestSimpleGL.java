@@ -16,27 +16,23 @@ import com.jmex.awt.JMECanvas;
 public class TestSimpleGL extends JFrame
 {
 
-	  public static void main(String[] args) 
+	public static void main(String[] args) 
 	  {
 		    TestSimpleGL app = new TestSimpleGL();
-		    Canvas glCanvas = null;
-		    Canvas regCanvas = new Canvas();
-		    JNIResolutionVolume jniCanvas = new JNIResolutionVolume();
+		    JNIResolutionVolume jniCanv = new JNIResolutionVolume();
 		    
 		    
 		    //get good coords for size and location
 		    Toolkit sysTools = Toolkit.getDefaultToolkit();	    
 		    int mid = (int)sysTools.getScreenSize().getHeight()/2;
-		    jniCanvas.init(); 
-		    //LWJGLDisplaySystem glDisplay = (LWJGLDisplaySystem) DisplaySystem.getDisplaySystem(LWJGLSystemProvider.LWJGL_SYSTEM_IDENTIFIER);
-		
+		     
 		    
-		    //glCanvas = (Canvas)glDisplay.createCanvas(mid, mid);
 		    
+		    //display the window
+		    jniCanv.dummy();
+		    app.add(jniCanv);
 		    app.setSize(mid,mid);
 		    app.setVisible(true);
-		    //glCanvas.setBackground(Color.BLACK);
-		    app.add(regCanvas);
 		    app.setLocation(mid, mid );
 		    
 	  }

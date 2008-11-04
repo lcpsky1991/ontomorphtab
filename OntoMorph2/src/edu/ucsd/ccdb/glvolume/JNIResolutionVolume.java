@@ -1,5 +1,8 @@
 package edu.ucsd.ccdb.glvolume;
 
+import java.awt.Canvas;
+import java.awt.Graphics;
+
 /**
  * @author Christopher Aprea (caprea)
  * 
@@ -16,8 +19,12 @@ package edu.ucsd.ccdb.glvolume;
 
 
 
-public class JNIResolutionVolume
+public class JNIResolutionVolume extends Canvas
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3613482352429075789L;
 	/**
 	 * System.load takes a fully qualified filename, eg C:\dlls\mjjni.dll
 	 * System.loadLibrary takes unqualified name and appens .dll or .so
@@ -59,4 +66,6 @@ public class JNIResolutionVolume
 	public native int getVolume(String filename);	//retreives the volume to store in the object
 	public native void init();
 	public native void redrawp();
+	public native void dummy();
+	public native void paint(Graphics g);
 }
