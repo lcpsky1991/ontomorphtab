@@ -4,6 +4,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Panel;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
@@ -21,19 +22,32 @@ public class TestSimpleGL extends JFrame
 		    TestSimpleGL app = new TestSimpleGL();
 		    JNIResolutionVolume jniCanv = new JNIResolutionVolume();
 		    
-		    
+		    boolean okgo = true;
 		    //get good coords for size and location
 		    Toolkit sysTools = Toolkit.getDefaultToolkit();	    
 		    int mid = (int)sysTools.getScreenSize().getHeight()/2;
 		     
-		    
-		    
 		    //display the window
-		    jniCanv.dummy();
-		    app.add(jniCanv);
-		    app.setSize(mid,mid);
 		    app.setVisible(true);
+		    app.setSize(mid, mid);
+		    app.setBackground(Color.blue);
 		    app.setLocation(mid, mid );
+		    app.repaint();
+		    
+		    jniCanv.setBackground(Color.DARK_GRAY);
+		    jniCanv.repaint();
+		    
+		    app.add(jniCanv);
+		    
+		    jniCanv.init();
+		    //jniCanv.dummy(jniCanv.getGraphics());
+		    
+		    while (okgo)
+		    {
+			    jniCanv.redrawp();
+			    jniCanv.repaint();
+		    }
+		    
 		    
 	  }
 	  

@@ -13,7 +13,7 @@ extern "C"
 JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_getVolume (JNIEnv *env, jobject, jstring);
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_init (JNIEnv *env, jobject);
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_redrawp (JNIEnv *env, jobject);
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_dummy (JNIEnv *env, jobject);
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_dummy (JNIEnv *env, jobject, jobject);
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_paint (JNIEnv *env, jobject, jobject);
 
 #undef edu_ucsd_ccdb_glvolume_JNIResolutionVolume_serialVersionUID

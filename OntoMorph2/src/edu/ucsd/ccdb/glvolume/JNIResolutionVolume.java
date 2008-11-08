@@ -2,6 +2,11 @@ package edu.ucsd.ccdb.glvolume;
 
 import java.awt.Canvas;
 import java.awt.Graphics;
+import java.awt.Panel;
+
+import javax.swing.JPanel;
+
+
 
 /**
  * @author Christopher Aprea (caprea)
@@ -66,6 +71,6 @@ public class JNIResolutionVolume extends Canvas
 	public native int getVolume(String filename);	//retreives the volume to store in the object
 	public native void init();
 	public native void redrawp();
-	public native void dummy();
+	public native void dummy(Graphics g);
 	public native void paint(Graphics g);
 }
