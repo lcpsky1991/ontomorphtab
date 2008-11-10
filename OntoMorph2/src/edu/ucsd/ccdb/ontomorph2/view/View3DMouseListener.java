@@ -280,10 +280,6 @@ public class View3DMouseListener implements MouseInputListener {
 	
 	private void onMouseDouble(int buttonIndex)
 	{
-		/*if(recent instanceof SphereParticles){
-			View.getInstance().getCameraView().searchZoomTo(recent.getPosition());
-			System.out.println(" recent is of type " + recent);
-		}*/
 		if (OMT_MBUTTON_LEFT == buttonIndex) //left 
 		{
 			doPick();
@@ -632,6 +628,7 @@ public class View3DMouseListener implements MouseInputListener {
 			//System.out.println("are they equal " + rollOver.equals(this.previousRollOver));
 			if(!(rollOver.equals(this.previousRollOver))){
 					
+				TangibleView current = TangibleViewManager.getInstance().getTangibleViewFor(rollOver);
 				if(rollOver instanceof SphereParticles){
 					String name = "To ".concat(rollOver.getName());  
 					createNameTag(name, rollOver.getPosition());
@@ -642,6 +639,7 @@ public class View3DMouseListener implements MouseInputListener {
 				}	
 					//System.out.println("not sp");
 			
+				View.getInstance().bloomIndicator(current);
 				this.previousRollOver = rollOver;
 			}
 		}
@@ -649,7 +647,8 @@ public class View3DMouseListener implements MouseInputListener {
 	
 	//TODO: Create a new class to take care of NameTagLabels and move function there
 	public void createNameTag(String name, Vector3f location){
-		View2D.getInstance().setInfoText(name);
+		View2D.getInstance().setInfoText(name);		
+		
 		/*Label nameTag = new Label(name);
 		System.out.println((int)location.getX() + " x " + ((int)location.getY() + 240));
 		nameTag.setPosition(new Point((int)location.getX(), (int)(location.getY()+ 240)));
