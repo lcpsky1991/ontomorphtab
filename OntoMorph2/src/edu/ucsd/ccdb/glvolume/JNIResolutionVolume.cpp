@@ -212,6 +212,8 @@ XVisualInfo* findVisualDirect()
   matcher.depth = xwa.depth;
   visualInfo = XGetVisualInfo(infoJAWT->getDisplay(), VisualIDMask | VisualScreenMask, &matcher, &numReturns); // get the matching visual
 
+printf("numReturns: %d\n", numReturns);
+
   for(i=0; i<numReturns; i++)
   {
     if ((xwa.visual)->visualid == visualInfo[i].visualid)
@@ -228,6 +230,21 @@ XVisualInfo* findVisualDirect()
   return NULL;
 }
 
+void initGLEnvironment()
+{
+
+
+  glClearColor(0.0, 0.0, 0.0, 0.0);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(-1.0f, 1.0f, -1.0f, 1.0f, 100.0f, -100.0f);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  glDrawBuffer(GL_BACK);
+  printf("finished init\n");
+}
+
+
 //********************************************************
 // END GL HELPERS
 //********************************************************
@@ -242,14 +259,14 @@ XVisualInfo* findVisualDirect()
 void createGLWindow()
 {
 
-	visual = findVisualDirect();
-	if (visual==NULL)
+	printf("a ");
+  visual = findVisualDirect();
+  if (visual==NULL)
   {
     cerr << "Fatal error: cannot find visual" << endl;
     return;
   }
-  
-
+	printf("b ");
 
   gc = glXCreateContext(infoJAWT->getDisplay(), visual, NULL, GL_TRUE);    // also try GL_FALSE
   if (gc == NULL) 
@@ -262,14 +279,22 @@ void createGLWindow()
   	cout << "glXContext created\n";
   }
 
-  if (glXMakeCurrent(infoJAWT->getDisplay(), infoJAWT->getDrawable(), gc) == False)
-  {
-    cerr << "Error in glXMakeCurrent" << endl;
-    return;
-  }
   
   cout << "Everything ok\n";
 
+}
+
+
+void makeCurrent()
+{
+	if (glXMakeCurrent(infoJAWT->getDisplay(), infoJAWT->getDrawable(), gc) == false)
+	{
+		cerr << "Error in glXMakeCurrent" << endl;
+		infoJAWT->print();
+	}
+  
+	XMapWindow(infoJAWT->getDisplay(), infoJAWT->getDrawable());
+	XSync(infoJAWT->getDisplay(), false);
 }
 
 ///////// DUMMY
@@ -280,68 +305,94 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_dummy (JN
 }
 
 
-
-
 JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_getVolume (JNIEnv *env, jobject obj, jstring )
 {
+
 	
 }
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_init (JNIEnv *env, jobject obj)
 {
-	vvStopwatch *sw = new vvStopwatch(); // create new stop watch instance
-	 sw->start();                        // reset counter
 
-
-	infoJAWT = new JawtInfo(env, obj);
+	visual = NULL;
 	
-	if(infoJAWT == NULL)
+	if(infoJAWT == NULL)	
 	{
-		printf("test");
+		infoJAWT = new JawtInfo(env, obj);
+	}
+	
+
+  	// Check if system supports OpenGL:
+  	if(!glXQueryExtension(infoJAWT->getDisplay(), NULL, NULL))
+  	{
+    	cerr << "Fatal error: window server does not support OpenGL" << endl;
+    	return;
+ 	}
+  	else 
+  	{
+   		cout << "Window server supports OpenGL" << endl;
 	}
 
-	printf("got info\n");	
+	printf("print JAWT info\n");
+	infoJAWT->print();
 		
 	createGLWindow();	//make context current glXMakeCurrent
+	
+	printf("got info\n");	
+	
 
-	// Initialize components
-	g_rendererManager = new vvVirTexMultiRendMngr();
-	g_rendererManager->setCameraAspect(float(200)/float(300));
-    g_rendererManager->load("/home/caprea/Documents/meshTester/meshData/config.txt"); 	//name of file
-	printf("Resolution initialized\n");
+
+	
+	printf("initialized\n");
 		
 
 }
 
-
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_paint (JNIEnv* env, jobject canvas, jobject graphics)
+void showError()
 {
-	printf("paint ");
-	
 
-  
-   char *testString = "rendered form native code";
-  
-  
-	////	
-			////
-			infoJAWT = new JawtInfo(env, canvas);		
-			/////
-	
-	    /* Now paint */
-    	GC xgc = XCreateGC(infoJAWT->getDisplay(), infoJAWT->getDrawable(), 0, 0);
-    	//XSetForeground(infoJAWT->getDisplay(), xgc, 255);
-    	//XDrawImageString(infoJAWT->getDisplay(), infoJAWT->getDrawable(), xgc, 100, 110, testString, strlen(testString));
-//    	g_rendererManager->renderMultipleVolume();
-    	
-		XFreeGC(infoJAWT->getDisplay(), xgc);  
-
+	GLenum err = glGetError(); 
+        while (err != GL_NO_ERROR) 
+        { 
+                fprintf(stderr, "glError: %s caught at %s:%u\n", (char *)gluErrorString(err), __FILE__, __LINE__); \
+                err = glGetError(); 
+        } 
+        cerr << "shown";
 }
-
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_redrawp (JNIEnv *env, jobject obj)
 {
   	
+	makeCurrent();
+
+
+
+	initGLEnvironment();
+
+
+// Initialize components
+	g_rendererManager = new vvVirTexMultiRendMngr();
+	g_rendererManager->setCameraAspect(float(200)/float(300));
+    g_rendererManager->load("/home/caprea/Documents/meshTester/meshData/config.txt"); 	//name of file	
+	g_rendererManager->renderMultipleVolume();
+	
+		
+	//glDrawBuffer( GL_FRONT_AND_BACK);
+	
+	glClearColor(0.0, 1.0, 0.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	
+	glBegin(GL_QUADS);
+		glColor3f(0.0, 1.0, 1.0); glVertex3f(0.0, -20.0, 0.0);
+		glColor3f(0.0, 1.0, 1.0); glVertex3f(0.0, 20.0, 0.0);
+		glColor3f(0.0, 1.0, 1.0); glVertex3f(20.0, 20.0, 0.0);
+		glColor3f(0.0, 1.0, 1.0); glVertex3f(20.0, -20.0, 0.0);
+	glEnd();
+	showError();		
+
+	
+	glXSwapBuffers(infoJAWT->getDisplay(), infoJAWT->getDrawable());  // implicitly calls glFlush()
+	cerr << "redraw" << endl;
 }
 
 

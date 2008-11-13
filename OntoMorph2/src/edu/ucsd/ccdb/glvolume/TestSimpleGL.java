@@ -2,19 +2,13 @@ package edu.ucsd.ccdb.glvolume;
 
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Panel;
+import java.awt.Frame;
 import java.awt.Toolkit;
 
-import javax.swing.JFrame;
 
 import com.jme.system.DisplaySystem;
-import com.jme.system.lwjgl.LWJGLDisplaySystem;
-import com.jme.system.lwjgl.LWJGLSystemProvider;
-import com.jmex.awt.JMECanvas;
 
-public class TestSimpleGL extends JFrame
+public class TestSimpleGL extends Frame
 {
 
 	public static void main(String[] args) 
@@ -22,32 +16,27 @@ public class TestSimpleGL extends JFrame
 		    TestSimpleGL app = new TestSimpleGL();
 		    JNIResolutionVolume jniCanv = new JNIResolutionVolume();
 		    
-		    boolean okgo = true;
 		    //get good coords for size and location
 		    Toolkit sysTools = Toolkit.getDefaultToolkit();	    
 		    int mid = (int)sysTools.getScreenSize().getHeight()/2;
 		     
 		    //display the window
-		    app.setVisible(true);
-		    app.setSize(mid, mid);
-		    app.setBackground(Color.blue);
-		    app.setLocation(mid, mid );
-		    app.repaint();
 		    
-		    jniCanv.setBackground(Color.DARK_GRAY);
-		    jniCanv.repaint();
+		    app.setVisible(true);
+		    app.setSize(500, 500);
+		    app.setLocation(0,0 );
+		    app.setBackground(Color.BLUE);
+		    
+		    jniCanv.setSize(300, 300);
+		    jniCanv.setLocation(1, 1);
+		    jniCanv.setBackground(Color.RED);
 		    
 		    app.add(jniCanv);
 		    
+		    
 		    jniCanv.init();
-		    //jniCanv.dummy(jniCanv.getGraphics());
-		    
-		    while (okgo)
-		    {
-			    jniCanv.redrawp();
-			    jniCanv.repaint();
-		    }
-		    
+		    jniCanv.redrawp();
+		    jniCanv.repaint();
 		    
 	  }
 	  
@@ -57,5 +46,12 @@ public class TestSimpleGL extends JFrame
 		// TODO Auto-generated method stub
 		super.hide();
 		System.exit(0);
-	} 
+	}
+	 
+	@Override
+	public void move(int x, int y) {
+		// TODO Auto-generated method stub
+		super.move(x, y);
+		System.out.println("moved");
+	}
 }
