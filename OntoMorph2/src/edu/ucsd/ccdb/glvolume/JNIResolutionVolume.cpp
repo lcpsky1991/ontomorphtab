@@ -244,6 +244,17 @@ void initGLEnvironment()
   printf("finished init\n");
 }
 
+void showError()
+{
+
+	GLenum err = glGetError(); 
+        while (err != GL_NO_ERROR) 
+        { 
+                fprintf(stderr, "glError: %s caught at %s:%u\n", (char *)gluErrorString(err), __FILE__, __LINE__); \
+                err = glGetError(); 
+        } 
+        cerr << "shown\n";
+}
 
 //********************************************************
 // END GL HELPERS
@@ -341,24 +352,25 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_init (JNI
 	printf("got info\n");	
 	
 
-
+	makeCurrent();
+	
+	g_rendererManager = new vvVirTexMultiRendMngr();
+	g_rendererManager->setCameraAspect(float(1)/float(1));
+    g_rendererManager->load("/home/caprea/Documents/meshTester/meshData/config.txt"); 	//name of file	
+	showError();	
 	
 	printf("initialized\n");
 		
 
 }
 
-void showError()
+void initVolume()
 {
 
-	GLenum err = glGetError(); 
-        while (err != GL_NO_ERROR) 
-        { 
-                fprintf(stderr, "glError: %s caught at %s:%u\n", (char *)gluErrorString(err), __FILE__, __LINE__); \
-                err = glGetError(); 
-        } 
-        cerr << "shown";
 }
+
+
+
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_redrawp (JNIEnv *env, jobject obj)
 {
@@ -369,25 +381,28 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_redrawp (
 
 	initGLEnvironment();
 
-
+	
 // Initialize components
-	g_rendererManager = new vvVirTexMultiRendMngr();
-	g_rendererManager->setCameraAspect(float(200)/float(300));
-    g_rendererManager->load("/home/caprea/Documents/meshTester/meshData/config.txt"); 	//name of file	
-	g_rendererManager->renderMultipleVolume();
-	
-		
-	//glDrawBuffer( GL_FRONT_AND_BACK);
-	
+
 	glClearColor(0.0, 1.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
+	/*
 	glBegin(GL_QUADS);
 		glColor3f(0.0, 1.0, 1.0); glVertex3f(0.0, -20.0, 0.0);
 		glColor3f(0.0, 1.0, 1.0); glVertex3f(0.0, 20.0, 0.0);
 		glColor3f(0.0, 1.0, 1.0); glVertex3f(20.0, 20.0, 0.0);
 		glColor3f(0.0, 1.0, 1.0); glVertex3f(20.0, -20.0, 0.0);
 	glEnd();
+	*/
+
+
+	g_rendererManager->translateVolume(0,-200,-200,0);
+	g_rendererManager->renderMultipleVolume();
+	
+	showError();
+	
+	
 	showError();		
 
 	

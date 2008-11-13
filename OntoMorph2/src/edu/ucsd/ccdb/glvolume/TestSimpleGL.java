@@ -23,11 +23,11 @@ public class TestSimpleGL extends Frame
 		    //display the window
 		    
 		    app.setVisible(true);
-		    app.setSize(500, 500);
+		    app.setSize(1200, 1024);
 		    app.setLocation(0,0 );
 		    app.setBackground(Color.BLUE);
 		    
-		    jniCanv.setSize(300, 300);
+		    jniCanv.setSize(1200, 1024);
 		    jniCanv.setLocation(1, 1);
 		    jniCanv.setBackground(Color.RED);
 		    
@@ -35,8 +35,15 @@ public class TestSimpleGL extends Frame
 		    
 		    
 		    jniCanv.init();
-		    jniCanv.redrawp();
-		    jniCanv.repaint();
+		    
+		    boolean okgo=false;
+		    
+		    do
+		    {
+		    	jniCanv.redrawp();
+		    }
+		    while(okgo);
+		    
 		    
 	  }
 	  
