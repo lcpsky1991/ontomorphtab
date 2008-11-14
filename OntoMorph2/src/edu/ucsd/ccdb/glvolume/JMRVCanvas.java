@@ -1,7 +1,7 @@
 package edu.ucsd.ccdb.glvolume;
 
+
 import java.awt.Canvas;
-import java.awt.Graphics;
 
 
 
@@ -21,8 +21,9 @@ import java.awt.Graphics;
 
 
 
-public class JNIResolutionVolume extends Canvas
+public class JMRVCanvas extends Canvas
 {
+
 	/**
 	 * 
 	 */
@@ -40,18 +41,18 @@ public class JNIResolutionVolume extends Canvas
 	 * 		but dont give a package name
 	 */
 	
-	private static String VIRVOLIB = "jmrv";
+	private static String VLIB = "jmrv";
 	
 	static 
 	{
 		try
 		{
-			System.out.println("Loading '" + VIRVOLIB + "' Library");
-			System.loadLibrary(VIRVOLIB);
+			System.out.println("Loading '" + VLIB + "' Library");
+			System.loadLibrary(VLIB);
 		}
 		catch(SecurityException e)
 		{
-			System.err.println("Unable to open library (Check for security violation)");
+			System.err.println("Unable to open library (Possibly due to security violation)");
 		}
 		catch(UnsatisfiedLinkError e)
 		{
@@ -65,9 +66,11 @@ public class JNIResolutionVolume extends Canvas
 		}
 	}
 
-	public native int getVolume(String filename);	//retreives the volume to store in the object
-	public native void init();
-	public native void redrawp();
-	public native void dummy(Graphics g);
+	public native int load(String filename);	//retreives the volume to store in the object
+	public native void init();						//must be initialized before loading object or anything else happens
+	public native void purge();						//uses GL to empty the frame buffer (display nothing)
+	public native void renderAll();
+	public native void translate(int vol, double x, double y, double z);
+	public native void rotate(int vol, 	double angle, double x, double y, double z);
 	
 }

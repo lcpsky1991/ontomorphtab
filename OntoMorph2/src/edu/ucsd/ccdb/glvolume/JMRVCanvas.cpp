@@ -1,3 +1,11 @@
+// 
+//	Author: Christopher Aprea
+//	
+// 
+// Contact: Christopher Aprea, caprea@ucsd.edu
+// 			Han S Kim, hskim@cs.ucsd.edu
+//			Jurgen P. Schulze, jschulze@ucsd.edu
+//
 
 #ifdef WIN32
   #include <windows.h>
@@ -11,18 +19,16 @@
 #include <iostream>
 
 
-#include "JNIResolutionVolume.h"
+#include "JMRVCanvas.h"
 #include "vvvirtexrendmngr.h"
 #include <stdio.h>
 #include <vvgltools.h>
 #include "jawt_md.h"
 
-//#include "vvcanvas.h"
-#include "tester.h"
 
 using namespace MipMapVideoLib;
 using namespace std;
-//using namespace vox;
+
 
 //*******************************************************
 //			BEGIN JAWT
@@ -61,7 +67,6 @@ class JawtInfo
         return;
       }
 
-	printf("0");
       // Get the drawing surface:
       ds = awt.GetDrawingSurface(env, panel);
       if (ds==NULL)
@@ -70,7 +75,6 @@ class JawtInfo
         return;
       }
 
-	printf("1");
 
       // Lock the drawing surface:
       if ((ds->Lock(ds) & JAWT_LOCK_ERROR) != 0)
@@ -80,7 +84,6 @@ class JawtInfo
         return;
       }
 
-	printf("2");
 
       // Get the drawing surface info:
       dsi = ds->GetDrawingSurfaceInfo(ds);
@@ -92,7 +95,6 @@ class JawtInfo
         return;
       }
 
-	printf("3");
 	
       // Get the platform-specific drawing info:
 #ifdef WIN32
@@ -178,10 +180,6 @@ class JawtInfo
 //*******************************************************
 
 
-
-
-
-
 /////// GLOBALS
 
 
@@ -212,7 +210,6 @@ XVisualInfo* findVisualDirect()
   matcher.depth = xwa.depth;
   visualInfo = XGetVisualInfo(infoJAWT->getDisplay(), VisualIDMask | VisualScreenMask, &matcher, &numReturns); // get the matching visual
 
-printf("numReturns: %d\n", numReturns);
 
   for(i=0; i<numReturns; i++)
   {
@@ -253,7 +250,26 @@ void showError()
                 fprintf(stderr, "glError: %s caught at %s:%u\n", (char *)gluErrorString(err), __FILE__, __LINE__); \
                 err = glGetError(); 
         } 
-        cerr << "shown\n";
+        cerr << "no err shown\n";
+}
+
+//----------------------------------------------------------------------------
+/** Conclude drawing of the OpenGL scene in the OpenGL canvas by
+  showing the back buffer and sending glFlush().
+*/
+void swapBuffers()
+{
+
+  if(infoJAWT == NULL) return;
+
+#ifdef WIN32
+  SwapBuffers(infoJAWT->getHDC());
+#else
+  glXSwapBuffers(infoJAWT->getDisplay(), infoJAWT->getDrawable());  // implicitly calls glFlush()
+#endif
+
+  glFlush();
+  glFinish(); // needed to prevent program from painting after mouse move stopped 
 }
 
 //********************************************************
@@ -270,14 +286,12 @@ void showError()
 void createGLWindow()
 {
 
-	printf("a ");
   visual = findVisualDirect();
   if (visual==NULL)
   {
     cerr << "Fatal error: cannot find visual" << endl;
     return;
   }
-	printf("b ");
 
   gc = glXCreateContext(infoJAWT->getDisplay(), visual, NULL, GL_TRUE);    // also try GL_FALSE
   if (gc == NULL) 
@@ -289,10 +303,6 @@ void createGLWindow()
   {
   	cout << "glXContext created\n";
   }
-
-  
-  cout << "Everything ok\n";
-
 }
 
 
@@ -308,28 +318,20 @@ void makeCurrent()
 	XSync(infoJAWT->getDisplay(), false);
 }
 
-///////// DUMMY
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_dummy (JNIEnv *env, jobject obj, jobject graphics)
-{
-
-	printf("Dummy\n");
-}
-
-
-JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_getVolume (JNIEnv *env, jobject obj, jstring )
+JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_load (JNIEnv *env, jobject, jstring)
 {
 
 	
 }
 
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_init (JNIEnv *env, jobject obj)
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_init (JNIEnv *env, jobject canvas)
 {
 
 	visual = NULL;
 	
 	if(infoJAWT == NULL)	
 	{
-		infoJAWT = new JawtInfo(env, obj);
+		infoJAWT = new JawtInfo(env, canvas);
 	}
 	
 
@@ -349,66 +351,55 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_init (JNI
 		
 	createGLWindow();	//make context current glXMakeCurrent
 	
-	printf("got info\n");	
-	
 
 	makeCurrent();
 	
 	g_rendererManager = new vvVirTexMultiRendMngr();
 	g_rendererManager->setCameraAspect(float(1)/float(1));
     g_rendererManager->load("/home/caprea/Documents/meshTester/meshData/config.txt"); 	//name of file	
-	showError();	
 	
 	printf("initialized\n");
 		
-
-}
-
-void initVolume()
-{
-
 }
 
 
-
-
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_redrawp (JNIEnv *env, jobject obj)
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_renderAll (JNIEnv *env, jobject)
 {
-  	
+	  	showError();
 	makeCurrent();
+	  	showError();
 
-
-
-	initGLEnvironment();
-
-	
-// Initialize components
-
-	glClearColor(0.0, 1.0, 0.0, 0.0);
+	// Initialize components
 	glClear(GL_COLOR_BUFFER_BIT);
-	
-	/*
-	glBegin(GL_QUADS);
-		glColor3f(0.0, 1.0, 1.0); glVertex3f(0.0, -20.0, 0.0);
-		glColor3f(0.0, 1.0, 1.0); glVertex3f(0.0, 20.0, 0.0);
-		glColor3f(0.0, 1.0, 1.0); glVertex3f(20.0, 20.0, 0.0);
-		glColor3f(0.0, 1.0, 1.0); glVertex3f(20.0, -20.0, 0.0);
-	glEnd();
-	*/
+	  	showError();
 
-
-	g_rendererManager->translateVolume(0,-200,-200,0);
 	g_rendererManager->renderMultipleVolume();
+	  	showError();
 	
-	showError();
-	
-	
-	showError();		
-
-	
-	glXSwapBuffers(infoJAWT->getDisplay(), infoJAWT->getDrawable());  // implicitly calls glFlush()
-	cerr << "redraw" << endl;
+	swapBuffers(); 
+	  	showError();
 }
 
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_purge (JNIEnv *env, jobject)
+{
+	initGLEnvironment();
+}
+
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_translate (JNIEnv *env, jobject obj, jint v, jdouble x, jdouble y, jdouble z)
+{
+	//public native void translate(int vol, double x, double y, double z);
+	
+	g_rendererManager->translateVolume(v,x,y,z);
+}
+
+
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_rotate (JNIEnv *env, jobject obj, jint v, jdouble a, jdouble x, jdouble y, jdouble z)
+{
+	//public native void rotate(int vol, 	double angle, double x, double y, double z);
+	g_rendererManager->rotateVolume(v,a,x,y,z);
+}
 
 
