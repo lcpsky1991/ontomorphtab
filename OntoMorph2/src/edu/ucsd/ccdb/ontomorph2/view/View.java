@@ -410,19 +410,19 @@ public void bloomIndicator(TangibleView rollOverSelected, Tangible rollOver){
 		pManager.add(rootPass);
 		
 	       if(!bloomRenderPass.isSupported()) {
-	    	   System.out.println(" is not supported");
+	    	   //System.out.println(" is not supported");
 	           Text t = new Text("Text", "GLSL Not supported on this computer.");
 	           t.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 	           t.setLightCombineMode(LightState.OFF);
 	           t.setLocalTranslation(new Vector3f(0,20,0));
 	       } else {
-	    	   System.out.println("is supported");
+	    	   //System.out.println("is supported");
 	    	   bloomRenderPass.setBlurIntensityMultiplier(.7f);
 	    	   bloomRenderPass.add(rollOverSelected);
 	           bloomRenderPass.setUseCurrentScene(true);
 	           bloomRenderPass.setExposurePow(2.0f);
 	           pManager.add(bloomRenderPass);
-	           System.out.println(bloomRenderPass.getThrottle());
+	           //System.out.println(bloomRenderPass.getThrottle());
 	   		
 	   		rollOverSelected.getParent().updateGeometricState(0.0f, true);
 	   		rollOverSelected.getParent().updateRenderState();
@@ -432,9 +432,9 @@ public void bloomIndicator(TangibleView rollOverSelected, Tangible rollOver){
 		}
 			System.out.println(rollOverSelected.getName());
 			if(rollOver!=null)
-			{					System.out.println("pues no lo es");		
+			{	
 				if(rollOverSelected.getName().equals(rollOver.getName())){
-				System.out.println("rollOverSelected " +rollOverSelected.getModel() + " " + rollOver );
+				//System.out.println("rollOverSelected " +rollOverSelected.getModel() + " " + rollOver );
 			pManager.clearAll();}}
 	}
 
