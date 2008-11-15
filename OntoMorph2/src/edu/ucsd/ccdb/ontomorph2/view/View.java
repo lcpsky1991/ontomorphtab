@@ -3,42 +3,43 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
 
-import java.util.concurrent.Callable;
-
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
-import com.jme.renderer.pass.BasicPassManager;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
 import com.jme.input.FirstPersonHandler;
-import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
 import com.jme.light.PointLight;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+import com.jme.renderer.pass.BasicPassManager;
 import com.jme.renderer.pass.RenderPass;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
-import com.jme.scene.Spatial;
+import com.jme.scene.SceneElement;
 import com.jme.scene.Text;
 import com.jme.scene.shape.Cone;
+import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.PropertiesIO;
+import com.jme.util.GameTaskQueue;
 import com.jme.util.GameTaskQueueManager;
 import com.jme.util.geom.Debugger;
 import com.jmex.effects.glsl.BloomRenderPass;
-import com.jme.renderer.pass.RenderPass;
+
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
+import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 
 //=========
@@ -65,13 +66,16 @@ public class View extends BaseSimpleGame
 	Line debugRay = null;	//used for mouse picking debugging mode
 	Cone wand = null;
 	
+	BasicPassManager pManager = new BasicPassManager();
+	BloomRenderPass bloomRenderPass;
+	private Node debugQuadsNode;
+	
 	org.fenggui.Display disp; // FengGUI's display
 
 	View3D view3D = null;
 	private View3DMouseListener view3DMouseListener;
 	private OMTKeyInputListener OMTKeyListener;
-	BasicPassManager pManager = new BasicPassManager();
-	BloomRenderPass bloomRenderPass;
+	
 	FengJMEInputHandler guiInput;
 	/**
 	 * Returns the singleton instance.
@@ -131,8 +135,6 @@ public class View extends BaseSimpleGame
 				
 		rootNode.attachChild(view3D);
 
-		
-			
 		//Remove lighting for rootNode so that it will use our basic colors
 		lightState.detachAll();
         
@@ -162,7 +164,9 @@ public class View extends BaseSimpleGame
 		disp = View2D.getInstance();
 		guiInput = new FengJMEInputHandler(disp);
 		//Section for setting up the mouse and other input controls	
-		configureControls();	
+		configureControls();
+		
+	
 	}
 	
 	public FirstPersonHandler getFPSHandler() {
@@ -194,6 +198,7 @@ public class View extends BaseSimpleGame
 		
 		this.OMTKeyListener = new OMTKeyInputListener(disp, guiInput);
 		KeyInput.get().addListener(this.OMTKeyListener);
+		
 	}
 			
 	public OMTKeyInputListener getKeyInputListener() {
@@ -275,6 +280,10 @@ public class View extends BaseSimpleGame
 	}
 
 	
+	protected void cleanUp(){
+		super.cleanup();
+		display.getRenderer().cleanup();
+	}
 	/**
 	 * Called every frame update
 	 *
@@ -302,11 +311,16 @@ public class View extends BaseSimpleGame
         
         Renderer r = display.getRenderer();
 
+		
+		GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).execute();
+	    pManager.renderPasses(r);
+        r.clearStatistics();
         r.clearBuffers();
-
+        //pManager.renderPasses(r);
         /** Draw the rootNode and all its children. */
         r.draw(rootNode);
         
+       
         /** Call simpleRender() in any derived classes. */
         simpleRender();
         
@@ -314,29 +328,36 @@ public class View extends BaseSimpleGame
         r.draw(fpsNode);
         
         doDebug(r);
-        
         //Flush the renderQueue right before rendering the menu so that nothing can get on top of it
         r.renderQueue();
-       
+    
 		// Then we display the GUI
 		disp.display();
+
+	        
+        //r.cleanup();
     }
 
 	 /**
      * Called every frame to update scene information.
      * 
-     * @param ation
+     * @param interpolation
      *            unused in this implementation
      * @see BaseSimpleGame#update(float interpolation)
      */
-    protected final void update(float ation) {
-    	if ( !pause ) {
+    protected final void update(float interpolation) {
+        super.update(interpolation);
+
+        if ( !pause ) {
             /** Call simpleUpdate in any derived classes of SimpleGame. */
             simpleUpdate();
 
             /** Update controllers/render states/transforms/bounds for rootNode. */
             rootNode.updateGeometricState(tpf, true);
         }
+        
+        pManager.updatePasses(interpolation);
+
     }
 
     @Override
@@ -372,34 +393,51 @@ public class View extends BaseSimpleGame
 	public Node getMainViewRootNode() {
 		return rootNode;
 	}
+
+public void bloomIndicator(TangibleView rollOverSelected, Tangible rollOver){
 		
-	public void bloomIndicator(TangibleView rollOverSelected){
+		if(rollOverSelected instanceof SlideView){
 		
-		bloomRenderPass = new BloomRenderPass(cam, 300);
-		bloomRenderPass.add(rollOverSelected);
-		bloomRenderPass.setEnabled(true);
-		//System.out.println("rollOverSelected" + rollOverSelected);
+		bloomRenderPass = new BloomRenderPass(cam, 4);
+
+		//bloomRenderPass.add(rollOverSelected.getParent());
+		//bloomRenderPass.setEnabled(true);	
+
 		
-		rollOverSelected.updateGeometricState(0.0f, true);
-		rollOverSelected.updateRenderState();
 		
 		RenderPass rootPass = new RenderPass();
 		rootPass.add(rollOverSelected);
 		pManager.add(rootPass);
 		
 	       if(!bloomRenderPass.isSupported()) {
-	    	   //System.out.println(" is not supported");
+	    	   System.out.println(" is not supported");
 	           Text t = new Text("Text", "GLSL Not supported on this computer.");
 	           t.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 	           t.setLightCombineMode(LightState.OFF);
 	           t.setLocalTranslation(new Vector3f(0,20,0));
 	       } else {
-	    	   //System.out.println("is supported");
+	    	   System.out.println("is supported");
+	    	   bloomRenderPass.setBlurIntensityMultiplier(.7f);
 	    	   bloomRenderPass.add(rollOverSelected);
 	           bloomRenderPass.setUseCurrentScene(true);
+	           bloomRenderPass.setExposurePow(2.0f);
 	           pManager.add(bloomRenderPass);
+	           System.out.println(bloomRenderPass.getThrottle());
+	   		
+	   		rollOverSelected.getParent().updateGeometricState(0.0f, true);
+	   		rollOverSelected.getParent().updateRenderState();
+	   		rollOverSelected.getParent().updateRenderState();
 	       } 		
+
+		}
+			System.out.println(rollOverSelected.getName());
+			if(rollOver!=null)
+			{					System.out.println("pues no lo es");		
+				if(rollOverSelected.getName().equals(rollOver.getName())){
+				System.out.println("rollOverSelected " +rollOverSelected.getModel() + " " + rollOver );
+			pManager.clearAll();}}
 	}
+
 }
 
 

@@ -639,20 +639,13 @@ public class View3DMouseListener implements MouseInputListener {
 				}	
 					//System.out.println("not sp");
 			
-				View.getInstance().bloomIndicator(current);
+				View.getInstance().bloomIndicator(current, this.previousRollOver);
 				this.previousRollOver = rollOver;
 			}
 		}
 	}
 	
-	//TODO: Create a new class to take care of NameTagLabels and move function there
 	public void createNameTag(String name, Vector3f location){
-		View2D.getInstance().setInfoText(name);		
-		
-		/*Label nameTag = new Label(name);
-		System.out.println((int)location.getX() + " x " + ((int)location.getY() + 240));
-		nameTag.setPosition(new Point((int)location.getX(), (int)(location.getY()+ 240)));
-		nameTag.getAppearance().setTextColor(Color.RED );
-		disp.addWidget(nameTag);*/
+		View2D.getInstance().setInfoText(name);				
 	}
 }
