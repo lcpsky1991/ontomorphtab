@@ -318,10 +318,33 @@ void makeCurrent()
 	XSync(infoJAWT->getDisplay(), false);
 }
 
-JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_load (JNIEnv *env, jobject, jstring)
+JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_load (JNIEnv *env, jobject, jstring strConfig)
 {
 
+
+	//Convert the jstring to a CSTRING
+	/**
+	 * 
+	 * This is the WRONG way (this is for C):
+	 * 			const char *nativeString = (*env)->GetStringUTFChars(env, javaString, 0);
+	 * This is the RIGHT way for C++:
+	 * 			const char *natstr = env->GetStringUTFChars(javaString, NULL);
+	 * 	
+	 */
+
+    char * cfilename = (char *) env->GetStringUTFChars(strConfig, NULL);  //convert the java 16 bit filenameString to 8-bit native c string
+
+	//check for errors
+	if (cfilename == NULL)
+	{
+		//fail
+		return 0;
+	}
 	
+	g_rendererManager->setCameraAspect(float(1)/float(1));
+   	g_rendererManager->load(cfilename); 	//name of file, load the config file
+
+	(env)->ReleaseStringUTFChars(strConfig, cfilename);//release the 8-bit version of the string
 }
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_init (JNIEnv *env, jobject canvas)
@@ -355,8 +378,7 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_init (JNIEnv *env,
 	makeCurrent();
 	
 	g_rendererManager = new vvVirTexMultiRendMngr();
-	g_rendererManager->setCameraAspect(float(1)/float(1));
-    g_rendererManager->load("/home/caprea/Documents/meshTester/meshData/config.txt"); 	//name of file	
+
 	
 	printf("initialized\n");
 		
@@ -380,6 +402,16 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_renderAll (JNIEnv 
 	  	showError();
 }
 
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_showGLError (JNIEnv *env, jobject)
+{
+	showError();
+}
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_test (JNIEnv *env, jobject)
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	g_rendererManager->renderMultipleVolume();
+}
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_purge (JNIEnv *env, jobject)
 {
