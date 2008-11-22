@@ -283,6 +283,10 @@ public class View extends BaseSimpleGame
 	protected void cleanUp(){
 		super.cleanup();
 		display.getRenderer().cleanup();
+        if (bloomRenderPass != null){
+        	bloomRenderPass.cleanup();
+        	pManager.clearAll();
+        }	
 	}
 	/**
 	 * Called every frame update
@@ -311,16 +315,16 @@ public class View extends BaseSimpleGame
         
         Renderer r = display.getRenderer();
 
-		
-		GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).execute();
-	    pManager.renderPasses(r);
         r.clearStatistics();
         r.clearBuffers();
         //pManager.renderPasses(r);
         /** Draw the rootNode and all its children. */
         r.draw(rootNode);
-        
        
+        
+        //GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).execute();
+	    pManager.renderPasses(r);
+	    
         /** Call simpleRender() in any derived classes. */
         simpleRender();
         
@@ -328,6 +332,7 @@ public class View extends BaseSimpleGame
         r.draw(fpsNode);
         
         doDebug(r);
+          
         //Flush the renderQueue right before rendering the menu so that nothing can get on top of it
         r.renderQueue();
     
@@ -354,8 +359,10 @@ public class View extends BaseSimpleGame
 
             /** Update controllers/render states/transforms/bounds for rootNode. */
             rootNode.updateGeometricState(tpf, true);
+            
         }
         
+       // System.out.println("interpolation " + interpolation);
         pManager.updatePasses(interpolation);
 
     }
@@ -398,17 +405,22 @@ public void bloomIndicator(TangibleView rollOverSelected, Tangible rollOver){
 		
 		if(rollOverSelected instanceof SlideView){
 		
-		bloomRenderPass = new BloomRenderPass(cam, 4);
+		//update geomtric states of the rollOverSelected object
+        //rollOverSelected.updateRenderState();
+		//rollOverSelected.updateGeometricState(0, true);
 
-		//bloomRenderPass.add(rollOverSelected.getParent());
-		//bloomRenderPass.setEnabled(true);	
-
-		
-		
+		System.out.println("rolloverselected" + rollOverSelected);
 		RenderPass rootPass = new RenderPass();
 		rootPass.add(rollOverSelected);
 		pManager.add(rootPass);
 		
+		ZBufferState zs = display.getRenderer().createZBufferState();
+        zs.setWritable(false);
+        zs.setEnabled(true);
+        rollOverSelected.setRenderState(zs);
+		bloomRenderPass = new BloomRenderPass(this.cam, 1);
+		//bloomRenderPass.setUseCurrentScene(false);
+				
 	       if(!bloomRenderPass.isSupported()) {
 	    	   //System.out.println(" is not supported");
 	           Text t = new Text("Text", "GLSL Not supported on this computer.");
@@ -417,27 +429,13 @@ public void bloomIndicator(TangibleView rollOverSelected, Tangible rollOver){
 	           t.setLocalTranslation(new Vector3f(0,20,0));
 	       } else {
 	    	   //System.out.println("is supported");
-	    	   bloomRenderPass.setBlurIntensityMultiplier(.7f);
+	    	   //bloomRenderPass.setBlurIntensityMultiplier(.07f);
+	           //bloomRenderPass.setExposurePow(0.008f);
 	    	   bloomRenderPass.add(rollOverSelected);
-	           bloomRenderPass.setUseCurrentScene(true);
-	           bloomRenderPass.setExposurePow(2.0f);
-	           pManager.add(bloomRenderPass);
-	           //System.out.println(bloomRenderPass.getThrottle());
-	   		
-	   		rollOverSelected.getParent().updateGeometricState(0.0f, true);
-	   		rollOverSelected.getParent().updateRenderState();
-	   		rollOverSelected.getParent().updateRenderState();
+	           pManager.add(bloomRenderPass);	   
 	       } 		
-
-		}
-			System.out.println(rollOverSelected.getName());
-			if(rollOver!=null)
-			{	
-				if(rollOverSelected.getName().equals(rollOver.getName())){
-				//System.out.println("rollOverSelected " +rollOverSelected.getModel() + " " + rollOver );
-			pManager.clearAll();}}
+		}					//pManager.clearAll();
 	}
-
 }
 
 

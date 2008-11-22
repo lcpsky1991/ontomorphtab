@@ -5,6 +5,8 @@ import com.jme.input.InputHandler;
 import com.jme.input.MouseInput;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
+import com.jme.math.Ray;
+import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.scene.Controller;
@@ -310,7 +312,6 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         points[0] = cam.getLocation();
         points[1] = location;
 
-        float distance = points[0].distance(points[1]);
         CatmullRomCurve curve = new CatmullRomCurve("Curve", points);
         
         Vector3f up = new Vector3f(0,1,0);
@@ -326,7 +327,6 @@ public class ViewCamera extends com.jme.scene.CameraNode {
         curve.updateRenderState();
         this.attachChild(curve);
         cc.setActive(true);        	
-        
 	}
 
 	/**
@@ -400,9 +400,13 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	 * Method called from Basic Search. Location of Query passed as parameter
 	 */
 	public void searchZoomTo(Vector3f location){
+  
 		Vector3f loc = location;
-		Vector3f position = location;
+		Vector3f position = new Vector3f(location.x, location.y, location.z - 100f);
+		System.out.println("location " + location + " position " + position);
+		//cam.setDirection(location);
 		continuousZoomTo(loc, position, .21f);
+        System.out.println(" camera direction " + cam.getDirection());
 	}
 
 	public float getZoom() {
