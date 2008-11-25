@@ -639,7 +639,7 @@ public class View3DMouseListener implements MouseInputListener {
 				}	
 					//System.out.println("not sp");
 			
-				//View.getInstance().bloomIndicator(current, this.previousRollOver);
+				View.getInstance().bloomIndicator(current);
 				this.previousRollOver = rollOver;
 			}
 		}
