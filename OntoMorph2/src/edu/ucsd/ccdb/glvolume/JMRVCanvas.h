@@ -16,6 +16,10 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_purge (JNIEnv *env
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_renderAll (JNIEnv *env, jobject);
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_translate (JNIEnv *env, jobject, jint, jdouble, jdouble, jdouble);
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_rotate (JNIEnv *env, jobject, jint, jdouble, jdouble, jdouble, jdouble);
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_showGLError (JNIEnv *env, jobject);
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_test (JNIEnv *env, jobject);
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_initFor (JNIEnv *env, jobject, jobject);
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_setCameraDistance (JNIEnv *env, jobject, jdouble);
 
 #undef edu_ucsd_ccdb_glvolume_JMRVCanvas_serialVersionUID
 #define edu_ucsd_ccdb_glvolume_JMRVCanvas_serialVersionUID 3613482352429075789LL

@@ -1,0 +1,1 @@
+g++ JMRVCanvas.cpp /home/caprea/workspace/wbc/lib/libmultivolume.so -o /home/caprea/workspace/wbc/lib/libjmrv.so -L/home/caprea/workspace/wbc/lib -lawt -ljawt -fPIC -shared  -I/home/caprea/workspace/wbc/src/edu/ucsd/ccdb/glvolume/meshsrc/  -I/home/caprea/workspace/wbc/src/edu/ucsd/ccdb/glvolume/virvosrc -static-libgcc

@@ -23,6 +23,7 @@
 #include "vvvirtexrendmngr.h"
 #include <stdio.h>
 #include <vvgltools.h>
+#include <vvdebugmsg.h>
 #include "jawt_md.h"
 
 
@@ -238,7 +239,7 @@ void initGLEnvironment()
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glDrawBuffer(GL_BACK);
-  printf("finished init\n");
+  printf("GL environment cleared\n");
 }
 
 void showError()
@@ -282,8 +283,7 @@ void swapBuffers()
 //$$$$$$$$==================		BEGIN JNI	====================$$$$$$$$$$$
 //$$$$$$$$==========================================================$$$$$$$$$$$
 
-
-void createGLWindow()
+void getContext()
 {
 
   visual = findVisualDirect();
@@ -341,20 +341,26 @@ JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_load (JNIEnv *env,
 		return 0;
 	}
 	
-	g_rendererManager->setCameraAspect(float(1)/float(1));
+
    	g_rendererManager->load(cfilename); 	//name of file, load the config file
+
 
 	(env)->ReleaseStringUTFChars(strConfig, cfilename);//release the 8-bit version of the string
 }
 
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_init (JNIEnv *env, jobject canvas)
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_setCameraDistance (JNIEnv *env, jobject, jdouble d)
 {
+	g_rendererManager->setCameraAspect(float(10)/float(10));
+	g_rendererManager->setCameraDistance(d);
+}
 
-	visual = NULL;
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_initFor (JNIEnv *env, jobject parent, jobject targetCanvas)
+{
+visual = NULL;
 	
 	if(infoJAWT == NULL)	
 	{
-		infoJAWT = new JawtInfo(env, canvas);
+		infoJAWT = new JawtInfo(env, targetCanvas);	//instead of initing on the current object (this/parent), initialize it on the parameter
 	}
 	
 
@@ -372,34 +378,41 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_init (JNIEnv *env,
 	printf("print JAWT info\n");
 	infoJAWT->print();
 		
-	createGLWindow();	//make context current glXMakeCurrent
+	getContext();	
 	
-
 	makeCurrent();
 	
 	g_rendererManager = new vvVirTexMultiRendMngr();
 
 	
 	printf("initialized\n");
-		
+
+
 }
+
 
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_renderAll (JNIEnv *env, jobject)
 {
-	  	showError();
-	makeCurrent();
-	  	showError();
+  	cerr << "1 ";
+	//makeCurrent();
+  	showError();
 
 	// Initialize components
+  	cerr << "2 ";
 	glClear(GL_COLOR_BUFFER_BIT);
-	  	showError();
+  	showError();
 
+  	cerr << "3 ";
+  	//vvDebugMsg::setDebugLevel(1);
 	g_rendererManager->renderMultipleVolume();
-	  	showError();
+  	showError();
 	
+  	cerr << "4 ";
 	swapBuffers(); 
-	  	showError();
+  	showError();
+  	
+  	glFinish();
 }
 
 
@@ -407,10 +420,12 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_showGLError (JNIEn
 {
 	showError();
 }
+
+//			Same as RENDER but doesnt swap the buffers
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_test (JNIEnv *env, jobject)
 {
-	glClear(GL_COLOR_BUFFER_BIT);
-	g_rendererManager->renderMultipleVolume();
+	swapBuffers();
+
 }
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_purge (JNIEnv *env, jobject)

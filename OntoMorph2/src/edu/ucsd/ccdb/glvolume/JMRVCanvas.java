@@ -3,8 +3,6 @@ package edu.ucsd.ccdb.glvolume;
 
 import java.awt.Canvas;
 
-
-
 /**
  * @author Christopher Aprea (caprea)
  * 
@@ -21,7 +19,7 @@ import java.awt.Canvas;
 
 
 
-public class JMRVCanvas extends Canvas
+public class JMRVCanvas
 {
 
 	/**
@@ -67,10 +65,16 @@ public class JMRVCanvas extends Canvas
 	}
 
 	public native int load(String filename);	//retreives the volume to store in the object
-	public native void init();						//must be initialized before loading object or anything else happens
-	public native void purge();						//uses GL to empty the frame buffer (display nothing)
+	public native void init();	//Creates Gl context or gets it, must be initialized before loading object or anything else happens
+	public native void purge();	//uses GL to empty the frame buffer (display nothing)
 	public native void renderAll();
 	public native void translate(int vol, double x, double y, double z);
 	public native void rotate(int vol, 	double angle, double x, double y, double z);
+	public native void showGLError();
+	public native void test();
+	public native void initFor(Canvas targetCanvas);
+	public native void setCameraDistance(double dis);
+	
+
 	
 }

@@ -103,19 +103,42 @@ public class TestJME {
     int width = 640, height = 480;
 
     // Swing frame
-    private SwingFrame frame;
-    private boolean started = false;
-    JMRVCanvas jni = new JMRVCanvas();
-	LWJGLCanvas glCanv = null;
+    private JFrame frame;
+    private static boolean started = false;
+    
+    
 	static Canvas comp = null;
 	
-    public TestJME() {
-        frame = new SwingFrame();
+    public TestJME() 
+    {
+        frame = new JFrame();
         // center the frame
         frame.setLocationRelativeTo(null);
         // show frame
         frame.setVisible(true);
+    
+        frame.setSize(width, height);
+        
+        //---------- init ---------------
+
+        // make the canvas:
+        comp = DisplaySystem.getDisplaySystem("lwjgl").createCanvas(width, height);
+
+                // Important!  Here is where we add the guts to the panel:
+        
+        GImplementor impl = new GImplementor(width, height);
+        
+        
+        JMECanvas jmeCanvas = ((JMECanvas) comp);
+        jmeCanvas.setImplementor(impl);
+        
+        // -----------END OF GL STUFF-------------
+
+        comp.setBounds(0, 0, width, height);
+        frame.add(comp);
+   
     }
+
 
     /**
      * Main Entry point...
@@ -123,199 +146,47 @@ public class TestJME {
      * @param args
      *            String[]
      * @throws LWJGLException 
+     * @throws InterruptedException 
      */
-    public static void main(String[] args) throws LWJGLException {
-
-    	
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) 
-        {
-            logger.logp(Level.SEVERE, TestJME.class.toString(), "main(args)", "Exception", e);
-        }
+    public static void main(String[] args) throws LWJGLException
+    {
         new TestJME();
-        
-        while (true) 
+        while (true)
         {
+       		debug();
         	comp.repaint();
-           
-        }  
+        }
+    }
+    
 
-        
+    private static void debug()
+    {
+        JMRVCanvas jni = new JMRVCanvas();
+      	if ( !started)
+    	{
+    		jni.initFor(comp);
+        	started = true;
+        	jni.load("/home/caprea/Documents/meshTester/meshData/config.txt");
+        	jni.setCameraDistance(50);
+        	jni.translate(0, -1000, -1000, 200);
+    	}
+    	
+      	if (started)
+    	{
+    		jni.translate(0, 0, 0, -1);
+    		jni.renderAll();
+    	}
+    		
     }
 
     // **************** SWING FRAME ****************
 
-    // Our custom Swing frame... Nothing really special here.
-    class SwingFrame extends JFrame {
-        private static final long serialVersionUID = 1L;
-
-        JPanel contentPane;
-        JPanel mainPanel = new JPanel();
-        
-        JButton coolButton = new JButton();
-        JButton uncoolButton = new JButton();
-        JPanel spPanel = new JPanel();
-        JScrollPane scrollPane = new JScrollPane();
-        JTree jTree1 = new JTree();
-        JCheckBox scaleBox = new JCheckBox("Scale GL Image");
-        JPanel colorPanel = new JPanel();
-        JLabel colorLabel = new JLabel("BG Color:");
-        JMECanvasImplementor impl;
-
-    	JFrame other = new JFrame();
-    	
-    	
-        // Construct the frame
-        public SwingFrame() {
-            addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent e) {
-                    dispose();
-                }
-            });
-
-            init();
-            pack();
-
-
-            // MAKE SURE YOU REPAINT SOMEHOW OR YOU WON'T SEE THE UPDATES...
-            	
-        }
-
-        
-        private void setupGame()
-        {
-        	
-        	
-        	
-        }
-        
-        
-        
-        // Component initialization
-        private void init() {
-            contentPane = (JPanel) this.getContentPane();
-            contentPane.setLayout(new BorderLayout());
-
-            mainPanel.setLayout(new GridBagLayout());
-
-            setTitle("JME - SWING INTEGRATION TEST");
-
-            // -------------GL STUFF------------------
-
-            // make the canvas:
-            comp = DisplaySystem.getDisplaySystem("lwjgl").createCanvas(width, height);
-
-            // add a listener... if window is resized, we can do something about it.
-            comp.addComponentListener(new ComponentAdapter() {
-                public void componentResized(ComponentEvent ce) {
-                    doResize();
-                }
-            });
-            KeyInput.setProvider( KeyInput.INPUT_AWT );
-            AWTMouseInput.setup( comp, false );
-
-                    // Important!  Here is where we add the guts to the panel:
-            
-            impl = new MyImplementor(width, height);
-            
-            
-            JMECanvas jmeCanvas = ((JMECanvas) comp);
-            jmeCanvas.setImplementor(impl);
-            
-            // -----------END OF GL STUFF-------------
-
-            glCanv = (LWJGLCanvas) comp;
-         
-            coolButton.setText("Cool Button");
-            uncoolButton.setText("Uncool Button");
-
-            colorPanel.setBackground(java.awt.Color.black);
-            colorPanel.setToolTipText("Click here to change Panel BG color.");
-            colorPanel.setBorder(BorderFactory.createRaisedBevelBorder());
-            colorPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
-                    final java.awt.Color color = JColorChooser.showDialog(
-                            SwingFrame.this, "Choose new background color:",
-                            colorPanel.getBackground());
-                    if (color == null)
-                        return;
-                    colorPanel.setBackground(color);
-                    Callable<?> call = new Callable<Object>() {
-                        public Object call() throws Exception {
-                            comp.setBackground(color);
-                            return null;
-                        }
-                    };
-                    GameTaskQueueManager.getManager().render(call);
-                }
-            });
-
-            scaleBox.setOpaque(false);
-            scaleBox.setSelected(true);
-            scaleBox.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    if (comp != null)
-                        doResize();
-                }
-            });
-
-            spPanel.setLayout(new BorderLayout());
-            contentPane.add(mainPanel, BorderLayout.WEST);
-            mainPanel.add(scaleBox,
-                    new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                            GridBagConstraints.CENTER,
-                            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0,
-                                    5), 0, 0));
-            mainPanel.add(colorLabel,
-                    new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-                            GridBagConstraints.CENTER,
-                            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0,
-                                    5), 0, 0));
-            mainPanel.add(colorPanel, new GridBagConstraints(0, 2, 1, 1, 0.0,
-                    0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                    new Insets(5, 5, 0, 5), 25, 25));
-            mainPanel.add(coolButton,
-                    new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
-                            GridBagConstraints.CENTER,
-                            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0,
-                                    5), 0, 0));
-            mainPanel.add(uncoolButton,
-                    new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
-                            GridBagConstraints.CENTER,
-                            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0,
-                                    5), 0, 0));
-            mainPanel.add(spPanel, new GridBagConstraints(0, 5, 1, 1, 1.0, 1.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(5, 5, 0, 5), 0, 0));
-            spPanel.add(scrollPane, BorderLayout.CENTER);
-            
-            scrollPane.setViewportView(jTree1);
-            comp.setBounds(0, 0, width, height);
-            contentPane.add(comp, BorderLayout.CENTER);
-        }
-
-        protected void doResize() {
-            if (scaleBox != null && scaleBox.isSelected()) {
-                impl.resizeCanvas(comp.getWidth(), comp.getHeight());
-            } else {
-                impl.resizeCanvas(width, height);
-            }
-        }
-
-        // Overridden so we can exit when window is closed
-        protected void processWindowEvent(WindowEvent e) {
-            super.processWindowEvent(e);
-            if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-                System.exit(0);
-            }
-        }
-    }
+    
 
     
     // IMPLEMENTING THE SCENE:
     
-    class MyImplementor extends SimpleCanvasImpl {
+    class GImplementor extends SimpleCanvasImpl {
 
         private Quaternion rotQuat;
         private float angle = 0;
@@ -325,11 +196,18 @@ public class TestJME {
 		long fps = 0;
         private InputHandler input;
 
-        public MyImplementor(int width, int height) {
+        public GImplementor(int width, int height) {
             super(width, height);
         }
         
-    
+    @Override
+    	public void doRender() {
+    	// 
+    	  renderer.clearBuffers();
+          renderer.draw(rootNode);
+          simpleRender();
+          renderer.displayBackBuffer();
+    	}
        
 
         public void simpleSetup() 
@@ -360,29 +238,13 @@ public class TestJME {
 
             rootNode.setRenderState(ts);
             startTime = System.currentTimeMillis() + 5000;
-
-            
+  
         }
 
-        public void simpleUpdate()
+        public synchronized void simpleUpdate()
         {
-        	
-            //----------- start jni ------------
-        	
-        	if ( !started)
-        	{
-        		jni.initFor(glCanv);
-            	started = true;
-            	jni.load("/home/caprea/Documents/meshTester/meshData/config.txt");
-        	}
-        	
-        	
-        	jni.renderAll();
 
-
-            //----------- end jni ------------
-            
-
+        	System.out.println("update");
             // Code for rotating the box... no surprises here.
             if (tpf < 1) {
                 angle = angle + (tpf * 25);
