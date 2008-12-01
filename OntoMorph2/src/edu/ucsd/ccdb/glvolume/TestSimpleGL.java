@@ -47,7 +47,7 @@ public class TestSimpleGL extends Frame
 		    
 		    
 		   // jniCanv.setSize(300, 300);
-		    nc.setSize(300, 300);
+		    nc.setSize(800, 800);
 		    
 		    nc.setBackground(Color.red);
 		    
@@ -62,15 +62,16 @@ public class TestSimpleGL extends Frame
 		    //jniCanv.init();
 		    jniCanv.initFor(nc);
 		    jniCanv.load("/home/caprea/Documents/meshTester/meshData/config.txt");
-		    
+		    jniCanv.translate(0, -100, -1000, 500);
 		    do
 		    {
 		    	
 		    	//jniCanv.rotate(0, 1, 0, 0, 500);
-		    	jniCanv.translate(0, -1, 0, 0);
+		   
+		    	jniCanv.translate(0, 0, 0, -1);
 		    	jniCanv.renderAll();
 		    	
-		    	jniCanv.test();
+		    	
 		    	
 		    	jniCanv.showGLError();
 		   // 	jniCanv.repaint();

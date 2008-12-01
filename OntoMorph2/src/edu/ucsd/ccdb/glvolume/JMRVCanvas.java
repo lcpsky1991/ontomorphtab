@@ -69,7 +69,7 @@ public class JMRVCanvas
 	public native void purge();	//uses GL to empty the frame buffer (display nothing)
 	public native void renderAll();
 	public native void translate(int vol, double x, double y, double z);
-	public native void rotate(int vol, 	double angle, double x, double y, double z);
+	public native void rotate(int vol, 	double angleRadians, double x, double y, double z);
 	public native void showGLError();
 	public native void test();
 	public native void initFor(Canvas targetCanvas);

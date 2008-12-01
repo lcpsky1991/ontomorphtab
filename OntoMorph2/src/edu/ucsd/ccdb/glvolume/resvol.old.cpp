@@ -1,3 +1,11 @@
+// 
+//	Author: Christopher Aprea
+//	
+// 
+// Contact: Christopher Aprea, caprea@ucsd.edu
+// 			Han S Kim, hskim@cs.ucsd.edu
+//			Jurgen P. Schulze, jschulze@ucsd.edu
+//
 
 #ifdef WIN32
   #include <windows.h>
@@ -11,18 +19,17 @@
 #include <iostream>
 
 
-#include "JNIResolutionVolume.h"
+#include "JMRVCanvas.h"
 #include "vvvirtexrendmngr.h"
 #include <stdio.h>
 #include <vvgltools.h>
+#include <vvdebugmsg.h>
 #include "jawt_md.h"
 
-//#include "vvcanvas.h"
-#include "tester.h"
 
 using namespace MipMapVideoLib;
 using namespace std;
-//using namespace vox;
+
 
 //*******************************************************
 //			BEGIN JAWT
@@ -54,14 +61,13 @@ class JawtInfo
 #endif
 
       // Get the AWT:
-      awt.version = JAWT_VERSION_1_3;
+      awt.version = JAWT_VERSION_1_3; //originally 1_3
       if (JAWT_GetAWT(env, &awt) == JNI_FALSE)
       {
         cerr << "Error: AWT not found" << endl;
         return;
       }
 
-	printf("0");
       // Get the drawing surface:
       ds = awt.GetDrawingSurface(env, panel);
       if (ds==NULL)
@@ -70,7 +76,6 @@ class JawtInfo
         return;
       }
 
-	printf("1");
 
       // Lock the drawing surface:
       if ((ds->Lock(ds) & JAWT_LOCK_ERROR) != 0)
@@ -80,7 +85,6 @@ class JawtInfo
         return;
       }
 
-	printf("2");
 
       // Get the drawing surface info:
       dsi = ds->GetDrawingSurfaceInfo(ds);
@@ -92,7 +96,6 @@ class JawtInfo
         return;
       }
 
-	printf("3");
 	
       // Get the platform-specific drawing info:
 #ifdef WIN32
@@ -150,6 +153,14 @@ class JawtInfo
     }
 #endif
 
+	void release()
+	{
+		ds->FreeDrawingSurfaceInfo(dsi);
+		ds->Unlock(ds);
+		awt.FreeDrawingSurface(ds);
+	}
+
+
     void print()
     {
       cerr << "ds  = " << ds << endl;
@@ -176,10 +187,6 @@ class JawtInfo
 //*******************************************************
 //			END JAWT
 //*******************************************************
-
-
-
-
 
 
 /////// GLOBALS
@@ -212,7 +219,6 @@ XVisualInfo* findVisualDirect()
   matcher.depth = xwa.depth;
   visualInfo = XGetVisualInfo(infoJAWT->getDisplay(), VisualIDMask | VisualScreenMask, &matcher, &numReturns); // get the matching visual
 
-printf("numReturns: %d\n", numReturns);
 
   for(i=0; i<numReturns; i++)
   {
@@ -241,7 +247,8 @@ void initGLEnvironment()
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glDrawBuffer(GL_BACK);
-  printf("finished init\n");
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  printf("GL environment cleared\n");
 }
 
 void showError()
@@ -253,7 +260,26 @@ void showError()
                 fprintf(stderr, "glError: %s caught at %s:%u\n", (char *)gluErrorString(err), __FILE__, __LINE__); \
                 err = glGetError(); 
         } 
-        cerr << "shown\n";
+        cerr << "no err shown\n";
+}
+
+//----------------------------------------------------------------------------
+/** Conclude drawing of the OpenGL scene in the OpenGL canvas by
+  showing the back buffer and sending glFlush().
+*/
+void swapBuffers()
+{
+
+  if(infoJAWT == NULL) return;
+
+#ifdef WIN32
+  SwapBuffers(infoJAWT->getHDC());
+#else
+  glXSwapBuffers(infoJAWT->getDisplay(), infoJAWT->getDrawable());  // implicitly calls glFlush()
+#endif
+
+  glFlush();
+  glFinish(); // needed to prevent program from painting after mouse move stopped 
 }
 
 //********************************************************
@@ -266,33 +292,28 @@ void showError()
 //$$$$$$$$==================		BEGIN JNI	====================$$$$$$$$$$$
 //$$$$$$$$==========================================================$$$$$$$$$$$
 
-
-void createGLWindow()
+GLXContext getContext()
 {
 
-	printf("a ");
   visual = findVisualDirect();
   if (visual==NULL)
   {
     cerr << "Fatal error: cannot find visual" << endl;
-    return;
+    return NULL;
   }
-	printf("b ");
 
-  gc = glXCreateContext(infoJAWT->getDisplay(), visual, NULL, GL_TRUE);    // also try GL_FALSE
+  GLXContext gc = glXCreateContext(infoJAWT->getDisplay(), visual, NULL, GL_TRUE);    // also try GL_FALSE
   if (gc == NULL) 
   {
     cerr << "Cannot create GLX context" << endl;
-    return;
+    return NULL;
   }
   else
   {
   	cout << "glXContext created\n";
   }
-
   
-  cout << "Everything ok\n";
-
+  return gc;
 }
 
 
@@ -301,35 +322,57 @@ void makeCurrent()
 	if (glXMakeCurrent(infoJAWT->getDisplay(), infoJAWT->getDrawable(), gc) == false)
 	{
 		cerr << "Error in glXMakeCurrent" << endl;
-		infoJAWT->print();
 	}
   
 	XMapWindow(infoJAWT->getDisplay(), infoJAWT->getDrawable());
 	XSync(infoJAWT->getDisplay(), false);
 }
 
-///////// DUMMY
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_dummy (JNIEnv *env, jobject obj, jobject graphics)
+JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_load (JNIEnv *env, jobject, jstring strConfig)
 {
 
-	printf("Dummy\n");
-}
 
+	//Convert the jstring to a CSTRING
+	/**
+	 * 
+	 * This is the WRONG way (this is for C):
+	 * 			const char *nativeString = (*env)->GetStringUTFChars(env, javaString, 0);
+	 * This is the RIGHT way for C++:
+	 * 			const char *natstr = env->GetStringUTFChars(javaString, NULL);
+	 * 	
+	 */
 
-JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_getVolume (JNIEnv *env, jobject obj, jstring )
-{
+    char * cfilename = (char *) env->GetStringUTFChars(strConfig, NULL);  //convert the java 16 bit filenameString to 8-bit native c string
 
+	//check for errors
+	if (cfilename == NULL)
+	{
+		//fail
+		return 0;
+	}
 	
+
+
+   	g_rendererManager->load(cfilename); 	//name of file, load the config file
+
+
+
+	(env)->ReleaseStringUTFChars(strConfig, cfilename);//release the 8-bit version of the string
 }
 
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_init (JNIEnv *env, jobject obj)
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_setCameraDistance (JNIEnv *env, jobject, jdouble d)
 {
+	g_rendererManager->setCameraAspect(float(10)/float(10));
+	g_rendererManager->setCameraDistance(d);
+}
 
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_initFor (JNIEnv *env, jobject parent, jobject targetCanvas)
+{
 	visual = NULL;
 	
 	if(infoJAWT == NULL)	
 	{
-		infoJAWT = new JawtInfo(env, obj);
+		infoJAWT = new JawtInfo(env, targetCanvas);	//instead of initing on the current object (this/parent), initialize it on the parameter
 	}
 	
 
@@ -346,65 +389,71 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_init (JNI
 
 	printf("print JAWT info\n");
 	infoJAWT->print();
-		
-	createGLWindow();	//make context current glXMakeCurrent
-	
-	printf("got info\n");	
-	
-
+	getContext();	
 	makeCurrent();
+	
 	
 	g_rendererManager = new vvVirTexMultiRendMngr();
-	g_rendererManager->setCameraAspect(float(1)/float(1));
-    g_rendererManager->load("/home/caprea/Documents/meshTester/meshData2/config.txt"); 	//name of file	
-	showError();	
-	
+	    
 	printf("initialized\n");
-		
-
-}
-
-void initVolume()
-{
 
 }
 
 
 
-
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JNIResolutionVolume_redrawp (JNIEnv *env, jobject obj)
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_renderAll (JNIEnv *env, jobject)
 {
-  	
+
+  	cerr << "1 ";
 	makeCurrent();
+  	showError();
 
+	//Clear screen
+  	cerr << "2 ";
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  	showError();
 
-
-	initGLEnvironment();
-
+  	cerr << "3 ";
+  	//vvDebugMsg::setDebugLevel(1);
+	g_rendererManager->renderMultipleVolume();	//draw image
+  	showError();
 	
-// Initialize components
-
-	//glClearColor(0.0, 1.0, 0.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	
-	/*
-	glBegin(GL_QUADS);
-		glColor3f(0.0, 1.0, 1.0); glVertex3f(0.0, -20.0, 0.0);
-		glColor3f(0.0, 1.0, 1.0); glVertex3f(0.0, 20.0, 0.0);
-		glColor3f(0.0, 1.0, 1.0); glVertex3f(20.0, 20.0, 0.0);
-		glColor3f(0.0, 1.0, 1.0); glVertex3f(20.0, -20.0, 0.0);
-	glEnd();
-	*/
-
-
-	g_rendererManager->translateVolume(0,0,0,0);
-	g_rendererManager->renderMultipleVolume();
-	
-
-	
-	glXSwapBuffers(infoJAWT->getDisplay(), infoJAWT->getDrawable());  // implicitly calls glFlush()
-	cerr << "redraw" << endl;
+  	cerr << "4 ";
+	swapBuffers(); //implicitly calls glFlush and glFinish
+  	showError();
+  	
 }
 
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_showGLError (JNIEnv *env, jobject)
+{
+	showError();
+}
+
+//			Same as RENDER but doesnt swap the buffers
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_test (JNIEnv *env, jobject)
+{
+
+}
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_purge (JNIEnv *env, jobject)
+{
+	initGLEnvironment();
+}
+
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_translate (JNIEnv *env, jobject obj, jint v, jdouble x, jdouble y, jdouble z)
+{
+	//public native void translate(int vol, double x, double y, double z);	
+	g_rendererManager->translateVolume(v,x,y,z);
+}
+
+
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_rotate (JNIEnv *env, jobject obj, jint v, jdouble a, jdouble x, jdouble y, jdouble z)
+{
+	//public native void rotate(int vol, 	double angle, double x, double y, double z);
+	g_rendererManager->rotateVolume(v,a,x,y,z);
+}
 
 

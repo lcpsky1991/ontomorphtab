@@ -424,8 +424,8 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_showGLError (JNIEn
 //			Same as RENDER but doesnt swap the buffers
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_test (JNIEnv *env, jobject)
 {
-	swapBuffers();
-
+	delete infoJAWT;
+	delete g_rendererManager;
 }
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_purge (JNIEnv *env, jobject)

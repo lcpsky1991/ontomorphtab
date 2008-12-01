@@ -35,6 +35,7 @@ package edu.ucsd.ccdb.glvolume;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -63,6 +64,9 @@ import javax.swing.UIManager;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.GLContext;
 
+import sun.awt.SunToolkit;
+
+import com.hp.hpl.jena.mem.faster.ProcessedTriple;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.input.InputHandler;
@@ -73,6 +77,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
+import com.jme.scene.Text;
 import com.jme.scene.shape.Box;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
@@ -103,11 +108,12 @@ public class TestJME {
     int width = 640, height = 480;
 
     // Swing frame
-    private JFrame frame;
+    private Frame frame;
     private static boolean started = false;
     
     
 	static Canvas comp = null;
+	
 	
     public TestJME() 
     {
@@ -151,31 +157,70 @@ public class TestJME {
     public static void main(String[] args) throws LWJGLException
     {
         new TestJME();
-        while (true)
+        
+        
+        //============ JME REPAINT THREAD
+        /*
+        new Thread()
         {
-       		debug();
-        	comp.repaint();
-        }
-    }
-    
+        	@Override
+        	public void run() {
+        		
+        		do
+        		{
 
-    private static void debug()
+        			comp.repaint();
+        			yield();
+
+        		}
+        		while (true);
+        		
+        	}
+        }.start();
+        */
+        //-------------------------------------
+        
+        
+        //============ JMRV repaint thread
+        new Thread()
+        {
+        	@Override
+        	public void run() 
+        	{
+        		JMRVCanvas jmrv = new JMRVCanvas();
+        		for (int i =0; i < 45; i++)
+        		{
+        			debug(jmrv);
+        			yield();
+        			comp.repaint();	
+        		}
+        		jmrv.test();
+        	}
+        }.start();
+        //-------------------------------------
+        
+        
+    }
+
+    private static void debug(JMRVCanvas vol)
     {
-        JMRVCanvas jni = new JMRVCanvas();
       	if ( !started)
     	{
-    		jni.initFor(comp);
+    		vol.initFor(comp);
         	started = true;
-        	jni.load("/home/caprea/Documents/meshTester/meshData/config.txt");
-        	jni.setCameraDistance(50);
-        	jni.translate(0, -1000, -1000, 200);
+        	vol.load("/home/caprea/Documents/meshTester/meshData/config.txt");
+        	vol.setCameraDistance(50);
+        	vol.translate(0, -1000, -1000, 100);
+        	vol.rotate(0, 6/4, 0, 1, 0);
     	}
     	
       	if (started)
     	{
-    		jni.translate(0, 0, 0, -1);
-    		jni.renderAll();
+      		
+      		vol.rotate(0, 0.017, 0, 1, 0); //rotate 1 degree (0.017 rads)
+    		vol.renderAll();
     	}
+      	
     		
     }
 
@@ -206,6 +251,7 @@ public class TestJME {
     	  renderer.clearBuffers();
           renderer.draw(rootNode);
           simpleRender();
+          
           renderer.displayBackBuffer();
     	}
        
@@ -244,7 +290,7 @@ public class TestJME {
         public synchronized void simpleUpdate()
         {
 
-        	System.out.println("update");
+        	
             // Code for rotating the box... no surprises here.
             if (tpf < 1) {
                 angle = angle + (tpf * 25);
