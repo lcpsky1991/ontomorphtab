@@ -405,22 +405,26 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_initFor (JNIEnv *e
    		cout << "Window server supports OpenGL" << endl;
 	}
 	
+
+	
 	printf("print JAWT info\n");
 	infoJAWT->print();
 	
 	makeContext();		
 	makeCurrent();
-	printf("initialized\n");
+	initGLEnvironment();
 	
-	infoJAWT->release();
+	//WHY this is needed I don't know, but it's needed.
+	infoJAWT->release(); //this is an extra canvas release, it is needed to swap between JME/JMRV
 
+	printf("initialized\n");
 }
 
 
 
 void doRender()
 {
-	XSync(infoJAWT->getDisplay(), false);
+
 	infoJAWT->prepare();
 	
 	cerr << "1 ";
@@ -429,7 +433,7 @@ void doRender()
 
 	// Initialize components
   	cerr << "2 ";
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
   	showError();
 
   	cerr << "3 ";
@@ -446,7 +450,9 @@ void doRender()
   	
   	
   	infoJAWT->release();
-	XSync(infoJAWT->getDisplay(), false);
+
+
+
 }
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_renderAll (JNIEnv *env, jobject)

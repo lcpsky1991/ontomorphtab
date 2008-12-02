@@ -111,7 +111,7 @@ public class TestJME {
     private Frame frame;
     private static boolean started = false;
     
-    
+    static int count = 0;
 	static Canvas comp = null;
 	
 	
@@ -163,15 +163,13 @@ public class TestJME {
         		JMRVCanvas jmrv = new JMRVCanvas();
         		debug(jmrv);
         		
-        		comp.repaint();
-        		
-        		debug(jmrv);
-        		
-        		comp.repaint();
-        		debug(jmrv);
-        		comp.repaint();
-        		debug(jmrv);
-        		comp.repaint();
+        		while (true)
+        		{
+        			System.out.println(count++);
+        			debug(jmrv);
+        			comp.repaint();
+        			
+        		}
         		
         //-------------------------------------
         
@@ -192,7 +190,8 @@ public class TestJME {
     	
       	if (started)
     	{
-      		vol.rotate(0, 0.017, 0, 1, 0); //rotate 1 degree (0.017 rads)
+      		
+      		vol.rotate(0, 0.017, 1, 1, 0); //rotate 1 degree (0.017 rads)
     		vol.renderAll();
     	}
       	
