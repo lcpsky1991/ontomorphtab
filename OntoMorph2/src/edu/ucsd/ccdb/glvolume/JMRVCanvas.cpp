@@ -153,6 +153,30 @@ class JawtInfo
     }
 #endif
 
+	bool prepare()
+	{	
+      // Lock the drawing surface:
+		if ((ds->Lock(ds) & JAWT_LOCK_ERROR) != 0)
+		{
+	  		cerr << "Error locking surface" << endl;
+			return false;
+		}		
+		return true;
+	}
+
+
+	bool release()
+	{
+		if(ds != NULL)
+	    {
+	        // Unlock the drawing surface:
+			ds->Unlock(ds);
+	        return true;
+		}
+		return false;
+	}
+
+
     void print()
     {
       cerr << "ds  = " << ds << endl;
@@ -283,7 +307,7 @@ void swapBuffers()
 //$$$$$$$$==================		BEGIN JNI	====================$$$$$$$$$$$
 //$$$$$$$$==========================================================$$$$$$$$$$$
 
-void getContext()
+void makeContext()
 {
 
   visual = findVisualDirect();
@@ -293,7 +317,7 @@ void getContext()
     return;
   }
 
-  gc = glXCreateContext(infoJAWT->getDisplay(), visual, NULL, GL_TRUE);    // also try GL_FALSE
+  gc = glXCreateContext(infoJAWT->getDisplay(), visual, NULL, GL_TRUE);    // GL_FALSE means through X server
   if (gc == NULL) 
   {
     cerr << "Cannot create GLX context" << endl;
@@ -308,6 +332,10 @@ void getContext()
 
 void makeCurrent()
 {
+	cerr << gc << endl;
+	cerr << infoJAWT->getDisplay() << endl;
+	cerr << infoJAWT->getDrawable() << endl;
+
 	if (glXMakeCurrent(infoJAWT->getDisplay(), infoJAWT->getDrawable(), gc) == false)
 	{
 		cerr << "Error in glXMakeCurrent" << endl;
@@ -342,6 +370,8 @@ JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_load (JNIEnv *env,
 	}
 	
 
+	
+	g_rendererManager = new vvVirTexMultiRendMngr();
    	g_rendererManager->load(cfilename); 	//name of file, load the config file
 
 
@@ -356,13 +386,13 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_setCameraDistance 
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_initFor (JNIEnv *env, jobject parent, jobject targetCanvas)
 {
-visual = NULL;
-	
-	if(infoJAWT == NULL)	
+
+	visual = NULL;
+
+	if (infoJAWT == NULL)	
 	{
-		infoJAWT = new JawtInfo(env, targetCanvas);	//instead of initing on the current object (this/parent), initialize it on the parameter
+		infoJAWT = new JawtInfo(env, targetCanvas);	//instead of initing on the current object (this/parent), initialize it on the parameter	
 	}
-	
 
   	// Check if system supports OpenGL:
   	if(!glXQueryExtension(infoJAWT->getDisplay(), NULL, NULL))
@@ -374,28 +404,27 @@ visual = NULL;
   	{
    		cout << "Window server supports OpenGL" << endl;
 	}
-
+	
 	printf("print JAWT info\n");
 	infoJAWT->print();
-		
-	getContext();	
 	
+	makeContext();		
 	makeCurrent();
-	
-	g_rendererManager = new vvVirTexMultiRendMngr();
-
-	
 	printf("initialized\n");
-
+	
+	infoJAWT->release();
 
 }
 
 
 
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_renderAll (JNIEnv *env, jobject)
+void doRender()
 {
-  	cerr << "1 ";
-	//makeCurrent();
+	XSync(infoJAWT->getDisplay(), false);
+	infoJAWT->prepare();
+	
+	cerr << "1 ";
+	makeCurrent();	//implicitly maps window and syncs
   	showError();
 
 	// Initialize components
@@ -413,6 +442,16 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_renderAll (JNIEnv 
   	showError();
   	
   	glFinish();
+  	
+  	
+  	
+  	infoJAWT->release();
+	XSync(infoJAWT->getDisplay(), false);
+}
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_renderAll (JNIEnv *env, jobject)
+{
+  	doRender();
 }
 
 
@@ -421,11 +460,17 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_showGLError (JNIEn
 	showError();
 }
 
-//			Same as RENDER but doesnt swap the buffers
+
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_test (JNIEnv *env, jobject)
 {
-	delete infoJAWT;
-	delete g_rendererManager;
+	if ( infoJAWT->release() )
+	{
+		cout << "released\n";
+	}
+	else
+	{
+		cout << "not released\n";	
+	}
 }
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_purge (JNIEnv *env, jobject)
@@ -437,7 +482,6 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_purge (JNIEnv *env
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_translate (JNIEnv *env, jobject obj, jint v, jdouble x, jdouble y, jdouble z)
 {
 	//public native void translate(int vol, double x, double y, double z);
-	
 	g_rendererManager->translateVolume(v,x,y,z);
 }
 

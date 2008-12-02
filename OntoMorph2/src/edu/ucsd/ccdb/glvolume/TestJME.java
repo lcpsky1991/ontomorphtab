@@ -158,45 +158,21 @@ public class TestJME {
     {
         new TestJME();
         
+       
         
-        //============ JME REPAINT THREAD
-        /*
-        new Thread()
-        {
-        	@Override
-        	public void run() {
-        		
-        		do
-        		{
-
-        			comp.repaint();
-        			yield();
-
-        		}
-        		while (true);
-        		
-        	}
-        }.start();
-        */
-        //-------------------------------------
-        
-        
-        //============ JMRV repaint thread
-        new Thread()
-        {
-        	@Override
-        	public void run() 
-        	{
         		JMRVCanvas jmrv = new JMRVCanvas();
-        		for (int i =0; i < 45; i++)
-        		{
-        			debug(jmrv);
-        			yield();
-        			comp.repaint();	
-        		}
-        		jmrv.test();
-        	}
-        }.start();
+        		debug(jmrv);
+        		
+        		comp.repaint();
+        		
+        		debug(jmrv);
+        		
+        		comp.repaint();
+        		debug(jmrv);
+        		comp.repaint();
+        		debug(jmrv);
+        		comp.repaint();
+        		
         //-------------------------------------
         
         
@@ -216,7 +192,6 @@ public class TestJME {
     	
       	if (started)
     	{
-      		
       		vol.rotate(0, 0.017, 0, 1, 0); //rotate 1 degree (0.017 rads)
     		vol.renderAll();
     	}
