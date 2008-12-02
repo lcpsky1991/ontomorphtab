@@ -7,12 +7,11 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.AWTGLCanvas;
 import org.lwjgl.opengl.GLContext;
+import org.lwjgl.opengl.RenderTexture;
+import org.lwjgl.opengl.glu.Cylinder;
 
-import com.jme.system.DisplaySystem;
-import com.jmex.awt.JMECanvas;
-import com.jmex.awt.JMECanvasImplementor;
-import com.jmex.awt.lwjgl.LWJGLCanvas;
 
 
 
@@ -30,7 +29,7 @@ public class TestSimpleGL extends Frame
 			app = new TestSimpleGL();	
 			
 			//jniCanv = new JMRVCanvas();
-			Canvas nc = new Canvas();
+			AWTGLCanvas nc = new AWTGLCanvas();
 			
 			
 		    //get good coords for size and location
@@ -45,13 +44,11 @@ public class TestSimpleGL extends Frame
 		    app.setBackground(Color.WHITE);
 		    app.setLayout(new GridLayout(1, 2));
 		    
-		    
-		   // jniCanv.setSize(300, 300);
 		    nc.setSize(800, 800);
 		    
 		    nc.setBackground(Color.red);
 		    
-		   // app.add(jniCanv);
+
 		    app.add(nc);
 		    
 		    //Make a seperate thread for the rendering to do
@@ -59,24 +56,24 @@ public class TestSimpleGL extends Frame
     		boolean okgo=true;
 		    double x= 0;
 
-		    //jniCanv.init();
 		    jniCanv.initFor(nc);
 		    jniCanv.load("/home/caprea/Documents/meshTester/meshData/config.txt");
+		    jniCanv.setCameraDistance(50);
 		    jniCanv.translate(0, -100, -1000, 500);
+		    
+		    
+		    Cylinder cyl = new Cylinder();
+		    
+		    
+		    
+		    cyl.draw(50, 50, 300, 50, 50);
+		    
 		    do
 		    {
-		    	
-		    	//jniCanv.rotate(0, 1, 0, 0, 500);
 		   
 		    	jniCanv.translate(0, 0, 0, -1);
 		    	jniCanv.renderAll();
 		    	
-		    	
-		    	
-		    	jniCanv.showGLError();
-		   // 	jniCanv.repaint();
-		    	nc.repaint();
-		    	app.repaint();	
 		    }
 		    while(okgo);
 

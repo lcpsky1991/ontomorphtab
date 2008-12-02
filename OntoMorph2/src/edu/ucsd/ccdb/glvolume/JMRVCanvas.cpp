@@ -272,10 +272,9 @@ void showError()
 	GLenum err = glGetError(); 
         while (err != GL_NO_ERROR) 
         { 
-                fprintf(stderr, "glError: %s caught at %s:%u\n", (char *)gluErrorString(err), __FILE__, __LINE__); \
-                err = glGetError(); 
-        } 
-        cerr << "no err shown\n";
+			fprintf(stderr, "glError: %s caught at %s:%u\n", (char *)gluErrorString(err), __FILE__, __LINE__); \
+            err = glGetError(); 
+        }
 }
 
 //----------------------------------------------------------------------------
@@ -332,9 +331,6 @@ void makeContext()
 
 void makeCurrent()
 {
-	cerr << gc << endl;
-	cerr << infoJAWT->getDisplay() << endl;
-	cerr << infoJAWT->getDrawable() << endl;
 
 	if (glXMakeCurrent(infoJAWT->getDisplay(), infoJAWT->getDrawable(), gc) == false)
 	{
@@ -407,9 +403,6 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_initFor (JNIEnv *e
 	
 
 	
-	printf("print JAWT info\n");
-	infoJAWT->print();
-	
 	makeContext();		
 	makeCurrent();
 	initGLEnvironment();
@@ -422,42 +415,38 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_initFor (JNIEnv *e
 
 
 
-void doRender()
+void doRender(bool clearFlag)
 {
 
+//		Clear the accumulation buffer with glClear(GL_ACCUM_BUFFER_BIT);
+//		Clear the current draw buffer.
+//		Draw the first image.
+//		Add this image to the accumulation buffer using glAccum(GL_ACCUM, 0.5);.  Note the multiplication by 0.5.
+//		Clear the current darw buffer.
+//		Draw the second image.
+//		Add this image to the accumulation buffer using glAccum(GL_ACCUM, 0.5);  
+//		Transfer the accumulation buffer contents to the current draw buffer (overwriting the last image) using glAccum(GL_RETURN, 1.0)
+
 	infoJAWT->prepare();
-	
-	cerr << "1 ";
+
 	makeCurrent();	//implicitly maps window and syncs
-  	showError();
 
 	// Initialize components
-  	cerr << "2 ";
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-  	showError();
+	if ( clearFlag) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  	cerr << "3 ";
   	//vvDebugMsg::setDebugLevel(1);
 	g_rendererManager->renderMultipleVolume();
-  	showError();
-	
-  	cerr << "4 ";
+
 	swapBuffers(); 
-  	showError();
   	
   	glFinish();
-  	
-  	
-  	
+
   	infoJAWT->release();
-
-
-
 }
 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_renderAll (JNIEnv *env, jobject)
 {
-  	doRender();
+  	doRender(false);	//passing true clears buffer
 }
 
 

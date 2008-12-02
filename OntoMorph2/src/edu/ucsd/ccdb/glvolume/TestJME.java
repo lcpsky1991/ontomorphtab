@@ -63,6 +63,7 @@ import javax.swing.UIManager;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.GLContext;
+import org.lwjgl.opengl.glu.Cylinder;
 
 import sun.awt.SunToolkit;
 
@@ -160,15 +161,11 @@ public class TestJME {
         
        
         
-        		JMRVCanvas jmrv = new JMRVCanvas();
-        		debug(jmrv);
+        		
         		
         		while (true)
         		{
-        			System.out.println(count++);
-        			debug(jmrv);
         			comp.repaint();
-        			
         		}
         		
         //-------------------------------------
@@ -176,27 +173,7 @@ public class TestJME {
         
     }
 
-    private static void debug(JMRVCanvas vol)
-    {
-      	if ( !started)
-    	{
-    		vol.initFor(comp);
-        	started = true;
-        	vol.load("/home/caprea/Documents/meshTester/meshData/config.txt");
-        	vol.setCameraDistance(50);
-        	vol.translate(0, -1000, -1000, 100);
-        	vol.rotate(0, 6/4, 0, 1, 0);
-    	}
-    	
-      	if (started)
-    	{
-      		
-      		vol.rotate(0, 0.017, 1, 1, 0); //rotate 1 degree (0.017 rads)
-    		vol.renderAll();
-    	}
-      	
-    		
-    }
+    
 
     // **************** SWING FRAME ****************
 
@@ -215,21 +192,63 @@ public class TestJME {
 		long fps = 0;
         private InputHandler input;
 
-        public GImplementor(int width, int height) {
+        JMRVCanvas jmrv = new JMRVCanvas();
+        
+        public GImplementor(int width, int height) 
+        {
             super(width, height);
+            //debug(jmrv);
         }
         
-    @Override
-    	public void doRender() {
-    	// 
-    	  renderer.clearBuffers();
-          renderer.draw(rootNode);
-          simpleRender();
-          
-          renderer.displayBackBuffer();
+        private void debug(JMRVCanvas vol)
+        {
+          	if ( !started)
+        	{
+        		vol.initFor(comp);
+            	started = true;
+            	vol.load("/home/caprea/Documents/meshTester/meshData/config.txt");
+            	vol.setCameraDistance(50);
+            	vol.translate(0, -1000, -1000, 100);
+            	vol.rotate(0, 6/4, 0, 1, 0);
+        	}
+        	
+          	if (started)
+        	{
+          		
+          		vol.rotate(0, 0.017, 1, 1, 0); //rotate 1 degree (0.017 rads)
+        		vol.renderAll();
+        	}
+          	
+        		
+        }
+    
+        //This is the basic rendering, notice the clearing and the swapping of the buffers
+        //original code as follow for backup:
+        //The scene is rendered to the back buffer and then brought to be active
+        /*
+         * renderer.clearBuffers();
+	     * renderer.draw(rootNode);
+	     * simpleRender();
+	     * renderer.displayBackBuffer();
+         */
+        
+    	public void doRender() 
+    	{
+    		
+    		renderer.clearBuffers();
+	        renderer.draw(rootNode);
+	        
+		    
+		    
+	        debug(jmrv);
+	        simpleRender();
+	        
+	        renderer.displayBackBuffer();
+	        
+	        
     	}
-       
-
+    	
+    	
         public void simpleSetup() 
         {
             // Normal Scene setup stuff...
@@ -259,6 +278,19 @@ public class TestJME {
             rootNode.setRenderState(ts);
             startTime = System.currentTimeMillis() + 5000;
   
+            
+            
+            //mouse handler
+            input = new InputHandler();
+            input.addAction(new InputAction() 
+            {
+                public void performAction( InputActionEvent evt ) 
+                {
+                    logger.info( evt.getTriggerName() );
+                    
+                }
+            }, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_NONE, false );
+            
         }
 
         public synchronized void simpleUpdate()
