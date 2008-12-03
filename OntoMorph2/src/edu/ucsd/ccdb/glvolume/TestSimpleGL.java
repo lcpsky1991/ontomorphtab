@@ -8,28 +8,31 @@ import java.awt.Toolkit;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.AWTGLCanvas;
-import org.lwjgl.opengl.GLContext;
-import org.lwjgl.opengl.RenderTexture;
-import org.lwjgl.opengl.glu.Cylinder;
-
-
 
 
 public class TestSimpleGL extends Frame
 {
-	GLContext gc = null;
+	
 	static TestSimpleGL app = null;
     
     
-	public static void main(String[] args) throws LWJGLException 
+	public static void main(String[] args)  
 	  {
 	
-			JMultiResolutionVolume jniCanv = new JMultiResolutionVolume();
+			JMultiResolutionVolume volume = new JMultiResolutionVolume();
 			
 			app = new TestSimpleGL();	
 			
-			//jniCanv = new JMRVCanvas();
-			AWTGLCanvas nc = new AWTGLCanvas();
+			AWTGLCanvas canv = null;	//canv can be substituted for any class that extends Canvas
+			try 
+			{
+				canv = new AWTGLCanvas();
+			} 
+			catch (LWJGLException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			
 		    //get good coords for size and location
@@ -44,35 +47,27 @@ public class TestSimpleGL extends Frame
 		    app.setBackground(Color.WHITE);
 		    app.setLayout(new GridLayout(1, 2));
 		    
-		    nc.setSize(800, 800);
+		    canv.setSize(800, 800);
 		    
-		    nc.setBackground(Color.red);
+		    canv.setBackground(Color.red);
 		    
 
-		    app.add(nc);
+		    app.add(canv);
 		    
-		    //Make a seperate thread for the rendering to do
 	    		    
-    		boolean okgo=true;
-		    double x= 0;
+    		boolean okgo=false;
 
-		    jniCanv.initFor(nc);
-		    jniCanv.load("/home/caprea/Documents/meshTester/meshData/config.txt");
-		    jniCanv.setCameraDistance(50);
-		    jniCanv.translate(0, -100, -1000, 500);
+		    volume.initFor(canv);
+		    volume.load("/home/caprea/Documents/meshTester/meshData/config.txt");
+		    volume.setCameraDistance(50);
+		    volume.translate(0, -100, -1000, 500);
 		    
-		    
-		    Cylinder cyl = new Cylinder();
-		    
-		    
-		    
-		    cyl.draw(50, 50, 300, 50, 50);
 		    
 		    do
 		    {
 		   
-		    	jniCanv.translate(0, 0, 0, -1);
-		    	jniCanv.display();
+		    	volume.translate(0, 0, 0, -1);
+		    	volume.display(false);		//display the canvas and don't keep the previous render
 		    	
 		    }
 		    while(okgo);

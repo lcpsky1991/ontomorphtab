@@ -503,7 +503,7 @@ JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_getNum
 
 JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_setActiveChannel (JNIEnv *env, jobject, jint vol, jint chan, jboolean val)
 {
-	if (JNI_TRUE == value)
+	if (JNI_TRUE == val)
 		g_rendererManager->setActiveChannel(vol, chan, 1);
 	else
 		g_rendererManager->setActiveChannel(vol, chan, 0);
