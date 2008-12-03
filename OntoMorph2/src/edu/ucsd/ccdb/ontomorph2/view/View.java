@@ -137,7 +137,7 @@ public class View extends BaseSimpleGame
 		//as a hack, calling the main application class to do initialization
 		//this is because model loading needs to have the view running in order to work
 		  
-		//OntoMorph2.initialization();
+		OntoMorph2.initialization();
 		display.getRenderer().setBackgroundColor(ColorRGBA.black); //Set a black background.
 				
 		rootNode.attachChild(view3D);
