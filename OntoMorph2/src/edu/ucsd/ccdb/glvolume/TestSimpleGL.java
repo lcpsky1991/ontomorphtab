@@ -24,7 +24,7 @@ public class TestSimpleGL extends Frame
 	public static void main(String[] args) throws LWJGLException 
 	  {
 	
-			JMRVCanvas jniCanv = new JMRVCanvas();
+			JMultiResolutionVolume jniCanv = new JMultiResolutionVolume();
 			
 			app = new TestSimpleGL();	
 			
@@ -72,7 +72,7 @@ public class TestSimpleGL extends Frame
 		    {
 		   
 		    	jniCanv.translate(0, 0, 0, -1);
-		    	jniCanv.renderAll();
+		    	jniCanv.display();
 		    	
 		    }
 		    while(okgo);

@@ -2,7 +2,7 @@
 //	Author: Christopher Aprea
 //	
 // 
-// Contact: Christopher Aprea, caprea@ucsd.edu
+// Contact: Chris Aprea, caprea@ucsd.edu
 // 			Han S Kim, hskim@cs.ucsd.edu
 //			Jurgen P. Schulze, jschulze@ucsd.edu
 //
@@ -19,7 +19,7 @@
 #include <iostream>
 
 
-#include "JMRVCanvas.h"
+#include "JMultiResolutionVolume.h"
 #include "vvvirtexrendmngr.h"
 #include <stdio.h>
 #include <vvgltools.h>
@@ -342,7 +342,7 @@ void makeCurrent()
 	XSync(infoJAWT->getDisplay(), false);
 }
 
-JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_load (JNIEnv *env, jobject, jstring strConfig)
+JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_load (JNIEnv *env, jobject, jstring strConfig)
 {
 
 
@@ -374,13 +374,13 @@ JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_load (JNIEnv *env,
 	(env)->ReleaseStringUTFChars(strConfig, cfilename);//release the 8-bit version of the string
 }
 
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_setCameraDistance (JNIEnv *env, jobject, jdouble d)
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_setCameraDistance (JNIEnv *env, jobject, jdouble d)
 {
 	g_rendererManager->setCameraAspect(float(10)/float(10));
 	g_rendererManager->setCameraDistance(d);
 }
 
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_initFor (JNIEnv *env, jobject parent, jobject targetCanvas)
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_initFor (JNIEnv *env, jobject parent, jobject targetCanvas)
 {
 
 	visual = NULL;
@@ -410,7 +410,6 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_initFor (JNIEnv *e
 	//WHY this is needed I don't know, but it's needed.
 	infoJAWT->release(); //this is an extra canvas release, it is needed to swap between JME/JMRV
 
-	printf("initialized\n");
 }
 
 
@@ -418,74 +417,134 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_initFor (JNIEnv *e
 void doRender(bool clearFlag)
 {
 
-//		Clear the accumulation buffer with glClear(GL_ACCUM_BUFFER_BIT);
-//		Clear the current draw buffer.
-//		Draw the first image.
-//		Add this image to the accumulation buffer using glAccum(GL_ACCUM, 0.5);.  Note the multiplication by 0.5.
-//		Clear the current darw buffer.
-//		Draw the second image.
-//		Add this image to the accumulation buffer using glAccum(GL_ACCUM, 0.5);  
-//		Transfer the accumulation buffer contents to the current draw buffer (overwriting the last image) using glAccum(GL_RETURN, 1.0)
+	infoJAWT->prepare();			//lock the canvas
 
-	infoJAWT->prepare();
-
-	makeCurrent();	//implicitly maps window and syncs
+	makeCurrent();					//implicitly maps window and syncs
 
 	// Initialize components
 	if ( clearFlag) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  	//vvDebugMsg::setDebugLevel(1);
-	g_rendererManager->renderMultipleVolume();
+  					
+	g_rendererManager->renderMultipleVolume();	//render
 
-	swapBuffers(); 
+	swapBuffers(); 					//display the rendered buffer
   	
   	glFinish();
 
-  	infoJAWT->release();
+  	infoJAWT->release();			//unlock the canvas
 }
 
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_renderAll (JNIEnv *env, jobject)
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_display (JNIEnv *env, jobject, jboolean asComp)
 {
-  	doRender(false);	//passing true clears buffer
+	//for clarity in Java, 'asComposite' is the opposite of clearFlag
+  	doRender(!asComp);	//passing true clears buffer
 }
 
 
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_showGLError (JNIEnv *env, jobject)
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_showGLError (JNIEnv *env, jobject)
 {
 	showError();
 }
 
 
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_test (JNIEnv *env, jobject)
-{
-	if ( infoJAWT->release() )
-	{
-		cout << "released\n";
-	}
-	else
-	{
-		cout << "not released\n";	
-	}
-}
-
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_purge (JNIEnv *env, jobject)
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_purge (JNIEnv *env, jobject)
 {
 	initGLEnvironment();
 }
 
-
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_translate (JNIEnv *env, jobject obj, jint v, jdouble x, jdouble y, jdouble z)
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_translate (JNIEnv *env, jobject obj, jint v, jdouble x, jdouble y, jdouble z)
 {
 	//public native void translate(int vol, double x, double y, double z);
 	g_rendererManager->translateVolume(v,x,y,z);
 }
 
 
-
-JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMRVCanvas_rotate (JNIEnv *env, jobject obj, jint v, jdouble a, jdouble x, jdouble y, jdouble z)
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_rotate (JNIEnv *env, jobject obj, jint v, jdouble a, jdouble x, jdouble y, jdouble z)
 {
 	//public native void rotate(int vol, 	double angle, double x, double y, double z);
 	g_rendererManager->rotateVolume(v,a,x,y,z);
 }
 
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_reset (JNIEnv *env, jobject)
+{
+	g_rendererManager->reset();
+}
 
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_setCurrentVolume (JNIEnv *env, jobject, jint v)
+{
+	g_rendererManager->setCurrentVolume(v);
+}
+
+JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_getCurrentVolume (JNIEnv *env, jobject)
+{
+	return g_rendererManager->getCurrentVolume();
+}
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_setTextureVisiblity (JNIEnv *env, jobject, jint vol, jboolean show)
+{
+	if (JNI_TRUE == show)
+		g_rendererManager->setShowTexture(vol,1);
+	else
+		g_rendererManager->setShowTexture(vol,0);
+}
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_setBoundryVisiblity (JNIEnv *env, jobject, jint vol, jboolean show)
+{
+	if (JNI_TRUE == show)
+		g_rendererManager->setShowBoundary(vol,1);
+	else
+		g_rendererManager->setShowBoundary(vol,0);
+}
+
+JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_getNumChannels (JNIEnv *env, jobject, jint vol)
+{
+	return g_rendererManager->getNumChannel(vol);
+}
+
+JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_setActiveChannel (JNIEnv *env, jobject, jint vol, jint chan, jboolean val)
+{
+	if (JNI_TRUE == value)
+		g_rendererManager->setActiveChannel(vol, chan, 1);
+	else
+		g_rendererManager->setActiveChannel(vol, chan, 0);
+}
+
+JNIEXPORT jboolean JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_isActiveChannel (JNIEnv *env, jobject, jint v, jint c)
+{
+	g_rendererManager->isActiveChannel(v, c);
+}
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_setPixelToVoxelRatio (JNIEnv *env, jobject, jint v, jint r)
+{
+	g_rendererManager->setPixelToVoxelRatio(v, r);
+}
+
+JNIEXPORT jboolean JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_setBrickLimit (JNIEnv *env, jobject, jint v, jint lim)
+{
+	g_rendererManager->setBrickLimit(v, lim);
+}
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_resetBrickLimit (JNIEnv *env, jobject)
+{
+	g_rendererManager->resetBrickLimit();
+}
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_setCameraAspect (JNIEnv *env, jobject, jfloat r)
+{
+	g_rendererManager->setCameraAspect(r);
+}
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_viewFromX (JNIEnv *env, jobject)
+{
+	g_rendererManager->cameraViewFromX();
+}
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_viewFromY (JNIEnv *env, jobject)
+{
+	g_rendererManager->cameraViewFromY();
+}
+
+JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_viewFromZ (JNIEnv *env, jobject)
+{
+	g_rendererManager->cameraViewFromZ();
+}

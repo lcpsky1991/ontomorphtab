@@ -62,6 +62,7 @@ import javax.swing.JTree;
 import javax.swing.UIManager;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.glu.Cylinder;
 
@@ -129,6 +130,9 @@ public class TestJME {
         //---------- init ---------------
 
         // make the canvas:
+        
+        
+        //Display jmeDisp = Displ
         comp = DisplaySystem.getDisplaySystem("lwjgl").createCanvas(width, height);
 
                 // Important!  Here is where we add the guts to the panel:
@@ -159,18 +163,11 @@ public class TestJME {
     {
         new TestJME();
         
-       
-        
-        		
-        		
         		while (true)
         		{
         			comp.repaint();
         		}
-        		
         //-------------------------------------
-        
-        
     }
 
     
@@ -190,17 +187,17 @@ public class TestJME {
         private Box box;
 		long startTime = 0;
 		long fps = 0;
+		private int c = 0;
         private InputHandler input;
 
-        JMRVCanvas jmrv = new JMRVCanvas();
+        JMultiResolutionVolume jmrv = new JMultiResolutionVolume();
         
         public GImplementor(int width, int height) 
         {
             super(width, height);
-            //debug(jmrv);
         }
         
-        private void debug(JMRVCanvas vol)
+        private void debug(JMultiResolutionVolume vol)
         {
           	if ( !started)
         	{
@@ -210,13 +207,20 @@ public class TestJME {
             	vol.setCameraDistance(50);
             	vol.translate(0, -1000, -1000, 100);
             	vol.rotate(0, 6/4, 0, 1, 0);
+            	vol.setBoundryVisiblity(0, false);
+            	vol.setPixelToVoxelRatio(0, 1);
         	}
         	
           	if (started)
         	{
           		
-          		vol.rotate(0, 0.017, 1, 1, 0); //rotate 1 degree (0.017 rads)
-        		vol.renderAll();
+          		vol.rotate(0, 0.017, 1, 0, 0); //rotate 1 degree (0.017 rads)
+          		
+          		
+          		vol.setActiveChannel(0, c, !vol.isActiveChannel(0, c));
+          		
+          		if (c>2) c = 0;
+          		vol.display(true);
         	}
           	
         		
@@ -236,16 +240,12 @@ public class TestJME {
     	{
     		
     		renderer.clearBuffers();
-	        renderer.draw(rootNode);
-	        
-		    
-		    
-	        debug(jmrv);
+    		
+    		renderer.draw(rootNode);
+    		debug(jmrv);
 	        simpleRender();
 	        
 	        renderer.displayBackBuffer();
-	        
-	        
     	}
     	
     	
