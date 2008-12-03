@@ -177,7 +177,8 @@ public class TestJME {
             	started = true;
             	vol.load("/home/caprea/Documents/meshTester/meshData/config.txt");
             	vol.setCameraDistance(25);
-            	vol.translate(0, -1000, -1000, 100);            	
+            	vol.translate(0, -1000, -1000, 100); 
+            	vol.setBoundryVisiblity(0, false);
         	}
         	
           	if (started)
@@ -234,10 +235,10 @@ public class TestJME {
 
             TextureState ts = renderer.createTextureState();
             ts.setEnabled(true);
-            ts.setTexture(TextureManager.loadTexture(TestJME.class
-                    .getClassLoader().getResource(
-                            "jmetest/data/images/Monkey.jpg"),
-                    Texture.MM_LINEAR, Texture.FM_LINEAR));
+            //ts.setTexture(TextureManager.loadTexture(TestJME.class
+                    //.getClassLoader().getResource("jmetest/data/images/Monkey.jpg"), Texture.MM_LINEAR, Texture.FM_LINEAR));
+            		
+            ts.setTexture(TextureManager.loadTexture("/home/caprea/workspace/wbc/etc/img/slice.jpg", Texture.MM_LINEAR, Texture.FM_LINEAR));
 
             rootNode.setRenderState(ts);
             startTime = System.currentTimeMillis() + 5000;

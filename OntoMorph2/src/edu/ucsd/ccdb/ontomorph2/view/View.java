@@ -35,10 +35,12 @@ import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.PropertiesIO;
+
 import com.jme.util.GameTaskQueue;
 import com.jme.util.GameTaskQueueManager;
 import com.jme.util.geom.Debugger;
 import com.jmex.effects.glsl.BloomRenderPass;
+
 
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
@@ -135,7 +137,7 @@ public class View extends BaseSimpleGame
 		//as a hack, calling the main application class to do initialization
 		//this is because model loading needs to have the view running in order to work
 		  
-		OntoMorph2.initialization();
+		//OntoMorph2.initialization();
 		display.getRenderer().setBackgroundColor(ColorRGBA.black); //Set a black background.
 				
 		rootNode.attachChild(view3D);

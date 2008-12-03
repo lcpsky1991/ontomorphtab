@@ -6,6 +6,10 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Level;
 
+import org.fenggui.render.lwjgl.LWJGLOpenGL;
+import org.lwjgl.opengl.Display;
+
+import com.jme.renderer.Renderer;
 import com.jme.system.DisplaySystem;
 import com.jme.system.lwjgl.LWJGLDisplaySystem;
 import com.jmex.awt.lwjgl.LWJGLCanvas;
@@ -41,7 +45,6 @@ public class OntoMorph2
 	public static final String DEBUG_MODE = "debugMode";
 	public static final String SCENE = "scene";
 	
-	protected static LWJGLCanvas glCanvas = null;
 	
 	public static void main(String[] args) {
         //		set global log level to warning
@@ -50,7 +53,7 @@ public class OntoMorph2
 		Log.getLogger("").setLevel(Level.WARNING);
 		Log.getLogger("").getHandlers()[0].setLevel(Level.WARNING);
 		
-		initAlt();
+	
 		View view = View.getInstance();
 		
 		SceneObserver obs = SceneObserver.getInstance();
@@ -88,31 +91,8 @@ public class OntoMorph2
 		//View.getInstance().getView2D().addInfoText("This is an example of \nloading neuronal morphologies...");
 	}
 	
-	public static void initAlt()
-	{
-		try
-		{
-			LWJGLDisplaySystem glDisplay = (LWJGLDisplaySystem) DisplaySystem.getDisplaySystem("LWJGL");
-			glCanvas = (LWJGLCanvas) glDisplay.createCanvas(200, 200);
-		}
-		catch(Exception e)
-		{
-			System.out.println("Did not init glDisplay, ");
-			//
-			e.printStackTrace();
-		}
-		
-		System.out.println(glCanvas);
-		for ( String sys : DisplaySystem.getSystemProviderIdentifiers())
-		{
-			System.out.println("Provider '" + sys + "'");
-		}
-	}
 	
-	public static LWJGLCanvas getCanvas()
-	{
-		return glCanvas;
-	}
+	
 	
 	public static Scene getCurrentScene() {
 		return _scene;

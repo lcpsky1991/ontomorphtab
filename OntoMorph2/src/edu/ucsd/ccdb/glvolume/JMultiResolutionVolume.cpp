@@ -368,6 +368,9 @@ JNIEXPORT jint JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_load (
 
 	
 	g_rendererManager = new vvVirTexMultiRendMngr();
+	
+	vvDebugMsg::setDebugLevel(0);
+	
    	g_rendererManager->load(cfilename); 	//name of file, load the config file
 
 
