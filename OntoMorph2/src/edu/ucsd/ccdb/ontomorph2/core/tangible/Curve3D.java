@@ -133,6 +133,9 @@ public class Curve3D extends Tangible{
 		morphMLCurve = curRetreive;
 	}
 	
+	
+	
+	
 	/**
 	 * Get a list of the CurveAnchorPoints for this Curve
 	 * @return

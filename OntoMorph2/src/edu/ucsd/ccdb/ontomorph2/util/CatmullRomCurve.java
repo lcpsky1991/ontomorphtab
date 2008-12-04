@@ -272,7 +272,9 @@ public class CatmullRomCurve extends Curve {
 	   * @see com.jme.scene.Spatial#doPick(com.jme.math.Ray, com.jme.intersection.PickResults)
 	   */
 	  @Override
-	  public void findPick(Ray toTest, PickResults results) {
+	  public void findPick(Ray toTest, PickResults results) 
+	  {
 
+		  
 	  } // findPick
 	} // CatmullRomCurve

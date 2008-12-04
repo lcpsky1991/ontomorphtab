@@ -294,7 +294,8 @@ public class View extends BaseSimpleGame
 	}
 
 	
-	protected void cleanUp(){
+	protected void cleanUp()
+	{
 		super.cleanup();
 		display.getRenderer().cleanup();
         if (bloomRenderPass != null){
@@ -454,7 +455,8 @@ public void bloomIndicator(TangibleView rollOverSelected){
 	indicator();
 	Callable<?> loadlock = new Callable<Object>() {
 
-        public Object call() throws Exception {
+        public Object call() throws Exception 
+        {
             pManager.add(rootPass);
         	pManager.add(bloomRenderPass);
         	//System.out.println("inside the object call method");
@@ -494,7 +496,8 @@ public void indicator(){
         zs.setWritable(false);
         zs.setEnabled(true);
         spatial.setRenderState(zs);*/
-		bloomRenderPass = new BloomRenderPass(this.cam, 4){
+		bloomRenderPass = new BloomRenderPass(this.cam, 4)
+		{
 
 			private static final long serialVersionUID = 1L;
 

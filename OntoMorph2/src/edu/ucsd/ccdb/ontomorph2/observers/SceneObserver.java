@@ -214,6 +214,12 @@ public class SceneObserver implements Observer {
 				//return; //do not execute the update() as usual because the object is null
 			}
 			
+			if (Tangible.CHANGED_NAME.equals(arg))
+			{
+				//update the TV to have the same name as the Tang
+				tv.setName(t.getName());
+			}
+			
 			tv.update();
 		}
 		

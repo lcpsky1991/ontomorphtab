@@ -2,8 +2,10 @@ package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 
 import com.jme.bounding.BoundingBox;
+import com.jme.intersection.PickData;
 import com.jme.intersection.PickResults;
 import com.jme.math.Ray;
+import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.batch.GeomBatch;
 
@@ -135,21 +137,39 @@ public class CurveView extends TangibleView {
     
         super.findPick(ray, results);
         
-        if (getWorldBound().intersects(ray)) 
-        {
-        	for (int i=0; i < this.b.getBatchCount(); i++)
-        	{
-        		//results.addPick(ray, this.b.getBatch(i)); //good idea to look through all the batches and call their findPicks than to jump into adding the result 
-        		//ca: I dont know why there is multiple Batchs so I just add them all
-        		//ca: I expect it will usually be only one so getBatch(0) will work in most cases
-        		GeomBatch gb = this.b.getBatch(i); 
-                if ( gb.isEnabled() )
-                {
-                	gb.findPick(ray, results);
-                	//System.out.println("intersects " + gb);
-                }
-        	}
-        }
+        
+        
+        /*
+		   * iterate steps over the entire curve
+		   * for each step, get a distance between the ray and the step point
+		   * if the distance is small enough then add this curve to the pickresults
+		   */
+		
+		  double minDist = 0.5;	//arbitrary number TODO: should be a global variable that changes with zoom
+		  Vector3f p = null;
+		  double dist = 0;
+		  
+		  for (float t=0; t < 1; t = t + 0.001f)
+		  {
+			  p = b.getPoint(t);
+			  dist = ray.distanceSquared(p); 
+			  
+			  if (dist < minDist)
+			  {
+				  for (int i=0; i < this.b.getBatchCount(); i++)
+		        	{
+		        		//results.addPick(ray, this.b.getBatch(i)); //good idea to look through all the batches and call their findPicks than to jump into adding the result 
+		        		//ca: I dont know why there is multiple Batchs so I just add them all
+		        		//ca: I expect it will usually be only one so getBatch(0) will work in most cases
+		        		GeomBatch gb = this.b.getBatch(i); 
+		                if ( gb.isEnabled() )
+		                {
+		                	results.addPick(ray, gb);
+		                }
+		        	}
+			  }
+		  }  
+        
     }
     
 	

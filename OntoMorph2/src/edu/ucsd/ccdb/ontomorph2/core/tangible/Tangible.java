@@ -486,7 +486,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	
 	}
 	
-	public void setName(String name) {
+	public void setName(String name) 
+	{
+		
 		this.theSpatial.setName(name);
 		changed(CHANGED_NAME);
 	}
