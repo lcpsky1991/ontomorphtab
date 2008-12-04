@@ -17,10 +17,12 @@ import com.jmex.model.converters.ObjToJme;
 
 import edu.ucsd.ccdb.ontomorph2.core.data.ReferenceAtlas;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationQuat;
 import edu.ucsd.ccdb.ontomorph2.util.AllenAtlasMeshLoader;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
+import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 /**
  * Defines an anatomical region of the mouse brain.  Contains data about its parent in a 
@@ -181,5 +183,18 @@ public class BrainRegion extends ContainerTangible {
 		
 		return jbr.load(new ByteArrayInputStream(BO.toByteArray()));
 	}
+	
+
+
+	/**
+	 * 12/03/08: bug found that allowed users to select, and then manipulate volumes from the List widget 
+	 * BrainRegions are reference and should not be manipulated 
+	 */
+	public PositionVector move(float dx, float dy, int mx, int my) 
+	{ 
+		return null;
+	}
+	public void rotate(float dx, float dy, OMTVector constraint){}
+	public void scale(float dx, float dy, OMTVector constraint) {}
 	
 }
