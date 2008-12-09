@@ -1027,19 +1027,20 @@ void vvVirTexRend::setGLenvironment()
   glEnable(GL_COLOR_MATERIAL);
   glEnable(GL_BLEND);
 
-  //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   //glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
   //glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_DST_ALPHA);
 
-  glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE);
+  //glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE);
   //glBlendFunc(GL_ONE, GL_CONSTANT_ALPHA);
-  glBlendColor(1.f, 1.f, 1.f, 0.5f);
+  //glBlendColor(1.f, 1.f, 1.f, 0.5f);
 
   glMatrixMode(GL_TEXTURE);
   glLoadIdentity();
   glMatrixMode(GL_MODELVIEW);
   glDepthMask(GL_FALSE);
 
+  _renderState._mipMode = 1;
 
   if (glBlendEquationVV)
   {

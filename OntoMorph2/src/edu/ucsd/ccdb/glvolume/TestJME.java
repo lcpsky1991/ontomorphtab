@@ -175,17 +175,19 @@ public class TestJME {
         	{
         		vol.initFor(comp);
             	started = true;
-            	vol.load("/home/caprea/Documents/meshTester/meshData/config.txt");
+            	vol.load("/home/caprea/Documents/meshTester/meshData3/3Dmultichan5/config.txt");
             	vol.setCameraDistance(25);
-            	vol.translate(0, -1000, -1000, 100); 
-            	vol.setBoundryVisiblity(0, false);
+            	vol.translate(0, -800, -800, 1000); 
+            	vol.setBoundryVisiblity(0, true);
         	}
         	
           	if (started)
         	{
           		
-          		vol.rotate(0, 0.017, 1, 0, 0); //rotate 1 degree (0.017 rads)
+          		//call display before translating it
           		vol.display(true);
+          		//vol.rotate(0, 0.017, 0, -1, 0); //rotate 1 degree (0.017 rads)
+          		vol.translate(0, 0, 0, -1);
         	}
           	
         		
@@ -246,7 +248,7 @@ public class TestJME {
             
             
             //mouse handler
-            input = new InputHandler();
+            /*input = new InputHandler();
             input.addAction(new InputAction() 
             {
                 public void performAction( InputActionEvent evt ) 
@@ -255,7 +257,7 @@ public class TestJME {
                     
                 }
             }, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL, InputHandler.AXIS_NONE, false );
-            
+            */
         }
 
         public synchronized void simpleUpdate()

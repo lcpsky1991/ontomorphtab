@@ -458,7 +458,7 @@ JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_purge 
 JNIEXPORT void JNICALL Java_edu_ucsd_ccdb_glvolume_JMultiResolutionVolume_translate (JNIEnv *env, jobject obj, jint v, jdouble x, jdouble y, jdouble z)
 {
 	//public native void translate(int vol, double x, double y, double z);
-	g_rendererManager->translateVolume(v,x,y,z);
+    g_rendererManager->translateVolume(v,x,y,z);
 }
 
 
