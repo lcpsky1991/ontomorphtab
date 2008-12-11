@@ -327,13 +327,30 @@ public class NeuronMorphologyView extends TangibleView{
 		Stack<Spatial> queue = new Stack<Spatial>();
 		
 		queue.addAll(this.getChildren());
-		while(!queue.isEmpty()) {
+		while(!queue.isEmpty()) 
+		{
 			Spatial s = queue.pop();
-			if (s instanceof Geometry) {
-				BigInteger id = getCableIdFromGeometry((Geometry)s);
-				ColorRGBA c = ColorUtil.convertColorToColorRGBA(getMorphology().getCable(id).getColor());
-				((Geometry)s).setSolidColor(c);
-			} else if (s instanceof Node) {
+			if (s instanceof Geometry) 
+			{
+				
+				//FIXME: remove try/catch by solving the bug
+				//this try/catch block to resolve an issue introduced by the tooltip
+				//an extra update is made by the tooltip which causes a nullPointer expcetion
+				//this is NOT fixed, this is a graceful-degredation
+				try 
+				{
+					BigInteger id = getCableIdFromGeometry((Geometry)s);
+					ColorRGBA c = ColorUtil.convertColorToColorRGBA(getMorphology().getCable(id).getColor());
+					((Geometry)s).setSolidColor(c);	
+				}
+				catch (Exception e) 
+				{
+					// TODO: handle exception
+				}
+				
+			}
+			else if (s instanceof Node) 
+			{
 				for (Spatial ns : ((Node)s).getChildren())
 					queue.push(ns);
 			}

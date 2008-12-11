@@ -66,7 +66,7 @@ public class Axon extends Curve3D
 		changed();
 		System.out.println("Axon move");
 		return null;
-		//return change;
+		
 	}
 	
 }

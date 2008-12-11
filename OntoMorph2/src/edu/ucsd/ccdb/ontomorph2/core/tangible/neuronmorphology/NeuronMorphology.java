@@ -354,12 +354,7 @@ public class NeuronMorphology extends Tangible{
 		Axon fiber = getAxon();
 		if (fiber != null)
 		{
-			fiber.delete();
-			//CurveAnchorPoint origin = fiber.getAnchorPoints().get(0);
-			
-			//fiber.move(dx, dy, mx, my);
-			
-			//fiber.changed();
+			fiber.changed();
 		}
 		
 		//apply the movement

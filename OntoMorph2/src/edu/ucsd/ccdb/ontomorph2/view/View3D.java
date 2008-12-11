@@ -117,12 +117,13 @@ public class View3D extends Node{
 	{
 		
 		cellsNode.detachAllChildren();	//this will also detach all the axons
-	
+		
+		
 		//+++++ readd all the cells ++++++++++++++
 		for(NeuronMorphology cell : cells)
 		{
 			NeuronMorphologyView cellView = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor(cell);
-			CurveView axonView = null;
+			CurveView axonView = null;	
 			Axon fiber = null;
 			if (cellView == null) 
 			{
@@ -148,34 +149,15 @@ public class View3D extends Node{
 				if ( axonView != null)
 				{
 					System.out.println(cell.getName() + " has an axon " + cell.getAxon().getName());
-					n.attachChild(axonView);	//attach the axon as a childnode of the cellnode
 				}
 			}
 
-			
 			cellsNode.attachChild(n);			
 		}
 		this.updateNode(cellsNode);
-		
-		
-		
 	}
-	
-	/**
-	 * added for {@link ContextMenu}s New Cell command, because it is more efficient to add ONE than remake all
-	 * @param cell the ({@link NeuronMorphology}s to be added
-	 * @deprecated
-	 */
-	public void addOneCell(NeuronMorphology cell)
-	{
-		NeuronMorphologyView cv = new NeuronMorphologyView(cell);
-		Node n = cv.getNode();
-		cellsNode.attachChild(n);
-	}
-	
 	
 
-	
 	public void setCurves(Set<Curve3D> curves) 
 	{
 		curvesNode.detachAllChildren();
@@ -225,7 +207,6 @@ public class View3D extends Node{
 			volumesNode.attachChild(volView.getNode());
 		}
 	}
-	
 	
 	public void addParticles(Set<SphereParticles> particles){
 		//System.out.println("add particles " + particles );

@@ -123,10 +123,10 @@ public abstract class TangibleView extends Node
 			this.setCullMode(SceneElement.CULL_ALWAYS); //inviisble
 		}
 		
-		
 		this.updateModelBound();
 		this.updateRenderState();
 		this.updateGeometricState(0.5f, false);
+		
 	}
 	
 	/**

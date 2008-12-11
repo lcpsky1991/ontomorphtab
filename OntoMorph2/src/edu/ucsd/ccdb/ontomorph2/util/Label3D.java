@@ -167,16 +167,24 @@ public class Label3D
      * @return returns a {@link BillboardNode} with text via getQuad()
      */
     public BillboardNode getBillboard(float height){
-        BillboardNode bb = new BillboardNode("bb");
+        BillboardNode bb = new BillboardNode("Text2D_BB");
         Quad q = getQuad(height);
         bb.attachChild(q);
         return bb;
     }
 
+    /**
+     * Sets the face color of the text
+     * @param foreground
+     */
     public void setForeground(Color foreground) {
         this.foreground = foreground;
     }
 
+    /**
+     * Sets the shadow color of the text
+     * @param background
+     */
     public void setBackground(Color background) {
         this.background = background;
     }
