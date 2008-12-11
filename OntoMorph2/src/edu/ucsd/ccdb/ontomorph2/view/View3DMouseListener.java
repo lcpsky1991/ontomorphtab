@@ -25,6 +25,7 @@ import com.jme.intersection.TrianglePickResults;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.scene.BillboardNode;
 import com.jme.scene.batch.GeomBatch;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
@@ -40,6 +41,7 @@ import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTUtility;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
+import edu.ucsd.ccdb.ontomorph2.util.Label3D;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.BasicSearchWidget;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
@@ -77,7 +79,7 @@ public class View3DMouseListener implements MouseInputListener {
 	View v = new View();
 	FengJMEInputHandler guiInput;
 	BasicSearchWidget widget = new BasicSearchWidget();	
-	Tangible rollOver = null, previousRollOver =null;
+	Tangible previousRollOver =null;
 	/**
 	 * Seriously, can we set the default to be move for all objects?  It is 
 	 * pretty unintuitive to have to select move from the menu.  
@@ -95,6 +97,7 @@ public class View3DMouseListener implements MouseInputListener {
 	
 	private boolean down;
 	private int lastButton;
+	private boolean inDrag = false;
 	long prevPressTime = 0;
 	long dblClickDelay = 800;	//in milliseconds (1000 = 1 sec)
 	
@@ -117,7 +120,8 @@ public class View3DMouseListener implements MouseInputListener {
 		if(!this.guiInput.wasMouseHandled()){
 			down = pressed;
 			lastButton = button;
-			if(pressed) {
+			if(pressed) 
+			{
 				onMousePress(button);
 				//check double click
 				if (System.currentTimeMillis() - this.prevPressTime < this.dblClickDelay) 
@@ -187,6 +191,8 @@ public class View3DMouseListener implements MouseInputListener {
 		//int numMouseBut = button;
 		int numMouseBut = MouseInput.get().getButtonCount();
 		
+		inDrag = true;
+		
 		//====================================
 		//	MIDDLE MOUSE
 		//====================================
@@ -243,14 +249,7 @@ public class View3DMouseListener implements MouseInputListener {
 	 */ 
 	private void onMousePress(int buttonIndex)
 	{
-		//	RIGHT CLICK
-		if (1 == buttonIndex) //right
-		{	
-			doPick();
-			//MouseInput.get().setCursorVisible(false); //hide mouse cursor
-			ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
-					MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
-		}
+		
 	}
 	
 	
@@ -276,13 +275,31 @@ public class View3DMouseListener implements MouseInputListener {
 				last.execPostManipulate(ontop);
 			}
 		}	
+		
+		
+		if (!inDrag)
+		{
+			if (OMT_MBUTTON_RIGHT == buttonIndex) //right
+			{	
+				doPick();
+				//MouseInput.get().setCursorVisible(false); //hide mouse cursor
+				ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
+						MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
+			}
+			else if (OMT_MBUTTON_LEFT == buttonIndex)
+			{
+				doPick();
+			}
+		}
+		
+		inDrag = false;		//must keep track of whether drag mode is on or off for selection versus drag
 	}
 	
 	private void onMouseDouble(int buttonIndex)
 	{
 		if (OMT_MBUTTON_LEFT == buttonIndex) //left 
 		{
-			doPick();
+			//doPick();
 		}
 	}
 	
@@ -617,35 +634,29 @@ public class View3DMouseListener implements MouseInputListener {
 		Log.warn("Manipulation method set to: " + m);
 	}
 	
-	public void mouseRollOver(){
+	public void mouseRollOver()
+	{
 		ArrayList<Tangible> pickedlist = psuedoPick(KeyInput.get().isControlDown(), true);   
 		if (pickedlist.size() > 0)
 		{			
-			//System.out.println(" pickedlist is bigger than zero");
-			rollOver = pickedlist.get(0).selectRollover();	//select the closest one
-			//System.out.println("rollover " + rollOver);
-			//System.out.println("previousrollover " + this.previousRollOver);
-			//System.out.println("are they equal " + rollOver.equals(this.previousRollOver));
-			if(!(rollOver.equals(this.previousRollOver))){
-					
-				TangibleView current = TangibleViewManager.getInstance().getTangibleViewFor(rollOver);
-				if(rollOver instanceof SphereParticles){
-					String name = "To ".concat(rollOver.getName());  
-					createNameTag(name, rollOver.getPosition());
-				}
-				
-				else{
-					createNameTag(rollOver.getName(), rollOver.getPosition());
-				}	
-					//System.out.println("not sp");
-			
-				//View.getInstance().bloomIndicator(current);
-				this.previousRollOver = rollOver;
+			Tangible rollOver = null;
+			rollOver = pickedlist.get(0); 	//select the closest one
+
+			if( rollOver != previousRollOver ) //prevents repeated rollOver events for the same object
+			{					
+				TangibleManager.getInstance().setCurrentRolledOver(rollOver);	//let the manager know whats been last rolled over
+				View.getInstance().getView3D().showToolTipFor(rollOver);		//display the tooltip
+				createNameTag(rollOver.getName());								//also show it in dev-box
+				rollOver.doRollOver();											//execute tangible-specific rolled-over code
+				this.previousRollOver = rollOver;								//remember what was done
 			}
 		}
 	}
 	
-	public void createNameTag(String name, Vector3f location){
-		View2D.getInstance().setInfoText(name);				
+
+	
+	public void createNameTag(String name)
+	{
+		View2D.getInstance().setInfoText(name);
 	}
 }

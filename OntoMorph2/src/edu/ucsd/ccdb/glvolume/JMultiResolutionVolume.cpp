@@ -425,7 +425,9 @@ void doRender(bool clearFlag)
 	makeCurrent();					//implicitly maps window and syncs
 
 	// Initialize components
-	if ( clearFlag) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//if ( clearFlag) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	if ( clearFlag) glClear(GL_COLOR_BUFFER_BIT);
 
   					
 	g_rendererManager->renderMultipleVolume();	//render

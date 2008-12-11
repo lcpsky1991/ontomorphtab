@@ -27,6 +27,7 @@ import edu.ucsd.ccdb.ontomorph2.core.spatial.DemoCoordinateSystem;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.Axon;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -70,6 +71,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 	public static final int CTX_ACTION_VISIBLE = 125;
 	public static final int CTX_ACTION_SAVE = 126;
 	public static final int CTX_ACTION_SETURL = 127;
+	public static final int CTX_ACTION_NEW_AXON = 128;
 		
 	//ms stands for Menu String
 	static final String msNEW = "New ...";
@@ -322,11 +324,30 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 			}
 			
 			
+			if (baseContext instanceof Curve3D ) //or Axon (implicitly)
+			{
+			
+			}
+			
 			//ATTACH TO:
 	        if (baseContext instanceof NeuronMorphology)
 	        {
 	        	Set<Curve3D> candidates = View.getInstance().getScene().getCurves();
-		        for (Curve3D c : candidates) menuItemFactory(mnuAttach, c.getName(), CTX_ACTION_ATTACH, c, 0);
+	        	menuItemFactory(mnuNew, "Axon", CTX_ACTION_NEW_AXON);
+	        	
+		        for (Curve3D c : candidates) 
+		        {	
+		        	//we are not interested in attaching neurons to their own axons, so excluse them
+		        	//if ( c instanceof Axon )
+		        	{
+		        		    			
+		        	}
+		        	//else
+		        	{
+		        		menuItemFactory(mnuAttach, c.getName(), CTX_ACTION_ATTACH, c, 0);
+		        	}
+		        	
+		        }
 	        }
 			
 			
@@ -550,6 +571,9 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 				case CTX_ACTION_ANIMATE:
 					Log.warn("animate: " + single);
 					break;
+				case CTX_ACTION_NEW_AXON:
+					TangibleFactory.getInstance().createAxon(single);
+					break;
 				case CTX_ACTION_NEW_CURVE:
 					TangibleFactory.getInstance().createCurve(single);
 					break;
@@ -622,7 +646,7 @@ public class ContextMenu extends Menu implements IMenuItemPressedListener{
 					break;
 				case CTX_ACTION_DELETE:
 					{
-						ival = JOptionPane.showConfirmDialog(frmDialog, "Are you sure you wish to delete " + single.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+						//ival = JOptionPane.showConfirmDialog(frmDialog, "Are you sure you wish to delete " + single.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 						//if (ival == JOptionPane.YES_OPTION) 
 						{
 							single.delete();

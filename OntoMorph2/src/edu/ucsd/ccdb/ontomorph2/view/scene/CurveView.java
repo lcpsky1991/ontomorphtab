@@ -35,10 +35,19 @@ public class CurveView extends TangibleView {
 		//remove everything at the beginning because we can't be guaranteed to have
 		//the same BezierCurve from Curve since it gives us a copy every time.
 		//(see Curve3D.asBezierCurve() comment.
+		
 		this.detachChild(this.b);
 		
 		Curve3D curve = ((Curve3D)getModel());
-		//this.b = (BezierCurve)curve.getCurve();
+		
+		//error checking
+		//if there is no defined curve, no sense in drawing anything
+		if ( null == curve ) 
+		{
+			System.out.println("The curve is Undefined: " + getName());
+			return;
+		}
+		
 		this.b = (CatmullRomCurve)curve.getCurve();
 		
 		
@@ -158,7 +167,8 @@ public class CurveView extends TangibleView {
 			  {
 				  for (int i=0; i < this.b.getBatchCount(); i++)
 		        	{
-		        		//results.addPick(ray, this.b.getBatch(i)); //good idea to look through all the batches and call their findPicks than to jump into adding the result 
+		        		//results.addPick(ray, this.b.getBatch(i)); //good idea to look through all the batches 
+					  	//and call their findPicks than to jump into adding the result 
 		        		//ca: I dont know why there is multiple Batchs so I just add them all
 		        		//ca: I expect it will usually be only one so getBatch(0) will work in most cases
 		        		GeomBatch gb = this.b.getBatch(i); 

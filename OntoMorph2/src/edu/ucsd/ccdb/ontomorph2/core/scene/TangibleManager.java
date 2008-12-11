@@ -19,6 +19,7 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.Axon;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -148,13 +149,15 @@ public class TangibleManager {
 	}
 	
 	public Set<Curve3D> getCurves() {
-		Set<Curve3D> surfaces = new HashSet<Curve3D>();
-		for (Tangible t : this.tangibles) {
-			if (t instanceof Curve3D) {
-				surfaces.add((Curve3D)t);
+		Set<Curve3D> curves = new HashSet<Curve3D>();
+		for (Tangible t : this.tangibles) 
+		{
+			if (t instanceof Curve3D) 
+			{
+				curves.add((Curve3D)t);
 			}
 		}
-		return surfaces;
+		return curves;
 	}
 	
 	public Set<SphereParticles> getParticles() {
@@ -198,10 +201,9 @@ public class TangibleManager {
 		Log.warn("Currently selected: " + selectedThings.toString());
 	}
 	
-	public Tangible selectRollover(Tangible thing)
+	public void setCurrentRolledOver(Tangible thing)
 	{
-			this.selectedRollover = thing;	
-			return this.selectedRollover;
+		selectedRollover = thing;	
 	}
 	
 	public void setMultiSelect(boolean multi) {

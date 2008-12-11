@@ -1,11 +1,15 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
+import java.awt.Color;
 import java.util.Set;
+
+import org.morphml.metadata.schema.Curve;
 
 import com.acarter.scenemonitor.SceneMonitor;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.state.LightState;
 
@@ -14,16 +18,21 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.DataMesh;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Surface;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Volume;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.Axon;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
+import edu.ucsd.ccdb.ontomorph2.util.Label3D;
 import edu.ucsd.ccdb.ontomorph2.view.gui2d.ContextMenu;
+import edu.ucsd.ccdb.ontomorph2.view.scene.AxonView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.DataMeshView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SphereParticlesView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.VolumeView;
 
 /**
@@ -40,6 +49,8 @@ public class View3D extends Node{
 	private Node volumesNode = null;
 	private Node particlesNode = null;
 	private Node atlasNode = null;
+	private Node axonsNode = null;
+	private Node tipNode = null;
 	
 	public View3D() {
 		super("View3D (Root)");
@@ -51,6 +62,8 @@ public class View3D extends Node{
 		volumesNode = new Node("Volumes");
 		particlesNode = new Node("Particles");
 		atlasNode = new Node("Atlas");
+		axonsNode = new Node("Axons");
+		tipNode = new BillboardNode("ToolTip");
 		
 		slidesNode.setLightCombineMode(LightState.OFF);
 		cellsNode.setLightCombineMode(LightState.OFF);
@@ -62,6 +75,7 @@ public class View3D extends Node{
 		//atlasNode.setLightCombineMode(LightState.COMBINE_CLOSEST);
 		atlasNode.setLightCombineMode(LightState.COMBINE_FIRST);
 		
+		
 		this.attachChild(slidesNode);
 		this.attachChild(cellsNode);
 		this.attachChild(curvesNode);
@@ -70,6 +84,7 @@ public class View3D extends Node{
 		this.attachChild(volumesNode);
 		this.attachChild(particlesNode);
 		this.attachChild(atlasNode);
+		cellsNode.attachChild(axonsNode);	//axons are a child of cells
 	}
 	
 	public void setSlides(Set<Slide> slides) {
@@ -95,14 +110,20 @@ public class View3D extends Node{
 	}
 	
 	/**
-	 * Detaches all children and then re-adds them fromt he paramter
+	 * Detaches all children and then re-adds them from the paramter
 	 * @param cells the {@link NeuronMorphology}s that will be added
 	 */
-	public void setCells(Set<NeuronMorphology> cells) {
-		cellsNode.detachAllChildren();
+	public void setCells(Set<NeuronMorphology> cells) 
+	{
+		
+		cellsNode.detachAllChildren();	//this will also detach all the axons
+	
+		//+++++ readd all the cells ++++++++++++++
 		for(NeuronMorphology cell : cells)
 		{
 			NeuronMorphologyView cellView = (NeuronMorphologyView)TangibleViewManager.getInstance().getTangibleViewFor(cell);
+			CurveView axonView = null;
+			Axon fiber = null;
 			if (cellView == null) 
 			{
 				//implicitly adds the new TangibleView to the TangibleViewManager
@@ -110,11 +131,36 @@ public class View3D extends Node{
 			}
 			
 			Node n = cellView.getNode();
-			cellsNode.attachChild(n);
+			
+			//cell created, create an axon for it too (Axons are actually curve3Ds)			
+			fiber = cell.getAxon();
+			if (fiber != null)
+			{
+				axonView = (CurveView)TangibleViewManager.getInstance().getTangibleViewFor(fiber);
+				
+				//the cell has an axon defined but it is not a view for it yet, create one
+				if (null == axonView)
+				{
+					axonView = new CurveView((Curve3D) fiber);	
+				}
+				
+				//add the axon fiber  if there is one
+				if ( axonView != null)
+				{
+					System.out.println(cell.getName() + " has an axon " + cell.getAxon().getName());
+					n.attachChild(axonView);	//attach the axon as a childnode of the cellnode
+				}
+			}
+
+			
+			cellsNode.attachChild(n);			
 		}
 		this.updateNode(cellsNode);
+		
+		
+		
 	}
-
+	
 	/**
 	 * added for {@link ContextMenu}s New Cell command, because it is more efficient to add ONE than remake all
 	 * @param cell the ({@link NeuronMorphology}s to be added
@@ -127,15 +173,26 @@ public class View3D extends Node{
 		cellsNode.attachChild(n);
 	}
 	
-	public void setCurves(Set<Curve3D> curves) {
+	
+
+	
+	public void setCurves(Set<Curve3D> curves) 
+	{
 		curvesNode.detachAllChildren();
-		for(Curve3D curve : curves) {
-			CurveView curveView = (CurveView)TangibleViewManager.getInstance().getTangibleViewFor(curve);
-			if (curveView == null) {
-				//implicitly adds the new TangibleView to the TangibleViewManager
-				curveView = new CurveView(curve);
+		for(Curve3D curve : curves) 
+		{
+			//axons are actually curve3Ds, but we keep them associated with cells and not on the curve node
+			//if ( !(curve instanceof Axon) )
+			{
+				CurveView curveView = (CurveView)TangibleViewManager.getInstance().getTangibleViewFor(curve);
+				if (curveView == null) 
+				{
+					//implicitly adds the new TangibleView to the TangibleViewManager
+					curveView = new CurveView(curve);
+				}
+				
+				curvesNode.attachChild(curveView);	
 			}
-			curvesNode.attachChild(curveView);
 		}
 		
 	}
@@ -169,6 +226,7 @@ public class View3D extends Node{
 		}
 	}
 	
+	
 	public void addParticles(Set<SphereParticles> particles){
 		//System.out.println("add particles " + particles );
 		particlesNode.detachAllChildren();
@@ -194,6 +252,23 @@ public class View3D extends Node{
 		updateNode(atlasNode);
 	}
 	
+	public void showToolTipFor(Tangible interest)
+	{
+	
+		//remove the previous tooltip
+		tipNode.removeFromParent(); //will unassign the tipNode from its previous parent
+		
+		//create a new tool tip 
+		Label3D label = new Label3D(interest.getName());
+		tipNode = label.getBillboard(1f);
+		TangibleView tv = TangibleViewManager.getInstance().getTangibleViewFor(interest);
+		
+		//assign the tool tip to the appropriate node
+		if ( tv != null)
+		{
+			tv.attachChild(tipNode);
+		}
+	}
 	
 	public void showSceneMonitor() {
 		//for more on this:

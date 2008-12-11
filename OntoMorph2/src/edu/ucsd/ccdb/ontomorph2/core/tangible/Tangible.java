@@ -260,10 +260,9 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		changed(CHANGED_SELECT);
 	}
 	
-	public Tangible selectRollover(){
-		Tangible rollover  = TangibleManager.getInstance().selectRollover(this);
-		//changed(CHANGED_SELECT);
-		return rollover;
+	public void doRollOver()
+	{
+		//do nothing (will be used for neuron  animations)
 	}
 	
 	public boolean isSelected() 

@@ -12,6 +12,8 @@ import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.Axon;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology.NeuronMorphology;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.observers.SceneObserver;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -74,6 +76,33 @@ public class TangibleFactory
 		return new OMTVector(combined);
 	}
 	
+	/**
+	 * Method attempts to create an axon with the first point at the cell body's position
+	 * @param src
+	 * @return
+	 */
+	public Axon createAxon(Tangible src)
+	{
+		Axon fiber = null;
+		
+		
+		if (src instanceof NeuronMorphology)
+		{
+			NeuronMorphology ncell = (NeuronMorphology) src;
+			
+			OMTVector posa = ncell.getPosition(); 
+			OMTVector posb = new OMTVector(posa.add(new Vector3f(0, 10, 10)));
+			OMTVector posc = new OMTVector(posb.add(new Vector3f(0, 10, 10)));
+			OMTVector[] pts = {posa, posb, posc};
+			Curve3D simplePath = new Curve3D(ncell.getName() + "_axon", pts);
+			fiber = new Axon(ncell, simplePath);
+			
+			//assign the axon to the cell
+			ncell.setAxon(fiber);
+		}
+		
+		return fiber;
+	}
 	
 	/**
 	 * This function intends to create a curve in the view based on some originating Tangible.

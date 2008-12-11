@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import org.morphml.metadata.schema.Curve;
 import org.morphml.metadata.schema.Point3D;
 import org.morphml.metadata.schema.impl.Point3DImpl;
 import org.morphml.morphml.schema.Cable;
@@ -29,11 +30,13 @@ import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.data.DataRepository;
 import edu.ucsd.ccdb.ontomorph2.core.data.MemoryCacheRepository;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleFactory;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.RotationQuat;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.BrainRegion;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.ContainerTangible;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
 import edu.ucsd.ccdb.ontomorph2.util.OMTException;
@@ -63,6 +66,8 @@ public class NeuronMorphology extends Tangible{
 	CurveAssociation curveAssoc = null;
 
 	Curve3D _curve = null;
+	private Axon _axon = null;
+	
 	float _time = 0.0f;
 
 	private Vector3f _upVector;
@@ -78,7 +83,23 @@ public class NeuronMorphology extends Tangible{
 		
 	}
 	
+	/**
+	 * 
+	 * @return  the Axon (represented as a {@link Curve3D}, or if there is no data available, <code>null</code>
+	 */
+	public Axon getAxon()
+	{
+		return _axon;
+	}
+	
+	public void setAxon(Axon fiber)
+	{
+		_axon = fiber;		
+		cellInstance.setAxonPath(fiber.getMorphMLCurve());
+	}
+	
 
+	
 	public NeuronMorphology(String name, PositionVector position, RotationQuat rotation) 
 	{
 		super(name);
@@ -88,6 +109,10 @@ public class NeuronMorphology extends Tangible{
 		cellInstance.setRotation(super.getRotation().toWBCQuat());
 		cellInstance.setScale(super.getScale().toPoint3D());
 		cellInstance.setId((BigInteger.valueOf(new Random().nextLong())));
+		
+		//create a temporary axon
+		//Curve3D noFiber = Curve3D.zeroLengthCurve(this.getPosition()); //create a 0 length curve
+		cellInstance.setAxonPath(null);
 		
 		if (position != null)
 		{
@@ -120,8 +145,11 @@ public class NeuronMorphology extends Tangible{
 	public NeuronMorphology(String name, CellInstance ci) {
 		super(name);
 		this.cellInstance = ci;
+		
+		//assign the neuron to a curve if its supposed to be
 		if (ci.getCurveAssociation() != null) 
 		{
+			//find the parent curve
 			this.curveAssoc = ci.getCurveAssociation();
 			for (Curve3D curve : OntoMorph2.getCurrentScene().getCurves()) 
 			{
@@ -135,6 +163,17 @@ public class NeuronMorphology extends Tangible{
 				}
 			}
 		}
+		
+		//assign the neuron an axon if its supposed to have one
+		Curve path = ci.getAxonPath();
+		if (path != null)
+		{
+			Curve3D graph = new Curve3D(path);
+			Axon fiber = new Axon(this, graph);
+			setAxon(fiber);
+		}
+		
+		
 	}
 
 
@@ -309,7 +348,18 @@ public class NeuronMorphology extends Tangible{
 			if (_time >= 1) setTime(0.999f);
 			this.positionAlongCurve(_curve,_time);
 			//p = new PositionVector(prev.asVector3f().subtract(this.getRelativePosition().asVector3f())); //return the displacement
+		}
+		
+		//regardless of how the cell moved, if a cell moved the axon must follow it
+		Axon fiber = getAxon();
+		if (fiber != null)
+		{
+			fiber.delete();
+			//CurveAnchorPoint origin = fiber.getAnchorPoints().get(0);
 			
+			//fiber.move(dx, dy, mx, my);
+			
+			//fiber.changed();
 		}
 		
 		//apply the movement

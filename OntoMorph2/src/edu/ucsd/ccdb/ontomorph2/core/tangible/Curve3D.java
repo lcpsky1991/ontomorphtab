@@ -33,7 +33,7 @@ import edu.ucsd.ccdb.ontomorph2.view.View;
 /**
  * Defines a CatmullRom curve in the framework that is manipulable by anchor points.
  * 
- * @author caprea
+ * @author Christopher Aprea (caprea)
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  */
 public class Curve3D extends Tangible{
@@ -47,6 +47,11 @@ public class Curve3D extends Tangible{
 	List<CurveAnchorPoint> anchors = null;
 	public static Random rand = new Random();
 	
+	/**
+	 * Create a curve from a list of control points
+	 * @param name
+	 * @param controlPoints
+	 */
 	public Curve3D(String name, OMTVector[] controlPoints) {
 		super(name);
 		morphMLCurve = new CurveImpl();
@@ -75,7 +80,21 @@ public class Curve3D extends Tangible{
 		return this.getCenterPoint();
 	}
 	
-	public Curve3D(Curve curve)
+	/**
+	 * Create a curve consisting of three points.
+	 * All three points share the same location so the reulting curve is a 0-length curve
+	 * @param startPosition
+	 * @return a new Curve with three points at startPosition
+	 */
+	public static Curve3D zeroLengthCurve(OMTVector startPosition)
+	{
+		OMTVector posa = startPosition;
+		OMTVector[] pts = {posa, posa, posa};
+		Curve3D simplePath = new Curve3D("zero curve", pts);
+		return simplePath;
+	}
+	
+	public Curve3D(Curve curve) 
 	{
 		super(curve.getName());
 		morphMLCurve = curve;
@@ -103,6 +122,7 @@ public class Curve3D extends Tangible{
 		}
 		*/
 	}
+	
 
 	public void getFromDB()
 	{
@@ -539,9 +559,14 @@ public class Curve3D extends Tangible{
 		TangibleManager.getInstance().setMultiSelect(true);
 		anchors = getAnchorPoints();
 		
-		for (int i=0; i < anchors.size(); i++)
+		//select the anchor points IIF currently in edit mode
+		if ( getAnchorPointsVisibility() )
 		{
-			//anchors.get(i).select(); //dont select the anchor points
+			for (int i=0; i < anchors.size(); i++)
+			{
+				anchors.get(i).select();
+			}
+				
 		}
 		//puts the curve as the most recently selected item		
 		TangibleManager.getInstance().setMultiSelect(ms);	//restore multiselect to however it was befpre

@@ -36,7 +36,10 @@ public abstract class TangibleView extends Node
 	
 	public TangibleView(Tangible model) 
 	{
-		super("Tangible View for " + model.getName());
+		super("UnInited Tangible View");
+		
+		if (model != null) this.setName("Tangible View for " + model.getName());
+		
 		this.setModel(model);
 		pickPriority = P_UNKNOWN;
 		
