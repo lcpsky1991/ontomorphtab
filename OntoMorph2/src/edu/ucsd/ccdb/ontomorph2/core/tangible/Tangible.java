@@ -71,7 +71,8 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 
 	private Set<ContainerTangible> previousContainerTangibles = null;
 	
-
+	private boolean debugGrid = false;
+	
 	private Color c = null;
 	private Color highlightedColor = Color.yellow;
 	
@@ -95,6 +96,7 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 		//addSemanticThing(GlobalSemanticRepository.getInstance().createNewInstanceOfClass("bfo:entity"));
 	}
 	
+		
 	protected void initializeTangible(String name, XWBCTangible t) {
 		theSpatial = t;
 		theSpatial.setPosition(new PositionVector().toPoint3D());

@@ -29,6 +29,7 @@ import edu.ucsd.ccdb.ontomorph2.view.scene.AxonView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.BrainRegionView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.CurveView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.DataMeshView;
+import edu.ucsd.ccdb.ontomorph2.view.scene.Grid;
 import edu.ucsd.ccdb.ontomorph2.view.scene.NeuronMorphologyView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SphereParticlesView;
@@ -239,6 +240,7 @@ public class View3D extends Node{
 		//remove the previous tooltip
 		tipNode.removeFromParent(); //will unassign the tipNode from its previous parent
 		
+		
 		//create a new tool tip 
 		Label3D label = new Label3D(interest.getName());
 		tipNode = label.getBillboard(1f);
@@ -253,13 +255,10 @@ public class View3D extends Node{
 			//TODO: make this more sophisticated by use of camera location
 			
 			float scale = tv.getLocalScale().lengthSquared();
-			
-			//if (scale < 1)
+			if (scale < 1)
 			{
 				float calc = 0;
 				calc = normer(scale); 
-	
-				System.out.println(scale + " to " + calc);
 				tipNode.setLocalScale(calc);
 			}
 		}
