@@ -74,7 +74,6 @@ public class Axon extends Curve3D
 	
 	/**
 	 * A conveiniance method that sets the origin AnchorPoint at the cell's position
-	 *
 	 */
 	public void alignToSoma()
 	{

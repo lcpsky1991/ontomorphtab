@@ -248,9 +248,39 @@ public class View3D extends Node{
 		if ( tv != null)
 		{
 			tv.attachChild(tipNode);
+			
+			//this is a fix for tiny objects
+			//TODO: make this more sophisticated by use of camera location
+			
+			float scale = tv.getLocalScale().lengthSquared();
+			
+			//if (scale < 1)
+			{
+				float calc = 0;
+				calc = normer(scale); 
+	
+				System.out.println(scale + " to " + calc);
+				tipNode.setLocalScale(calc);
+			}
 		}
 	}
 	
+	private float normer(float s)
+	{
+		float calc = (float)s;
+		float range = 10000000; 
+		calc = calc * range;
+		
+		calc = FastMath.log((float)calc, 3000); 
+		calc = FastMath.LERP(calc, 3000, 100);
+		
+		
+		if (calc < 0)
+		{
+			return 1;
+		}
+		return calc;
+	}
 	public void showSceneMonitor() {
 		//for more on this:
 		//http://www.jmonkeyengine.com/jmeforum/index.php?topic=8159.msg64486#msg64486
