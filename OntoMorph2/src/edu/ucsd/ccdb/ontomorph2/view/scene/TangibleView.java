@@ -122,14 +122,8 @@ public abstract class TangibleView extends Node
 		{
 			this.setCullMode(SceneElement.CULL_ALWAYS); //inviisble
 		}
-		
-		//show the grid if it is enabled
-		if (this.getModel().getGridVisible())
-		{
-			
-		}
-		
-		
+
+				
 		this.updateModelBound();
 		this.updateRenderState();
 		this.updateGeometricState(0.5f, false);
