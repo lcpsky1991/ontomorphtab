@@ -94,6 +94,41 @@ public class TangibleManager {
 		}
 	}
 	
+	/**
+	 * If more than one object is selected, then this is an attempt to
+	 *  make an 'intelligent' decision on which item should represent the group,
+	 *  or if only one object is selected, return that
+	 * @return the Tangible that best represents the group of all selected objects
+	 */
+	public Tangible getSelectedRelevent()
+	{
+		Tangible leader = null;
+		
+		if (selectedThings.size() <= 1)
+		{
+			leader = getSelectedRecent();
+		}
+		else
+		{
+			//give the first curve or the first axon found
+			
+			for ( Tangible part : selectedThings)
+			{
+				if (part instanceof Axon)
+				{
+					return part;
+				}
+				else if (part instanceof Curve3D)
+				{
+					return part;
+				}
+			}
+		}
+		
+		return leader;
+	}
+	
+	
 	public List<Tangible> getSelected() {
 		return this.selectedThings;
 	}

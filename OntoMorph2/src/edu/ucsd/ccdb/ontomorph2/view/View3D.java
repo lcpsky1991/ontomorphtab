@@ -142,7 +142,7 @@ public class View3D extends Node{
 				//the cell has an axon defined but it is not a view for it yet, create one
 				if (null == axonView)
 				{
-					axonView = new CurveView((Curve3D) fiber);	
+					//axonView = new CurveView((Curve3D) fiber);	
 				}
 				
 				//add the axon fiber  if there is one

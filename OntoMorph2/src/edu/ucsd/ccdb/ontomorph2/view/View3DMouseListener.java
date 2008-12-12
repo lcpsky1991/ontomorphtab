@@ -551,7 +551,7 @@ public class View3DMouseListener implements MouseInputListener {
 		
 		float dx = MouseInput.get().getXDelta();
 		float dy = MouseInput.get().getYDelta();
-		Tangible recent = TangibleManager.getInstance().getSelectedRecent();
+		Tangible relevant = TangibleManager.getInstance().getSelectedRelevent();
 		
 		//do the manipulation to all selected objects
 		//loop over the objects in reverse as to keep order of selected objects relevant
@@ -562,7 +562,7 @@ public class View3DMouseListener implements MouseInputListener {
 			//widget.absolutePosition(TangibleManager.getInstance().getSelectedRecent().getAbsolutePosition());
 			if (OntoMorph2.isDebugMode()) 
 			{
-				Log.warn("selection "  + recent + " manip:" + manip);
+				Log.warn("selection "  + relevant + " manip:" + manip);
 				Log.warn("position" + TangibleManager.getInstance().getSelectedRecent().getPosition());
 			}
 
@@ -581,9 +581,9 @@ public class View3DMouseListener implements MouseInputListener {
 				//do nothing
 				break;
 			case METHOD_MOVE:
-				if ( recent == manip ) //only move the most recent, do not apply movement to all selected
+				if ( relevant == manip ) //only move the most recent, do not apply movement to all selected
 				{
-					complicatedMultiMove(recent, dx, dy, mx, my);
+					complicatedMultiMove(relevant, dx, dy, mx, my);
 				}
 				break;
 			case METHOD_ROTATEX:

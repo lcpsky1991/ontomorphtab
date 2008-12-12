@@ -1,9 +1,12 @@
 package edu.ucsd.ccdb.ontomorph2.core.tangible.neuronmorphology;
 
 
+import org.morphml.metadata.schema.Curve;
+
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.OMTVector;
 
 
@@ -32,41 +35,61 @@ public class Axon extends Curve3D
 	 * @param controlGraph This is the characteristic curve/graph/polygon for the shape of this spline
 	 * @throws Exception 
 	 */
-	public Axon(NeuronMorphology soma,  Curve3D controlGraph)  
+	public Axon(NeuronMorphology soma, OMTVector[] controlPoints) 
 	{
-		super(controlGraph.getMorphMLCurve());	//start as an empty curve
-		super.setControlPoint(0, soma.getPosition());	//force one of the control points to be at the neuron's cellbody
+		super(soma.getName() + "_axon", controlPoints);
 		parentCellBody = soma;
-		
+		parentCellBody.setAxon(this);
+	}
+
+	public Axon(NeuronMorphology soma, Curve controlPath) 
+	{
+		super(controlPath);
+		parentCellBody = soma;
+		parentCellBody.setAxon(this);
+	}
+
+	@Override
+	public void setControlPoint(int i, OMTVector pos)
+	{
+		//The begining control point is always at the cellbody
+		//so do not allow the origin to be changed
+		if ( i > 0)
+		{
+			super.setControlPoint(i, pos);
+		}
+		else
+		{
+			super.setControlPoint(0, parentCellBody.getPosition());	
+		}
 	}
 	
 	
 	@Override
-	protected void setControlPoint(int i, OMTVector pos)
+	public void execPostManipulate(Tangible newTarget) 
 	{
-		//The begining control point is always at the cellbody
-		//so do not allow the origin to be changed
-		if ( i == 0)
-		{
-			System.out.println("Axon setControlPoint");
-			return;
-		}
-		
-		super.setControlPoint(i, pos);
+		System.out.println("post exec axon");
+		//super.setControlPoint(0, parentCellBody.getPosition());
 	}
 	
+	/**
+	 * A conveiniance method that sets the origin AnchorPoint at the cell's position
+	 *
+	 */
+	public void alignToSoma()
+	{
+		PositionVector where = parentCellBody.getPosition();
+		super.setControlPoint(0, where);
+		CurveAnchorPoint origin = getAnchorPoints().get(0);
+		origin.setPosition(where);
+	}
 	
 	@Override
 	public PositionVector move(float dx, float dy, int mx, int my) 
 	{
-		//PositionVector change = super.move(dx, dy, mx, my); 
-		CurveAnchorPoint origin = getAnchorPoints().get(0);
-		origin.setPosition(parentCellBody.getPosition());
-		origin.changed(CHANGED_MOVE);
-		changed();
-		System.out.println("Axon move");
-		return null;
-		
+		PositionVector change = super.move(dx, dy, mx, my); 
+		alignToSoma();
+		return change;
 	}
 	
 }

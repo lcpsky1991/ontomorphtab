@@ -168,13 +168,13 @@ public class NeuronMorphology extends Tangible{
 		Curve path = ci.getAxonPath();
 		if (path != null)
 		{
-			Curve3D graph = new Curve3D(path);
-			Axon fiber = new Axon(this, graph);
-			setAxon(fiber);
+			Axon fiber = new Axon(this, path);
 		}
 		
 		
 	}
+	
+	
 
 
 	public CurveAssociation getCurveAssociation() {
@@ -204,7 +204,6 @@ public class NeuronMorphology extends Tangible{
 	
 	public void setPosition(PositionVector pos, boolean flagChanged)
 	{
-		
 		if (pos != null) 
 		{
 			cellInstance.setLocation(pos.toPoint3D());
@@ -350,11 +349,13 @@ public class NeuronMorphology extends Tangible{
 			//p = new PositionVector(prev.asVector3f().subtract(this.getRelativePosition().asVector3f())); //return the displacement
 		}
 		
-		//regardless of how the cell moved, if a cell moved the axon must follow it
+		//regardless of how the cell moved,
+		//because the cell has moved the axon needs to be updated
 		Axon fiber = getAxon();
 		if (fiber != null)
 		{
-			fiber.changed();
+			//update the origin anchorpoint
+			fiber.alignToSoma();
 		}
 		
 		//apply the movement
@@ -362,7 +363,11 @@ public class NeuronMorphology extends Tangible{
 		return p;
 	}
 	
-	
+	@Override
+	public void execPostManipulate(Tangible newTarget) 
+	{
+		//dragged something onto a neuronmorphology
+	}
 	
 	/**
 	 * Set the position of this NeuronMorphology at point time

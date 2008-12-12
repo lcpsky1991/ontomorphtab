@@ -94,8 +94,9 @@ public class TangibleFactory
 			OMTVector posb = new OMTVector(posa.add(new Vector3f(0, 10, 10)));
 			OMTVector posc = new OMTVector(posb.add(new Vector3f(0, 10, 10)));
 			OMTVector[] pts = {posa, posb, posc};
-			Curve3D simplePath = new Curve3D(ncell.getName() + "_axon", pts);
-			fiber = new Axon(ncell, simplePath);
+			
+			fiber = new Axon(ncell, pts);
+			
 			
 			//assign the axon to the cell
 			ncell.setAxon(fiber);

@@ -364,6 +364,11 @@ public class Curve3D extends Tangible{
 	}
 	
 	
+	/**
+	 * Redraws the curve based on the anchorPoints rather than on the controlPoints
+	 * (basicly the opposite of usual model-view)
+	 *
+	 */
 	public void reapply()
 	{
 		//redraw the curve
@@ -428,14 +433,14 @@ public class Curve3D extends Tangible{
 	 * @param pos
 	 */
 	@SuppressWarnings("unchecked")
-	protected void setControlPoint(int i, OMTVector pos) {
+	public void setControlPoint(int i, OMTVector pos) {
 		morphMLCurve.getPoint().set(i, pos.toPoint3D());
 		save();
 		changed();
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected void setControlPoints(OMTVector[] arg1) 
+	public void setControlPoints(OMTVector[] arg1) 
 	{
 		morphMLCurve.getPoint().clear();
 		for (int i = 0; i < arg1.length; i++) 
