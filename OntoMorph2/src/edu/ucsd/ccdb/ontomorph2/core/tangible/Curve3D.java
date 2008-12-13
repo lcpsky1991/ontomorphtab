@@ -382,8 +382,6 @@ public class Curve3D extends Tangible{
 		{
 			cell.positionAlongCurve(cell.getCurve(), cell.getTime());
 		}
-		
-		
 	}
 	
 	public PositionVector getCenterPoint()
