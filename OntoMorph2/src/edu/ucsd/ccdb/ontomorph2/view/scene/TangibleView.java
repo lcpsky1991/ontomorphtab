@@ -58,6 +58,7 @@ public abstract class TangibleView extends Node
 		this.model = model;
 	}
 	
+
 	/**
 	 * Gets the model that corresponds to this TangibleView
 	 * @return

@@ -526,7 +526,8 @@ public class NeuronMorphology extends Tangible{
 	 * @param id
 	 * @return
 	 */
-	public NeuronCable getCable(BigInteger id) {
+	public NeuronCable getCable(BigInteger id)
+	{
 		for (int i = 0; i < getCableCount(); i++) {
 			NeuronCable c = getCable(i);
 			if (c.getId().equals(id)) {

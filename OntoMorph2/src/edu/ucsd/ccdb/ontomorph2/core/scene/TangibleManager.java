@@ -183,13 +183,27 @@ public class TangibleManager {
 		return surfaces;
 	}
 	
-	public Set<Curve3D> getCurves() {
+	public Set<Curve3D> getCurves()	//TODO: only return regular curves (not axons)
+	{
 		Set<Curve3D> curves = new HashSet<Curve3D>();
 		for (Tangible t : this.tangibles) 
 		{
 			if (t instanceof Curve3D) 
 			{
 				curves.add((Curve3D)t);
+			}
+		}
+		return curves;
+	}
+	
+	public Set<Axon> getAxons()
+	{
+		Set<Axon> curves = new HashSet<Axon>();
+		for (Tangible t : this.tangibles) 
+		{
+			if (t instanceof Axon) 
+			{
+				curves.add((Axon)t);
 			}
 		}
 		return curves;

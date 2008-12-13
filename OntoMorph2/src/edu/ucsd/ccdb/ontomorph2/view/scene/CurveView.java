@@ -26,12 +26,11 @@ public class CurveView extends TangibleView {
 		super(curve);
 		super.setName("Curve3DView");
 		this.pickPriority = P_LOW;
-		update();
+		//update();
 	}
 
-	public void update() {
-		
-	
+	public void update() 
+	{
 		//remove everything at the beginning because we can't be guaranteed to have
 		//the same BezierCurve from Curve since it gives us a copy every time.
 		//(see Curve3D.asBezierCurve() comment.

@@ -138,12 +138,12 @@ public class View3D extends Node{
 			fiber = cell.getAxon();
 			if (fiber != null)
 			{
-				axonView = (CurveView)TangibleViewManager.getInstance().getTangibleViewFor(fiber);
+				axonView = (AxonView)TangibleViewManager.getInstance().getTangibleViewFor(fiber);
 				
 				//the cell has an axon defined but it is not a view for it yet, create one
 				if (null == axonView)
 				{
-					//axonView = new CurveView((Curve3D) fiber);	
+					axonView = new AxonView((Curve3D) fiber);	
 				}
 				
 				//add the axon fiber  if there is one
@@ -164,8 +164,19 @@ public class View3D extends Node{
 		curvesNode.detachAllChildren();
 		for(Curve3D curve : curves) 
 		{
+			TangibleView ntv = null;
+		
 			//axons are actually curve3Ds, but we keep them associated with cells and not on the curve node
-			//if ( !(curve instanceof Axon) )
+			if (curve instanceof Axon) //FIXME: Axons are still considered curves	
+			{
+				AxonView aview = (AxonView)TangibleViewManager.getInstance().getTangibleViewFor(curve);
+				if (aview == null)
+				{
+					aview = new AxonView(curve);
+				}
+				ntv = aview;
+			}
+			else	//handle regular curves
 			{
 				CurveView curveView = (CurveView)TangibleViewManager.getInstance().getTangibleViewFor(curve);
 				if (curveView == null) 
@@ -173,11 +184,11 @@ public class View3D extends Node{
 					//implicitly adds the new TangibleView to the TangibleViewManager
 					curveView = new CurveView(curve);
 				}
-				
-				curvesNode.attachChild(curveView);	
+				ntv = curveView;
 			}
+			
+			curvesNode.attachChild(ntv);	
 		}
-		
 	}
 
 	public void setSurfaces(Set<Surface> surfaces) {
