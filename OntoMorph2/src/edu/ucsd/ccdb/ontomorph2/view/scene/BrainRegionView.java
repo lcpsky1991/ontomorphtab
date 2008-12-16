@@ -1,5 +1,9 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
+import java.net.URL;
+
+import org.lwjgl.opengl.Display;
+
 import com.jme.bounding.BoundingBox;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -7,9 +11,11 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.SceneElement;
+import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.ZBufferState;
@@ -61,6 +67,34 @@ public class BrainRegionView extends TangibleView{
         ms.setEmissive(brColor);
         ms.setShininess(0.5f);
 		//mesh.setRenderState(ms);
+        
+        
+        //===== make it appealing ===========
+        //applies a ghost effect to the mesh
+		try
+		{
+			mesh.clearRenderState(0);
+			GLSLShaderObjectsState xray = DisplaySystem.getDisplaySystem().getRenderer().createGLSLShaderObjectsState();
+	        			
+	        URL frag = this.getClass().getResource("xray.frag");
+	        URL vert = this.getClass().getResource("xray.vert");
+	        
+	        xray.load(vert,  frag);  
+	        xray.setEnabled(true);
+	        xray.setUniform("edgefalloff", 1f);
+
+	        mesh.setLightCombineMode(LightState.COMBINE_FIRST);
+	        mesh.setRenderState(xray);
+		}
+        catch (Exception e) 
+        {
+        	System.out.println("Xray failed"); 
+        	e.printStackTrace();
+		}
+
+        
+        //==================================
+        
         
         //register the geometries
 		//update the geometries registry, this is neccessary to enable picking, which is based on geomtry key maps

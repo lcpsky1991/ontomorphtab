@@ -1,6 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import java.awt.Color;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,15 +50,16 @@ public class AxonView extends CurveView
 	public void update() 
 	{
 		super.update();
+	
 		
-		//detach all the segments
+		//+++ detach all the segments
 		partsNode.detachAllChildren();
 		
 		//------------
-		//rettach all the segments
+		//+++ rettach all the segments
 		Curve3D model = (Curve3D) this.getModel();
 		
-			//attach a cylinder for each control point
+		//attach a cylinder for each control point
 		
 		List points = model.getAnchorPoints();
 		
@@ -81,37 +83,48 @@ public class AxonView extends CurveView
 		}
 
 		//------------
-		//register the geomtries of the segments
+		//+++ register the geomtries of the segments
 		//this.registerGeometries(segments);  
 		
 		
-//		attach the segments to the node
+		//+++ attach the segments to the node
 		this.attachChild(partsNode);
 		
 		//make the segments visually appealing
 		partsNode.setLocalScale(1f);
 		
 		
-		
-		
-		GLSLShaderObjectsState xray = DisplaySystem.getDisplaySystem().getRenderer().createGLSLShaderObjectsState();
-        xray.load(getClass().getClassLoader().getResource("xray.vert"),  getClass().getClassLoader().getResource("xray.frag"));
-        xray.setEnabled(true);
-        xray.setUniform("edgefalloff", 1f);
+        //where
+		try
+		{
+			partsNode.clearRenderState(0);
+			GLSLShaderObjectsState xray = DisplaySystem.getDisplaySystem().getRenderer().createGLSLShaderObjectsState();
+	        			
+	        URL frag = this.getClass().getResource("xray.frag");
+	        URL vert = this.getClass().getResource("xray.vert");
+	        
+	        xray.load(vert,  frag);  
+	        xray.setEnabled(true);
+	        xray.setUniform("edgefalloff", 1f);
 
-        partsNode.setLightCombineMode(LightState.COMBINE_FIRST);
-        partsNode.clearRenderState(0);
-        partsNode.setRenderState(xray);
+	        partsNode.setLightCombineMode(LightState.COMBINE_FIRST);
+	        partsNode.setRenderState(xray);
+		}
+        catch (Exception e) 
+        {
+        	System.out.println("Xray failed"); 
+        	e.printStackTrace();
+		}
+		//-----------------------------
         
+		//+++ update the graphics
         
-        
-		//----------------
-		
 		this.updateRenderState();
 		this.updateGeometricState(5f, true);
 		this.updateWorldBound();
 		this.updateModelBound();
 	}
+		
 	
 	
 }
