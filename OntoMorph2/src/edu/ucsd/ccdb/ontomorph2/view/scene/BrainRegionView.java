@@ -71,26 +71,8 @@ public class BrainRegionView extends TangibleView{
         
         //===== make it appealing ===========
         //applies a ghost effect to the mesh
-		try
-		{
-			mesh.clearRenderState(0);
-			GLSLShaderObjectsState xray = DisplaySystem.getDisplaySystem().getRenderer().createGLSLShaderObjectsState();
-	        			
-	        URL frag = this.getClass().getResource("xray.frag");
-	        URL vert = this.getClass().getResource("xray.vert");
-	        
-	        xray.load(vert,  frag);  
-	        xray.setEnabled(true);
-	        xray.setUniform("edgefalloff", 1f);
-
-	        mesh.setLightCombineMode(LightState.COMBINE_FIRST);
-	        mesh.setRenderState(xray);
-		}
-        catch (Exception e) 
-        {
-        	System.out.println("Xray failed"); 
-        	e.printStackTrace();
-		}
+       
+		EffectsUtility.applyEffectGhost(this);
 
         
         //==================================

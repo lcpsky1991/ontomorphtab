@@ -93,28 +93,7 @@ public class AxonView extends CurveView
 		//make the segments visually appealing
 		partsNode.setLocalScale(1f);
 		
-		
-        //where
-		try
-		{
-			partsNode.clearRenderState(0);
-			GLSLShaderObjectsState xray = DisplaySystem.getDisplaySystem().getRenderer().createGLSLShaderObjectsState();
-	        			
-	        URL frag = this.getClass().getResource("xray.frag");
-	        URL vert = this.getClass().getResource("xray.vert");
-	        
-	        xray.load(vert,  frag);  
-	        xray.setEnabled(true);
-	        xray.setUniform("edgefalloff", 1f);
-
-	        partsNode.setLightCombineMode(LightState.COMBINE_FIRST);
-	        partsNode.setRenderState(xray);
-		}
-        catch (Exception e) 
-        {
-        	System.out.println("Xray failed"); 
-        	e.printStackTrace();
-		}
+		EffectsUtility.applyEffectGhost(this);
 		//-----------------------------
         
 		//+++ update the graphics
