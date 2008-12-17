@@ -25,21 +25,52 @@ import java.util.Arrays;
  */
 public class Label3D 
 {
+	private static int fontSize = 48;
+	
     private String text;
     private float blurIntensity = 0.1f;
     private int kernelSize = 5;
     private ConvolveOp blur;
     private Color foreground = new Color(1f, 1f, 1f);
     private Color background = new Color(0f, 0f, 0f);
-    private float fontResolution = 48f;		//should be done in powers of two
+    private float fontResolution = fontSize;		//should be done in powers of two
     private int shadowOffsetX = 2;
     private int shadowOffsetY = 2;
     private Font font;
     
-    public Label3D(String text) {
+    public Label3D(String text) 
+    {
         this.text = text;
         updateKernel();
-        setFont(Font.decode("Sans PLAIN 48"));
+        
+        boolean isLinux = false;
+        
+        //determine which font size to use based on operating system
+        try
+        {
+        	String systemName = System.getProperty("os.name");
+        	if (systemName.contains("Linux"))
+        	{
+        		isLinux = true;
+        	}
+        }
+        catch (Exception e) 
+        {
+        	isLinux = false;
+		}
+        
+        if (isLinux)
+        {
+        	fontSize = 48;
+        }
+        else
+        {
+        	fontSize = 40;
+        }
+        
+        
+        fontResolution = fontSize;
+        setFont(Font.decode("Sans PLAIN " + fontSize));
     }
     
     public void setFont(Font font){
