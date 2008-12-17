@@ -651,6 +651,11 @@ public class View3DMouseListener implements MouseInputListener {
 				this.previousRollOver = rollOver;								//remember what was done
 			}
 		}
+		else
+		{	
+			//moused over nothing, detach tooltip
+			View.getInstance().getView3D().showToolTipFor(null);
+		}
 	}
 	
 

@@ -76,7 +76,6 @@ public class View extends BaseSimpleGame
 	
 	BasicPassManager pManager = new BasicPassManager();
 	BloomRenderPass bloomRenderPass;
-	private Node debugQuadsNode;
 	
 	org.fenggui.Display disp; // FengGUI's display
 
@@ -85,6 +84,8 @@ public class View extends BaseSimpleGame
 	private OMTKeyInputListener OMTKeyListener;
 	private TangibleView spatial;
 	FengJMEInputHandler guiInput;
+	
+	
 	/**
 	 * Returns the singleton instance.
 	 @return	the singleton instance

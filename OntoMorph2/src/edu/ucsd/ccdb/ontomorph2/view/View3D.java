@@ -252,6 +252,8 @@ public class View3D extends Node{
 		tipNode.removeFromParent(); //will unassign the tipNode from its previous parent
 		
 		
+		if (null == interest) return;
+		
 		//create a new tool tip 
 		Label3D label = new Label3D(interest.getName());
 		tipNode = label.getBillboard(1f);

@@ -2,12 +2,20 @@ package edu.ucsd.ccdb.ontomorph2.view.scene;
 
 import java.util.List;
 
+import com.jme.bounding.BoundingBox;
+import com.jme.bounding.BoundingVolume;
+import com.jme.math.Vector3f;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
+import com.jme.scene.shape.Box;
+import com.jme.scene.state.WireframeState;
+import com.jme.scene.state.ZBufferState;
+import com.jme.util.geom.Debugger;
 
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.view.TangibleViewManager;
+import edu.ucsd.ccdb.ontomorph2.view.View;
 
 /**
  * A base class for the view classes that display Tangibles.  
@@ -33,6 +41,7 @@ public abstract class TangibleView extends Node
 	public static final int P_HIGHEST = 5;
 	
 	public int pickPriority = P_UNKNOWN;
+	
 	
 	public TangibleView(Tangible model) 
 	{
@@ -67,11 +76,50 @@ public abstract class TangibleView extends Node
 		return this.model;
 	}
 	
+	
+	public void showBounds()
+	{
+		return;
+		
+		//Debugger.drawBounds(this, View.getInstance().getRenderer(), false);
+		
+		//BoundingBox bounds = (BoundingBox) this.getWorldBound();
+
+		//System.out.println(this.getLocalTranslation());
+		//Debugger.drawBounds(this, View.getInstance().getRenderer(), true);
+		
+		
+		/*
+		Vector3f size = new Vector3f();
+		if (bounds != null)
+		{
+			float scale = this.getWorldScale().length();
+			size = bounds.getExtent(size);
+			
+			
+			Box wirebox = new Box("bbox", new Vector3f(), size.x /scale, size.y /scale , size.z /scale);
+			
+			wirebox.setLocalRotation(this.getLocalRotation());
+			
+			
+			ZBufferState zt = View.getInstance().getRenderer().createZBufferState();
+			WireframeState wt = View.getInstance().getRenderer().createWireframeState();
+			
+			wirebox.setRenderState(wt);
+			wirebox.setRenderState(zt);
+	        wirebox.updateRenderState();
+	        nEffects.attachChild(wirebox);	
+		}
+		*/
+        
+	}
+	
 	/**
-	 * Switch the visualization of this ISegmentView to indicate that it has been selected
+	 * Switch the visualization of this TangibleView to indicate that it has been selected
 	 *
 	 */
-	public final void highlight() {
+	public final void highlight() 
+	{
 		doHighlight();
 	}
 
@@ -93,10 +141,12 @@ public abstract class TangibleView extends Node
 		if (this.getModel().isSelected()) 
 		{
 			this.highlight();
+			showBounds();
 		}
 		else 
 		{
 			this.unhighlight();
+			nEffects.detachAllChildren();
 		}
 		
 		//FIXME: setlocals may need to be changed to setWorld
