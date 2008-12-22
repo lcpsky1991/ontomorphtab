@@ -237,8 +237,18 @@ public class View3DMouseListener implements MouseInputListener {
 			}
 			else
 			{
-				//dragging
-				manipulateCurrentSelection();	
+				//dragging, but only manipulate if you started dragging fromt he object
+				//ArrayList<Tangible> pickedlist = psuedoPick(KeyInput.get().isControlDown(), true);   
+				//if (pickedlist.size() > 0)
+				{			
+					//boolean movingsame = false;
+					//movingsame = pickedlist.contains(TangibleManager.getInstance().getSelectedRecent());
+					//if (movingsame)
+					{
+						 manipulateCurrentSelection();	 
+					}
+				}
+					
 			}
 		}
 	}
@@ -250,6 +260,20 @@ public class View3DMouseListener implements MouseInputListener {
 	private void onMousePress(int buttonIndex)
 	{
 		
+		if (!inDrag)
+		{
+			if (OMT_MBUTTON_RIGHT == buttonIndex) //right
+			{	
+				doPick();
+				//MouseInput.get().setCursorVisible(false); //hide mouse cursor
+				ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
+						MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
+			}
+			else if (OMT_MBUTTON_LEFT == buttonIndex)
+			{
+				doPick();
+			}
+		}
 	}
 	
 	
@@ -275,23 +299,7 @@ public class View3DMouseListener implements MouseInputListener {
 				last.execPostManipulate(ontop);
 			}
 		}	
-		
-		
-		if (!inDrag)
-		{
-			if (OMT_MBUTTON_RIGHT == buttonIndex) //right
-			{	
-				doPick();
-				//MouseInput.get().setCursorVisible(false); //hide mouse cursor
-				ContextMenu.getInstance().displayMenuFor(MouseInput.get().getXAbsolute(),
-						MouseInput.get().getYAbsolute(),TangibleManager.getInstance().getSelected());
-			}
-			else if (OMT_MBUTTON_LEFT == buttonIndex)
-			{
-				doPick();
-			}
-		}
-		
+
 		inDrag = false;		//must keep track of whether drag mode is on or off for selection versus drag
 	}
 	
