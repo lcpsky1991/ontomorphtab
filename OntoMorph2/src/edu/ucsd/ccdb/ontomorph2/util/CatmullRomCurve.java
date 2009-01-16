@@ -277,4 +277,12 @@ public class CatmullRomCurve extends Curve {
 
 		  
 	  } // findPick
+	  
+	  public Vector3f getFirstPoint(){
+		  return this.firstPoint;
+	  }
+	  
+	  public Vector3f getLastPoint(){
+		  return this.lastPoint;
+	  }
 	} // CatmullRomCurve

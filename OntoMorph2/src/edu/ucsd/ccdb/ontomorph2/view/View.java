@@ -15,6 +15,7 @@ import com.jme.input.KeyInput;
 import com.jme.input.MouseInput;
 import com.jme.light.PointLight;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.pass.BasicPassManager;
@@ -28,6 +29,7 @@ import com.jme.scene.shape.Cone;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
@@ -45,7 +47,9 @@ import com.jmex.effects.glsl.BloomRenderPass;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.Scene;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.slide.Slide;
 import edu.ucsd.ccdb.ontomorph2.util.FengJMEInputHandler;
 import edu.ucsd.ccdb.ontomorph2.view.scene.SlideView;
 import edu.ucsd.ccdb.ontomorph2.view.scene.TangibleView;
@@ -76,16 +80,15 @@ public class View extends BaseSimpleGame
 	
 	BasicPassManager pManager = new BasicPassManager();
 	BloomRenderPass bloomRenderPass;
+	private Node debugQuadsNode;
 	
 	org.fenggui.Display disp; // FengGUI's display
 
 	View3D view3D = null;
 	private View3DMouseListener view3DMouseListener;
 	private OMTKeyInputListener OMTKeyListener;
-	private TangibleView spatial;
+	private TangibleView spatial, previousSpatial;
 	FengJMEInputHandler guiInput;
-	
-	
 	/**
 	 * Returns the singleton instance.
 	 @return	the singleton instance
@@ -295,7 +298,7 @@ public class View extends BaseSimpleGame
 	}
 
 	
-	protected void cleanUp()
+	public void cleanUp()
 	{
 		super.cleanup();
 		display.getRenderer().cleanup();
@@ -338,7 +341,7 @@ public class View extends BaseSimpleGame
         r.draw(rootNode);
        
         //pManager.add(bloomRenderPass);
-        //GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).execute();
+        GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).execute();
         if(pManager!=null)pManager.renderPasses(display.getRenderer());
 	    
         /** Call simpleRender() in any derived classes. */
@@ -380,6 +383,8 @@ public class View extends BaseSimpleGame
         
        // System.out.println("interpolation " + interpolation);
        if(pManager!=null){pManager.updatePasses(interpolation);}
+       
+       //System.out.println(MouseInput.get().getXAbsolute() + " " + MouseInput.get().getYAbsolute());
 
     }
 
@@ -405,6 +410,11 @@ public class View extends BaseSimpleGame
 		return getDisplaySystem().getRenderer();
 	}
 	
+	public void cleanup() {
+		super.cleanup();
+
+         //bloomRenderPass.cleanup();
+	}
 	/**
 	 * Get the current instance of the ViewCamera for this view
 	 * @return
@@ -416,8 +426,13 @@ public class View extends BaseSimpleGame
 	public Node getMainViewRootNode() {
 		return rootNode;
 	}
+	
+	public Camera getCamera(){
+		return this.cam;
+	}
 
-	private void buildPointLighting(Node node) {
+	//method use for debuggin purposes
+	/*private void buildPointLighting(Node node) {
         // Create Light
         PointLight light = new PointLight();
         light.setLocation(new Vector3f(0, 0, 0));
@@ -431,14 +446,15 @@ public class View extends BaseSimpleGame
         lightState.setEnabled(true);
         lightState.attach(light);
         node.setRenderState(lightState);
-    }
+    }*/
 
-public void bloomIndicator(TangibleView rollOverSelected){
+//TODO: Move into different class
+public void bloomIndicator(TangibleView rollOverSelected, boolean cameraLocation){
+	
+	//System.out.println("bloomIndicator");
 	spatial = rollOverSelected;	
-	 spatial.updateRenderState();
-     spatial.updateModelBound();
-     spatial.updateWorldBound();
-     spatial.setCullMode(Node.CULL_NEVER);
+
+	this.pManager = new BasicPassManager();
 	final RenderPass rootPass = new RenderPass() {
 
         /**
@@ -451,8 +467,8 @@ public void bloomIndicator(TangibleView rollOverSelected){
             super.doRender(r);
         }
     };
-	rootPass.add(spatial);
 
+	rootPass.add(spatial);
 	indicator();
 	Callable<?> loadlock = new Callable<Object>() {
 
@@ -460,29 +476,37 @@ public void bloomIndicator(TangibleView rollOverSelected){
         {
             pManager.add(rootPass);
         	pManager.add(bloomRenderPass);
+        	//spatial.setCullMode(SceneElement.CULL_NEVER);
+    		//spatial.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
         	//System.out.println("inside the object call method");
         	return null;
         }
     };
+    
     GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).enqueue(loadlock);
-	//indicator();
+	//indicator()
 	//pManager.clearAll();
 	
-	//pManager.add(bloomRenderPass);	   
+	//pManager.clearAll();
+	//pManager.add(bloomRenderPass);
+	if(cameraLocation == false){
+		pManager.cleanUp();
+		pManager.clearAll();
+		bloomRenderPass.cleanup();
+		bloomRenderPass.cleanUp();
+		bloomRenderPass.clearPassStates();
+		pManager.remove(bloomRenderPass);
+		//display.getRenderer().cleanup();
+	}
+    //pManager.add(bloomRenderPass);	   
+    previousSpatial = spatial;
 }
 
+//TODO; Move into different class
 public void indicator(){
 	
-	final MaterialState msc = DisplaySystem.getDisplaySystem().getRenderer().createMaterialState();
-    msc.setAmbient(new ColorRGBA(0f, 0f, 0f, 1f));
-    msc.setEmissive(new ColorRGBA(0f, 0f, 0f, 1f));
-    msc.setDiffuse(new ColorRGBA(0f, 0f, 0f, 1f));
-    msc.setSpecular(new ColorRGBA(0f, 0f, 0f, 1f));
-    msc.setShininess(127);
-    
-    //System.out.println(msc + " msc");
-    
 	if(spatial instanceof SlideView){
+	//System.out.println("slideview");
 		//update geomtric states of the rollOverSelected object
         //rollOverSelected.updateRenderState();
 		//rollOverSelected.updateGeometricState(0, true);
@@ -497,42 +521,71 @@ public void indicator(){
         zs.setWritable(false);
         zs.setEnabled(true);
         spatial.setRenderState(zs);*/
-		bloomRenderPass = new BloomRenderPass(this.cam, 4)
-		{
 
-			private static final long serialVersionUID = 1L;
+	bloomRenderPass = new BloomRenderPass(this.cam, 4){
+
+		private static final long serialVersionUID = 1L;
 
 			@Override
-            public void doRender(Renderer r) {
-                super.doRender(r);
- 	    	   spatial.setRenderState(msc);
- 	    	   spatial.updateRenderState();
-            }
-			
-        };
-		bloomRenderPass.setUseCurrentScene(false);
+	         public void doRender(Renderer r) {
+				    super.doRender(r);
+	         }
 				
-	       /*if(!bloomRenderPass.isSupported()) {
-	    	   System.out.println(" is not supported");
-	           Text t = new Text("Text", "GLSL Not supported on this computer.");
-	           t.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-	           t.setLightCombineMode(LightState.OFF);
-	           t.setLocalTranslation(new Vector3f(0,20,0));
-	       } else {*/
-	    //	  System.out.println("is supported");
-	    	 bloomRenderPass.setBlurIntensityMultiplier(1.7f);
-	         bloomRenderPass.setBlurSize(0.006f);
-	    	  bloomRenderPass.setExposureCutoff(0.0f);
-	         bloomRenderPass.setExposurePow(54f);
-         		bloomRenderPass.add(spatial);	
+	     };
+	bloomRenderPass.setUseCurrentScene(false);		
+	//spatial.setRenderState(arg0)
+	//	  System.out.println("is supported");
+	//bloomRenderPass.setBlurIntensityMultiplier(bloomRenderPass.getBlurIntensityMultiplier() + 6.1f);
+	bloomRenderPass.setBlurSize(bloomRenderPass.getBlurSize() + 0.001f);
+	bloomRenderPass.setExposureCutoff(bloomRenderPass.getExposureCutoff() + 0.1f);
+	bloomRenderPass.setExposurePow(bloomRenderPass.getExposurePow() - 1.5f);
+	bloomRenderPass.add(spatial);	
 
+	}
+	
+	else{
+		//System.out.println("not slideview");
+		final MaterialState msc = DisplaySystem.getDisplaySystem().getRenderer().createMaterialState();
+	    msc.setAmbient(new ColorRGBA(0f, 0f, 0f, 1f));
+	    msc.setEmissive(new ColorRGBA(0f, 0f, 0f, 1f));
+	    msc.setDiffuse(new ColorRGBA(0f, 0f, 0f, 1f));
+	    msc.setSpecular(new ColorRGBA(0f, 0f, 0f, 1f));
+	    msc.setShininess(127);
+	    
+		bloomRenderPass = new BloomRenderPass(this.cam, 4){
 
-	       //}
-        
+		private static final long serialVersionUID = 1L;
 
-
-		}	
+			@Override
+	         public void doRender(Renderer r) {
+				 spatial.clearRenderState(RenderState.RS_MATERIAL);
+				    spatial.setRenderState(msc);
+				    spatial.updateRenderState();
+				    super.doRender(r);
+	         }
+				
+	     };
+		bloomRenderPass.setUseCurrentScene(false);			
+		       /*if(!bloomRenderPass.isSupported()) {
+		    	   System.out.println(" is not supported");
+		           Text t = new Text("Text", "GLSL Not supported on this computer.");
+		           t.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+		           t.setLightCombineMode(LightState.OFF);
+		           t.setLocalTranslation(new Vector3f(0,20,0));
+		       } else {*/
+		    //	  System.out.println("is supported");
+		 bloomRenderPass.setExposurePow(bloomRenderPass.getExposurePow() - 2.5f);
+	     bloomRenderPass.add(spatial);	
+	     pManager.add(bloomRenderPass);
+	     
+	     CullState cs = display.getRenderer().createCullState();
+	     cs.setCullMode(CullState.CS_BACK);
+	     spatial.setRenderState(cs);
+	     spatial.updateRenderState(); 
+	     spatial.setCullMode(SceneElement.CULL_NEVER);
+	}
 }
-}
+	}
+
 
 

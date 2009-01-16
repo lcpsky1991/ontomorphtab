@@ -266,7 +266,11 @@ public abstract class Tangible extends Observable implements ISemanticsAware{
 	{
 		//do nothing (will be used for neuron  animations)
 	}
-	
+
+	public boolean isRollOver()
+	{
+		return TangibleManager.getInstance().isRollOver(this);
+	}
 	public boolean isSelected() 
 	{
 		return TangibleManager.getInstance().isSelected(this);

@@ -94,6 +94,7 @@ public class CurveOnceController extends Controller {
                 //System.out.println("camera direction " + cam.getLocation() + " " + newPoint);
                 if(autoRotation) {   // ***** added
                 	mover.lookAt(rotation,up);
+                	//System.out.println("autorotation");
                 }
                 if (isDisableAfterClamp() && lastPoint != null) {
                     if (lastPoint.equals(newPoint)) {

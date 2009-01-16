@@ -1,5 +1,7 @@
 package edu.ucsd.ccdb.ontomorph2.view;
 
+import java.util.List;
+
 import com.jme.bounding.BoundingSphere;
 import com.jme.input.InputHandler;
 import com.jme.input.MouseInput;
@@ -15,6 +17,9 @@ import com.jme.scene.SceneElement;
 import com.jme.scene.shape.Sphere;
 import com.jme.util.Timer;
 
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
 import edu.ucsd.ccdb.ontomorph2.util.CatmullRomCurve;
 import edu.ucsd.ccdb.ontomorph2.util.CurveOnceController;
 import edu.ucsd.ccdb.ontomorph2.util.Log;
@@ -26,6 +31,8 @@ import edu.ucsd.ccdb.ontomorph2.util.Log;
  *
  */
 public class ViewCamera extends com.jme.scene.CameraNode {
+
+	private static ViewCamera instance = null;
 
 	float camRotationRate = FastMath.PI * 5 / 180;	//(FastMath.PI * X / 180) corresponds to X degrees per (FPS?) = Rate/UnitOfUpdate 
 	float invZoom = 1.0f; //zoom amount
@@ -43,6 +50,13 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	InputHandler input = new InputHandler();
 	public ViewCamera() {
 		init();	
+	}
+	
+	public static ViewCamera getInstance() {
+		if (instance == null) {
+			instance = new ViewCamera();
+		}
+		return instance;
 	}
 	
 	/**
@@ -399,17 +413,34 @@ public class ViewCamera extends com.jme.scene.CameraNode {
 	/*
 	 * Method called from Basic Search. Location of Query passed as parameter
 	 */
-	public void searchZoomTo(Vector3f location){
+	public void searchZoomTo(Vector3f location, Vector3f direction){
   
 		Vector3f loc = location;
-		Vector3f position = new Vector3f(location.x, location.y, location.z - 100f);
+		Vector3f position = new Vector3f(location.x, location.y, location.z - 20.0f);
 		System.out.println("location " + location + " position " + position);
 		//cam.setDirection(location);
-		continuousZoomTo(loc, position, .21f);
-        System.out.println(" camera direction " + cam.getDirection());
+		continuousZoomTo(loc, location, .21f);
+        System.out.println(" camera direction " + direction);
 	}
 
 	public float getZoom() {
 		return invZoom;
+	}
+	
+	public void TravelAlongCurve(Curve3D curvePath, Vector3f objectPosition){
+		CatmullRomCurve curve = (CatmullRomCurve) curvePath.getCurve();
+		 Vector3f up = new Vector3f(0,1,0);
+	        CurveOnceController cc = new CurveOnceController(curve, this, objectPosition);
+	        cc.setActive(false);
+	        this.addController(cc);
+	        cc.setRepeatType(Controller.RT_CLAMP);
+	        cc.setUpVector(up);
+	        cc.setSpeed(.21f);
+	        cc.setDisableAfterClamp(true);
+	        cc.setAutoRotation(true);
+	        curve.setCullMode(SceneElement.CULL_ALWAYS);
+	        curve.updateRenderState();
+	        this.attachChild(curve);
+	        cc.setActive(true);      
 	}
 }

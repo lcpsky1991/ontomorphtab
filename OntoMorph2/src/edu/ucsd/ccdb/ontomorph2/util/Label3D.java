@@ -33,7 +33,9 @@ public class Label3D
     private ConvolveOp blur;
     private Color foreground = new Color(1f, 1f, 1f);
     private Color background = new Color(0f, 0f, 0f);
+
     private float fontResolution = fontSize;		//should be done in powers of two
+
     private int shadowOffsetX = 2;
     private int shadowOffsetY = 2;
     private Font font;

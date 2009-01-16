@@ -54,7 +54,7 @@ public class SphereParticles extends Tangible{
 			this.previousSelected.setVisible(true);
 		}*/
 
-		View.getInstance().getCameraView().searchZoomTo(this.getPosition());
+		//View.getInstance().getCameraView().searchZoomTo(this.getPosition());
 	}
 	
 

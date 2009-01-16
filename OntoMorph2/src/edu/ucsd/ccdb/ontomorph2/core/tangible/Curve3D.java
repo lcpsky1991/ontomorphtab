@@ -259,7 +259,7 @@ public class Curve3D extends Tangible{
 		if (theCurve == null) {
 			theCurve = copyBezierCurve();
 		}
-		return theCurve;
+		return this.theCurve;
 	}
 	
 	//have to copy the curve because JME BezierCurve class 

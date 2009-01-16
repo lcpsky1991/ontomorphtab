@@ -309,6 +309,10 @@ public class TangibleManager {
 		return selectedThings.contains(thing);
 	}
 
+	public boolean isRollOver(Tangible thing){
+		//System.out.println("call to is RollOver");
+		return selectedRollover.equals(thing);
+	}
 	public boolean addTangible(Tangible tangible) {
 		return this.tangibles.add(tangible);
 	}

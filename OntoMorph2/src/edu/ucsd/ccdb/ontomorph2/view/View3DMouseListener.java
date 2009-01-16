@@ -27,10 +27,12 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.batch.GeomBatch;
+import com.jme.system.DisplaySystem;
 
 import edu.ucsd.ccdb.ontomorph2.app.OntoMorph2;
 import edu.ucsd.ccdb.ontomorph2.core.scene.TangibleManager;
 import edu.ucsd.ccdb.ontomorph2.core.spatial.PositionVector;
+import edu.ucsd.ccdb.ontomorph2.core.tangible.Curve3D;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.CurveAnchorPoint;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.SphereParticles;
 import edu.ucsd.ccdb.ontomorph2.core.tangible.Tangible;
@@ -74,7 +76,8 @@ public class View3DMouseListener implements MouseInputListener {
 	//variables for rotating the camera
 	Vector3f brainCenter = new Vector3f(387.276f,-157.0343f,-239.10233f); //the center of the brain
 	Vector3f focusPoint = new Vector3f(brainCenter);
-	
+	Vector3f cameraLocation = Vector3f.ZERO;
+	Vector3f vectorFlag = Vector3f.ZERO;
 	Display disp;
 	View v = new View();
 	FengJMEInputHandler guiInput;
@@ -176,6 +179,8 @@ public class View3DMouseListener implements MouseInputListener {
 					else
 					{
 						View.getInstance().getCameraView().moveForward(dx);
+						//System.out.println(" inside onwheel " +View.getInstance().getCamera().getLocation());
+						cameraLocation = View.getInstance().getCamera().getLocation();
 					}
 				}
 			}
@@ -336,13 +341,20 @@ public class View3DMouseListener implements MouseInputListener {
 	private void doPick() 
 	{		
 		//get the tangible picked
+		Vector2f screenPos = new Vector2f();
+		screenPos.set(MouseInput.get().getXAbsolute(), MouseInput.get().getYAbsolute());
+		Vector3f worldCoords = View.getInstance().getDisplaySystem().getWorldCoordinates(screenPos, 1.0f);
+		Vector3f closePoint = View.getInstance().getDisplaySystem().getWorldCoordinates(screenPos, 0.0f);
+        Vector3f direction = worldCoords.subtract(closePoint).normalize();
+        View.getInstance().getCameraView().searchZoomTo(worldCoords, direction);
+		Ray mouseRay = new Ray(DisplaySystem.getDisplaySystem().getWorldCoordinates(screenPos, 0.0f),worldCoords);
+
+		System.out.println(" worldCoords  " + screenPos);
 		ArrayList<Tangible> pickedlist = psuedoPick(KeyInput.get().isControlDown(), true);   
-		
 		boolean shift = KeyInput.get().isShiftDown();
 		
 		//enable multiselect if shift is down
 		if ( shift ) TangibleManager.getInstance().setMultiSelect(true);
-		
 		//decide how to select it, is this multi select, deselect, etc?
 		if (pickedlist.size() == 0 && !shift) //nothing was picked so do deselect
 		{
@@ -352,6 +364,14 @@ public class View3DMouseListener implements MouseInputListener {
 		else if (pickedlist.size() > 0)
 		{			
 			pickedlist.get(0).select();	//select the closest one
+			
+			Tangible current = pickedlist.get(0);
+			if(current instanceof Curve3D){
+				Curve3D currentCurve = (Curve3D)current;
+				System.out.println("istance of curve 3d");
+				//Takes a Trip through a User Created Curve
+				View.getInstance().getCameraView().TravelAlongCurve(currentCurve, currentCurve.getCenterPoint());
+			}
 		}
 		
 		//turn off multiselection
@@ -652,11 +672,21 @@ public class View3DMouseListener implements MouseInputListener {
 
 			if( rollOver != previousRollOver ) //prevents repeated rollOver events for the same object
 			{					
+				TangibleView current = TangibleViewManager.getInstance().getTangibleViewFor(rollOver);
 				TangibleManager.getInstance().setCurrentRolledOver(rollOver);	//let the manager know whats been last rolled over
 				View.getInstance().getView3D().showToolTipFor(rollOver);		//display the tooltip
 				createNameTag(rollOver.getName());								//also show it in dev-box
 				rollOver.doRollOver();											//execute tangible-specific rolled-over code
 				this.previousRollOver = rollOver;								//remember what was done
+				if(vectorFlag.equals(cameraLocation)){
+					System.out.println("vectorFlag" + vectorFlag);
+					//View.getInstance().bloomIndicator(current, true);
+					vectorFlag = cameraLocation;
+				}	
+				else{
+					//View.getInstance().bloomIndicator(current,false);
+					System.out.println("not equal at all");
+				}
 			}
 		}
 		else
