@@ -18,7 +18,8 @@ public class LocalSemanticRepositorySetup {
 	private void loadOntologyOne() {
 		JenaOWLModel owlModel  = null;
 		try {
-			owlModel = ProtegeOWL.createJenaOWLModelFromURI("http://purl.org/nif/ontology/nif.owl");					    			
+			//owlModel = ProtegeOWL.createJenaOWLModelFromURI("http://purl.org/nif/ontology/nif.owl");
+			owlModel = ProtegeOWL.createJenaOWLModelFromURI("http://ontology.neuinfo.org/NIF/nif.owl");
 		} catch (Exception e) {
 			throw new OMTException("Cannot load NIF ontology!", e);
 		}	

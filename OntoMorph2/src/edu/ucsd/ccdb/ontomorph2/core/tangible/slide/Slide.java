@@ -61,7 +61,7 @@ public class Slide extends Tangible {
 		this.theSpatial = slide;
 		
 		this.addSemanticClass(SemanticRepository.getAvailableInstance().getSemanticClass(
-				SemanticClass.IMAGE_CLASS));
+				SemanticClass.HIPPOCAMPUS_CLASS));
 		this.getSemanticInstance();
 	}
 
